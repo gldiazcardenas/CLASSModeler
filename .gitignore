@@ -1,6 +1,8 @@
+# Ignored Files by Extension #
 *.class
-
-# Package Files #
-*.jar
 *.war
 *.ear
+
+# Ignored Folders #
+java/_workspace/
+resources/mxgraph
