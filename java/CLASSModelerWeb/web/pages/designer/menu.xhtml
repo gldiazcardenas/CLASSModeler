@@ -1,0 +1,47 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+                
+  <h:form id="menuForm" prependId="false">
+        <p:menubar id="menu">
+            <p:submenu label="File" icon="ui-icon-document">
+                <p:submenu label="New" icon="ui-icon-contact">
+                    <p:menuitem value="Project" url="#" />
+                    <p:menuitem value="Other" url="#" />
+                </p:submenu>
+                <p:menuitem value="Open" url="#" />
+                <p:separator />
+                <p:menuitem value="Quit" url="#" />
+            </p:submenu>
+            
+            <p:submenu label="Edit" icon="ui-icon-pencil">
+                <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+            </p:submenu>
+            
+            <p:submenu label="View" icon="ui-icon-pin-s">
+                <p:menuitem value="Project browser" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                <p:menuitem value="Components" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+            </p:submenu>
+            
+            <p:menuitem value="Import" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+            <p:menuitem value="Export" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+            
+            <p:submenu label="Help" icon="ui-icon-help">
+                <p:menuitem value="Contents" url="#" />
+                <p:submenu label="Search" icon="ui-icon-search">
+                    <p:submenu label="Text">
+                        <p:menuitem value="Workspace" url="#" />
+                    </p:submenu>
+                    <p:menuitem value="File" url="#" />
+                </p:submenu>
+            </p:submenu>
+            
+            <f:facet name="options">
+                <ui:include src="/pages/dashboard/userSection.xhtml" />
+            </f:facet>
+        </p:menubar>
+    </h:form>
+  
+</ui:composition>

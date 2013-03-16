@@ -1,0 +1,91 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/templates/common.xhtml">
+
+<ui:define name="title"><h:outputText value="#{msgs.DESIGNER_PAGE_BASE_TITLE}" /></ui:define>
+<ui:define name="stylesheet">
+    <h:outputStylesheet name="layoutDesigner.css" library="css"/>
+    <h:outputStylesheet name="common.css" library="css"/>
+</ui:define>
+
+<ui:define name="script">
+    <script type="text/javascript">
+        mxBasePath = '../../resources';
+        mxImageBasePath = '../../resources/images';
+        
+        /**
+         * Class that defines the editor.
+         */
+        function mxEditorUFPS () {
+           // Checking the browser used
+          if (!mxClient.isBrowserSupported()) {
+            mxUtils.error('Browser is not supported!', 200, false);
+            return;
+          }
+          
+          // Creates the editor by loading the specified configuration file
+          var node = mxUtils.load('../../resources/config/mxUFPSModeler.xml').getDocumentElement();
+          var editor = new mxEditor(node);
+          
+          // Sets the graph container
+          //editor.setGraphContainer(document.getElementById("graph"));
+
+          // Sets the image base path to the popUp handler
+          editor.popupHandler.imageBasePath = mxClient.imageBasePath;
+          editor.toolbar.imageBasePath = mxClient.imageBasePath;
+          
+          return editor;
+        }
+
+        /**
+         * Method that initializes the editor component.
+         */
+        function onInit () {
+          
+        }
+    </script>
+    <h:outputScript library="js" name="mxClient.js" />
+</ui:define>
+
+<ui:define name="header">
+    <ui:include src="/pages/designer/menu.xhtml"/>
+    <ui:include src="/pages/designer/toolbar.xhtml"/>
+</ui:define>
+
+<ui:define name="center">
+    <pe:layout fullPage="false" id="center-layout" collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
+        <pe:layoutPane id="sidebarLeft" position="west" resizable="true" collapsible="true" minSize="200" maxSize="300">
+            <ui:include src="/pages/designer/sidebarLeft.xhtml"/>
+        </pe:layoutPane>
+
+        <pe:layoutPane id="workspace" position="center">
+            <ui:include src="/pages/designer/workspace.xhtml" />
+        </pe:layoutPane>
+
+        <pe:layoutPane id="sidebarRight" position="east" resizable="true" collapsible="true" minSize="200" maxSize="300">
+            <ui:include src="/pages/designer/sidebarRight.xhtml" />
+        </pe:layoutPane>
+    </pe:layout>
+    <!-- <p:layout id="center-layout" collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
+        <p:layoutUnit id="sidebarLeft" position="west" resizable="true" collapsible="true" minSize="200" maxSize="300" gutter="3">
+            <ui:include src="/pages/designer/sidebarLeft.xhtml"/>
+        </p:layoutUnit>
+
+        <p:layoutUnit id="workspace" position="center">
+            <ui:include src="/pages/designer/workspace.xhtml" />
+        </p:layoutUnit>
+
+        <p:layoutUnit id="sidebarRight" position="east" resizable="true" collapsible="true" minSize="200" maxSize="300" gutter="3">
+            <ui:include src="/pages/designer/sidebarRight.xhtml" />
+        </p:layoutUnit>
+    </p:layout> -->
+    
+    <script type="text/javascript">
+        new mxEditorUFPS();
+    </script>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,34 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+                
+  <h:form id="toolbarForm" prependId="false">
+        <p:toolbar id="toolbar">
+            <p:toolbarGroup align="left">
+                <p:separator/>
+                <p:commandButton type="button" title="New" icon="ui-icon-document" />
+                <p:commandButton type="button" title="Open" icon="ui-icon-folder-open" />
+                <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
+                <p:commandButton type="button" title="Print" icon="ui-icon-print" />
+                <p:separator/>
+                <p:commandButton type="button" title="Cut" icon="ui-icon-scissors" />
+                <p:commandButton type="button" title="Copy" icon="ui-icon-copy" />
+                <p:commandButton type="button" title="Paste" icon="ui-icon-clipboard" />
+                <p:separator/>
+                <p:commandButton type="button" title="Undo" icon="ui-icon-arrowreturnthick-1-w" />
+                <p:commandButton type="button" title="Redo" icon="ui-icon-arrowreturnthick-1-e" />
+                <p:separator/>
+                <p:commandButton type="button" title="Zoom-in" icon="ui-icon-zoomin" />
+                <p:commandButton type="button" title="Zoom-out" icon="ui-icon-zoomout" />
+            </p:toolbarGroup>
+            
+            <p:toolbarGroup align="right">
+                <p:separator/>
+                <h:outputText value="Search" style="margin: 5px;" />
+                <p:inputText value="" style="margin: 2px;" />
+            </p:toolbarGroup>
+        </p:toolbar>
+    </h:form>
+  
+</ui:composition>

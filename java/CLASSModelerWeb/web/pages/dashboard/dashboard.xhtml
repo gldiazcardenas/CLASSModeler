@@ -1,0 +1,38 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" 
+                template="/templates/portal.xhtml">
+                
+<ui:define name="title"><h:outputText value="#{msgs.DESIGNER_PAGE_BASE_TITLE}" /></ui:define>
+
+<ui:define name="userSection"><ui:include src="/pages/dashboard/userSection.xhtml"/></ui:define>
+
+<ui:define name="centerContent">
+    <div id="sidebarSection" class="ui-widget-content">
+        <h:form>
+            <p:commandButton value="New Folder" icon="ui-icon-folder-collapsed" />
+        </h:form>
+    </div>
+    <div id="projectsSection" class="ui-widget-content">
+        <h:form id="projectsForm">
+            <div style="width:40%; float: left;">
+                <p:commandButton value="New Project" icon="ui-icon-document" ajax="false" action="/pages/designer/designer.xhtml" />
+            </div>
+            
+            <div style="width: 60%; float: right; text-align: right; margin-bottom: 5px;">
+                <p:commandButton value="Share" icon="ui-icon-star" />
+                <p:commandButton value="Configuration" icon="ui-icon-gear" />
+            </div>
+            
+            <p:dataTable>
+                <p:column headerText="Project Name"></p:column>
+                <p:column headerText="Owner"></p:column>
+                <p:column headerText="Modified Date"></p:column>
+                <p:column headerText="Modified by"></p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,23 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" 
+                template="/templates/portal.xhtml">
+                
+<ui:define name="title"><h:outputText value="#{msgs.PORTAL_PAGE_BASE_TITLE}"/></ui:define>
+
+<ui:define name="userSection">
+  <ui:include src="/pages/portal/logIn.xhtml" />
+</ui:define>
+
+
+<ui:define name="centerContent">
+    <div id="signUpSection">
+        <ui:include src="/pages/portal/signUp.xhtml"/>
+    </div>
+    <div id="tryDemoSection">
+        <p:button id="tryDemoCommand" value="#{msgs.TRY_DEMO_BUTTON_LABEL}" icon="ui-icon-play" outcome="pages/designer/designer.xhtml"/>
+    </div>
+</ui:define>
+
+</ui:composition>

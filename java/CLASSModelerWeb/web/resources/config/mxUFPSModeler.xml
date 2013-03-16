@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  Default configuration file for the mxEditor graphical component
+  
+  Universidad Francisco de Paula Santander UFPS
+  Cúcuta, Colombia
+  (c) 2013 by UFPS. All rights reserved.
+  
+  @author: Gabriel Leonardo Diaz, 31.01.2013.
+-->
+
+<mxEditor defaultGroup="group" defaultEdge="connector" urlImage="" urlInit="" urlPoll="" urlNotify="">
+  <!-- Initialization method, this method should be implemented in the .js file -->
+  <add as="onInit"><![CDATA[
+      function () {
+        onInit(this);
+      }
+    ]]>
+  </add>
+  
+  <!-- Defining templates for the components toolbar -->
+  <Array as="templates">
+    <add as="container">
+      <Container label="Container" href="">
+        <mxCell vertex="1" style="swimlane" connectable="0">
+          <mxGeometry as="geometry" width="200" height="200"/>
+        </mxCell>
+      </Container>
+    </add>
+    <add as="rectangle">
+      <Rect label="Rectangle" href="">
+        <mxCell vertex="1"> 
+          <mxGeometry as="geometry" width="80" height="40"/>
+        </mxCell>
+      </Rect>
+    </add>
+    <add as="text">
+      <Text label="Text Here" href="">
+        <mxCell vertex="1" style="text">  
+          <mxGeometry as="geometry" width="80" height="20"/>
+        </mxCell>
+      </Text>
+    </add>
+  </Array>
+  
+  <!-- Defines the sections in the screen -->
+  <ui>
+    <add as="graph" element="graph"/>
+    <add as="toolbar" element="components"/>
+  </ui>
+
+  <!-- Configures the PopUp menu -->
+  <mxDefaultPopupMenu as="popupHandler">
+    <add as="cut" action="cut" icon="/cut.png"/>
+    <add as="paste" action="paste" icon="/paste.png"/>
+  </mxDefaultPopupMenu>
+  
+  <!-- Configures the Components ToolBar -->
+  <mxDefaultToolbar as="toolbar">
+    <add as="connect" mode="connect" icon="/UFPS-Modeler/resources/images/cut.png"/>
+    <add as="Text" template="text" icon="/UFPS-Modeler/resources/images/paste.png"/>
+    <add as="Container" template="container" icon="/UFPS-Modeler/resources/images/cut.png"/>
+    <add as="Rectangle" template="rectangle" icon="/UFPS-Modeler/resources/images/paste.png"/>
+  </mxDefaultToolbar>
+  
+  <!-- Defines the Graph used to build the diagram in the editor  -->
+  <mxGraph as="graph">
+  </mxGraph>
+  
+  <!-- unDo-reDo Manager to handle user interactions with the diagram editor -->
+  <mxUndoManager as="undoManager">
+  </mxUndoManager>
+  
+  <!-- Key Manager to handle user keyboard interactions -->
+  <mxDefaultKeyHandler as="keyHandler">
+  </mxDefaultKeyHandler>
+  
+</mxEditor>

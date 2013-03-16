@@ -1,0 +1,74 @@
+@CHARSET "ISO-8859-1";
+
+.sectionsContainer {
+    width: 920px;
+    margin: 0px auto 0px auto;
+}
+
+#center {
+    min-height: 500px;
+}
+
+#bannerSection {
+    float: left;
+    width: 62%;
+}
+
+#userSection {
+    float: right;
+    width: 38%;
+    margin-top: 30px;
+}
+
+#signUpSection {
+    float: left;
+    width: 45%;
+    margin-left: 5%;
+}
+
+#tryDemoSection {
+    float: left;
+    width: 45%;
+    margin-right: 5%;
+    height: 100%;
+    text-align: center;
+}
+
+#sidebarSection {
+    float: left;
+    margin-top: 30px;
+    padding-bottom: 10px;
+    width: 20%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+#projectsSection{
+    float: right;
+    margin: 10px 0px;
+    padding-left: 10px;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    width: 78%;
+    min-height: inherit;
+}
+
+#tryDemoCommand {
+    margin-top: 50%;
+}
+
+#signUpForm {
+    margin: 60px 0;
+    padding: 35px 0;
+    border-bottom: none;
+    border-top: none;
+    border-left: none;
+    min-height: inherit;
+}
+
+#signUpForm input {
+	
+}
+

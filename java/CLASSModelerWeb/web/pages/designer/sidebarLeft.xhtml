@@ -1,0 +1,19 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dashboard id="left-dashboard" model="#{sideBarPanels.leftDashboard}">
+        <p:panel id="components" header="#{msgs.COMPONENTS_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
+            
+        </p:panel>
+        
+        <p:panel id="zoom" header="#{msgs.ZOOM_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
+            
+        </p:panel>
+        
+        <p:panel id="output" header="#{msgs.OUTPUT_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
+            
+        </p:panel>
+    </p:dashboard>
+    
+</ui:composition>

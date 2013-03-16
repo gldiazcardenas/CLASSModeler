@@ -5,4 +5,7 @@
 
 # Ignored Folders #
 java/_workspace/
+java/CLASSModelerWeb/build
+java/CLASSModelerEJB/build
+java/CLASSModelerJPA/build
 resources/mxgraph

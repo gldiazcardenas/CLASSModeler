@@ -1,0 +1,42 @@
+@CHARSET "ISO-8859-1";
+
+#toolbar {
+    border:none;
+    background: none;
+}
+
+#center {
+    min-height: 530px;
+}
+
+#center-layout {
+    margin: 2px;
+    min-height: inherit;
+}
+
+#center-layout .pe-layout-pane-content {
+    padding: 0;
+    overflow: hidden;
+}
+
+#components img {
+    display: block;
+}
+
+#sidebarRight {
+    height: 100px;
+    border: none;
+}
+
+#sidebarLeft {
+    height: 100px;
+    border: none;
+}
+
+.ui-dashboard .ui-dashboard-column {
+    float: none;
+}
+
+.ui-dashboard .ui-panel {
+    margin-bottom: 2px;
+}
