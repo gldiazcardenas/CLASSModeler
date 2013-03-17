@@ -12,7 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnit;
 
-import classmodeler.service.UserServiceBean;
+import classmodeler.service.UserService;
 
 import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 
@@ -21,9 +21,9 @@ import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
  * 
  * @author Gabriel Leonardo Diaz, 02.03.2013.
  */
-public @Stateless class UserServiceBeanImpl implements UserServiceBean {
+public @Stateless class UserServiceBean implements UserService {
   
-  @PersistenceUnit(unitName="CLASSModelerPU")
+  @PersistenceUnit(unitName="CLASSModelerJPA")
   private EntityManager em;
   
   @Override

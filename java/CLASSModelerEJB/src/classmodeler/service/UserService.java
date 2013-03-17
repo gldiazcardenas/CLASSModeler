@@ -18,7 +18,7 @@ import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
  * @author Gabriel Leonardo Diaz, 02.03.2013.
  */
 @Local
-public interface UserServiceBean {
+public interface UserService {
   
   /**
    * Service method that checks if the given user email already exists.
