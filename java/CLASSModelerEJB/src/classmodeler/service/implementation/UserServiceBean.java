@@ -23,7 +23,7 @@ import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
  */
 public @Stateless class UserServiceBean implements UserService {
   
-  @PersistenceUnit(unitName="CLASSModelerJPA")
+  @PersistenceUnit(unitName="CLASSModelerPU")
   private EntityManager em;
   
   @Override

@@ -23,7 +23,6 @@ import javax.persistence.TemporalType;
 
 
 /**
- * 
  * Domain bean that represents a person who is able to login in the system, who
  * has a nickname and a password to enter successfully in the system.
  * 
@@ -113,7 +112,7 @@ public class User implements Serializable {
     this.key = userKey;
   }
   
-  public String getName() {
+  public String getFullName() {
     return getFirstName() + " " + getLastName();
   }
 
@@ -187,6 +186,32 @@ public class User implements Serializable {
 
   public void setPhoto(String photo) {
     this.photo = photo;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + key;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    
+    User other = (User) obj;
+    if (key != other.key) {
+      return false;
+    }
+    
+    return true;
   }
 
 }
