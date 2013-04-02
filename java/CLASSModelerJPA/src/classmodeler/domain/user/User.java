@@ -27,6 +27,8 @@ import javax.persistence.TemporalType;
  * has a nickname and a password to enter successfully in the system.
  * 
  * @author Gabriel Leonardo Diaz, 25.12.2012.
+ * @version 1.0
+ * @updated 24.03.2013 04:59:27 p.m.
  */
 @Entity(name="user")
 public class User implements Serializable {
@@ -213,5 +215,9 @@ public class User implements Serializable {
     
     return true;
   }
+
+	public String getName(){
+		return "";
+	}
 
 }

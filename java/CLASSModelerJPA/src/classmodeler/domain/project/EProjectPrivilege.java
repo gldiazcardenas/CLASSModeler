@@ -13,6 +13,8 @@ package classmodeler.domain.project;
  * he/she shares a project.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
+ * @version 1.0
+ * @updated 24.03.2013 04:59:23 p.m.
  */
 public enum EProjectPrivilege {
   /**

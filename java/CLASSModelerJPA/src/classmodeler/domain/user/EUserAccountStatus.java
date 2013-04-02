@@ -12,6 +12,8 @@ package classmodeler.domain.user;
  * This represents the possible values for user account status.
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2013.
+ * @version 1.0
+ * @updated 24.03.2013 04:59:23 p.m.
  */
 public enum EUserAccountStatus {
 

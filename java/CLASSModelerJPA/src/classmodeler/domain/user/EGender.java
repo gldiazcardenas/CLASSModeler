@@ -13,6 +13,8 @@ package classmodeler.domain.user;
  * Enumeration that represents the common human genders.
  * 
  * @author Gabriel Leonardo Diaz, o9.02.2013.
+ * @version 1.0
+ * @updated 24.03.2013 04:59:22 p.m.
  */
 public enum EGender {
   

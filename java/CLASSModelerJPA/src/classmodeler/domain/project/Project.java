@@ -10,7 +10,7 @@ package classmodeler.domain.project;
 
 import java.util.Date;
 
-import classmodeler.domain.uml.Element;
+import classmodeler.domain.uml.IElement;
 import classmodeler.domain.user.User;
 
 /**
@@ -18,6 +18,8 @@ import classmodeler.domain.user.User;
  * the diagrams in a logical and customizable structure for the user.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
+ * @version 1.0
+ * @updated 24.03.2013 04:59:26 p.m.
  */
 public class Project {
 
@@ -28,7 +30,7 @@ public class Project {
   private Date createdDate;
   private User modifiedBy;
   private Date modifiedDate;
-  private Element rootElement;
+  private IElement rootElement;
 
   public Project() {
     // Empty construct
@@ -90,11 +92,11 @@ public class Project {
     this.modifiedDate = modifiedDate;
   }
   
-  public Element getRootElement() {
+  public IElement getRootElement() {
     return rootElement;
   }
   
-  public void setRootElement(Element rootElement) {
+  public void setRootElement(IElement rootElement) {
     this.rootElement = rootElement;
   }
 
