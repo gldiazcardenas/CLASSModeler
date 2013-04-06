@@ -27,7 +27,7 @@ public abstract class Element implements IElement {
   private Set<Comment> ownedComments;
 
   public Element() {
-    // Empty constructor.
+    super();
   }
   
   public int getKey() {
@@ -65,7 +65,7 @@ public abstract class Element implements IElement {
   public void addOwnedElememnt (IElement element) {
     if (element != null && !this.equals(element)) {
       if (ownedElements == null) {
-        ownedElements = new HashSet<>();
+        ownedElements = new HashSet<IElement>();
       }
       
       ownedElements.add(element);
@@ -94,4 +94,31 @@ public abstract class Element implements IElement {
     }
     return allOwnedElements;
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + key;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+      
+    Element other = (Element) obj;
+    if (key != other.key) {
+      return false;
+    }
+    
+    return true;
+  }
+  
 }

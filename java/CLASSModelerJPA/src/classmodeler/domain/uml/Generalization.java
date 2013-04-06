@@ -6,15 +6,11 @@ package classmodeler.domain.uml;
  * @created 24-mar-2013 04:59:23 p.m.
  */
 public class Generalization extends DirectedRelationship {
-
-	private boolean sustituable;
-	public Classifier m_Classifier;
-
-	public Generalization(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-}//end Generalization
+  
+  public boolean sustituable;
+  public Classifier m_Classifier;
+  
+  public Generalization() {
+    
+  }
+}

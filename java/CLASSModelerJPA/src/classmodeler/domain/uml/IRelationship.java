@@ -10,12 +10,18 @@ package classmodeler.domain.uml;
 import java.util.Set;
 
 /**
- * Defines the common behavior of any relationship element.
+ * A relationship references one or more related elements. Relationship is an
+ * abstract metaclass.
+ * 
  * @author Gabriel Leonardo Diaz, 24.03.2013.
- * @version 1.0
  */
 public interface IRelationship extends IElement {
 
+  /**
+   * Specifies the elements related by the Relationship.
+   * 
+   * @return The elements related.
+   */
   public Set<IElement> getRelatedElements();
 
 }

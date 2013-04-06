@@ -14,7 +14,6 @@ import java.util.Set;
  * A relationship that has a defined direction from the source to the target.
  * 
  * @author Gabriel Leonardo Diaz, 24.03.2013.
- * @version 1.0
  */
 public class DirectedRelationship extends Element implements IRelationship {
 

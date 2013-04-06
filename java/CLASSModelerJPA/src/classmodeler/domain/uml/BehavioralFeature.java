@@ -1,93 +1,73 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
- * @author Gabriel
- * @version 1.0
- * @created 24-mar-2013 04:59:21 p.m.
+ * A behavioral feature specifies that an instance of a classifier will respond
+ * to a designated request by invoking a behavior. BehavioralFeature is an
+ * abstract metaclass specializing Feature and Namespace. Kinds of behavioral
+ * aspects are modeled by subclasses of BehavioralFeature.
+ * 
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
 public class BehavioralFeature extends Namespace implements IFeature {
+  
+  /**
+   * References the Types representing exceptions that may be raised during an
+   * invocation of this operation.
+   */
+  public List<IType> raisedExceptions;
+  
+  /**
+   * Specifies the ordered set of formal parameters owned by this
+   * BehavioralFeature. The parameter direction can be ‘in,’ ‘inout,’ ‘out,’ or
+   * ‘return’ to specify input, output, or return parameters.
+   */
+  public List<Parameter> ownedParameters;
+  
+  public BehavioralFeature() {
+    super();
+  }
+  
+  /**
+   * 
+   * @param namedElement
+   * @param namespace
+   */
+  public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace) {
+    return false;
+  }
 
-	private List<IType> raisedExceptions;
-	private List<Parameter> ownedParameters;
+  @Override
+  public boolean isConsistentWith(IRedefinableElement redefinableElement) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public BehavioralFeature(){
+  @Override
+  public boolean isRedefinitionContextValid(IRedefinableElement redefinableElement) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	}
+  @Override
+  public boolean isLeaf() {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-	/**
-	 * 
-	 * @param namespace
-	 * @param namedElement
-	 */
-	public boolean isDistinguishableFrom(Namespace namespace, INamedElement namedElement){
-		return false;
-	}
-
-	public IElement getOwner(){
-		return null;
-	}
-
-	public List<Namespace> getAllNamespaces(){
-		return null;
-	}
-
-	public String getSeparator(){
-		return "";
-	}
-
-	/**
-	 * 
-	 * @param namedElement
-	 * @param namespace
-	 */
-	public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace){
-		return false;
-	}
-
-	public List<Comment> getOwnedComments(){
-		return null;
-	}
-
-	public String getName(){
-		return "";
-	}
-
-	public EVisibilityKind getVisibility(){
-		return null;
-	}
-
-	public String getQualifiedName(){
-		return "";
-	}
-
-	public boolean isLeaf(){
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isConsistentWith(IRedefinableElement redefinableElement){
-
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isRedefinitionContextValid(IRedefinableElement redefinableElement){
-
-	}
-
-	public boolean isStatic(){
-		return false;
-	}
-
-	public List<Classifier> getFeaturedClassifiers(){
-		return null;
-	}
-}//end BehavioralFeature
+  @Override
+  public boolean isStatic() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+  
+}

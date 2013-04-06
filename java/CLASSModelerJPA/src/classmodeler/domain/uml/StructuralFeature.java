@@ -1,87 +1,109 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
- * @author Gabriel
- * @version 1.0
- * @created 24-mar-2013 04:59:26 p.m.
+ * A structural feature is a typed feature of a classifier that specifies the
+ * structure of instances of the classifier. Structural feature is an abstract
+ * metaclass. By specializing multiplicity element, it supports a multiplicity
+ * that specifies valid cardinalities for the collection of values associated
+ * with an instantiation of the structural feature.
+ * 
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
 public class StructuralFeature extends MultiplicityElement implements ITypedElement, IFeature {
+  
+  private boolean readOnly;
+  
+  public StructuralFeature() {
+    super();
+  }
+  
+  public boolean isReadOnly() {
+    return readOnly;
+  }
+  
+  public void setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
+  }
 
-	private boolean readOnly;
+  @Override
+  public String getName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	public StructuralFeature(){
+  @Override
+  public void setName(String name) {
+    // TODO Auto-generated method stub
+    
+  }
 
-	}
+  @Override
+  public EVisibilityKind getVisibility() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-	public IElement getOwner(){
-		return null;
-	}
+  @Override
+  public String getQualifiedName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	public List<Namespace> getAllNamespaces(){
-		return null;
-	}
+  @Override
+  public String getSeparator() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	public String getSeparator(){
-		return "";
-	}
+  @Override
+  public List<Namespace> getAllNamespaces() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	/**
-	 * 
-	 * @param namedElement
-	 * @param namespace
-	 */
-	public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace){
-		return false;
-	}
+  @Override
+  public boolean isDistinguishableFrom(INamedElement ne, Namespace ns) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public IType getType(){
-		return null;
-	}
+  @Override
+  public boolean isLeaf() {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public List<Comment> getOwnedComments(){
-		return null;
-	}
+  @Override
+  public boolean isConsistentWith(IRedefinableElement redefinableElement) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public String getName(){
-		return "";
-	}
+  @Override
+  public boolean isRedefinitionContextValid(IRedefinableElement redefinableElement) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public EVisibilityKind getVisibility(){
-		return null;
-	}
+  @Override
+  public boolean isStatic() {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public String getQualifiedName(){
-		return "";
-	}
-
-	public boolean isLeaf(){
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isConsistentWith(IRedefinableElement redefinableElement){
-
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isRedefinitionContextValid(IRedefinableElement redefinableElement){
-
-	}
-
-	public boolean isStatic(){
-		return false;
-	}
-
-	public List<Classifier> getFeaturedClassifiers(){
-		return null;
-	}
-}//end StructuralFeature
+  @Override
+  public IType getType() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+}

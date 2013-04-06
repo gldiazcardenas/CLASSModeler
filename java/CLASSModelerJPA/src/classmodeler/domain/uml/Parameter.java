@@ -1,61 +1,59 @@
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
  * @author Gabriel
  * @version 1.0
  * @created 24-mar-2013 04:59:25 p.m.
  */
 public class Parameter extends MultiplicityElement implements ITypedElement {
+  
+  public EParameterDirectionKind direction;
+  public ValueSpecification defaultValue;
+  
+  public Parameter() {
+    
+  }
+  
+  public String getSeparator() {
+    return "";
+  }
+  
+  /**
+   * 
+   * @param namedElement
+   * @param namespace
+   */
+  public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace) {
+    return false;
+  }
+  
+  public IType getType() {
+    return null;
+  }
+  
+  public String getName() {
+    return "";
+  }
+  
+  public EVisibilityKind getVisibility() {
+    return null;
+  }
+  
+  public String getQualifiedName() {
+    return "";
+  }
 
-	private String default;
-	private EParameterDirectionKind direction;
-	private ValueSpecification defaultValue;
+  @Override
+  public void setName(String name) {
+    // TODO Auto-generated method stub
+    
+  }
 
-	public Parameter(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-	public IElement getOwner(){
-		return null;
-	}
-
-	public List<Namespace> getAllNamespaces(){
-		return null;
-	}
-
-	public String getSeparator(){
-		return "";
-	}
-
-	/**
-	 * 
-	 * @param namedElement
-	 * @param namespace
-	 */
-	public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace){
-		return false;
-	}
-
-	public IType getType(){
-		return null;
-	}
-
-	public List<Comment> getOwnedComments(){
-		return null;
-	}
-
-	public String getName(){
-		return "";
-	}
-
-	public EVisibilityKind getVisibility(){
-		return null;
-	}
-
-	public String getQualifiedName(){
-		return "";
-	}
-}//end Parameter
+  @Override
+  public List<Namespace> getAllNamespaces() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+}// end Parameter

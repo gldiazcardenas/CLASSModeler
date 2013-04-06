@@ -1,99 +1,69 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
- * @author Gabriel
- * @version 1.0
- * @created 24-mar-2013 04:59:21 p.m.
+ * <p>
+ * A classifier is a namespace whose members can include features. Classifier is
+ * an abstract metaclass.
+ * </p>
+ * <p>
+ * A classifier is a type and can own generalizations, thereby making it
+ * possible to define generalization relationships to other classifiers.
+ * </p>
+ * <p>
+ * A classifier can specify a generalization hierarchy by referencing its
+ * general classifiers.
+ * </p>
+ * <p>
+ * A classifier is a redefinable element, meaning that it is possible to
+ * redefine nested classifiers.
+ * </p>
+ * 
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
-public class Classifier extends Namespace implements IType, IRedefinableElement {
+public abstract class Classifier extends Namespace implements IType, IRedefinableElement {
+  
+  public boolean finalSpecification;
+  public List<Property> attributes;
+  public List<IFeature> features;
+  public List<Classifier> generals;
+  public List<Generalization> generalizations;
+  public List<INamedElement> inheritMember;
+  public List<Classifier> redefinedClassifiers;
+  
+  public Classifier() {
+    super();
+  }
+  
+  public boolean isLeaf() {
+    return false;
+  }
 
-	private boolean abstract;
-	private boolean finalSpecification;
-	private List<Property> attributes;
-	private List<IFeature> features;
-	private List<Classifier> generals;
-	private List<Generalization> generalizations;
-	private List<INamedElement> inheritMember;
-	private List<Classifier> redefinedClassifiers;
-	public Generalization m_Generalization;
+  @Override
+  public boolean isConsistentWith(IRedefinableElement redefinableElement) {
+    return false;
+  }
 
-	public Classifier(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-	public IElement getOwner(){
-		return null;
-	}
-
-	public List<Namespace> getAllNamespaces(){
-		return null;
-	}
-
-	public String getSeparator(){
-		return "";
-	}
-
-	/**
-	 * 
-	 * @param namedElement
-	 * @param namespace
-	 */
-	public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace){
-		return false;
-	}
-
-	public EVisibilityKind getVisibility(){
-		return null;
-	}
-
-	public List<Comment> getOwnedComments(){
-		return null;
-	}
-
-	public String getName(){
-		return "";
-	}
-
-	public EVisibilityKind getVisibility(){
-		return null;
-	}
-
-	public String getQualifiedName(){
-		return "";
-	}
-
-	public boolean isLeaf(){
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isConsistentWith(IRedefinableElement redefinableElement){
-
-	}
-
-	/**
-	 * 
-	 * @param redefinableElement
-	 */
-	public void isRedefinitionContextValid(IRedefinableElement redefinableElement){
-
-	}
-
-	public Package getOwningPackage(){
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param type
-	 */
-	public boolean conformsTo(IType type){
-		return false;
-	}
-}//end Classifier
+  @Override
+  public boolean isRedefinitionContextValid(IRedefinableElement redefinableElement) {
+    return false;
+  }
+  
+  /**
+   * 
+   * @param type
+   */
+  public boolean conformsTo(IType type) {
+    return false;
+  }
+  
+}

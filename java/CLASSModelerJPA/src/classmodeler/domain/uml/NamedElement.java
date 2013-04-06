@@ -20,7 +20,7 @@ import java.util.List;
  * @author Gabriel Leonardo Diaz, 24.03.2013.
  * @version 1.0
  */
-public class NamedElement extends Element implements INamedElement {
+public abstract class NamedElement extends Element implements INamedElement {
 
   private String name;
   private String qualifiedName;
@@ -28,19 +28,27 @@ public class NamedElement extends Element implements INamedElement {
   private EVisibilityKind visibilityKind;
 
   public NamedElement() {
-
+    super();
   }
 
+  @Override
   public String getName() {
     return name;
   }
+  
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
 
+  @Override
   public String getQualifiedName() {
     return qualifiedName;
   }
 
+  @Override
   public String getSeparator() {
-    return "";
+    return "::";
   }
   
   public EVisibilityKind getVisibility() {
@@ -55,11 +63,7 @@ public class NamedElement extends Element implements INamedElement {
     return namespace;
   }
 
-  /**
-   * 
-   * @param ne
-   * @param ns
-   */
+  @Override
   public boolean isDistinguishableFrom(INamedElement ne, Namespace ns) {
     return false;
   }

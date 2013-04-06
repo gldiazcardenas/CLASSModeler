@@ -27,6 +27,12 @@ public interface INamedElement extends IElement {
    * @return The name in a String object.
    */
   public String getName();
+  
+  /**
+   * Sets the name of the named element.
+   * @param name
+   */
+  public void setName(String name);
 
   /**
    * The visibility determines where the NamedElement appears within different
@@ -37,20 +43,33 @@ public interface INamedElement extends IElement {
   public EVisibilityKind getVisibility();
 
   /**
+   * A name that allows the NamedElement to be identified within a hierarchy of
+   * nested Namespaces. It is constructed from the names of the containing
+   * namespaces starting at the root of the hierarchy and ending with the name
+   * of the NamedElement itself
    * 
    * @return
    */
   public String getQualifiedName();
 
   /**
+   * The query gives the string that is used to separate names when constructing
+   * a qualified name.<br/>
    * 
+   * <code>separator = ‘::’</code>
    * @return
    */
   public String getSeparator();
 
   /**
-   * The query gives the sequence of namespaces in which the
-   * NamedElement is nested, working outwards.
+   * The query gives the sequence of namespaces in which the NamedElement is
+   * nested, working outwards.
+   * 
+   * <code>
+   * allNamespaces = if self.namespace->isEmpty() then Sequence{}
+                     else self.namespace.allNamespaces()->prepend(self.namespace)
+                     endif
+   * </code>
    * 
    * @return
    */
@@ -62,9 +81,11 @@ public interface INamedElement extends IElement {
    * (a) they have unrelated types or (b) they have related types but different
    * names.
    * 
-   * @param namedElement
-   * @param namespace
+   * @param ne
+   *          The named element to compare.
+   * @param ns
+   *          the namespace in which will be compared the named elements.
    */
-  public boolean isDistinguishableFrom(INamedElement namedElement, Namespace namespace);
+  public boolean isDistinguishableFrom(INamedElement ne, Namespace ns);
 
 }

@@ -1,20 +1,19 @@
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
  * @author Gabriel
  * @version 1.0
  * @created 24-mar-2013 04:59:22 p.m.
  */
 public class DataType extends Classifier {
-
-	private List<Property> ownedAttribute;
-	private List<Operation> ownedOperation;
-
-	public DataType(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-}//end DataType
+  
+  public List<Property> ownedAttribute;
+  public List<Operation> ownedOperation;
+  
+  public DataType() {
+    super();
+  }
+  
+}

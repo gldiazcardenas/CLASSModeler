@@ -1,4 +1,15 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Gabriel
@@ -6,29 +17,19 @@ package classmodeler.domain.uml;
  * @created 24-mar-2013 04:59:21 p.m.
  */
 public class Association extends Classifier implements IRelationship {
-
-	private boolean derived;
-	private List<Property> membersEnd;
-	private List<Property> ownedEnd;
-	private List<Property> navigableOwnedEnd;
-	private List<IType> endTypes;
-
-	public Association(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-	public IElement getOwner(){
-		return null;
-	}
-
-	public List<Comment> getOwnedComments(){
-		return null;
-	}
-
-	public List<IElement> getRelatedElements(){
-		return null;
-	}
-}//end Association
+  
+  public boolean derived;
+  public List<Property> membersEnd;
+  public List<Property> ownedEnd;
+  public List<Property> navigableOwnedEnd;
+  public List<IType> endTypes;
+  
+  public Association() {
+    super();
+  }
+  
+  public Set<IElement> getRelatedElements() {
+    return null;
+  }
+  
+}

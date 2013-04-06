@@ -11,17 +11,16 @@ package classmodeler.domain.uml;
 import java.util.Set;
 
 /**
- * This class represents a core UML object, 'Comment' is an annotation made over
- * a specific element of the UML objects.
+ * A comment gives the ability to attach various remarks to elements. A comment
+ * carries no semantic force, but may contain information that is useful to a
+ * modeler. A comment can be owned by any element.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
- * @version 1.0
- * @updated 24.03.2013 04:59:22 p.m.
  */
 public class Comment extends Element {
 
   private String body;
-  private Set<IElement> annotatedElement;
+  private Set<IElement> annotatedElements;
 
   public Comment() {
     super();
@@ -35,12 +34,12 @@ public class Comment extends Element {
     this.body = body;
   }
   
-  public Set<IElement> getAnnotatedElement() {
-    return annotatedElement;
+  public Set<IElement> getAnnotatedElements() {
+    return annotatedElements;
   }
   
-  public void setAnnotatedElement(Set<IElement> annotatedElement) {
-    this.annotatedElement = annotatedElement;
+  public void setAnnotatedElements(Set<IElement> annotatedElements) {
+    this.annotatedElements = annotatedElements;
   }
 
 }

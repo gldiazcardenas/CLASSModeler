@@ -1,28 +1,32 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml;
 
+import java.util.List;
+
 /**
- * @author Gabriel
- * @version 1.0
- * @created 24-mar-2013 04:59:25 p.m.
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
 public class Operation extends BehavioralFeature {
-
-	private boolean ordered;
-	private boolean query;
-	private boolean unique;
-	private int upper;
-	private int lower;
-	private List<Constraint> preConditions;
-	private List<Constraint> bodyConditions;
-	private List<Constraint> postCondition;
-	private List<Operation> redefinedOperations;
-	private Parameter ownedParameters;
-
-	public Operation(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-}//end Operation
+  
+  public boolean ordered;
+  public boolean query;
+  public boolean unique;
+  public int upper;
+  public int lower;
+  public List<Constraint> preConditions;
+  public List<Constraint> bodyConditions;
+  public List<Constraint> postCondition;
+  public List<Operation> redefinedOperations;
+  
+  public Operation() {
+    super();
+  }
+  
+}

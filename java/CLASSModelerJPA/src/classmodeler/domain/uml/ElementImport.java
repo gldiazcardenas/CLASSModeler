@@ -6,17 +6,14 @@ package classmodeler.domain.uml;
  * @created 24-mar-2013 04:59:22 p.m.
  */
 public class ElementImport extends DirectedRelationship {
-
-	private EVisibilityKind visibility;
-	private String alias;
-	private IPackagableElement importedElement;
-	private Namespace importingNamespace;
-
-	public ElementImport(){
-
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-}//end ElementImport
+  
+  public EVisibilityKind visibility;
+  public String alias;
+  public IPackageableElement importedElement;
+  public Namespace importingNamespace;
+  
+  public ElementImport() {
+    
+  }
+  
+}
