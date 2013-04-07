@@ -12,7 +12,7 @@ package classmodeler.domain.uml.kernel;
  * A type serves as a constraint on the range of values represented by a typed
  * element. Type is an abstract metaclass.
  * 
- * @author Gabri
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
 public interface IType extends IPackageableElement {
   
