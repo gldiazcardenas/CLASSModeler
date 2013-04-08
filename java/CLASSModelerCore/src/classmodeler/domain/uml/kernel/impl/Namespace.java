@@ -1,9 +1,11 @@
 package classmodeler.domain.uml.kernel.impl;
 
+import java.util.Collection;
 import java.util.Set;
 
 import classmodeler.domain.uml.kernel.INamedElement;
 import classmodeler.domain.uml.kernel.INamespace;
+import classmodeler.domain.uml.kernel.IPackageableElement;
 
 /**
  * <p>
@@ -33,61 +35,41 @@ import classmodeler.domain.uml.kernel.INamespace;
  */
 public abstract class Namespace extends NamedElement implements INamespace {
   
-  /*private List<ElementImport> elementImports;
-  private List<PackageImport> packageImports;
-  private List<Constraint> ownedRules;
-  */
-  
-  //private List<INamedElement> members;
-  //private List<NamedElement> ownedMembers;
+  private Set<ElementImport> elementImports;
+  private Set<PackageImport> packageImports;
+  private Set<Constraint> ownedRules;
+  private Collection<INamedElement> members;
+  private Collection<INamedElement> ownedMembers;
   
   public Namespace() {
     super();
   }
   
-  /*public List<ElementImport> getElementImports() {
+  public Set<ElementImport> getElementImports() {
     return elementImports;
   }
   
-  public void setElementImports(List<ElementImport> elementImports) {
+  public void setElementImports(Set<ElementImport> elementImports) {
     this.elementImports = elementImports;
   }
   
-  public List<PackageImport> getPackageImports() {
+  public Set<PackageImport> getPackageImports() {
     return packageImports;
   }
   
-  public void setPackageImports(List<PackageImport> packageImports) {
+  public void setPackageImports(Set<PackageImport> packageImports) {
     this.packageImports = packageImports;
   }
   
-  public List<Constraint> getOwnedRules() {
+  public Set<Constraint> getOwnedRules() {
     return ownedRules;
   }
   
-  public void setOwnedRules(List<Constraint> ownedRules) {
+  public void setOwnedRules(Set<Constraint> ownedRules) {
     this.ownedRules = ownedRules;
-  }*/
+  }
   
-  /**
-   * The query getNamesOfMember() gives a set of all of the names that a member
-   * would have in a Namespace. In general a member can have multiple names in a
-   * Namespace if it is imported more than once with different aliases. The
-   * query takes account of importing. It gives back the set of names that an
-   * element would have in an importing namespace, either because it is owned;
-   * or if not owned, then imported individually; or if not individually, then
-   * from a package. Namespace::getNamesOfMember(element: NamedElement):
-   * Set(String); getNamesOfMember = if self.ownedMember ->includes(element)
-   * then Set{}->include(element.name) else let elementImports: ElementImport =
-   * self.elementImport->select(ei | ei.importedElement = element) in if
-   * elementImports->notEmpty() then elementImports->collect(el | el.getName())
-   * else self.packageImport->select(pi |
-   * pi.importedPackage.visibleMembers()->includes(element))-> collect(pi |
-   * pi.importedPackage.getNamesOfMember(element)) endif endif
-   * 
-   * @param namedElement
-   * @return
-   */
+  @Override
   public Set<String> getNamesOfMember (INamedElement namedElement) {
     if (namedElement != null) {
       return null;
@@ -95,16 +77,39 @@ public abstract class Namespace extends NamedElement implements INamespace {
     return null;
   }
   
+  @Override
+  public boolean membersAreDistinguishable () {
+    return false;
+  }
+  
+  @Override
+  public Set<IPackageableElement> importedMembers(Set<IPackageableElement> imps) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
   /**
-   * The Boolean query membersAreDistinguishable() determines whether all of the
-   * namespace’s members are distinguishable within it.
-   * Namespace::membersAreDistinguishable() : Boolean; membersAreDistinguishable
-   * = self.member->forAll( memb | self.member->excluding(memb)->forAll(other |
-   * memb.isDistinguishableFrom(other, self)))
+   * The importedMember property is derived from the ElementImports and the
+   * PackageImports. importedMember = self.elementImport.importedElement.asSet()->
+   *                                  union(self.packageImport.importedPackage->collect(p | p.visibleMembers()))
    * 
    * @return
    */
-  public boolean membersAreDistinguishable () {
-    return false;
+  public Set<IPackageableElement> getImportedMembers () {
+    return null;
+  }
+  
+  @Override
+  public Set<IPackageableElement> excludeCollisions(Set<IPackageableElement> imps) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
+  public Collection<INamedElement> getMembers() {
+    return members;
+  }
+  
+  public Collection<INamedElement> getOwnedMembers() {
+    return ownedMembers;
   }
 }

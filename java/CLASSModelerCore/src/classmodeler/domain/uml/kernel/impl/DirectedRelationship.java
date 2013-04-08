@@ -8,6 +8,7 @@
 
 package classmodeler.domain.uml.kernel.impl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import classmodeler.domain.uml.kernel.IElement;
@@ -24,11 +25,21 @@ public abstract class DirectedRelationship extends Element implements IRelations
   private Set<IElement> target;
 
   public DirectedRelationship() {
-    // Empty constructor
+    super();
   }
 
   public Set<IElement> getRelatedElements() {
-    return null;
+    Set<IElement> relatedElements = new HashSet<IElement>();
+    
+    if (source != null) {
+      relatedElements.addAll(source);
+    }
+    
+    if (target != null) {
+      relatedElements.addAll(target);
+    }
+    
+    return relatedElements;
   }
   
   public Set<IElement> getSource() {

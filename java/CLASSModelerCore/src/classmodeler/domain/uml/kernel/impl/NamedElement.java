@@ -25,11 +25,12 @@ import classmodeler.domain.uml.kernel.INamespace;
  * @version 1.0
  */
 public abstract class NamedElement extends Element implements INamedElement {
+  
+  public static final String DEFAULT_SEPARATOR = "::";
 
   private String name;
-  private String qualifiedName;
   private INamespace namespace;
-  private EVisibilityKind visibilityKind;
+  private EVisibilityKind visibility;
 
   public NamedElement() {
     super();
@@ -47,18 +48,20 @@ public abstract class NamedElement extends Element implements INamedElement {
 
   @Override
   public String getQualifiedName() {
-    return qualifiedName;
+    return "";
   }
 
   @Override
   public String getSeparator() {
-    return "::";
+    return DEFAULT_SEPARATOR;
   }
   
+  @Override
   public EVisibilityKind getVisibility() {
-    return visibilityKind;
+    return visibility;
   }
 
+  @Override
   public List<INamespace> getAllNamespaces() {
     return null;
   }

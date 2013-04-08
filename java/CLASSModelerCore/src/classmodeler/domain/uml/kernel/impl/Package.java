@@ -32,10 +32,24 @@ public class Package extends Namespace implements IPackageableElement {
    * must comply with those syntax rules.
    */
   private String URI;
-  //public List<PackageMerge> packagesMerged;
+  
+  /**
+   * Specifies the packageable elements that are owned by this Package. Subsets
+   * Namespace::ownedMember.
+   */
   public List<IPackageableElement> packagedElement;
-  //public List<IType> ownedTypes;
-  public List<Package> nestedPackages;
+  
+  /**
+   * References the PackageMerges that are owned by this Package. Subsets
+   * Element::ownedElement
+   */
+  public List<PackageMerge> packagesMerged;
+  
+  /**
+   * References the Package that owns this Package. Subsets
+   * NamedElement::namespace
+   */
+  public Package nestingPackage;
   
   public Package() {
     super();

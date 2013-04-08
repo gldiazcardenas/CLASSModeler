@@ -8,7 +8,6 @@
 
 package classmodeler.domain.user;
 
-import java.io.Serializable;
 import java.util.Date;
 
 
@@ -18,10 +17,8 @@ import java.util.Date;
  * 
  * @author Gabriel Leonardo Diaz, 25.12.2012.
  */
-public class User implements Serializable {
+public class User implements IUser {
   
-  private static final long serialVersionUID = 1L;
-
   /**
    * The key of the user, this is an auto-numeric value given by a database sequence.
    */

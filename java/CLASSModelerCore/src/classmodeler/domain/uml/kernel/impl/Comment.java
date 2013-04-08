@@ -29,6 +29,7 @@ public class Comment extends Element implements IComment {
     super();
   }
 
+  @Override
   public String getBody() {
     return body;
   }
@@ -37,6 +38,7 @@ public class Comment extends Element implements IComment {
     this.body = body;
   }
   
+  @Override
   public Set<IElement> getAnnotatedElements() {
     return annotatedElements;
   }

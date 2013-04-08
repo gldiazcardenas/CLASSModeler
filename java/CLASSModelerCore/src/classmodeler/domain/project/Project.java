@@ -18,8 +18,6 @@ import classmodeler.domain.user.User;
  * the diagrams in a logical and customizable structure for the user.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
- * @version 1.0
- * @updated 24.03.2013 04:59:26 p.m.
  */
 public class Project {
 

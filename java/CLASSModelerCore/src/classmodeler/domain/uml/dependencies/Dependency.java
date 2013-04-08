@@ -1,3 +1,11 @@
+/****************************************************
+ * 
+ * Universidad Francisco de Paula Santander UFPS
+ * Cúcuta, Colombia
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ ****************************************************/
+
 package classmodeler.domain.uml.dependencies;
 
 import java.util.List;
@@ -9,26 +17,31 @@ import classmodeler.domain.uml.kernel.IPackageableElement;
 import classmodeler.domain.uml.kernel.impl.DirectedRelationship;
 
 /**
- * @author Gabriel
- * @version 1.0
- * @created 24-mar-2013 04:59:22 p.m.
+ * A dependency is a relationship that signifies that a single or a set of model
+ * elements requires other model elements for their specification or
+ * implementation. This means that the complete semantics of the depending
+ * elements is either semantically or structurally dependent on the definition
+ * of the supplier element(s).
+ * 
+ * @author Gabriel Leonardo Diaz, 24.03.2013.
  */
 public class Dependency extends DirectedRelationship implements IPackageableElement {
+  
+  private String name;
+  private EVisibilityKind visibilityKind = EVisibilityKind.PUBLIC;
 
   public Dependency() {
-    
+    super();
   }
 
   @Override
   public String getName() {
-    // TODO Auto-generated method stub
-    return null;
+    return name;
   }
 
   @Override
   public void setName(String name) {
-    // TODO Auto-generated method stub
-    
+    this.name = name;
   }
 
   @Override
@@ -57,7 +70,10 @@ public class Dependency extends DirectedRelationship implements IPackageableElem
 
   @Override
   public EVisibilityKind getVisibility() {
-    // TODO Auto-generated method stub
-    return null;
+    return visibilityKind;
+  }
+  
+  public void setVisibilityKind(EVisibilityKind visibilityKind) {
+    this.visibilityKind = visibilityKind;
   }
 }

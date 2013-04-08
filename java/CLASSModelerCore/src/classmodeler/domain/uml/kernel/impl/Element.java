@@ -41,18 +41,22 @@ public abstract class Element implements IElement {
     this.key = key;
   }
   
+  @Override
   public IElement getOwner() {
     return owner;
   }
   
+  @Override
   public void setOwner(IElement owner) {
     this.owner = owner;
   }
 
+  @Override
   public boolean mustBeOwned() {
     return true;
   }
 
+  @Override
   public Set<IComment> getOwnedComments() {
     return ownedComments;
   }
