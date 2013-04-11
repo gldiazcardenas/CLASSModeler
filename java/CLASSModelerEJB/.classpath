@@ -27,6 +27,5 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/CLASSModelerCore"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

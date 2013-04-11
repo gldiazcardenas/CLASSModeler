@@ -10,11 +10,13 @@ package classmodeler.service.implementation;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
-
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
+import classmodeler.service.util.CollectionUtils;
+import classmodeler.service.util.GenericUtils;
 
 /**
  * Class that implements the operations (CRUD) to handle users.
@@ -23,13 +25,19 @@ import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
  */
 public @Stateless class UserServiceBean implements UserService {
   
-  @PersistenceUnit(unitName="CLASSModelerPU")
+  @PersistenceContext(unitName="CLASSModelerPU")
   private EntityManager em;
   
   @Override
-  public boolean existsUser(String email) {
-    // TODO Auto-generated method stub
-    return false;
+  public boolean existsUser(String nickname) {
+    if (GenericUtils.isEmptyString(nickname)) {
+      return false;
+    }
+    
+    Query query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.email) = :userEmail");
+    query.setParameter("userEmail", nickname.toLowerCase());
+    
+    return !CollectionUtils.isEmptyCollection(query.getResultList());
   }
 
   @Override

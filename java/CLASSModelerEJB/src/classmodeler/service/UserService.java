@@ -9,7 +9,7 @@ package classmodeler.service;
 
 import javax.ejb.Local;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
+import classmodeler.domain.user.User;
 
 /**
  * Service definition that contains all the operations to handle users in the
@@ -23,13 +23,13 @@ public interface UserService {
   /**
    * Service method that checks if the given user email already exists.
    * 
-   * @param email
-   *          The user email to check.
+   * @param nickname
+   *          The nickname of the user to check.
    * @return A <code>boolean</code> value indicating if the user email exists or
    *         not.
    * @author Gabriel Leonardo Diaz, 02.03.2013.
    */
-  public boolean existsUser (String email);
+  public boolean existsUser (String nickname);
   
   /**
    * Activates the user account of the given user.

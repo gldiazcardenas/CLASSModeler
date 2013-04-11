@@ -13,7 +13,7 @@ package classmodeler.service.exception;
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2013.
  */
-public class ServiceException {
+public abstract class ServiceException {
   
   public ServiceException() {
     // Empty constructor
