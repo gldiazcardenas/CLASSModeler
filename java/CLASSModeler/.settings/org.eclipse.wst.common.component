@@ -9,7 +9,7 @@
             <dependent-object/>
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="CLASSModelerJPA.jar" deploy-path="/lib" handle="module:/resource/CLASSModelerJPA/CLASSModelerJPA">
+        <dependent-module archiveName="CLASSModelerJPA.jar" deploy-path="/" handle="module:/resource/CLASSModelerJPA/CLASSModelerJPA">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

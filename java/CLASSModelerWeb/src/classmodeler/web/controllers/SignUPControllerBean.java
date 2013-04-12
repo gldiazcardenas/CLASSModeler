@@ -10,11 +10,14 @@ package classmodeler.web.controllers;
 
 import java.util.Date;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 
 import classmodeler.domain.user.EGender;
+import classmodeler.domain.user.User;
+import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFContextUtil;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -33,12 +36,17 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
   private static final long serialVersionUID = 1L;
   
+  // Fields
   private String firstName;
   private String lastName;
   private String email;
   private String password;
   private Date birthdate;
   private EGender gender;
+  
+  // Services
+  @EJB
+  private UserService userService;
 
   public SignUPControllerBean() {
     super();
@@ -108,6 +116,14 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     if (isAllValid()) {
       return;
     }
+    
+    User newUser = createUserFromFields();
+    try {
+      userService.insertUser(newUser);
+    }
+    catch (Exception e) {
+      // TODO
+    }
   }
 
   @Override
@@ -135,6 +151,16 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     }
     
     return valid;
+  }
+  
+  private User createUserFromFields () {
+    User newUser = new User();
+    newUser.setFirstName(firstName);
+    newUser.setLastName(lastName);
+    newUser.setBirthdate(birthdate);
+    newUser.setGender(gender);
+    newUser.setPassword(password);
+    return newUser;
   }
   
 }

@@ -15,29 +15,34 @@ package classmodeler.domain.user;
  * @author Gabriel Leonardo Diaz, 07.04.2013.
  */
 public class Guest implements IUser {
+  
+  public static final String GUEST_NAME      = "GUEST_NAME";
+  public static final String GUEST_PASSWORD  = "GUEST_PASSWORD";
+  public static final String GUEST_NICK_NAME = "GUEST_NICK_NAME";
+  public static final String GUEST_AVATAR     = "GUEST_AVATAR";
 
   @Override
   public String getName() {
-    // TODO Auto-generated method stub
-    return null;
+    return GUEST_NAME;
   }
 
   @Override
   public String getPassword() {
-    // TODO Auto-generated method stub
-    return null;
+    return GUEST_PASSWORD;
   }
 
   @Override
   public String getNickname() {
-    // TODO Auto-generated method stub
-    return null;
+    return GUEST_NICK_NAME;
   }
 
   @Override
-  public String getPhoto() {
-    // TODO Auto-generated method stub
-    return null;
+  public String getAvatar() {
+    return GUEST_AVATAR;
   }
   
+  @Override
+  public boolean isRegisteredUser() {
+    return false;
+  }
 }

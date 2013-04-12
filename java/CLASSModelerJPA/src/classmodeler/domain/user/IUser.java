@@ -37,9 +37,17 @@ public interface IUser {
   public String getNickname();
   
   /**
-   * Gets the URL of the photo of the user.
+   * Gets the URL of the avatar of the user.
    * 
-   * @return The photo of the user.
+   * @return The avatar of the user.
    */
-  public String getPhoto();
+  public String getAvatar();
+  
+  /**
+   * The query determines if the user is registered in the system, or he is a
+   * guest.
+   * 
+   * @return A boolean value depending on the user implementation.
+   */
+  public boolean isRegisteredUser();
 }

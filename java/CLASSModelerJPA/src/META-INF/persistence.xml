@@ -6,6 +6,7 @@
              
     <persistence-unit name="CLASSModelerPU">
         <jta-data-source>jdbc/CLASSModelerDS</jta-data-source>
+        <class>classmodeler.domain.email.EmailVerification</class>
         
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>

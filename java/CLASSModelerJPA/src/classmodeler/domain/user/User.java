@@ -89,12 +89,14 @@ public class User implements Serializable, IUser {
   /**
    * The photo of the person owner of the user account.
    */
-  @Column(name = "user_photo", length = 255)
-  private String photo;
+  @Column(name = "user_avatar", length = 255)
+  private String avatar;
   
   public User() {
     super();
   }
+  
+  
   
   public int getKey() {
     return this.key;
@@ -170,12 +172,12 @@ public class User implements Serializable, IUser {
   }
   
   @Override
-  public String getPhoto() {
-    return this.photo;
+  public String getAvatar() {
+    return this.avatar;
   }
   
-  public void setPhoto(String photo) {
-    this.photo = photo;
+  public void setPhoto(String avatar) {
+    this.avatar = avatar;
   }
   
   @Override
@@ -196,6 +198,19 @@ public class User implements Serializable, IUser {
   @Override
   public String getNickname() {
     return email;
+  }
+  
+  @Override
+  public boolean isRegisteredUser() {
+    return true;
+  }
+  
+  public boolean isActivatedAccount () {
+    return accountStatus == EUserAccountStatus.ACTIVATED;
+  }
+  
+  public boolean isDeactivatedAccount () {
+    return accountStatus == EUserAccountStatus.DEACTIVATED;
   }
   
 }

@@ -50,7 +50,7 @@ public class ProjectSharing implements Serializable {
   @Column(name="project_sharing_comment")
   private String comment;
   
-  @Column(name="project_sharing_privilege_key", nullable=false)
+  @Column(name="project_sharing_privilege", nullable=false)
   private EProjectPrivilege privilege;
   
   // UNI-Directional many-to-one association to Project
