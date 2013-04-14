@@ -9,7 +9,10 @@ package classmodeler.service;
 
 import javax.ejb.Local;
 
+import classmodeler.domain.user.Guest;
+import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.service.exception.InactivatedUserAccountException;
 
 /**
  * Service definition that contains all the operations to handle users in the
@@ -30,6 +33,22 @@ public interface UserService {
    * @author Gabriel Leonardo Diaz, 02.03.2013.
    */
   public boolean existsUser (String nickname);
+  
+  /**
+   * Logs in the user represented by the given credentials in the system. This
+   * also allows to log in as a invited user ({@link Guest}), in that case the
+   * nickname should be equal to {@link Guest#GUEST_NICK_NAME} and the password
+   * equal to {@link Guest#GUEST_PASSWORD}.
+   * 
+   * @param nickname
+   *          The user nickname.
+   * @param password
+   *          The use password.
+   * @throws InactivatedUserAccountException
+   *           When the user is found but the account has not been activated.
+   * @return A user bean or null if no one user is found.
+   */
+  public IUser logIn (String nickname, String password) throws InactivatedUserAccountException;
   
   /**
    * Activates the user account of the given user.

@@ -8,31 +8,37 @@
  * @author: Gabriel Leonardo Diaz, 31.01.2013.
  * 
  ******************************************************************************/
+
+mxBasePath = '../../resources';
+mxImageBasePath = '../../resources/images';
+
 /**
- * Base resources path configuration
+ * Class that defines the editor.
  */
+function mxEditorUFPS () {
+   // Checking the browser used
+  if (!mxClient.isBrowserSupported()) {
+    mxUtils.error('Browser is not supported!', 200, false);
+    return;
+  }
+  
+  // Creates the editor by loading the specified configuration file
+  var node = mxUtils.load('../../resources/config/mxUFPSModeler.xml').getDocumentElement();
+  var editor = new mxEditor(node);
+  
+  // Sets the graph container
+  //editor.setGraphContainer(document.getElementById("graph"));
 
+  // Sets the image base path to the popUp handler
+  editor.popupHandler.imageBasePath = mxClient.imageBasePath;
+  editor.toolbar.imageBasePath = mxClient.imageBasePath;
+  
+  return editor;
+}
 
-function mxEditorUFPS (container) {
-    try {
-      // Checking the browser used
-      if (!mxClient.isBrowserSupported()) {
-        mxUtils.error('Browser is not supported!', 200, false);
-        return;
-      }
-      
-      // Creating the editor and returning it
-      var node = mxUtils.load('../../resources/config/mxEditorUFPS.xml').getDocumentElement();
-      var editor = new mxEditor(node);
-      
-      // Configuring the editor
-      editor.setGraphContainer(container);
-      editor.popupHandler.imageBasePath = mxClient.imageBasePath;
-      
-      return editor;
-    }
-    catch (e) {
-      mxUtils.alert('Cannot start application: ' + e.message);
-      throw e;
-    }
+/**
+ * Method that initializes the editor component.
+ */
+function onInit () {
+  
 }

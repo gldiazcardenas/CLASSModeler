@@ -1,22 +1,21 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
                 
-    <p:dashboard id="right-dashboard" model="#{sideBarPanels.rightDashboard}">
-        <p:panel id="project" header="#{msgs.PROJECT_BROWSER_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-        
-        </p:panel>
-        
-        <p:panel id="properties" header="#{msgs.PROPERTIES_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-        
-        </p:panel>
-        
-        <p:panel id="ratings" header="#{msgs.SHARING_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-        
-        </p:panel>
-        
-        <p:panel id="sharing" header="#{msgs.RATINGS_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-        
-        </p:panel>
-    </p:dashboard>
+    <pe:layoutPane position="north" minSize="250" maxSize="350">
+        <f:facet name="header"><h:outputText value="#{msgs.PROJECT_BROWSER_PANEL_LABEL}" /></f:facet>
+        Browser Panel
+    </pe:layoutPane>
+    
+    <pe:layoutPane position="center" minSize="100" maxSize="300">
+        <f:facet name="header"><h:outputText value="#{msgs.PROPERTIES_PANEL_LABEL}" /></f:facet>
+        Properties Panel
+    </pe:layoutPane>
+    
+    <pe:layoutPane position="south" minSize="100" maxSize="200">
+        <f:facet name="header"><h:outputText value="#{msgs.SHARING_PANEL_LABEL}" /></f:facet>
+        Sharing Panel
+    </pe:layoutPane>
+    
 </ui:composition>

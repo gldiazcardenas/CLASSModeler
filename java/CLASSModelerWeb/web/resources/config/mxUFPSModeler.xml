@@ -58,10 +58,10 @@
   
   <!-- Configures the Components ToolBar -->
   <mxDefaultToolbar as="toolbar">
-    <add as="connect" mode="connect" icon="/UFPS-Modeler/resources/images/cut.png"/>
-    <add as="Text" template="text" icon="/UFPS-Modeler/resources/images/paste.png"/>
-    <add as="Container" template="container" icon="/UFPS-Modeler/resources/images/cut.png"/>
-    <add as="Rectangle" template="rectangle" icon="/UFPS-Modeler/resources/images/paste.png"/>
+    <add as="connect" mode="connect" icon="/CLASSModeler/resources/images/cut.png"/>
+    <add as="Text" template="text" icon="/CLASSModeler/resources/images/paste.png"/>
+    <add as="Container" template="container" icon="/CLASSModeler/resources/images/cut.png"/>
+    <add as="Rectangle" template="rectangle" icon="/CLASSModeler/resources/images/paste.png"/>
   </mxDefaultToolbar>
   
   <!-- Defines the Graph used to build the diagram in the editor  -->

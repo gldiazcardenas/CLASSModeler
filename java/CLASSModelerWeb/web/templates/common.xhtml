@@ -5,10 +5,13 @@
 <h:head>
     <!-- Other stuff -->
     <meta charset="ISO-8859-1"/>
-    <title><ui:insert name="title"/></title>
+    <title><h:outputText value="#{title}" /></title>
     
     <!-- Scripts -->
     <ui:insert name="script"/>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/CLASSModeler/resources/images/favicon.ico" />
     
     <!-- Style-sheets -->
     <h:outputStylesheet name="layoutCommon.css" library="css"/>

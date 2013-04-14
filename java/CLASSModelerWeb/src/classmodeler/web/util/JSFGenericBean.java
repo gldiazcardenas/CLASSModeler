@@ -10,6 +10,7 @@ package classmodeler.web.util;
 
 import java.io.Serializable;
 
+import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
@@ -43,6 +44,23 @@ public class JSFGenericBean implements JSFMessageBean, Serializable {
   public void addFatalMessage(String message, String details) {
     addMessage(FacesMessage.SEVERITY_FATAL, message, details);
   }
+  
+  /**
+   * Gets a JSF bean by its name.
+   * 
+   * @param beanName
+   *          The name of the bean to look for.
+   * @param clazz
+   *          The class of the bean.
+   * @return A JSF bean object.
+   */
+  @SuppressWarnings("unchecked")
+  public <T> T getJSFBean(final String beanName, final Class<T> clazz) {
+    ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+    return (T) FacesContext.getCurrentInstance().getApplication()
+                                                .getELResolver()
+                                                .getValue(elContext, null, beanName);
+}
   
   /**
    * Generic method that adds messages to the JSF context with the given

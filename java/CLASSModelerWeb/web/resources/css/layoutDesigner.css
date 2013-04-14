@@ -15,28 +15,10 @@
 }
 
 #center-layout .pe-layout-pane-content {
-    padding: 0;
+    padding: 4px;
     overflow: hidden;
 }
 
 #components img {
     display: block;
-}
-
-#sidebarRight {
-    height: 100px;
-    border: none;
-}
-
-#sidebarLeft {
-    height: 100px;
-    border: none;
-}
-
-.ui-dashboard .ui-dashboard-column {
-    float: none;
-}
-
-.ui-dashboard .ui-panel {
-    margin-bottom: 2px;
 }

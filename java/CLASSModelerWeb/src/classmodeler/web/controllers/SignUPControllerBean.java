@@ -11,11 +11,12 @@ package classmodeler.web.controllers;
 import java.util.Date;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
-import javax.inject.Named;
 
 import classmodeler.domain.user.EGender;
+import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
@@ -30,8 +31,8 @@ import classmodeler.web.util.JSFGenericBean;
  * 
  * @author Gabriel Leonardo Diaz, 23.02.2013.
  */
-@Named("signUPController")
-@SessionScoped
+@ManagedBean (name="signUPController")
+@ViewScoped
 public class SignUPControllerBean extends JSFGenericBean implements JSFFormControllerBean {
 
   private static final long serialVersionUID = 1L;
@@ -100,12 +101,16 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     this.gender = gender;
   }
   
+  /**
+   * Gets the items for the gender select radio GUI component.
+   * @return An array with the items of the select radio
+   */
   public SelectItem[] getGendersForSelectOneRadio() {
     SelectItem[] items = new SelectItem[EGender.values().length];
 
     int i = 0;
     for (EGender g : EGender.values()) {
-      items[i++] = new SelectItem(g, g.toString());
+      items[i++] = new SelectItem(g, JSFContextUtil.getLocalizedMessage(g.getName()));
     }
     
     return items;
@@ -113,16 +118,18 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
   @Override
   public void actionPerformed() {
-    if (isAllValid()) {
+    if (!isAllValid()) {
       return;
     }
     
     User newUser = createUserFromFields();
+    
     try {
       userService.insertUser(newUser);
     }
     catch (Exception e) {
-      // TODO
+      addErrorMessage("Unexpected error: " + e.getMessage(), null);
+      return;
     }
   }
 
@@ -160,6 +167,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     newUser.setBirthdate(birthdate);
     newUser.setGender(gender);
     newUser.setPassword(password);
+    newUser.setAccountStatus(EUserAccountStatus.INACTIVATED);
     return newUser;
   }
   

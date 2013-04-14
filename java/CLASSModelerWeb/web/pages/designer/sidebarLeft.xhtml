@@ -1,19 +1,18 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:p="http://primefaces.org/ui">
-
-    <p:dashboard id="left-dashboard" model="#{sideBarPanels.leftDashboard}">
-        <p:panel id="components" header="#{msgs.COMPONENTS_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-            
-        </p:panel>
-        
-        <p:panel id="zoom" header="#{msgs.ZOOM_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-            
-        </p:panel>
-        
-        <p:panel id="output" header="#{msgs.OUTPUT_PANEL_LABEL}" closable="true" closeTitle="#{msgs.CLOSE_TOOLTIP}" toggleTitle="#{msgs.MINIMIZE_TOOLTIP}" toggleable="true">
-            
-        </p:panel>
-    </p:dashboard>
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    <pe:layoutPane position="center">
+        <f:facet name="header"><h:outputText value="#{msgs.COMPONENTS_PANEL_LABEL}" /></f:facet>
+        <h:panelGroup id="components">
+            <!-- mxGraph library automatically puts the components inside of this tag -->
+        </h:panelGroup>
+    </pe:layoutPane>
+    
+    <pe:layoutPane position="south" minSize="150" maxSize="150">
+        <f:facet name="header"><h:outputText value="#{msgs.ZOOM_PANEL_LABEL}" /></f:facet>
+        Zoom Panel
+    </pe:layoutPane>
     
 </ui:composition>

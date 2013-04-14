@@ -176,7 +176,7 @@ public class User implements Serializable, IUser {
     return this.avatar;
   }
   
-  public void setPhoto(String avatar) {
+  public void setAvatar(String avatar) {
     this.avatar = avatar;
   }
   

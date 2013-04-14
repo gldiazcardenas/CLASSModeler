@@ -4,7 +4,7 @@
                 xmlns:p="http://primefaces.org/ui" 
                 template="/templates/portal.xhtml">
                 
-<ui:define name="title"><h:outputText value="#{msgs.DESIGNER_PAGE_BASE_TITLE}" /></ui:define>
+<ui:param name="title" value="#{msgs.DASHBOARD_PAGE_BASE_TITLE}"/>
 
 <ui:define name="userSection"><ui:include src="/pages/dashboard/userSection.xhtml"/></ui:define>
 
