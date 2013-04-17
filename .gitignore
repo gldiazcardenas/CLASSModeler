@@ -9,3 +9,7 @@ java/CLASSModelerWeb/build
 java/CLASSModelerEJB/build
 java/CLASSModelerJPA/build
 resources/mxgraph
+
+# Ignored Files #
+resources/emf-xsd-Update-2.9.0M6.zip
+resources/mdt-uml2-Update-4.1.0M6.zip

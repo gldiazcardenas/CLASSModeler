@@ -18,4 +18,16 @@ public class InactivatedUserAccountException extends ServiceException {
 
   private static final long serialVersionUID = 1L;
   
+  public InactivatedUserAccountException() {
+    super();
+  }
+  
+  public InactivatedUserAccountException (String message) {
+    super(message);
+  }
+  
+  public InactivatedUserAccountException (String message, Throwable cause) {
+    super (message, cause);
+  }
+  
 }

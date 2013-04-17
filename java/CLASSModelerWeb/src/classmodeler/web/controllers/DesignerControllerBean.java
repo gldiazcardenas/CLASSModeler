@@ -11,7 +11,6 @@ package classmodeler.web.controllers;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-import classmodeler.domain.user.IUser;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -26,14 +25,8 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
-  private IUser loggedUser;
-  
   public DesignerControllerBean() {
     super();
-  }
-  
-  public IUser getLoggedUser() {
-    return loggedUser;
   }
   
 }

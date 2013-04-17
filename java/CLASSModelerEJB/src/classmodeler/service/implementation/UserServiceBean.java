@@ -50,7 +50,7 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     // TODO Auto-generated method stub
-    return null;
+    throw new InactivatedUserAccountException();
   }
 
   @Override

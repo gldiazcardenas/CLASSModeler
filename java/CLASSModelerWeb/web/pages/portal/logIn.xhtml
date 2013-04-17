@@ -4,11 +4,11 @@
                 
   <h:form id="loginForm" style="float: right;">
     <h:panelGrid columns="3" cellpadding="0" cellspacing="1">
-        <p:inputText id="email" required="true" />
-        <p:password id="password" required="true" />
-        <p:commandButton ajax="false" value="#{msgs.LOGIN_FORM_BUTTON_LABEL}" action="pages/dashboard/dashboard.xhtml" />
+        <p:inputText id="nickname" value="#{logInController.nickname}" required="true" />
+        <p:password id="password" value="#{logInController.password}" required="true" />
+        <p:commandButton ajax="false" value="#{msgs.LOGIN_FORM_BUTTON_LABEL}" action="#{logInController.logIn()}" />
         
-        <p:watermark for="email" value="#{msgs.LOGIN_FORM_EMAIL_FIELD}" />
+        <p:watermark for="nickname" value="#{msgs.LOGIN_FORM_EMAIL_FIELD}" />
         <p:commandLink value="#{msgs.LOGIN_FORM_FORGOT_PASSWORD_LABEL}" />
         <p:watermark for="password" value="#{msgs.LOGIN_FORM_PASSWORD_FIELD}" />
     </h:panelGrid>

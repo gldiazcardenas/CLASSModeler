@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
@@ -50,8 +51,9 @@ public class SessionControllerBean extends JSFGenericBean {
   
   public String getUserLoggedName () {
     if (loggedUser == null) {
-      FacesContext.getCurrentInstance().responseComplete();
+      
       try {
+        FacesContext.getCurrentInstance().responseComplete();
         FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
       }
       catch (IOException e) {
@@ -66,6 +68,10 @@ public class SessionControllerBean extends JSFGenericBean {
     return loggedUser.getName();
   }
   
+  public boolean isGuestUser () {
+    return loggedUser instanceof Guest;
+  }
+  
   /**
    * Logs in the system the user represented by the given credentials.
    * 
@@ -73,28 +79,22 @@ public class SessionControllerBean extends JSFGenericBean {
    *          The user nickname.
    * @param password
    *          The password of the system.
+   * @throws InactivatedUserAccountException 
    */
-  public void login (String nickname, String password) {
-    if (Guest.GUEST_NICK_NAME.equals(nickname) && Guest.GUEST_PASSWORD.equals(password)) {
-      loggedUser = new Guest();
-    }
-    else {
-      try {
-        loggedUser = userServiceBean.logIn(nickname, password);
-      }
-      catch (InactivatedUserAccountException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
+  public void login (String nickname, String password) throws InactivatedUserAccountException {
+    loggedUser = userServiceBean.logIn(nickname, password);
   }
   
   /**
    * Ends the current user session, this clears the local information and starts
    * saving the GUI preferences.
    */
-  public void logout () {
-    // TODO implement this method.
+  public String logout () {
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+    if (session != null) {
+      session.invalidate();
+    }
+    return "index.xhtml";
   }
   
 }
