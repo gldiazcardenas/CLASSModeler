@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User implements Serializable, IUser {
+public class User implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
@@ -96,8 +96,6 @@ public class User implements Serializable, IUser {
     super();
   }
   
-  
-  
   public int getKey() {
     return this.key;
   }
@@ -162,7 +160,6 @@ public class User implements Serializable, IUser {
     this.lastName = lastName;
   }
   
-  @Override
   public String getPassword() {
     return this.password;
   }
@@ -171,7 +168,6 @@ public class User implements Serializable, IUser {
     this.password = password;
   }
   
-  @Override
   public String getAvatar() {
     return this.avatar;
   }
@@ -179,38 +175,20 @@ public class User implements Serializable, IUser {
   public void setAvatar(String avatar) {
     this.avatar = avatar;
   }
-  
+  /*
   @Override
   public String getName() {
-    if (firstName != null && lastName != null) {
-      return firstName + " " + lastName;
-    }
-    else if (firstName != null) {
-      return firstName;
-    }
-    else if (lastName != null) {
-      return lastName;
-    }
-    
     return "";
   }
   
   @Override
   public String getNickname() {
-    return email;
+    return "";
   }
   
   @Override
   public boolean isRegisteredUser() {
     return true;
-  }
-  
-  public boolean isActivatedAccount () {
-    return accountStatus == EUserAccountStatus.ACTIVATED;
-  }
-  
-  public boolean isDeactivatedAccount () {
-    return accountStatus == EUserAccountStatus.DEACTIVATED;
-  }
+  }*/
   
 }

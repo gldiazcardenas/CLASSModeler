@@ -5,7 +5,6 @@
 	<projects>
 		<project>CLASSModelerEJB</project>
 		<project>CLASSModelerWeb</project>
-		<project>CLASSModelerJPA</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

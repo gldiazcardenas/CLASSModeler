@@ -8,8 +8,8 @@
 
 package classmodeler.web.controllers;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import classmodeler.web.util.JSFGenericBean;
 
@@ -19,7 +19,7 @@ import classmodeler.web.util.JSFGenericBean;
  * 
  * @author Gabriel Leonardo Diaz, 14.04.2013.
  */
-@Named("designerController")
+@ManagedBean(name="designerController")
 @SessionScoped
 public class DesignerControllerBean extends JSFGenericBean {
 
