@@ -1,21 +1,35 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions">
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
                 
-    <pe:layoutPane position="north" minSize="250" maxSize="350">
+    <pe:layoutPane position="center">
         <f:facet name="header"><h:outputText value="#{msgs.PROJECT_BROWSER_PANEL_LABEL}" /></f:facet>
-        <!-- TODO -->
+        <p:tree id="projectTree" value="#{designerController.projectTree}" var="node">
+            <p:treeNode>
+                <h:outputText value="#{node}" />
+            </p:treeNode>
+        </p:tree>
     </pe:layoutPane>
     
-    <pe:layoutPane position="center" minSize="100" maxSize="300">
+    <pe:layoutPane position="south" size="250" minSize="100" maxSize="350">
         <f:facet name="header"><h:outputText value="#{msgs.PROPERTIES_PANEL_LABEL}" /></f:facet>
-        <!-- TODO -->
-    </pe:layoutPane>
-    
-    <pe:layoutPane position="south" minSize="100" maxSize="200">
-        <f:facet name="header"><h:outputText value="#{msgs.SHARING_PANEL_LABEL}" /></f:facet>
-        <!-- TODO -->
+        <h:form prependId="false">
+            <p:dataTable id="propertyTable" value="#{designerController.propertyValues}" var="property" scrollable="true">
+                <!-- Property name -->
+                <p:column>
+                    <h:outputText value="#{property.name}" />
+                </p:column>
+                
+                <!-- Property value -->
+                <p:column>
+                    <p:inplace id="propertyValueEditor" editor="true">
+                        <p:inputText value="#{property.value}" />
+                    </p:inplace>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </pe:layoutPane>
     
 </ui:composition>

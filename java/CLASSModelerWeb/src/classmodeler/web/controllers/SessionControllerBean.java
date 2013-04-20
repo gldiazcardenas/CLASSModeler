@@ -11,16 +11,16 @@ package classmodeler.web.controllers;
 import java.io.IOException;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InactivatedUserAccountException;
-import classmodeler.web.util.JSFContextUtil;
+import classmodeler.web.resources.JSFMessageBundle;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -28,7 +28,7 @@ import classmodeler.web.util.JSFGenericBean;
  *
  * @author Gabriel Leonardo Diaz, 14.04.2013.
  */
-@Named("sessionController")
+@ManagedBean(name="sessionController")
 @SessionScoped
 public class SessionControllerBean extends JSFGenericBean {
   
@@ -49,7 +49,7 @@ public class SessionControllerBean extends JSFGenericBean {
     return loggedUser;
   }
   
-  public String getUserLoggedName () {
+  public String obtainLoggedUserName () {
     if (loggedUser == null) {
       
       try {
@@ -62,7 +62,7 @@ public class SessionControllerBean extends JSFGenericBean {
     }
     
     if (loggedUser instanceof Guest) {
-      return JSFContextUtil.getLocalizedMessage(loggedUser.getName());
+      return JSFMessageBundle.getLocalizedMessage(loggedUser.getName());
     }
     
     return loggedUser.getName();

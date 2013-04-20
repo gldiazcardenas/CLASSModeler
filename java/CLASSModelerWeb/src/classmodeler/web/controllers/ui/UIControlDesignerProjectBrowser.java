@@ -10,8 +10,8 @@ package classmodeler.web.controllers.ui;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 /**
  * Graphical user interface component controller that handles the project
@@ -19,7 +19,7 @@ import javax.inject.Named;
  * 
  * @author Gabriel Leonardo Diaz, 19.01.2013.
  */
-@Named("projectBrowser")
+@ManagedBean(name="projectBrowser")
 @SessionScoped
 public class UIControlDesignerProjectBrowser implements Serializable {
 

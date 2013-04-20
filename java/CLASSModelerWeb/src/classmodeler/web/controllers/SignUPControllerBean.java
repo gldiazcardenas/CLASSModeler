@@ -20,7 +20,7 @@ import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.util.JSFContextUtil;
+import classmodeler.web.resources.JSFMessageBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -110,7 +110,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
     int i = 0;
     for (EGender g : EGender.values()) {
-      items[i++] = new SelectItem(g, JSFContextUtil.getLocalizedMessage(g.getName()));
+      items[i++] = new SelectItem(g, JSFMessageBundle.getLocalizedMessage(g.getName()));
     }
     
     return items;
@@ -138,22 +138,22 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     boolean valid = true;
     
     if (GenericUtils.isEmptyString(firstName)) {
-      addErrorMessage(JSFContextUtil.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_FST_NAME_MESSAGE"), null);
+      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_FST_NAME_MESSAGE"), null);
       valid = false;
     }
     
     if (GenericUtils.isEmptyString(lastName)) {
-      addErrorMessage(JSFContextUtil.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_LST_NAME_MESSAGE"), null);
+      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_LST_NAME_MESSAGE"), null);
       valid = false;
     }
     
     if (GenericUtils.isEmptyString(email)) {
-      addErrorMessage(JSFContextUtil.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_EMAIL_MESSAGE"), null);
+      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_EMAIL_MESSAGE"), null);
       valid = false;
     }
     
     if (gender == null) {
-      addErrorMessage(JSFContextUtil.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_GENDER_MESSAGE"), null);
+      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_GENDER_MESSAGE"), null);
       valid = false;
     }
     

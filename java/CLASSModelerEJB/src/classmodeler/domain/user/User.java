@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User implements Serializable {
+public class User implements Serializable, IUser {
   
   private static final long serialVersionUID = 1L;
   
@@ -160,6 +160,7 @@ public class User implements Serializable {
     this.lastName = lastName;
   }
   
+  @Override
   public String getPassword() {
     return this.password;
   }
@@ -168,6 +169,7 @@ public class User implements Serializable {
     this.password = password;
   }
   
+  @Override
   public String getAvatar() {
     return this.avatar;
   }
@@ -175,20 +177,20 @@ public class User implements Serializable {
   public void setAvatar(String avatar) {
     this.avatar = avatar;
   }
-  /*
+  
   @Override
   public String getName() {
-    return "";
+    return firstName + " " + lastName;
   }
   
   @Override
   public String getNickname() {
-    return "";
+    return email;
   }
   
   @Override
   public boolean isRegisteredUser() {
     return true;
-  }*/
+  }
   
 }

@@ -5,15 +5,15 @@
     <h:form prependId="false" style="float: right;">
         <h:panelGrid columns="3" border="0" cellpadding="0" cellspacing="0">
             <h:panelGroup style="text-align: right; margin-right: 5px;">
-                <h:outputText value="#{sessionController.userLoggedName}" />
+                <h:outputText value="#{sessionController.obtainLoggedUserName()}" />
             </h:panelGroup>
             
             <p:commandButton id="userProfileButton" icon="ui-icon-person" rendered="#{sessionController.guestUser}" />
             
             <p:menuButton id="optionsMenuButton" value="#{msgs.USER_SECTION_OPTIONS_MENU_BUTTON_LABEL}">
-                <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" url="" icon="ui-icon-key" />
-                <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" url="" icon="ui-icon-contact" />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" url="/pages/dashboard/dashboard.xhtml" icon="ui-icon-home" rendered="#{!sessionController.guestUser}" />
+                <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" icon="ui-icon-key" url="#" rendered="#{!sessionController.guestUser}" />
+                <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" icon="ui-icon-contact" url="#" rendered="#{!sessionController.guestUser}" />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" url="/pages/dashboard/dashboard.xhtml" rendered="#{!sessionController.guestUser}" />
                 <p:menuitem value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
             </p:menuButton>
         </h:panelGrid>

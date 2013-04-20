@@ -3,40 +3,66 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-  <h:form id="menuForm" prependId="false">
-        <p:menubar id="menu">
+    <h:form id="menuForm" prependId="false">
+        <p:menubar id="menu" autoDisplay="false">
             <p:submenu label="File" icon="ui-icon-document">
-                <p:submenu label="New" icon="ui-icon-contact">
-                    <p:menuitem value="Project" url="#" />
-                    <p:menuitem value="Other" url="#" />
-                </p:submenu>
-                <p:menuitem value="Open" url="#" />
+                <p:menuitem value="New Project" icon="ui-icon-document" />
+                <p:menuitem value="Open Project" icon="ui-icon-folder-open" disabled="#{sessionController.guestUser}" />
+                <p:menuitem value="Save Project" icon="ui-icon-disk" disabled="#{sessionController.guestUser}" />
+                <p:menuitem value="Copy Project" icon="ui-icon-copy" disabled="#{sessionController.guestUser}" />
                 <p:separator />
-                <p:menuitem value="Quit" url="#" />
+                <p:menuitem value="Import" icon="ui-icon-arrowthickstop-1-s" />
+                <p:menuitem value="Export" icon="ui-icon-arrowthickstop-1-n" />
+                <p:separator />
+                <p:menuitem value="Print" icon="ui-icon-print" />
+                <p:separator />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{sessionController.guestUser}" url="/pages/dashboard/dashboard.xhtml" />
             </p:submenu>
             
             <p:submenu label="Edit" icon="ui-icon-pencil">
-                <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
-                <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                <p:menuitem value="Undo" icon="ui-icon-arrowreturnthick-1-w" />
+                <p:menuitem value="Redo" icon="ui-icon-arrowreturnthick-1-e" />
+                <p:separator />
+                <p:menuitem value="Cut" icon="ui-icon-scissors" />
+                <p:menuitem value="Copy" icon="ui-icon-copy" />
+                <p:menuitem value="Paste" icon="ui-icon-clipboard" />
+                <p:menuitem value="Delete" icon="ui-icon-trash" />
+                <p:separator />
+                <p:menuitem value="Select All" icon="ui-icon-arrowthick-2-ne-sw" />
             </p:submenu>
             
             <p:submenu label="View" icon="ui-icon-pin-s">
-                <p:menuitem value="Project browser" url="#" icon="ui-icon-arrowreturnthick-1-w" />
-                <p:menuitem value="Components" url="#" icon="ui-icon-arrowreturnthick-1-e" />
-                <p:menuitem value="Console" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                <p:submenu label="Zoom" icon="ui-icon-search">
+                    <p:menuitem value="Zoom In" icon="ui-icon-zoomin" />
+                    <p:menuitem value="Zoom Out" icon="ui-icon-zoomout" />
+                    <p:separator/>
+                    <p:menuitem value="25%" />
+                    <p:menuitem value="50%" />
+                    <p:menuitem value="75%" />
+                    <p:menuitem value="100%" />
+                    <p:menuitem value="200%" />
+                    <p:menuitem value="400%" />
+                </p:submenu>
+                <p:separator />
+                <p:menuitem value="Refresh" icon="ui-icon-refresh" />
+                <p:menuitem value="Close Diagram" icon="ui-icon-close" />
             </p:submenu>
             
-            <p:menuitem value="Import" url="#" icon="ui-icon-arrowreturnthick-1-w" />
-            <p:menuitem value="Export" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+            <p:submenu label="Tools" icon="ui-icon-wrench">
+                <p:menuitem value="Generate Code" icon="ui-icon-script"/>
+                <p:menuitem value="Generate Image" icon="ui-icon-image"/>
+                <p:menuitem value="Reverse Engineering" icon="ui-icon-gear"/>
+                <p:separator/>
+                <p:menuitem value="Share Project" icon="ui-icon-transferthick-e-w" disabled="#{sessionController.guestUser}" />
+                <p:menuitem value="Rate Project" icon="ui-icon-star" disabled="#{sessionController.guestUser}" />
+                <p:separator/>
+                <p:menuitem value="Automatic Layout"/>
+                <p:menuitem value="Console" />
+            </p:submenu>
             
-            <p:submenu label="Tools" icon="ui-icon-gear">
-                <p:menuitem value="Help" url="#" />
-                <p:submenu label="Search" icon="ui-icon-search">
-                    <p:submenu label="Text">
-                        <p:menuitem value="Workspace" url="#" />
-                    </p:submenu>
-                    <p:menuitem value="File" url="#" />
-                </p:submenu>
+            <p:submenu label="Help" icon="ui-icon-help">
+                <p:menuitem value="Contents"  icon="ui-icon-bookmark" />
+                <p:menuitem value="About" icon="ui-icon-flag" />
             </p:submenu>
             
             <f:facet name="options">
@@ -44,5 +70,4 @@
             </f:facet>
         </p:menubar>
     </h:form>
-  
 </ui:composition>

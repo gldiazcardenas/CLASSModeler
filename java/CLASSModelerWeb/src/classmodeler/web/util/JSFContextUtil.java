@@ -8,8 +8,6 @@
 
 package classmodeler.web.util;
 
-import java.util.ResourceBundle;
-
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -22,20 +20,6 @@ public final class JSFContextUtil {
   
   private JSFContextUtil () {
     // This class CANNOT BE INSTANCED.
-  }
-  
-  /**
-   * Looks for a localized message through the given <code>messageKey</code> in
-   * the message resource bundle.
-   * 
-   * @param messageKey
-   *          The key of the message.
-   * @return The localized message represented by the given key.
-   */
-  public static String getLocalizedMessage (String messageKey) {
-    FacesContext facesContext = FacesContext.getCurrentInstance();
-    ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msgs");
-    return bundle.getString(messageKey);
   }
   
   /**

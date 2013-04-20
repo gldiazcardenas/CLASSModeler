@@ -9,8 +9,8 @@
 package classmodeler.web.controllers;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
 
 import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InactivatedUserAccountException;
@@ -29,7 +29,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   private String password;
   
   // Injected Beans
-  @Inject
+  @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
 
   public LogInControllerBean() {
@@ -50,6 +50,10 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   
   public void setPassword(String password) {
     this.password = password;
+  }
+  
+  public void setSessionController(SessionControllerBean sessionController) {
+    this.sessionController = sessionController;
   }
   
   /**
