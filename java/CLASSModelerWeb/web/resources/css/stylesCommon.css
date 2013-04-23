@@ -14,12 +14,6 @@ body {
     font-size: 1em;
 }
 
-.editorComponent {
-    height: inherit;
-    width: inherit;
-    background: url("#{resource['images:grid.gif']}");
-}
-
 .ui-datepicker-trigger {
     margin-left: 2px;
 }

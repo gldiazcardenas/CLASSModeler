@@ -6,7 +6,11 @@
                 
 <ui:param name="title" value="#{msgs.DASHBOARD_PAGE_BASE_TITLE}"/>
 
-<ui:define name="userSection"><ui:include src="/pages/dashboard/userSection.xhtml"/></ui:define>
+<ui:define name="userSection">
+    <h:form prependId="false" style="float: right;">
+        <ui:include src="/pages/dashboard/userSection.xhtml"/>
+    </h:form>
+</ui:define>
 
 <ui:define name="centerContent">
     <div id="sidebarSection" class="ui-widget-content">

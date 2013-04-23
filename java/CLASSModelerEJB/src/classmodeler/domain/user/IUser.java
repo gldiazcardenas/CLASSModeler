@@ -8,12 +8,14 @@
 
 package classmodeler.domain.user;
 
+import java.io.Serializable;
+
 /**
  * Defines the common behavior of an user that interacts with the system.
  * 
  * @author Gabriel Leonardo Diaz, 07.04.2013.
  */
-public interface IUser {
+public interface IUser extends Serializable {
   
   /**
    * Gets the full name of the user that is using the system.

@@ -4,15 +4,17 @@
                 xmlns:pe="http://primefaces.org/ui/extensions">
     
     <pe:layoutPane position="center">
-        <f:facet name="header"><h:outputText value="#{msgs.COMPONENTS_PANEL_LABEL}" /></f:facet>
-        <h:panelGroup id="components">
-            <!-- mxGraph library automatically puts the components inside of this tag -->
+        <f:facet name="header"><h:outputText value="#{msgs.TOOLBOX_PANEL_LABEL}" /></f:facet>
+        <h:panelGroup id="toolbox">
+            <!-- mxCLASSModeler.js library automatically puts the components inside of this tag -->
         </h:panelGroup>
     </pe:layoutPane>
     
     <pe:layoutPane position="south" minSize="150" maxSize="150">
         <f:facet name="header"><h:outputText value="#{msgs.ZOOM_PANEL_LABEL}" /></f:facet>
-        <!-- TODO -->
+        <h:panelGroup id="outline">
+            <!-- mxCLASSModeler.js automatically puts the components inside of this tag -->
+        </h:panelGroup>
     </pe:layoutPane>
     
 </ui:composition>

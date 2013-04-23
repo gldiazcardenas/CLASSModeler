@@ -8,15 +8,12 @@
 
 package classmodeler.web.controllers;
 
-import java.io.IOException;
-
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InactivatedUserAccountException;
@@ -49,27 +46,32 @@ public class SessionControllerBean extends JSFGenericBean {
     return loggedUser;
   }
   
-  public String obtainLoggedUserName () {
+  public String getUserName () {
     if (loggedUser == null) {
-      
-      try {
-        FacesContext.getCurrentInstance().responseComplete();
-        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-      }
-      catch (IOException e) {
-        addErrorMessage("Unexpected exception: " + e.getMessage(), null);
-      }
+      return null;
     }
     
-    if (loggedUser instanceof Guest) {
+    if (!loggedUser.isRegisteredUser()) {
       return JSFMessageBundle.getLocalizedMessage(loggedUser.getName());
     }
     
     return loggedUser.getName();
   }
   
-  public boolean isGuestUser () {
-    return loggedUser instanceof Guest;
+  public boolean isRegisteredUser () {
+    return loggedUser != null && loggedUser.isRegisteredUser();
+  }
+  
+  public String getUserAvatar () {
+    if (loggedUser == null) {
+      return null;
+    }
+    
+    if (!loggedUser.isRegisteredUser()) {
+      return "/resources/uploads/avatar.png";
+    }
+    
+    return loggedUser.getAvatar();
   }
   
   /**
@@ -88,13 +90,24 @@ public class SessionControllerBean extends JSFGenericBean {
   /**
    * Ends the current user session, this clears the local information and starts
    * saving the GUI preferences.
+   * 
+   * @return The OUTCOME to the index page.
    */
   public String logout () {
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
     if (session != null) {
       session.invalidate();
     }
-    return "index.xhtml";
+    return "/index.xhtml";
+  }
+  
+  /**
+   * Redirects the user to the Dashboard page.
+   * 
+   * @return The OUTCOME to the Dashboard page
+   */
+  public String goToDashboard () {
+    return "/pages/dashboard/dashboard.xhtml";
   }
   
 }

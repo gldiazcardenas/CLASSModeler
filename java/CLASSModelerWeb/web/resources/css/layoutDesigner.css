@@ -22,3 +22,9 @@
 #components img {
     display: block;
 }
+
+.editorComponent {
+    height: inherit;
+    width: inherit;
+    background: url("#{resource['images:grid.gif']}");
+}

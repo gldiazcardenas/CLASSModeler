@@ -8,9 +8,18 @@
 
 package classmodeler.domain.user;
 
-import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Domain bean that represents a person who is able to login in the system, who
@@ -20,7 +29,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User implements Serializable, IUser {
+public class User implements IUser {
   
   private static final long serialVersionUID = 1L;
   

@@ -5,36 +5,36 @@
                 
     <h:form id="menuForm" prependId="false">
         <p:menubar id="menu" autoDisplay="false">
-            <p:submenu label="File" icon="ui-icon-document">
-                <p:menuitem value="New Project" icon="ui-icon-document" />
-                <p:menuitem value="Open Project" icon="ui-icon-folder-open" disabled="#{sessionController.guestUser}" />
-                <p:menuitem value="Save Project" icon="ui-icon-disk" disabled="#{sessionController.guestUser}" />
-                <p:menuitem value="Copy Project" icon="ui-icon-copy" disabled="#{sessionController.guestUser}" />
+            <p:submenu label="#{msgs.MENU_FILE_LABEL}" icon="ui-icon-document">
+                <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" />
+                <p:menuitem value="#{msgs.MENU_ITEM_OPEN_PROJECT_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SAVE_PROJECT_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.registeredUser}" />
                 <p:separator />
-                <p:menuitem value="Import" icon="ui-icon-arrowthickstop-1-s" />
-                <p:menuitem value="Export" icon="ui-icon-arrowthickstop-1-n" />
+                <p:menuitem value="#{msgs.MENU_ITEM_IMPORT_LABEL}" icon="ui-icon-arrowthickstop-1-s" />
+                <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" />
                 <p:separator />
-                <p:menuitem value="Print" icon="ui-icon-print" />
+                <p:menuitem value="#{msgs.MENU_ITEM_PRINT_LABEL}" icon="ui-icon-print" />
                 <p:separator />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{sessionController.guestUser}" url="/pages/dashboard/dashboard.xhtml" />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" action="#{sessionController.goToDashboard()}" />
             </p:submenu>
             
-            <p:submenu label="Edit" icon="ui-icon-pencil">
-                <p:menuitem value="Undo" icon="ui-icon-arrowreturnthick-1-w" />
-                <p:menuitem value="Redo" icon="ui-icon-arrowreturnthick-1-e" />
+            <p:submenu label="#{msgs.MENU_EDIT_LABEL}" icon="ui-icon-pencil">
+                <p:menuitem value="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" />
+                <p:menuitem value="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" />
                 <p:separator />
-                <p:menuitem value="Cut" icon="ui-icon-scissors" />
-                <p:menuitem value="Copy" icon="ui-icon-copy" />
-                <p:menuitem value="Paste" icon="ui-icon-clipboard" />
-                <p:menuitem value="Delete" icon="ui-icon-trash" />
+                <p:menuitem value="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" />
+                <p:menuitem value="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" />
+                <p:menuitem value="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" />
                 <p:separator />
-                <p:menuitem value="Select All" icon="ui-icon-arrowthick-2-ne-sw" />
+                <p:menuitem value="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SELECT_ALL_LABEL}" icon="ui-icon-arrowthick-2-ne-sw" />
             </p:submenu>
             
-            <p:submenu label="View" icon="ui-icon-pin-s">
-                <p:submenu label="Zoom" icon="ui-icon-search">
-                    <p:menuitem value="Zoom In" icon="ui-icon-zoomin" />
-                    <p:menuitem value="Zoom Out" icon="ui-icon-zoomout" />
+            <p:submenu label="#{msgs.MENU_VIEW_LABEL}" icon="ui-icon-pin-s">
+                <p:submenu label="#{msgs.MENU_SUB_ZOOM_LABEL}" icon="ui-icon-search">
+                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" />
+                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" />
                     <p:separator/>
                     <p:menuitem value="25%" />
                     <p:menuitem value="50%" />
@@ -44,25 +44,25 @@
                     <p:menuitem value="400%" />
                 </p:submenu>
                 <p:separator />
-                <p:menuitem value="Refresh" icon="ui-icon-refresh" />
-                <p:menuitem value="Close Diagram" icon="ui-icon-close" />
+                <p:menuitem value="#{msgs.MENU_ITEM_REFRESH_LABEL}" icon="ui-icon-refresh" />
+                <p:menuitem value="#{msgs.MENU_ITEM_CLOSE_DIAGRAM_LABEL}" icon="ui-icon-close" />
             </p:submenu>
             
-            <p:submenu label="Tools" icon="ui-icon-wrench">
-                <p:menuitem value="Generate Code" icon="ui-icon-script"/>
-                <p:menuitem value="Generate Image" icon="ui-icon-image"/>
-                <p:menuitem value="Reverse Engineering" icon="ui-icon-gear"/>
+            <p:submenu label="#{msgs.MENU_TOOLS_LABEL}" icon="ui-icon-wrench">
+                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script"/>
+                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image"/>
+                <p:menuitem value="#{msgs.MENU_ITEM_REVERSE_ENGINEERING_LABEL}" icon="ui-icon-gear"/>
                 <p:separator/>
-                <p:menuitem value="Share Project" icon="ui-icon-transferthick-e-w" disabled="#{sessionController.guestUser}" />
-                <p:menuitem value="Rate Project" icon="ui-icon-star" disabled="#{sessionController.guestUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SHARE_PROJECT_LABEL}" icon="ui-icon-transferthick-e-w" disabled="#{sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_RATE_PROJECT_LABEL}" icon="ui-icon-star" disabled="#{sessionController.registeredUser}" />
                 <p:separator/>
-                <p:menuitem value="Automatic Layout"/>
-                <p:menuitem value="Console" />
+                <p:menuitem value="#{msgs.MENU_ITEM_AUTOMATIC_LAYOUT_LABEL}"/>
+                <p:menuitem value="#{msgs.MENU_ITEM_CONSOLE_LABEL}" />
             </p:submenu>
             
-            <p:submenu label="Help" icon="ui-icon-help">
-                <p:menuitem value="Contents"  icon="ui-icon-bookmark" />
-                <p:menuitem value="About" icon="ui-icon-flag" />
+            <p:submenu label="#{msgs.MENU_HELP_LABEL}" icon="ui-icon-help">
+                <p:menuitem value="#{msgs.MENU_ITEM_CONTENTS_LABEL}"  icon="ui-icon-bookmark" />
+                <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" />
             </p:submenu>
             
             <f:facet name="options">

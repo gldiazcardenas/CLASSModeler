@@ -15,6 +15,8 @@ package classmodeler.domain.user;
  * @author Gabriel Leonardo Diaz, 07.04.2013.
  */
 public class Guest implements IUser {
+
+  private static final long serialVersionUID = 1L;
   
   public static final String GUEST_NAME      = "GUEST_NAME";
   public static final String GUEST_PASSWORD  = "GUEST_PASSWORD";

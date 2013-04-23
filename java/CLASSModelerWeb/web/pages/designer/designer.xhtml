@@ -14,7 +14,9 @@
 
 <ui:define name="script">
     <h:outputScript library="js" name="mxClient.js" />
-    <h:outputScript library="js" name="mxEditorUFPS.js" />
+    <h:outputScript library="js" name="CLASSEditor.js" />
+    <h:outputScript library="js" name="CLASSGraph.js" />
+    <h:outputScript library="js" name="CLASSToolBox.js" />
 </ui:define>
 
 <ui:define name="header">
@@ -40,7 +42,7 @@
     
     <!-- Creates the designer -->
     <script type="text/javascript">
-        new mxEditorUFPS();
+        new CLASSEditor('');
     </script>
 </ui:define>
 

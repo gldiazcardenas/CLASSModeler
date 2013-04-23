@@ -29,12 +29,12 @@ import classmodeler.web.controllers.SessionControllerBean;
  * @author Gabriel Leonardo Diaz, 15.04.2013.
  */
 @WebFilter(filterName="UserSessionValidationFilter", urlPatterns= {"/*"})
-public class SessionControllerFilter implements Filter {
+public class SessionFilter implements Filter {
   
   /**
    * Default constructor.
    */
-  public SessionControllerFilter() {
+  public SessionFilter() {
     super();
   }
   

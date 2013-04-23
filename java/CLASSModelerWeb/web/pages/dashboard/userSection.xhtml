@@ -1,22 +1,17 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
-
-    <h:form prependId="false" style="float: right;">
-        <h:panelGrid columns="3" border="0" cellpadding="0" cellspacing="0">
-            <h:panelGroup style="text-align: right; margin-right: 5px;">
-                <h:outputText value="#{sessionController.obtainLoggedUserName()}" />
-            </h:panelGroup>
-            
-            <p:commandButton id="userProfileButton" icon="ui-icon-person" rendered="#{sessionController.guestUser}" />
-            
-            <p:menuButton id="optionsMenuButton" value="#{msgs.USER_SECTION_OPTIONS_MENU_BUTTON_LABEL}">
-                <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" icon="ui-icon-key" url="#" rendered="#{!sessionController.guestUser}" />
-                <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" icon="ui-icon-contact" url="#" rendered="#{!sessionController.guestUser}" />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" url="/pages/dashboard/dashboard.xhtml" rendered="#{!sessionController.guestUser}" />
-                <p:menuitem value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
-            </p:menuButton>
-        </h:panelGrid>
-    </h:form>
-
+    
+    <h:panelGrid columns="3" border="0" cellpadding="0" cellspacing="0">
+        <h:outputText value="#{sessionController.userName}" />
+        
+        <p:graphicImage id="avatar" url="#{sessionController.userAvatar}" width="29" height="29" />
+        
+        <p:menuButton id="optionsMenuButton" value="#{msgs.USER_SECTION_OPTIONS_MENU_BUTTON_LABEL}">
+            <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" icon="ui-icon-key" disabled="#{!sessionController.registeredUser}" />
+            <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" icon="ui-icon-contact" disabled="#{!sessionController.registeredUser}" />
+            <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
+            <p:menuitem value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
+        </p:menuButton>
+    </h:panelGrid>
 </ui:composition>
