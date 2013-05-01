@@ -98,7 +98,7 @@ public class SessionControllerBean extends JSFGenericBean {
     if (session != null) {
       session.invalidate();
     }
-    return "/index.xhtml";
+    return "/index.xhtml?faces-redirect=true";
   }
   
   /**
@@ -107,7 +107,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the Dashboard page
    */
   public String goToDashboard () {
-    return "/pages/dashboard/dashboard.xhtml";
+    return "/pages/dashboard/dashboard.xhtml?faces-redirect=true";
   }
   
 }

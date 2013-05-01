@@ -16,7 +16,7 @@
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_PRINT_LABEL}" icon="ui-icon-print" />
                 <p:separator />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" action="#{sessionController.goToDashboard()}" />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_EDIT_LABEL}" icon="ui-icon-pencil">

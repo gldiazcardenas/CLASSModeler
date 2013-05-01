@@ -25,3 +25,7 @@ body {
 .italic {
     font-style: italic;
 }
+
+#avatar {
+    margin-top: 3px;
+}

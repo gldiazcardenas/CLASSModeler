@@ -5,7 +5,11 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/templates/common.xhtml">
 
+<!-- Sets up the title of the page -->
 <ui:param name="title" value="#{msgs.DESIGNER_PAGE_BASE_TITLE}"/>
+
+<!-- Installs the method JavaScript invoked after page is loaded -->
+<ui:param name="executeOnload" value="main('');" />
 
 <ui:define name="stylesheet">
     <h:outputStylesheet name="layoutDesigner.css" library="css"/>
@@ -13,10 +17,18 @@
 </ui:define>
 
 <ui:define name="script">
+    <script type="text/javascript">
+        // Static variables to point out the resources location.
+        mxBasePath      = '/CLASSModeler';
+        mxImageBasePath = '/CLASSModeler/resources/images';
+        mxLoadResources = false;
+    </script>
+    
     <h:outputScript library="js" name="mxClient.js" />
     <h:outputScript library="js" name="CLASSEditor.js" />
     <h:outputScript library="js" name="CLASSGraph.js" />
     <h:outputScript library="js" name="CLASSToolBox.js" />
+    <h:outputScript library="js" name="CLASSModeler.js" />
 </ui:define>
 
 <ui:define name="header">
@@ -30,20 +42,15 @@
         <pe:layoutPane id="sidebarLeft" position="west" resizable="true" collapsible="true" minSize="200" maxSize="300">
             <ui:include src="/pages/designer/sidebarLeft.xhtml" />
         </pe:layoutPane>
-
+        
         <pe:layoutPane id="workspace" position="center">
             <ui:include src="/pages/designer/workspace.xhtml" />
         </pe:layoutPane>
-
+        
         <pe:layoutPane id="sidebarRight" position="east" resizable="true" collapsible="true" minSize="200" maxSize="300">
             <ui:include src="/pages/designer/sidebarRight.xhtml" />
         </pe:layoutPane>
     </pe:layout>
-    
-    <!-- Creates the designer -->
-    <script type="text/javascript">
-        new CLASSEditor('');
-    </script>
 </ui:define>
 
 </ui:composition>

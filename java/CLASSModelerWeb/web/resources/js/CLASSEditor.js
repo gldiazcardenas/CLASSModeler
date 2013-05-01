@@ -7,23 +7,12 @@
  * @author: Gabriel Leonardo Diaz, 21.04.2013.
  * 
  ******************************************************************************/
-/**
- * Static variables to point out the resources location.
- */
-mxBasePath = '../../resources';
-mxImageBasePath = '../../resources/images';
 
 /**
  * JavaScript Class for the editor, this inherits from mxEditor.
  */
 CLASSEditor = function (initialXML) {
-  // Checking the browser used
-  if (!mxClient.isBrowserSupported()) {
-    mxUtils.error('Browser is not supported for mxGraph!', 200, false);
-    return;
-  }
-  
-  this.urlInit   = "/CLASSModeler/Designer?init";
+  this.urlInit   = null; //"/CLASSModeler/Designer?init";
   this.urlImage  = "/CLASSModeler/Designer?image";
   this.urlPoll   = "/CLASSModeler/Designer?poll";
   this.urlNotify = "/CLASSModeler/Designer?notify";
@@ -35,8 +24,6 @@ CLASSEditor = function (initialXML) {
   this.graphContainer   = document.getElementById("graph");
   this.toolboxContainer = document.getElementById("toolbox");
   this.outlineContainer = document.getElementById("outline");
-  
-  this.configureCLASSEditor();
 };
 
 // CLASSEditor inherits from mxEditor
@@ -45,17 +32,19 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.configureCLASSEditor = function() {
+CLASSEditor.prototype.init = function() {
   // Creates the Graph
   this.graph = new CLASSGraph();
   this.graph.init(this.graphContainer);
+  this.graph.refresh();
   
   // Creates the outline (zoom panel)
   this.outline = new mxOutline(this.graph);
   this.outline.init(this.outlineContainer);
+  this.outline.updateOnPan = true;
   
   // Creates the toolBox component.
-  this.toolbox = new CLASSToolBox();
+  this.toolbox = new CLASSToolBox(this);
   this.toolbox.init(this.toolboxContainer);
   
   // Sets the image base path to the popUp handler

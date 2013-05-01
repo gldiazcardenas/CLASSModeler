@@ -1,5 +1,9 @@
 @CHARSET "ISO-8859-1";
 
+body {
+    overflow: hidden;
+}
+
 #toolbar {
     border:none;
     background: none;
@@ -17,10 +21,6 @@
 #center-layout .pe-layout-pane-content {
     padding: 0px;
     overflow: hidden;
-}
-
-#components img {
-    display: block;
 }
 
 .editorComponent {

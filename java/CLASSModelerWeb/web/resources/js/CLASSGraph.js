@@ -14,10 +14,27 @@
 CLASSGraph = function (container, model, renderHint, stylesheet) {
   // Call super
   mxGraph.call(this, container, model, renderHint, stylesheet);
+  
+  this.setConnectable(true);
+  this.setDropEnabled(true);
+  this.setPanning(true);
+  this.setTooltips(!mxClient.IS_TOUCH);
+  this.setAllowLoops(true);
+  this.allowAutoPanning = true;
 };
 
 // Graph inherits from mxGraph
 mxUtils.extend(CLASSGraph, mxGraph);
+
+/**
+ * Allows to all values in fit.
+ */
+CLASSGraph.prototype.minFitScale = null;
+
+/**
+ * Allows to all values in fit.
+ */
+CLASSGraph.prototype.maxFitScale = null;
 
 /**
  * Initializer method for the graph.
@@ -29,6 +46,7 @@ CLASSGraph.prototype.init = function (container) {
   this.setPanning(true);
   this.setTooltips(true);
   this.setConnectable(true);
+  this.connectionHandler.setCreateTarget(true);
   
   // Install the lasso feature
   var rubberband = new mxRubberband(this);
@@ -42,8 +60,10 @@ CLASSGraph.prototype.init = function (container) {
     return keyHandler;
   };
   
-  // Install the popUpMenu creator, and disables the default popUpMenu
+  // Disables the default popUpMenu, this avoids the default navigator's popUp is showed up.
   mxEvent.disableContextMenu(container);
+  
+  // Installs the popUpMenu creator
   this.panningHandler.factoryMethod = function (menu, cell, evt) {
     return menu.graph.createPopupMenu(menu, cell, evt);
   };
@@ -60,7 +80,17 @@ CLASSGraph.prototype.init = function (container) {
  *          The mouse event.
  */
 CLASSGraph.prototype.createPopupMenu = function (menu, cell, evt) {
-  menu.addItem('MyItem', null, function() {
+  var callbackFunction = function() {
     mxUtils.alert('MenuItem1');
-  }, null, 'ui-icon-gear', true);
+  };
+  menu.addItem('MyItem', null, callbackFunction, null, 'ui-icon-gear', true);
+};
+
+/**
+ * Determines if the cell should be rendered as HTML.
+ */
+CLASSGraph.prototype.isHtmlLabel = function (cell) {
+  var state = this.view.getState(cell);
+  var style = state != null ? state.style : this.getCellStyle(cell);
+  return style['html'] == '1';
 };
