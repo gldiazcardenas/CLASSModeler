@@ -34,7 +34,7 @@ public class User implements IUser {
   private static final long serialVersionUID = 1L;
   
   /**
-   * The key of the user, this is an auto-numeric value given by a database sequence.
+   * The key of the user, this is an auto-incremental value.
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -199,6 +199,32 @@ public class User implements IUser {
   
   @Override
   public boolean isRegisteredUser() {
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + key;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+      
+    User other = (User) obj;
+    if (key != other.key) {
+      return false;
+    }
+    
     return true;
   }
   

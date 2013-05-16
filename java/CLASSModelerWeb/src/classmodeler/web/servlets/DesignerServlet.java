@@ -18,7 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class DesignerServlet that handles the requests from
- * the designer graph.
+ * the mxGraph client side component, processes notifications when the graph is
+ * modified by adding, editing or removing elements.
+ * 
+ * @author Gabriel Leonardo Diaz, 02.05.2013.
  */
 @WebServlet("/Designer")
 public class DesignerServlet extends HttpServlet {
@@ -33,8 +36,7 @@ public class DesignerServlet extends HttpServlet {
   }
   
   /**
-   * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse
-   *      response)
+   * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
    */
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/xml;charset=UTF-8");
@@ -45,16 +47,14 @@ public class DesignerServlet extends HttpServlet {
   }
   
   /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-   *      response)
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     service(request, response);
   }
   
   /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-   *      response)
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     service(request, response);

@@ -28,3 +28,7 @@ body {
     width: inherit;
     background: url("#{resource['images:grid.gif']}");
 }
+
+#editorTabView .ui-tabs-panel {
+    padding: 1px;
+}

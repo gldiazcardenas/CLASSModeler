@@ -13,6 +13,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,48 +29,71 @@ import javax.persistence.TemporalType;
 import classmodeler.domain.user.User;
 
 /**
- * Bean that represents sharing a project between two users.
+ * Bean that represents a project shared between two users.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
  */
 @Entity
-@Table(name="project_sharing")
-public class ProjectSharing implements Serializable {
+@Table(name="shared")
+public class Shared implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
+  /**
+   * The identifier of the sharing process of a project. This is an
+   * auto-incremental value.
+   */
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  @Column(name="project_sharing_key", unique=true, nullable=false)
+  @Column(name="shared_key", unique=true, nullable=false)
   private int key;
   
+  /**
+   * The date in which the project was shared.
+   */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="project_sharing_date", nullable=false)
+  @Column(name="shared_date", nullable=false)
   private Date date;
   
+  /**
+   * A general comment made by the owner of the project.
+   */
   @Lob
-  @Column(name="project_sharing_comment")
+  @Column(name="shared_comment")
   private String comment;
   
-  @Column(name="project_sharing_privilege", nullable=false)
+  /**
+   * The privileged given to the user who receives the project.
+   */
+  @Enumerated(EnumType.STRING)
+  @Column(name="shared_privilege", nullable=false)
   private EProjectPrivilege privilege;
   
-  // UNI-Directional many-to-one association to Project
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name="project_sharing_project_key", nullable=false)
+  /**
+   * UNI-Directional many-to-one association to Project. This is the reference
+   * to the shared project.
+   */
+  @ManyToOne
+  @JoinColumn(name="shared_project_key", nullable=false)
   private Project project;
   
-  // UNI-Directional many-to-one association to User
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name="project_sharing_from_user", nullable=false)
+  /**
+   * UNI-Directional many-to-one association to User. This is the reference of
+   * the owner of the project.
+   */
+  @ManyToOne
+  @JoinColumn(name="shared_from_user", nullable=false)
   private User fromUser;
   
-  // UNI-Directional many-to-one association to User
+  /**
+   * UNI-Directional many-to-one association to User. This is the reference to
+   * the user who receives the project.
+   */
   @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name="project_sharing_to_user", nullable=false)
+  @JoinColumn(name="shared_to_user", nullable=false)
   private User toUser;
 
-  public ProjectSharing() {
+  public Shared() {
     super();
   }
   
@@ -126,6 +151,32 @@ public class ProjectSharing implements Serializable {
   
   public void setToUser(User toUser) {
     this.toUser = toUser;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + key;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+      
+    Shared other = (Shared) obj;
+    if (key != other.key) {
+      return false;
+    }
+    
+    return true;
   }
   
 }

@@ -17,8 +17,9 @@ import javax.servlet.http.HttpSession;
 import classmodeler.domain.user.IUser;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InactivatedUserAccountException;
-import classmodeler.web.resources.JSFMessageBundle;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * JSF bean controller for the user session. 
@@ -31,10 +32,8 @@ public class SessionControllerBean extends JSFGenericBean {
   
   private static final long serialVersionUID = 1L;
   
-  // Data
   private IUser loggedUser;
   
-  // EJBs
   @EJB
   private UserService userServiceBean;
 
@@ -42,17 +41,28 @@ public class SessionControllerBean extends JSFGenericBean {
     super();
   }
   
+  /**
+   * Gets the current user in session.
+   * 
+   * @return An instance of IUser object.
+   */
   public IUser getLoggedUser() {
     return loggedUser;
   }
   
+  /**
+   * Gets the name of the user logged. If there is not user logged this return
+   * <code>null</code>.
+   * 
+   * @return The name of the user logged.
+   */
   public String getUserName () {
     if (loggedUser == null) {
       return null;
     }
     
     if (!loggedUser.isRegisteredUser()) {
-      return JSFMessageBundle.getLocalizedMessage(loggedUser.getName());
+      return JSFResourceBundle.getLocalizedMessage(loggedUser.getName());
     }
     
     return loggedUser.getName();
@@ -62,13 +72,18 @@ public class SessionControllerBean extends JSFGenericBean {
     return loggedUser != null && loggedUser.isRegisteredUser();
   }
   
+  /**
+   * Gets the URL to the image that represents the avatar of the logged user.
+   * 
+   * @return The URL to the image.
+   */
   public String getUserAvatar () {
     if (loggedUser == null) {
       return null;
     }
     
     if (!loggedUser.isRegisteredUser()) {
-      return "/resources/uploads/avatar.png";
+      return JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL;
     }
     
     return loggedUser.getAvatar();
@@ -98,7 +113,7 @@ public class SessionControllerBean extends JSFGenericBean {
     if (session != null) {
       session.invalidate();
     }
-    return "/index.xhtml?faces-redirect=true";
+    return JSFOutcomeUtil.INDEX;
   }
   
   /**
@@ -107,7 +122,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the Dashboard page
    */
   public String goToDashboard () {
-    return "/pages/dashboard/dashboard.xhtml?faces-redirect=true";
+    return JSFOutcomeUtil.DASHBOARD;
   }
   
 }

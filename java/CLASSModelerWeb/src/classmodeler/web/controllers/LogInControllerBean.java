@@ -90,8 +90,9 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   }
 
   @Override
-  public void actionPerformed() {
+  public String actionPerformed() {
     // Not used
+    return null;
   }
 
   @Override

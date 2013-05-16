@@ -6,10 +6,10 @@
     <h:form id="menuForm" prependId="false">
         <p:menubar id="menu" autoDisplay="false">
             <p:submenu label="#{msgs.MENU_FILE_LABEL}" icon="ui-icon-document">
-                <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" />
+                <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_OPEN_PROJECT_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_SAVE_PROJECT_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_COPY_PROJECT_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.registeredUser}" />
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_IMPORT_LABEL}" icon="ui-icon-arrowthickstop-1-s" />
                 <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" />
@@ -51,10 +51,8 @@
             <p:submenu label="#{msgs.MENU_TOOLS_LABEL}" icon="ui-icon-wrench">
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script"/>
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image"/>
-                <p:menuitem value="#{msgs.MENU_ITEM_REVERSE_ENGINEERING_LABEL}" icon="ui-icon-gear"/>
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_SHARE_PROJECT_LABEL}" icon="ui-icon-transferthick-e-w" disabled="#{sessionController.registeredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_RATE_PROJECT_LABEL}" icon="ui-icon-star" disabled="#{sessionController.registeredUser}" />
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_AUTOMATIC_LAYOUT_LABEL}"/>
                 <p:menuitem value="#{msgs.MENU_ITEM_CONSOLE_LABEL}" />

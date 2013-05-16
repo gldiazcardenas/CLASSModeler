@@ -63,9 +63,7 @@ CLASSToolBox.prototype.init = function (container) {
   this.container.appendChild(this.createVertexTemplateFromCells([classElement], 140, 60));
   
   // Add package
-  var packageElement = new mxCell('package',
-                                  new mxGeometry(0, 0, 70, 50),
-                                  'shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;');
+  var packageElement = new mxCell('Package', new mxGeometry(0, 0, 70, 50), 'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
   packageElement.vertex = true;
   this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 70, 50));
 };

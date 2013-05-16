@@ -2,6 +2,9 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
   
-    <div id="graph" class="editorComponent" />
-    
+    <p:tabView id="editorTabView" orientation="bottom">
+        <p:tab id="diagramTab" title="Diagram 1">
+            <div id="graph" class="editorComponent" />
+        </p:tab>
+    </p:tabView>
 </ui:composition>

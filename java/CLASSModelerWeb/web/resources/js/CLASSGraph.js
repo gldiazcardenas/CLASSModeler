@@ -14,27 +14,10 @@
 CLASSGraph = function (container, model, renderHint, stylesheet) {
   // Call super
   mxGraph.call(this, container, model, renderHint, stylesheet);
-  
-  this.setConnectable(true);
-  this.setDropEnabled(true);
-  this.setPanning(true);
-  this.setTooltips(!mxClient.IS_TOUCH);
-  this.setAllowLoops(true);
-  this.allowAutoPanning = true;
 };
 
 // Graph inherits from mxGraph
 mxUtils.extend(CLASSGraph, mxGraph);
-
-/**
- * Allows to all values in fit.
- */
-CLASSGraph.prototype.minFitScale = null;
-
-/**
- * Allows to all values in fit.
- */
-CLASSGraph.prototype.maxFitScale = null;
 
 /**
  * Initializer method for the graph.
@@ -46,6 +29,9 @@ CLASSGraph.prototype.init = function (container) {
   this.setPanning(true);
   this.setTooltips(true);
   this.setConnectable(true);
+  this.setDropEnabled(true);
+  this.setAllowLoops(true);
+  this.allowAutoPanning = true;
   this.connectionHandler.setCreateTarget(true);
   
   // Install the lasso feature
@@ -67,6 +53,14 @@ CLASSGraph.prototype.init = function (container) {
   this.panningHandler.factoryMethod = function (menu, cell, evt) {
     return menu.graph.createPopupMenu(menu, cell, evt);
   };
+  
+  this.panningHandler.addListener(mxEvent.PAN_START, mxUtils.bind(this, function() {
+    this.container.style.cursor = 'pointer';
+  }));
+  
+  this.panningHandler.addListener(mxEvent.PAN_END, mxUtils.bind(this, function() {
+    this.container.style.cursor = 'default';
+  }));
 };
 
 /**

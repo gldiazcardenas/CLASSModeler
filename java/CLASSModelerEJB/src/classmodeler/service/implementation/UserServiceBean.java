@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
@@ -61,8 +62,11 @@ public @Stateless class UserServiceBean implements UserService {
 
   @Override
   public User insertUser(User user) {
-    // TODO Auto-generated method stub
-    return null;
+    if (user != null) {
+      user.setAccountStatus(EUserAccountStatus.INACTIVATED);
+      em.persist(user);
+    }
+    return user;
   }
 
   @Override

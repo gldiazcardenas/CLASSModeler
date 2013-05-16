@@ -11,14 +11,14 @@
             <h:panelGrid columns="2" cellpadding="0" cellspacing="0" width="100%">
                 <p:inputText id="firstName" value="#{signUPController.firstName}" style="width:92%;" required="true" />
                 <p:inputText id="lastName" value="#{signUPController.lastName}" style="width:92%;" required="true"/>
-            </h:panelGrid>
-            
-            <h:panelGrid columns="2" cellpadding="0" cellspacing="0" width="100%">
+                
                 <p:watermark for="firstName" value="#{msgs.SIGN_UP_FORM_FIRST_NAME_FIELD}" />
                 <p:watermark for="lastName" value="#{msgs.SIGN_UP_FORM_LAST_NAME_FIELD}" />
             </h:panelGrid>
             
-            <p:inputText id="email" value="#{signUPController.email}" style="width:96%;" required="true"/>
+            <p:inputText id="email" value="#{signUPController.email}" style="width:96%;" required="true">
+                <f:validator binding="#{emailValidator}"/>
+            </p:inputText>
             <p:watermark for="email" value="#{msgs.SIGN_UP_FORM_EMAIL_FIELD}" />
             
             <p:password id="password" value="#{signUPController.password}" style="width:96%;" required="true"/>
@@ -31,9 +31,9 @@
                 <f:selectItems value="#{signUPController.gendersForSelectOneRadio}" />
             </p:selectOneRadio>
             
-            <h:panelGroup>
-                <hr/>
-            </h:panelGroup>
+            <p:growl for="customMessage"/>
+            
+            <p:separator/>
             
             <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" actionListener="#{signUPController.actionPerformed()}" />
         </h:panelGrid>

@@ -11,19 +11,14 @@
 /**
  * JavaScript Class for the editor, this inherits from mxEditor.
  */
-CLASSEditor = function (initialXML) {
-  this.urlInit   = null; //"/CLASSModeler/Designer?init";
-  this.urlImage  = "/CLASSModeler/Designer?image";
-  this.urlPoll   = "/CLASSModeler/Designer?poll";
-  this.urlNotify = "/CLASSModeler/Designer?notify";
+CLASSEditor = function (initialXML, urlInit, urlImage, urlPoll, urlNotify) {
+  this.urlInit   = urlInit;
+  this.urlImage  = urlImage;
+  this.urlPoll   = urlPoll;
+  this.urlNotify = urlNotify;
   
   // Call super
   mxEditor.call(this);
-  
-  // Gets the containers
-  this.graphContainer   = document.getElementById("graph");
-  this.toolboxContainer = document.getElementById("toolbox");
-  this.outlineContainer = document.getElementById("outline");
 };
 
 // CLASSEditor inherits from mxEditor
@@ -32,7 +27,12 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.init = function() {
+CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContainer, outlineContainer) {
+  // Gets the containers
+  this.graphContainer   = graphContainer;
+  this.toolboxContainer = toolboxContainer;
+  this.outlineContainer = outlineContainer;
+  
   // Creates the Graph
   this.graph = new CLASSGraph();
   this.graph.init(this.graphContainer);
@@ -47,6 +47,39 @@ CLASSEditor.prototype.init = function() {
   this.toolbox = new CLASSToolBox(this);
   this.toolbox.init(this.toolboxContainer);
   
-  // Sets the image base path to the popUp handler
-  this.popupHandler.imageBasePath = mxClient.imageBasePath;
+  // Creates the Undo-Redo Handler
+  this.createUndoRedoManager();
+};
+
+/**
+ * Creates the UNDO-REDO handler mechanism and installs it into the graph
+ * editor.
+ */
+CLASSEditor.prototype.createUndoRedoManager = function () {
+  var undoRedoManager = new mxUndoManager();
+  
+  // Installs the command history
+  var listener = function(sender, evt) {
+    undoRedoManager.undoableEditHappened(evt.getProperty('edit'));
+  };
+  
+  this.graph.getModel().addListener(mxEvent.UNDO, listener);
+  this.graph.getView().addListener(mxEvent.UNDO, listener);
+  
+  // Keeps the selection in sync with the history
+  var undoHandler = function(sender, evt) {
+    var cand = this.graph.getSelectionCellsForChanges(evt.getProperty('edit').changes);
+    var cells = [];
+    
+    for (var i = 0; i < cand.length; i++) {
+      if (this.graph.view.getState(cand[i]) != null) {
+        cells.push(cand[i]);
+      }
+    }
+    
+    this.graph.setSelectionCells(cells);
+  };
+  
+  undoRedoManager.addListener(mxEvent.UNDO, undoHandler);
+  undoRedoManager.addListener(mxEvent.REDO, undoHandler);
 };

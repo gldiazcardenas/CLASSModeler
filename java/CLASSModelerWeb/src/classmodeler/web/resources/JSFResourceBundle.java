@@ -17,9 +17,11 @@ import javax.faces.context.FacesContext;
  * 
  * @author Gabriel Leonardo Diaz, 19.04.2013.
  */
-public final class JSFMessageBundle {
+public final class JSFResourceBundle {
   
-  private JSFMessageBundle () {
+  public static final String GUEST_DEFAULT_IMAGE_URL = "/resources/uploads/avatar.png";
+  
+  private JSFResourceBundle () {
     // This class CANNOT be instanced
   }
   

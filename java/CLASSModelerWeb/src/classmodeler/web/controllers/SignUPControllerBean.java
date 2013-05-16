@@ -16,13 +16,13 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import classmodeler.domain.user.EGender;
-import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFMessageBundle;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 
 /**
@@ -110,65 +110,52 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
     int i = 0;
     for (EGender g : EGender.values()) {
-      items[i++] = new SelectItem(g, JSFMessageBundle.getLocalizedMessage(g.getName()));
+      items[i++] = new SelectItem(g, JSFResourceBundle.getLocalizedMessage(g.getName()));
     }
     
     return items;
   }
 
   @Override
-  public void actionPerformed() {
+  public String actionPerformed() {
     if (!isAllValid()) {
-      return;
+      return null;
     }
     
-    User newUser = createUserFromFields();
-    
-    try {
-      userService.insertUser(newUser);
-    }
-    catch (Exception e) {
-      addErrorMessage("Unexpected error: " + e.getMessage(), null);
-      return;
-    }
-  }
-
-  @Override
-  public boolean isAllValid() {
-    boolean valid = true;
-    
-    if (GenericUtils.isEmptyString(firstName)) {
-      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_FST_NAME_MESSAGE"), null);
-      valid = false;
-    }
-    
-    if (GenericUtils.isEmptyString(lastName)) {
-      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_LST_NAME_MESSAGE"), null);
-      valid = false;
-    }
-    
-    if (GenericUtils.isEmptyString(email)) {
-      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_EMAIL_MESSAGE"), null);
-      valid = false;
-    }
-    
-    if (gender == null) {
-      addErrorMessage(JSFMessageBundle.getLocalizedMessage("SIGN_UP_FORM_MANDATORY_GENDER_MESSAGE"), null);
-      valid = false;
-    }
-    
-    return valid;
-  }
-  
-  private User createUserFromFields () {
     User newUser = new User();
     newUser.setFirstName(firstName);
     newUser.setLastName(lastName);
     newUser.setBirthdate(birthdate);
     newUser.setGender(gender);
+    newUser.setEmail(email);
     newUser.setPassword(password);
-    newUser.setAccountStatus(EUserAccountStatus.INACTIVATED);
-    return newUser;
+    newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
+    
+    userService.insertUser(newUser);
+    
+    return JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
+  }
+
+  @Override
+  public boolean isAllValid() {
+    // Checks basic required information
+    if (GenericUtils.isEmptyString(firstName) ||
+        GenericUtils.isEmptyString(lastName) ||
+        GenericUtils.isEmptyString(email) ||
+        gender == null) {
+      
+      return false;
+    }
+    
+    // Checks the email validity
+    if (!GenericUtils.isValidEmail(email) ||
+        userService.existsUser(email)) {
+      
+      return false;
+    }
+    
+    // All is valid now, so we can create the user
+    return true;
   }
   
 }

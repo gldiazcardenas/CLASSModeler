@@ -19,9 +19,11 @@ public interface JSFFormControllerBean {
    * Use this method to implement the logic that catches and processes the
    * values sent through the form.
    * 
+   * @return The OUTCOME redirecting to another page, or <code>null</code> to
+   *         stay in the current page.
    * @author Gabriel Leonardo Diaz, 02.03.2013.
    */
-  public void actionPerformed ();
+  public String actionPerformed ();
   
   /**
    * Use this method to validate the values given in the form before to process

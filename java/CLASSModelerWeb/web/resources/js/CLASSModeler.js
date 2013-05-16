@@ -25,8 +25,17 @@ function main (initialXML) {
     return;
   }
   
-  editorComponent  = new CLASSEditor(initialXML);
-  editorComponent.init();
+  var graphContainer   = document.getElementById("graph");
+  var toolboxContainer = document.getElementById("toolbox");
+  var outlineContainer = document.getElementById("outline");
+  
+  var urlInit          = "/CLASSModeler/Designer?init";
+  var urlImage         = "/CLASSModeler/Designer?image";
+  var urlPoll          = "/CLASSModeler/Designer?poll";
+  var urlNotify        = "/CLASSModeler/Designer?notify";
+  
+  editorComponent = new CLASSEditor(urlInit, urlImage, urlPoll, urlNotify);
+  editorComponent.init(initialXML, graphContainer, toolboxContainer, outlineContainer);
   
   actionHandler = new CLASSActionHandler(editorComponent);
   actionHandler.init();

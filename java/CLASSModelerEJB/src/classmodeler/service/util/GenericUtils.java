@@ -8,6 +8,9 @@
 
 package classmodeler.service.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Utility class that contains generic method to handle common operations like
  * validations, conversions and so on.
@@ -82,5 +85,26 @@ public final class GenericUtils {
     }
     
     return str1.trim().equals(str2.trim());
+  }
+  
+  /**
+   * Basic method that checks an email address and determines whether it is
+   * valid or not. This validation is made based on a regular expression, it is
+   * really simple and allows to know the validity of an email without complex
+   * calculations.
+   * 
+   * @param email
+   *          The email address to check.
+   * @return A <code>boolean</code> value with the result of the validation.
+   * @author Gabriel Leonardo Diaz, 10.05.2013.
+   */
+  public static boolean isValidEmail (String email) {
+    if (isEmptyString(email)) {
+      return false;
+    }
+    
+    Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+    Matcher m = p.matcher(email);
+    return m.matches();
   }
 }

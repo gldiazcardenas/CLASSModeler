@@ -73,5 +73,40 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.common_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.common.source_2.9.0.v20130314-0814.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.ecore_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.ecore.source_2.9.0.v20130314-0814.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.ecore.xmi_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.ecore.xmi.source_2.9.0.v20130314-0814.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20130318-0639.jar" sourcepath="lib/EMF/org.eclipse.emf.mapping.ecore2xml.source_2.7.0.v20130318-0639.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.common_1.8.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.common.source_1.8.0.v20130318-0942.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml_4.1.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.source_4.1.0.v20130318-0942.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml.resources_4.1.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.resources.source_4.1.0.v20130318-0942.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
