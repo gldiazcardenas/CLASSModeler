@@ -8,6 +8,8 @@
 
 package classmodeler.service.implementation;
 
+import javax.ejb.Stateless;
+
 import classmodeler.domain.project.Project;
 import classmodeler.service.ProjectService;
 
@@ -16,7 +18,7 @@ import classmodeler.service.ProjectService;
  * 
  * @author Gabriel Leonardo Diaz, 08.05.2013.
  */
-public class ProjectServiceBean implements ProjectService {
+public @Stateless class ProjectServiceBean implements ProjectService {
   
   @Override
   public void insertProject(Project project) {

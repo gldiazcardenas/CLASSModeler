@@ -13,6 +13,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,8 +32,8 @@ import classmodeler.domain.user.User;
  * @author Gabriel Leonardo Diaz, 11.04.2013.
  */
 @Entity
-@Table(name = "email_verification")
-public class EmailVerification implements Serializable {
+@Table(name = "verification")
+public class Verification implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
@@ -47,14 +49,21 @@ public class EmailVerification implements Serializable {
    * The hash code used to confirm the user account.
    */
   @Column(name = "verification_code", nullable = false, length = 255)
-  private String verificationCode;
+  private String code;
+  
+  /**
+   * The type of verification.
+   */
+  @Enumerated(EnumType.STRING)
+  @Column (name="verification_type", nullable = false, length = 20)
+  private EVerificationType type;
   
   /**
    * The expiration date of the hash code, when the code has expired the user
    * has to generate a new code.
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "verification_expiration_date", nullable = false)
+  @Column(name = "verification_expire_date", nullable = false)
   private Date expirationDate;
   
   /**
@@ -65,7 +74,7 @@ public class EmailVerification implements Serializable {
   @JoinColumn(name = "user_key", nullable = false)
   private User user;
   
-  public EmailVerification() {
+  public Verification() {
     super();
   }
   
@@ -77,12 +86,20 @@ public class EmailVerification implements Serializable {
     this.key = key;
   }
   
-  public String getVerificationCode() {
-    return verificationCode;
+  public String getCode() {
+    return code;
   }
   
-  public void setVerificationCode(String verificationCode) {
-    this.verificationCode = verificationCode;
+  public void setCode(String code) {
+    this.code = code;
+  }
+  
+  public EVerificationType getType() {
+    return type;
+  }
+  
+  public void setType(EVerificationType type) {
+    this.type = type;
   }
   
   public Date getExpirationDate() {
@@ -119,7 +136,7 @@ public class EmailVerification implements Serializable {
       return false;
     }
       
-    EmailVerification other = (EmailVerification) obj;
+    Verification other = (Verification) obj;
     if (key != other.key) {
       return false;
     }

@@ -8,11 +8,17 @@
 
 package classmodeler.service.implementation;
 
+import java.io.IOException;
+
 import javax.ejb.Stateless;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import classmodeler.domain.email.EVerificationType;
+import classmodeler.domain.email.Verification;
 import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
@@ -62,10 +68,36 @@ public @Stateless class UserServiceBean implements UserService {
 
   @Override
   public User insertUser(User user) {
-    if (user != null) {
+    
+    try {
+      // Inserts the user
       user.setAccountStatus(EUserAccountStatus.INACTIVATED);
       em.persist(user);
+      
+      // Inserts the email verification
+      Verification verificationCode = new Verification();
+      verificationCode.setUser(user);
+      verificationCode.setType(EVerificationType.ACCOUNT_ACTIVATION);
+      verificationCode.setExpirationDate(GenericUtils.generateExpirationDate());
+      verificationCode.setCode(GenericUtils.getHashCodeMD5(user.getEmail()));
+      em.persist(verificationCode);
+      
+      // Sends the email to the user address
+      GenericUtils.sendActivationAccountEmail(user.getEmail(), verificationCode.getCode());
+      
+      // Commits the changes.
+      em.flush();
     }
+    catch (AddressException e) {
+      // TODO Auto-generated catch block
+    }
+    catch (MessagingException e) {
+      // TODO Auto-generated catch block
+    }
+    catch (IOException e) {
+      // TODO Auto-generated catch block
+    }
+    
     return user;
   }
 

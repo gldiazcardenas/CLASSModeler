@@ -21,8 +21,7 @@ import classmodeler.service.SharingService;
  * 
  * @author Gabriel Leonardo Diaz, 06.05.2013.
  */
-@Singleton(mappedName = "sharingService")
-public class SharingServiceBean implements SharingService {
+public @Singleton class SharingServiceBean implements SharingService {
   
   private Set<ProjectShared> sharedProjects;
   
