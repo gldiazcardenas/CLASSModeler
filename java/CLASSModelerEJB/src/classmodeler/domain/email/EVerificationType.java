@@ -19,7 +19,7 @@ public enum EVerificationType {
    * When the user is signed up, the system sends an email to the confirm the
    * account.
    */
-  ACCOUNT_ACTIVATION,
+  ACTIVATE_ACCOUNT,
   
   /**
    * Used to send a confirmation after the user forgot the password and wants to

@@ -15,8 +15,11 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -24,6 +27,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.codec.digest.DigestUtils;
+
+import classmodeler.domain.email.EVerificationType;
+import classmodeler.domain.user.User;
 
 /**
  * Utility class that contains generic method to handle common operations like
@@ -123,16 +129,23 @@ public final class GenericUtils {
   }
   
   /**
-   * Creates a hash code using MD5 encrypt algorithm, this uses the email of the
-   * user and some other special characters.
+   * Creates a hash code using MD5 encrypt algorithm, this uses the email and
+   * the current date to build an special string that is parsed in MD5.
    * 
-   * @param email
+   * For example:
+   * - Email: gabriel.leonardo.diaz@gmail.com
+   * - Key  : 25
+   * 
+   * The result string is: "gabriel.leonardo.diaz@gmail.com" + "+%+" + Calendar.getInstance().getTimeInMillis().
+   * Later this is parsed to MD5 and converted to the specific format.
+   * 
+   * @param userEmail
    *          The email of the user.
    * @return The MD5 code representation.
    * @author Gabriel Leonardo Diaz, 16.05.2013.
    */
-  public static String getHashCodeMD5(String email) {
-    return DigestUtils.md5Hex(email + "+%+" + Calendar.getInstance().getTimeInMillis());
+  public static String getHashCodeMD5(String userEmail) {
+    return DigestUtils.md5Hex(userEmail + "+%+" + Calendar.getInstance().getTimeInMillis());
   }
   
   /**
@@ -151,37 +164,58 @@ public final class GenericUtils {
   /**
    * Sends the activation code to the user email address.
    * 
-   * @param email
+   * @param user
    *          The user email address.
    * @param hashCode
    *          The hash code generated to confirm the user account.
-   * @throws MessagingException 
    * @throws AddressException 
+   * @throws SendFailedException 
+   * @throws MessagingException 
    * @throws IOException 
    * @author Gabriel Leonardo Diaz, 16.05.2013.
    */
-  public static void sendActivationAccountEmail(String email, String hashCode) throws AddressException, MessagingException, IOException {
-    // Propertie
-    Properties props = new Properties();
-    props.put("mail.smtp.host", "smtp.gmail.com");
-    props.put("mail.smtp.socketFactory.port", "465");
-    props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.port", "465");
+  public static void sendActivationAccountEmail(User user, String hashCode) throws AddressException,
+                                                                                   SendFailedException,
+                                                                                   MessagingException,
+                                                                                   IOException {
+    // Properties
+    final Properties props = new Properties();
+    props.load(GenericUtils.class.getResourceAsStream("smtp_email_config.properties"));
     
     // Get a Session object
-    Session session = Session.getInstance(props, null);
+    Session session = Session.getInstance(props, new Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(props.getProperty("mail.user"), props.getProperty("mail.password"));
+      }
+    });
     session.setDebug(true);
     
-    // construct the message
-    Message msg = new MimeMessage(session);
-    msg.setFrom(new InternetAddress("gabriel.leonardo.diaz@gmail.com"));
-    msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("leonar248@hotmail.com", false));
-    msg.setSubject("Mensaje de prueba");
-    msg.setText("Hollaaaaaaaa");
-    msg.setSentDate(new Date());
+    // Constructs the HTML message
+    StringBuilder msgHTML = new StringBuilder();
+    msgHTML.append("<html>");
+    msgHTML.append("<p>Hola <b>").append(user.getName()).append("</b>,");
+    msgHTML.append("<br/><br/>");
+    msgHTML.append("<div>Tu cuenta ha sido creada, por favor pulsa en el siguiente link para hacer la activación: ");
+    msgHTML.append("<a href='").append(props.getProperty("classmodeler.verification.address"))
+           .append("?code=").append(hashCode)
+           .append("&address=").append(user.getEmail())
+           .append("&type=").append(EVerificationType.ACTIVATE_ACCOUNT)
+           .append("'>Activar Cuenta</a>");
+    msgHTML.append("</div>");
+    msgHTML.append("</p>");
+    msgHTML.append("</html>");
     
-    // send the thing off
+    // Constructs the email
+    Message msg = new MimeMessage(session);
+    msg.setFrom(new InternetAddress(props.getProperty("mail.user")));
+    msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail(), false));
+    msg.setSubject("CLASSModeler - Activación de Cuenta");
+    msg.setHeader("X-Mailer", "msgsend");
+    msg.setContent(msgHTML.toString(), "text/html");
+    msg.setSentDate(Calendar.getInstance().getTime());
+    
+    // Send the thing off
     Transport.send(msg);
   }
 }

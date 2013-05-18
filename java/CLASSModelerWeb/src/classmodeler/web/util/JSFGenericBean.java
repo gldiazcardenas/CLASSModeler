@@ -26,23 +26,23 @@ public class JSFGenericBean implements JSFMessageBean, Serializable {
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void addErrorMessage(String message, String details) {
-    addMessage(FacesMessage.SEVERITY_ERROR, message, details);
+  public void addErrorMessage(String clientId, String message, String details) {
+    addMessage(FacesMessage.SEVERITY_ERROR, clientId, message, details);
   }
 
   @Override
-  public void addWarningMessage(String message, String details) {
-    addMessage(FacesMessage.SEVERITY_WARN, message, details);
+  public void addWarningMessage(String clientId, String message, String details) {
+    addMessage(FacesMessage.SEVERITY_WARN, clientId, message, details);
   }
 
   @Override
-  public void addInformationMessage(String message, String details) {
-    addMessage(FacesMessage.SEVERITY_INFO, message, details);
+  public void addInformationMessage(String clientId, String message, String details) {
+    addMessage(FacesMessage.SEVERITY_INFO, clientId, message, details);
   }
   
   @Override
-  public void addFatalMessage(String message, String details) {
-    addMessage(FacesMessage.SEVERITY_FATAL, message, details);
+  public void addFatalMessage(String clientId, String message, String details) {
+    addMessage(FacesMessage.SEVERITY_FATAL, clientId, message, details);
   }
   
   /**
@@ -68,14 +68,16 @@ public class JSFGenericBean implements JSFMessageBean, Serializable {
    * 
    * @param severity
    *          The severity of the message.
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
    * @param message
    *          The message text.
    * @param details
    *          The details of the message.
    * @author Gabriel Leonardo Diaz, 23.02.2013.
    */
-  private void addMessage (Severity severity, String message, String details) {
-    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, message, details));
+  private void addMessage (Severity severity, String clientId, String message, String details) {
+    FacesContext.getCurrentInstance().addMessage(clientId, new FacesMessage(severity, message, details));
   }
   
 }

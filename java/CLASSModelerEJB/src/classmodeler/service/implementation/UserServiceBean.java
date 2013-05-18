@@ -8,14 +8,15 @@
 
 package classmodeler.service.implementation;
 
-import java.io.IOException;
+import java.util.Calendar;
 
+import javax.annotation.Resource;
+import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.UserTransaction;
 
 import classmodeler.domain.email.EVerificationType;
 import classmodeler.domain.email.Verification;
@@ -24,6 +25,7 @@ import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
+import classmodeler.service.exception.DuplicatedUserEmailException;
 import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
@@ -34,6 +36,9 @@ import classmodeler.service.util.GenericUtils;
  * @author Gabriel Leonardo Diaz, 02.03.2013.
  */
 public @Stateless class UserServiceBean implements UserService {
+  
+  @Resource
+  private EJBContext context;
   
   @PersistenceContext(unitName="CLASSModelerPU")
   private EntityManager em;
@@ -67,37 +72,39 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User insertUser(User user) {
+  public User insertUser(User user) throws Exception {
+    if (existsUser(user.getEmail())) {
+      throw new DuplicatedUserEmailException("", user.getEmail());
+    }
+    
+    UserTransaction transaction = context.getUserTransaction();
     
     try {
+      transaction.begin();
+      
       // Inserts the user
       user.setAccountStatus(EUserAccountStatus.INACTIVATED);
+      user.setCreatedDate(Calendar.getInstance().getTime());
       em.persist(user);
       
       // Inserts the email verification
-      Verification verificationCode = new Verification();
-      verificationCode.setUser(user);
-      verificationCode.setType(EVerificationType.ACCOUNT_ACTIVATION);
-      verificationCode.setExpirationDate(GenericUtils.generateExpirationDate());
-      verificationCode.setCode(GenericUtils.getHashCodeMD5(user.getEmail()));
-      em.persist(verificationCode);
+      Verification verification = new Verification();
+      verification.setUser(user);
+      verification.setType(EVerificationType.ACTIVATE_ACCOUNT);
+      verification.setExpirationDate(GenericUtils.generateExpirationDate());
+      verification.setCode(GenericUtils.getHashCodeMD5(user.getEmail()));
+      em.persist(verification);
       
       // Sends the email to the user address
-      GenericUtils.sendActivationAccountEmail(user.getEmail(), verificationCode.getCode());
+      GenericUtils.sendActivationAccountEmail(user, verification.getCode());
       
       // Commits the changes.
-      em.flush();
+      transaction.commit();
     }
-    catch (AddressException e) {
-      // TODO Auto-generated catch block
+    finally {
+      // RollBack changes, on successful there are not pending changes. 
+      transaction.rollback();
     }
-    catch (MessagingException e) {
-      // TODO Auto-generated catch block
-    }
-    catch (IOException e) {
-      // TODO Auto-generated catch block
-    }
-    
     return user;
   }
 

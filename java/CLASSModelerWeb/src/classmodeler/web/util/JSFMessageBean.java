@@ -20,41 +20,49 @@ public interface JSFMessageBean {
   /**
    * Adds an error message to the JSF context.
    * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
    * @param message
    *          The text of the message, this parameter should not be null.
    * @param details
    *          The details of the message, null value is allowed.
    */
-  public void addErrorMessage (String message, String details);
+  public void addErrorMessage (String clientId, String message, String details);
   
   /**
    * Adds a warning message to the JSF context.
    * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
    * @param message
    *          The text of the message, this parameter should not be null.
    * @param details
    *          The details of the message, null value is allowed.
    */
-  public void addWarningMessage (String message, String details);
+  public void addWarningMessage (String clientId, String message, String details);
   
   /**
    * Adds an information message to the JSF context.
    * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
    * @param message
    *          The text of the message, this parameter should not be null.
    * @param details
    *          The details of the message, null value is allowed.
    */
-  public void addInformationMessage (String message, String details);
+  public void addInformationMessage (String clientId, String message, String details);
   
   /**
    * Adds a fatal error message to the JSF context.
    * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
    * @param message
    *          The text of the message, this parameter should not be null.
    * @param details
    *          The details of the message, null value is allowed.
    */
-  public void addFatalMessage (String message, String details);
+  public void addFatalMessage (String clientId, String message, String details);
 
 }

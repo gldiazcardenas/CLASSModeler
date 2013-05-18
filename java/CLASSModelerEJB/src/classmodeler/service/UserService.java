@@ -12,6 +12,7 @@ import javax.ejb.Local;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.service.exception.DuplicatedUserEmailException;
 import classmodeler.service.exception.InactivatedUserAccountException;
 
 /**
@@ -66,9 +67,14 @@ public interface UserService {
    * @param user
    *          The new user to save.
    * @return The user bean after inserting in the database.
+   * @throws DuplicatedUserEmailException
+   *           When the user email already exists in database.
+   * @throws Exception
+   *           For any problem inserting the user or sending the activation
+   *           email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User insertUser (User user);
+  public User insertUser (User user) throws Exception;
   
   /**
    * Updates the fields of the given user into the database.

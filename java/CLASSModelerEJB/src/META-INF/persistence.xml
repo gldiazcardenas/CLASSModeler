@@ -6,8 +6,6 @@
              
     <persistence-unit name="CLASSModelerPU">
         <jta-data-source>jdbc/CLASSModelerDS</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>

@@ -18,6 +18,7 @@ import javax.faces.model.SelectItem;
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
+import classmodeler.service.exception.DuplicatedUserEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -118,22 +119,32 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
   @Override
   public String actionPerformed() {
-    if (!isAllValid()) {
-      return null;
+    String resultOutCome = null;
+    
+    if (isAllValid()) {
+      User newUser = new User();
+      newUser.setFirstName(firstName);
+      newUser.setLastName(lastName);
+      newUser.setBirthdate(birthdate);
+      newUser.setGender(gender);
+      newUser.setEmail(email);
+      newUser.setPassword(password);
+      newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
+      
+      try {
+        userService.insertUser(newUser);
+        resultOutCome = JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
+      }
+      catch (DuplicatedUserEmailException e) {
+        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
+      }
+      catch (Exception e) {
+        // For unexpected exceptions
+        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
+      }
     }
     
-    User newUser = new User();
-    newUser.setFirstName(firstName);
-    newUser.setLastName(lastName);
-    newUser.setBirthdate(birthdate);
-    newUser.setGender(gender);
-    newUser.setEmail(email);
-    newUser.setPassword(password);
-    newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
-    
-    userService.insertUser(newUser);
-    
-    return JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
+    return resultOutCome;
   }
 
   @Override
@@ -148,9 +159,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     }
     
     // Checks the email validity
-    if (!GenericUtils.isValidEmail(email) ||
-        userService.existsUser(email)) {
-      
+    if (!GenericUtils.isValidEmail(email)) {
       return false;
     }
     

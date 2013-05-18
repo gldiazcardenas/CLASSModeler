@@ -35,7 +35,7 @@
             
             <p:separator/>
             
-            <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" actionListener="#{signUPController.actionPerformed()}" />
+            <p:commandButton ajax="false" value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" action="#{signUPController.actionPerformed()}" />
         </h:panelGrid>
     </h:form>
 </ui:composition>
