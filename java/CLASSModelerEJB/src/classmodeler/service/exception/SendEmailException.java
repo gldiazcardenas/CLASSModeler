@@ -10,27 +10,28 @@ package classmodeler.service.exception;
 
 import javax.ejb.ApplicationException;
 
+
 /**
- * Exception class that is thrown when the user tries to log in the system but
- * he/she has not activated its account.
+ * Exception thrown when the system tries to send an email but it is not able to
+ * complete the operation by any reason.
  * 
- * @author Gabriel Leonardo Diaz, 14.04.2013.
+ * @author Gabriel Leonardo Diaz, 18.05.2013.
  */
 @ApplicationException (rollback = true)
-public class InactivatedUserAccountException extends ServiceException {
+public class SendEmailException extends ServiceException {
 
   private static final long serialVersionUID = 1L;
-
-  public InactivatedUserAccountException() {
+  
+  public SendEmailException() {
     super();
   }
   
-  public InactivatedUserAccountException (String message) {
+  public SendEmailException (String message) {
     super(message);
   }
   
-  public InactivatedUserAccountException (String message, Throwable cause) {
-    super (message, cause);
+  public SendEmailException (String message, Throwable cause) {
+    super(message, cause);
   }
   
 }

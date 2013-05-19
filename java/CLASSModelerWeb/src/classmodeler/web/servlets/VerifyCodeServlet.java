@@ -10,41 +10,50 @@ package classmodeler.web.servlets;
 
 import java.io.IOException;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import classmodeler.domain.email.EVerificationType;
+import classmodeler.domain.user.User;
+import classmodeler.service.UserService;
+
 /**
- * Servlet implementation class DesignerServlet that handles the requests from
- * the mxGraph client side component, processes notifications when the graph is
- * modified by adding, editing or removing elements.
+ * Servlet implementation that allows to check the verification code sent to the
+ * user email address.
  * 
- * @author Gabriel Leonardo Diaz, 02.05.2013.
+ * @author Gabriel Leonardo Diaz, 18.05.2013.
  */
-@WebServlet("/Designer")
-public class DesignerServlet extends HttpServlet {
+@WebServlet("/VerifyCode")
+public class VerifyCodeServlet extends HttpServlet {
+  
+  @EJB
+  private UserService userService;
   
   private static final long serialVersionUID = 1L;
   
   /**
    * @see HttpServlet#HttpServlet()
    */
-  public DesignerServlet() {
+  public VerifyCodeServlet() {
     super();
   }
   
-  /**
-   * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
-   */
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/xml;charset=UTF-8");
-    response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-    response.setHeader("Cache-control", "private, no-cache, no-store");
-    response.setHeader("Expires", "0");
-    response.setStatus(HttpServletResponse.SC_OK);
+    String code = request.getParameter("code");
+    String email = request.getParameter("email");
+    String action = request.getParameter("action");
+    
+    if (EVerificationType.ACTIVATE_ACCOUNT.toString().equals(action)) {
+      User user = userService.getUserByEmail(email);
+      userService.activateUserAccount(user, code);
+    }
+    
+    request.getRequestDispatcher("/pages/portal/activatedAccount.xhtml").forward(request, response);
   }
   
   /**

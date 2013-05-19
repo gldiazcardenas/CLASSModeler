@@ -31,8 +31,6 @@
                 <f:selectItems value="#{signUPController.gendersForSelectOneRadio}" />
             </p:selectOneRadio>
             
-            <p:growl for="customMessage"/>
-            
             <p:separator/>
             
             <p:commandButton ajax="false" value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" action="#{signUPController.actionPerformed()}" />

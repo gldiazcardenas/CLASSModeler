@@ -18,7 +18,8 @@ import javax.faces.model.SelectItem;
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
-import classmodeler.service.exception.DuplicatedUserEmailException;
+import classmodeler.service.exception.ExistingUserEmailException;
+import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -135,12 +136,14 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
         userService.insertUser(newUser);
         resultOutCome = JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
       }
-      catch (DuplicatedUserEmailException e) {
+      catch (ExistingUserEmailException e) {
         addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
       }
-      catch (Exception e) {
-        // For unexpected exceptions
+      catch (SendEmailException e) {
         addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
+      }
+      catch (RuntimeException e) { // For unexpected exceptions
+        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
       }
     }
     

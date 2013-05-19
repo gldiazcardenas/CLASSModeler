@@ -12,8 +12,9 @@ import javax.ejb.Local;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
-import classmodeler.service.exception.DuplicatedUserEmailException;
+import classmodeler.service.exception.ExistingUserEmailException;
 import classmodeler.service.exception.InactivatedUserAccountException;
+import classmodeler.service.exception.SendEmailException;
 
 /**
  * Service definition that contains all the operations to handle users in the
@@ -27,29 +28,29 @@ public interface UserService {
   /**
    * Service method that checks if the given user email already exists.
    * 
-   * @param nickname
-   *          The nickname of the user to check.
+   * @param email
+   *          The email of the user to check.
    * @return A <code>boolean</code> value indicating if the user email exists or
    *         not.
    * @author Gabriel Leonardo Diaz, 02.03.2013.
    */
-  public boolean existsUser (String nickname);
+  public boolean existsUser (String email);
   
   /**
    * Logs in the user represented by the given credentials in the system. This
    * also allows to log in as a invited user ({@link Guest}), in that case the
-   * nickname should be equal to {@link Guest#GUEST_NICK_NAME} and the password
+   * nickname should be equal to {@link Guest#GUEST_EMAIL} and the password
    * equal to {@link Guest#GUEST_PASSWORD}.
    * 
-   * @param nickname
-   *          The user nickname.
+   * @param email
+   *          The user email.
    * @param password
    *          The use password.
    * @throws InactivatedUserAccountException
    *           When the user is found but the account has not been activated.
    * @return A user bean or null if no one user is found.
    */
-  public IUser logIn (String nickname, String password) throws InactivatedUserAccountException;
+  public IUser logIn (String email, String password) throws InactivatedUserAccountException;
   
   /**
    * Activates the user account of the given user.
@@ -59,22 +60,23 @@ public interface UserService {
    * @return The user after setting the account status.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User activateUserAccount (User user);
+  public User activateUserAccount (User user, String verificationCode);
   
   /**
-   * Inserts the given user into the database.
+   * Inserts the given user into the database. This method also creates the user
+   * account verification code and sends it to the user email address.
    * 
    * @param user
    *          The new user to save.
    * @return The user bean after inserting in the database.
-   * @throws DuplicatedUserEmailException
-   *           When the user email already exists in database.
-   * @throws Exception
-   *           For any problem inserting the user or sending the activation
-   *           email.
+   * @throws ExistingUserEmailException
+   *           When the user that is being inserted has an already existing
+   *           email in database.
+   * @throws SendEmailException
+   *           When the system is not able to send the activation email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User insertUser (User user) throws Exception;
+  public User insertUser (User user) throws ExistingUserEmailException, SendEmailException;
   
   /**
    * Updates the fields of the given user into the database.
@@ -104,6 +106,16 @@ public interface UserService {
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
   public User getUserByKey (int userKey);
+  
+  /**
+   * Gets the user who owns the given email.
+   * 
+   * @param email
+   *          The email of the user.
+   * @return The user that has the email associated.
+   * @author Gabriel Leonardo Diaz, 18.05.2013.
+   */
+  public User getUserByEmail (String email);
   
   
 }

@@ -8,17 +8,16 @@
 
 package classmodeler.service.exception;
 
+
 /**
  * Generic exception for EJB services.
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2013.
  */
-public abstract class ServiceException extends Exception {
+public abstract class ServiceException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
   
-  private String errorMessageKey;
-
   public ServiceException() {
     super();
   }
@@ -29,19 +28,6 @@ public abstract class ServiceException extends Exception {
   
   public ServiceException (String message, Throwable cause) {
     super(message, cause);
-  }
-  
-  public ServiceException (String message, Throwable cause, String errorMessageKey) {
-    super(message, cause);
-    this.errorMessageKey = errorMessageKey;
-  }
-  
-  public String getErrorMessageKey() {
-    return errorMessageKey;
-  }
-  
-  public void setErrorMessageKey(String errorMessageKey) {
-    this.errorMessageKey = errorMessageKey;
   }
 
 }

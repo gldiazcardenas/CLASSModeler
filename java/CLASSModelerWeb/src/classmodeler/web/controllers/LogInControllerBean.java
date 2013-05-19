@@ -64,7 +64,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
    *           As a Guest user this exception never happens.
    */
   public String logInGuest () throws InactivatedUserAccountException {
-    sessionController.login(Guest.GUEST_NICK_NAME, Guest.GUEST_PASSWORD);
+    sessionController.login(Guest.GUEST_EMAIL, Guest.GUEST_PASSWORD);
     
     // Redirect to the designer page
     return "pages/designer/designer.xhtml?faces-redirect=true";

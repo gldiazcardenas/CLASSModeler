@@ -20,7 +20,7 @@ public class Guest implements IUser {
   
   public static final String GUEST_NAME      = "GUEST_NAME";
   public static final String GUEST_PASSWORD  = "GUEST_PASSWORD";
-  public static final String GUEST_NICK_NAME = "GUEST_NICK_NAME";
+  public static final String GUEST_EMAIL     = "GUEST_NICK_NAME";
   public static final String GUEST_AVATAR    = "GUEST_AVATAR";
 
   @Override
@@ -34,8 +34,8 @@ public class Guest implements IUser {
   }
 
   @Override
-  public String getNickname() {
-    return GUEST_NICK_NAME;
+  public String getEmail() {
+    return GUEST_EMAIL;
   }
 
   @Override

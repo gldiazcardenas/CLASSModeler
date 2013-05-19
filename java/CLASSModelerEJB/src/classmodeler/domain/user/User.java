@@ -193,11 +193,6 @@ public class User implements IUser {
   }
   
   @Override
-  public String getNickname() {
-    return email;
-  }
-  
-  @Override
   public boolean isRegisteredUser() {
     return true;
   }

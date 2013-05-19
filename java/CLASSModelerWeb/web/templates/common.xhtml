@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
       
 <h:head>
     <!-- Other stuff -->
@@ -20,6 +21,8 @@
 </h:head>
 
 <h:body onload="#{executeOnload}">
+    <p:growl for="customMessage"/>
+    
     <div id="header" class="ui-widget-content">
         <ui:insert name="header"/>
     </div>

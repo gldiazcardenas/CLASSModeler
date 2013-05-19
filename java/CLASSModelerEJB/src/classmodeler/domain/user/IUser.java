@@ -32,11 +32,12 @@ public interface IUser extends Serializable {
   public String getPassword();
   
   /**
-   * Gets the nickname of the user used to login in the system.
+   * Gets the email of the user, this is used as nickname to login in the
+   * system.
    * 
-   * @return The nickname of the user.
+   * @return The email of the user.
    */
-  public String getNickname();
+  public String getEmail();
   
   /**
    * Gets the URL of the avatar of the user.

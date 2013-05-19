@@ -8,38 +8,45 @@
 
 package classmodeler.service.exception;
 
+import javax.ejb.ApplicationException;
+
 /**
  * This is thrown when the user tries to register itself twice. The system looks
  * for the same email and throws an exception if any is found.
  * 
  * @author Gabriel Leonardo Diaz, 17.05.2013.
  */
-public class DuplicatedUserEmailException extends ServiceException {
+@ApplicationException (rollback = true)
+public class ExistingUserEmailException extends ServiceException {
   
   private static final long serialVersionUID = 1L;
   
   private String email;
   
-  public DuplicatedUserEmailException() {
+  public ExistingUserEmailException() {
     super();
   }
   
-  public DuplicatedUserEmailException (String message) {
+  public ExistingUserEmailException (String message) {
     super(message);
   }
   
-  public DuplicatedUserEmailException (String message, String email) {
+  public ExistingUserEmailException (String message, String email) {
     super(message);
     
     this.email = email;
   }
   
-  public DuplicatedUserEmailException (String message, Throwable cause) {
+  public ExistingUserEmailException (String message, Throwable cause) {
     super(message, cause);
   }
   
   public String getEmail() {
     return email;
+  }
+  
+  public void setEmail(String email) {
+    this.email = email;
   }
   
 }
