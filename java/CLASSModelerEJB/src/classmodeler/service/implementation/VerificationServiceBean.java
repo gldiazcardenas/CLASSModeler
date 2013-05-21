@@ -76,9 +76,9 @@ public class VerificationServiceBean implements VerificationService {
       
       // Constructs the HTML message
       String subject = "CLASSModeler - Activación de Cuenta";
-      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.verification.address"))
+      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.activation.address"))
          .append("?code=").append(verification.getCode())
-         .append("&address=").append(user.getEmail())
+         .append("&email=").append(user.getEmail())
          .append("&action=").append(EVerificationType.ACTIVATE_ACCOUNT);
       
       StringBuilder msgHTML = new StringBuilder();
@@ -87,7 +87,6 @@ public class VerificationServiceBean implements VerificationService {
       msgHTML.append("<br/><br/>");
       msgHTML.append("<div>Tu cuenta ha sido creada satisfactoriamente. El codigo de activación tiene una vigencia ");
       msgHTML.append("de dos(2) dias, para activar su cuenta ahora pulse sobre el siguiente link: ");
-      msgHTML.append("Por favor pulsa en el siguiente link para hacer la activación: ");
       msgHTML.append("<a href='").append(link.toString()).append("' target='_blank'>").append(link.toString()).append("</a>");
       msgHTML.append("</div>");
       msgHTML.append("</p>");

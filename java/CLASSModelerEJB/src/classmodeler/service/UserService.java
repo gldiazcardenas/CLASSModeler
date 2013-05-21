@@ -13,6 +13,7 @@ import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.exception.ExistingUserEmailException;
+import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.exception.SendEmailException;
 
@@ -55,12 +56,14 @@ public interface UserService {
   /**
    * Activates the user account of the given user.
    * 
-   * @param user
-   *          The user to activate its account.
+   * @param email
+   *          The email of user to activate its account.
    * @return The user after setting the account status.
+   * @throws ExpiredVerificationCodeException
+   *           When the activation code for the user account has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User activateUserAccount (User user, String verificationCode);
+  public User activateUserAccount (String email, String verificationCode) throws ExpiredVerificationCodeException;
   
   /**
    * Inserts the given user into the database. This method also creates the user

@@ -15,7 +15,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import classmodeler.domain.email.EVerificationType;
 import classmodeler.domain.email.Verification;
@@ -26,6 +26,7 @@ import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.ExistingUserEmailException;
+import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.CollectionUtils;
@@ -60,9 +61,29 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User activateUserAccount(User user, String verificationCode) {
-    // TODO Auto-generated method stub
-    return null;
+  public User activateUserAccount(String email, String verificationCode) throws ExpiredVerificationCodeException {
+    User user = getUserByEmail(email);
+    
+    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code AND v.expirationDate >= :currentTime", Verification.class);
+    query.setParameter("user", user);
+    query.setParameter("code", verificationCode);
+    query.setParameter("verificationType", EVerificationType.ACTIVATE_ACCOUNT);
+    query.setParameter("currentTime", Calendar.getInstance().getTime());
+    
+    if (CollectionUtils.isEmptyCollection(query.getResultList())) {
+      // The verification code has expired, the system should generate a new one.
+      Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
+      
+      // Sends the email with the new activation code.
+      vsb.sendActivationEmail(user, verification);
+      
+      throw new ExpiredVerificationCodeException("The activation code has expired."); // This doesn't trigger a RollBack operation.
+    }
+    
+    user.setAccountStatus(EUserAccountStatus.ACTIVATED);
+    em.merge(user);
+    
+    return user;
   }
 
   @Override
@@ -111,14 +132,13 @@ public @Stateless class UserServiceBean implements UserService {
   public User getUserByEmail(String email) {
     User user = null;
     if (!GenericUtils.isEmptyString(email)) {
-      Query query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.email) = :userEmail");
+      TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.email) = :userEmail", User.class);
       query.setParameter("userEmail", email.toLowerCase());
       
-      @SuppressWarnings("rawtypes")
-      List userList = query.getResultList();
+      List<User> userList = query.getResultList();
       
       if (!CollectionUtils.isEmptyCollection(userList)) {
-        user = (User) userList.get(0);
+        user = userList.get(0);
       }
     }
     

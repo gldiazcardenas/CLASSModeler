@@ -1,0 +1,24 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" 
+                template="/templates/portal.xhtml">
+                
+<ui:param name="title" value="#{msgs.PORTAL_PAGE_BASE_TITLE}"/>
+
+<ui:define name="userSection">
+  <ui:include src="/pages/portal/logIn.xhtml" />
+</ui:define>
+
+
+<ui:define name="centerContent">
+    <div style="margin: 60px 0;">
+        <h:outputText value="#{verifyCodeController.activateUserAccount()}" />
+        <p:spacer width="10"/>
+        <h:outputLink value="../../index.xhtml"><h:outputText value="#{msgs.GO_BACK_LABEL}" /></h:outputLink>
+    </div>
+</ui:define>
+
+
+
+</ui:composition>

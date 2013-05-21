@@ -8,7 +8,6 @@
 
 package classmodeler.service.exception;
 
-import javax.ejb.ApplicationException;
 
 
 /**
@@ -17,7 +16,6 @@ import javax.ejb.ApplicationException;
  * 
  * @author Gabriel Leonardo Diaz, 18.05.2013.
  */
-@ApplicationException (rollback = true)
 public class SendEmailException extends ServiceException {
 
   private static final long serialVersionUID = 1L;

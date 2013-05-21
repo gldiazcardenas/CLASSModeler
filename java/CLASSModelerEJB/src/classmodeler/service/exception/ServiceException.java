@@ -8,12 +8,15 @@
 
 package classmodeler.service.exception;
 
+import javax.ejb.ApplicationException;
+
 
 /**
  * Generic exception for EJB services.
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2013.
  */
+@ApplicationException (rollback = true, inherited = true)
 public abstract class ServiceException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;

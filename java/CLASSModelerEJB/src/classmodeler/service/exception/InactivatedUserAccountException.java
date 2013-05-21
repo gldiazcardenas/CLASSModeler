@@ -8,7 +8,6 @@
 
 package classmodeler.service.exception;
 
-import javax.ejb.ApplicationException;
 
 /**
  * Exception class that is thrown when the user tries to log in the system but
@@ -16,7 +15,6 @@ import javax.ejb.ApplicationException;
  * 
  * @author Gabriel Leonardo Diaz, 14.04.2013.
  */
-@ApplicationException (rollback = true)
 public class InactivatedUserAccountException extends ServiceException {
 
   private static final long serialVersionUID = 1L;
