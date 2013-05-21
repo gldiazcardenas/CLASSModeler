@@ -28,7 +28,9 @@ import classmodeler.service.VerificationService;
 import classmodeler.service.exception.ExistingUserEmailException;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InactivatedUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
+import classmodeler.service.exception.ServiceException;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 
@@ -61,8 +63,14 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User activateUserAccount(String email, String verificationCode) throws ExpiredVerificationCodeException {
+  public User activateUserAccount(String email, String verificationCode) throws ServiceException {
     User user = getUserByEmail(email);
+    
+    if (user == null || user.getAccountStatus() != EUserAccountStatus.INACTIVATED) {
+      throw new InvalidUserAccountException("The user account is invalid.");
+    }
+    
+    em.refresh(user); // Reloads the changes
     
     TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code AND v.expirationDate >= :currentTime", Verification.class);
     query.setParameter("user", user);

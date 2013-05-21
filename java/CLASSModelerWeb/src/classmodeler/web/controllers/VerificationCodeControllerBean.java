@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import classmodeler.domain.email.EVerificationType;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
+import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -49,13 +51,16 @@ public class VerificationCodeControllerBean extends JSFGenericBean {
     
     String resultMessage = JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_MISSING_INFO_MESSAGE");
     
-    if (EVerificationType.ACTIVATE_ACCOUNT.toString().equals(action)) {
+    if (GenericUtils.isValidEmail(email) && EVerificationType.ACTIVATE_ACCOUNT.toString().equals(action)) {
       try {
         userService.activateUserAccount(email, code);
         resultMessage = JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE");
       }
       catch (ExpiredVerificationCodeException e) {
         resultMessage = JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_EXPIRED_CODE_MESSAGE");
+      }
+      catch (InvalidUserAccountException e) {
+        resultMessage = JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_INVALID_STATE_MESSAGE");
       }
     }
     
