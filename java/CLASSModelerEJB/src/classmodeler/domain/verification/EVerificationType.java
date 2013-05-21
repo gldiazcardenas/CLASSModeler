@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.email;
+package classmodeler.domain.verification;
 
 /**
  * The different kinds of email verification made by the system.

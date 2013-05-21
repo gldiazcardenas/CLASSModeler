@@ -12,9 +12,9 @@ import java.util.Date;
 
 import javax.ejb.Local;
 
-import classmodeler.domain.email.EVerificationType;
-import classmodeler.domain.email.Verification;
 import classmodeler.domain.user.User;
+import classmodeler.domain.verification.EVerificationType;
+import classmodeler.domain.verification.Verification;
 import classmodeler.service.exception.SendEmailException;
 
 /**

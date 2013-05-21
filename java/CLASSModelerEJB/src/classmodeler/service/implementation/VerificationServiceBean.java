@@ -28,9 +28,9 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import classmodeler.domain.email.EVerificationType;
-import classmodeler.domain.email.Verification;
 import classmodeler.domain.user.User;
+import classmodeler.domain.verification.EVerificationType;
+import classmodeler.domain.verification.Verification;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;

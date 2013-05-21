@@ -14,7 +14,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import classmodeler.domain.email.EVerificationType;
+import classmodeler.domain.verification.EVerificationType;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;

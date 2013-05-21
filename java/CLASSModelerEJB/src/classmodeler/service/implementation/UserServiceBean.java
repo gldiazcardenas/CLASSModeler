@@ -17,12 +17,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import classmodeler.domain.email.EVerificationType;
-import classmodeler.domain.email.Verification;
 import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.domain.verification.EVerificationType;
+import classmodeler.domain.verification.Verification;
 import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.ExistingUserEmailException;
