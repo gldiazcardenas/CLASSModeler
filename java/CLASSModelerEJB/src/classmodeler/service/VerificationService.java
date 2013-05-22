@@ -41,7 +41,7 @@ public interface VerificationService {
    * Sends the activation account email to the address provided by the user.
    * 
    * @param user
-   *          The user which the email will be sent to.
+   *          The user owner of the email address.
    * @param verification
    *          The verification object created for the email.
    * @throws SendEmailException
@@ -49,6 +49,19 @@ public interface VerificationService {
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
   public void sendActivationEmail(User user, Verification verification) throws SendEmailException;
+  
+  /**
+   * Sends the reset password email to the address provided by the user.
+   * 
+   * @param user
+   *          The user owner of the email address.
+   * @param verification
+   *          The verification object created for the email.
+   * @throws SendEmailException
+   *           When the system is not able to perform the operation.
+   * @author Gabriel Leonardo Diaz, 21.05.2013.
+   */
+  public void sendResetPasswordEmail (User user, Verification verification) throws SendEmailException;
   
   /**
    * Creates a hash code using MD5 encrypt algorithm, this uses the email and

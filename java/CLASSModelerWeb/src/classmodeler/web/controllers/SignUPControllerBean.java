@@ -120,7 +120,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
   @Override
   public String actionPerformed() {
-    String resultOutCome = null;
+    String outcome = null;
     
     if (isAllValid()) {
       User newUser = new User();
@@ -134,7 +134,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       
       try {
         userService.insertUser(newUser);
-        resultOutCome = JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
+        outcome = JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
       }
       catch (ExistingUserEmailException e) {
         addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
@@ -147,7 +147,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       }
     }
     
-    return resultOutCome;
+    return outcome;
   }
 
   @Override

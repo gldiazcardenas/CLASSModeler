@@ -55,6 +55,15 @@ public interface UserService {
   public IUser logIn (String email, String password) throws InactivatedUserAccountException;
   
   /**
+   * Resets the password of the user account represented by the given email.
+   * 
+   * @param email
+   *          The user email.
+   * @author Gabriel Leonardo Diaz, 21.05.2013.
+   */
+  public void resetPassword (String email);
+  
+  /**
    * Activates the user account of the given user.
    * 
    * @param email

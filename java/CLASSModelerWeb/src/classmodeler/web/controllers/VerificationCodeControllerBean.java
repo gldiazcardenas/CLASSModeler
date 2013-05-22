@@ -10,7 +10,7 @@ package classmodeler.web.controllers;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,8 +27,8 @@ import classmodeler.web.util.JSFGenericBean;
  * 
  * @author Gabriel Leonardo Diaz, 20.05.2013.
  */
-@RequestScoped
 @ManagedBean(name="verifyCodeController")
+@ViewScoped
 public class VerificationCodeControllerBean extends JSFGenericBean {
   
   @EJB
@@ -65,6 +65,15 @@ public class VerificationCodeControllerBean extends JSFGenericBean {
     }
     
     return resultMessage;
+  }
+  
+  /**
+   * Restores the pas
+   * @return
+   */
+  public String resetPassword () {
+    // TODO
+    return null;
   }
 
 }

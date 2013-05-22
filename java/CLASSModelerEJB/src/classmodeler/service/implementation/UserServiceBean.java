@@ -58,8 +58,20 @@ public @Stateless class UserServiceBean implements UserService {
       return new Guest();
     }
     
-    // TODO Auto-generated method stub
-    throw new InactivatedUserAccountException();
+    User user = getUserByEmail(email);
+    
+    if (user != null) {
+      if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
+        throw new InactivatedUserAccountException("The user account is not activated.");
+      }
+      
+      if (user.getPassword().equals(password)) {
+        // The password is invalid.
+        user = null;
+      }
+    }
+    
+    return user;
   }
 
   @Override
@@ -67,10 +79,8 @@ public @Stateless class UserServiceBean implements UserService {
     User user = getUserByEmail(email);
     
     if (user == null || user.getAccountStatus() != EUserAccountStatus.INACTIVATED) {
-      throw new InvalidUserAccountException("The user account is invalid.");
+      throw new InvalidUserAccountException("The user doesn't exist or has an invalid status.");
     }
-    
-    em.refresh(user); // Reloads the changes
     
     TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code AND v.expirationDate >= :currentTime", Verification.class);
     query.setParameter("user", user);
@@ -92,6 +102,13 @@ public @Stateless class UserServiceBean implements UserService {
     em.merge(user);
     
     return user;
+  }
+  
+  @Override
+  public void resetPassword(String email) {
+    User user = getUserByEmail(email);
+    Verification verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
+    vsb.sendResetPasswordEmail(user, verification);
   }
 
   @Override
