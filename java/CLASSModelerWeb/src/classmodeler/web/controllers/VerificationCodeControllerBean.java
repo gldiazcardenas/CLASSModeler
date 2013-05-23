@@ -33,6 +33,20 @@ public class VerificationCodeControllerBean extends JSFGenericBean {
   
   @EJB
   private UserService userService;
+  
+  private boolean validToReset;
+  
+  public VerificationCodeControllerBean() {
+    super();
+  }
+  
+  public void setValidToReset(boolean validToReset) {
+    this.validToReset = validToReset;
+  }
+  
+  public boolean isValidToReset() {
+    return validToReset;
+  }
 
   private static final long serialVersionUID = 1L;
   
