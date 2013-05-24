@@ -10,14 +10,19 @@ package classmodeler.web.servlets;
 
 import java.io.IOException;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * Java Servlet to process the verification codes sent to the user email
@@ -50,11 +55,25 @@ public class VerificationCodeServlet extends HttpServlet {
       System.out.print("");
     }
     
-    FacesContext context = FacesContext.getCurrentInstance();
+    LifecycleFactory lFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
     
-    context.addMessage("generalMessage", null);
+    Lifecycle lifecycle = lFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
     
-    request.getRequestDispatcher(JSFOutcomeUtil.INDEX).forward(request, response);
+    FacesContextFactory fcFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+    
+    FacesContext context = fcFactory.getFacesContext(getServletContext(), request, response, lifecycle);
+    
+    Application app = context.getApplication();
+    
+    //app.createValueBinding("#{tabset.cartBean}").setValue(context, null);
+    
+    ViewHandler viewHandler = app.getViewHandler();
+    
+    UIViewRoot view = viewHandler.createView(context, "/index.xhtml");
+    
+    context.setViewRoot(view);
+    
+    lifecycle.render(context);
   }
   
   /**

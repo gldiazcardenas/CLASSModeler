@@ -132,7 +132,7 @@ public class VerificationServiceBean implements VerificationService {
       
       // Constructs the HTML message
       String subject = "CLASSModeler - Restauración de Contraseña";
-      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.reset.address"))
+      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.verify.code.address"))
          .append("?code=").append(verification.getCode())
          .append("&email=").append(user.getEmail())
          .append("&action=").append(EVerificationType.PASSWORD_RESET);
@@ -142,7 +142,7 @@ public class VerificationServiceBean implements VerificationService {
       msgHTML.append("<p>Hola <b>").append(user.getName()).append("</b>,");
       msgHTML.append("<br/><br/>");
       msgHTML.append("<div>Has solicitado restaurar tu contraseña. El codigo de verificación tiene una vigencia ");
-      msgHTML.append("de dos(2) dias, para restaurar tu contraseña ahora por favor pulsa el siguiente link: ");
+      msgHTML.append("de dos(2) dias, para restaurar tu contraseña ahora por favor pulse sobre el siguiente link: ");
       msgHTML.append("<a href='").append(link.toString()).append("' target='_blank'>").append(link.toString()).append("</a>");
       msgHTML.append("</div>");
       msgHTML.append("</p>");
