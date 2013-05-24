@@ -53,6 +53,7 @@ public class VerificationServiceBean implements VerificationService {
     verification.setType(type);
     verification.setExpirationDate(getExpirationDate());
     verification.setCode(getHashCodeMD5(user.getEmail()));
+    verification.setValid(true);
     
     em.persist(verification);
     
@@ -76,7 +77,7 @@ public class VerificationServiceBean implements VerificationService {
       
       // Constructs the HTML message
       String subject = "CLASSModeler - Activación de Cuenta";
-      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.activation.address"))
+      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.verify.code.address"))
          .append("?code=").append(verification.getCode())
          .append("&email=").append(user.getEmail())
          .append("&action=").append(EVerificationType.ACTIVATE_ACCOUNT);
@@ -86,7 +87,7 @@ public class VerificationServiceBean implements VerificationService {
       msgHTML.append("<p>Hola <b>").append(user.getName()).append("</b>,");
       msgHTML.append("<br/><br/>");
       msgHTML.append("<div>Tu cuenta ha sido creada satisfactoriamente. El codigo de verificación tiene una vigencia ");
-      msgHTML.append("de dos(2) dias, para activar su cuenta ahora pulse sobre el siguiente link: ");
+      msgHTML.append("de dos(2) dias, para activar su cuenta ahora por favor pulse sobre el siguiente link: ");
       msgHTML.append("<a href='").append(link.toString()).append("' target='_blank'>").append(link.toString()).append("</a>");
       msgHTML.append("</div>");
       msgHTML.append("</p>");

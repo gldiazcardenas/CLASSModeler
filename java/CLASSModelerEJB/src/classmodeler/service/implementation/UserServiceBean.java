@@ -29,6 +29,7 @@ import classmodeler.service.exception.ExistingUserEmailException;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.exception.ServiceException;
 import classmodeler.service.util.CollectionUtils;
@@ -78,26 +79,47 @@ public @Stateless class UserServiceBean implements UserService {
   public User activateUserAccount(String email, String verificationCode) throws ServiceException {
     User user = getUserByEmail(email);
     
-    if (user == null || user.getAccountStatus() != EUserAccountStatus.INACTIVATED) {
-      throw new InvalidUserAccountException("The user doesn't exist or has an invalid status.");
+    if (user == null) {
+      throw new InvalidUserAccountException("The user doesn't exist.");
     }
     
-    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code AND v.expirationDate >= :currentTime", Verification.class);
+    if (user.getAccountStatus() == EUserAccountStatus.ACTIVATED) {
+      throw new InvalidUserAccountException("The user account is already activated.");
+    }
+    
+    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+      throw new InvalidUserAccountException("The user account cannot activated because it is disabled.");
+    }
+    
+    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
     query.setParameter("user", user);
     query.setParameter("code", verificationCode);
     query.setParameter("verificationType", EVerificationType.ACTIVATE_ACCOUNT);
-    query.setParameter("currentTime", Calendar.getInstance().getTime());
     
-    if (CollectionUtils.isEmptyCollection(query.getResultList())) {
+    List<Verification> verificationList = query.getResultList();
+    
+    if (CollectionUtils.isEmptyCollection(verificationList)) {
+      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
+    }
+    
+    Verification verification = verificationList.get(0); // Only should exists one record.
+    
+    // The code won't be valid any more.
+    verification.setValid(false);
+    em.merge(verification);
+    
+    if (verification.getExpirationDate().after(Calendar.getInstance().getTime())) {
       // The verification code has expired, the system should generate a new one.
-      Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
+      verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
       
       // Sends the email with the new activation code.
       vsb.sendActivationEmail(user, verification);
       
-      throw new ExpiredVerificationCodeException("The activation code has expired."); // This doesn't trigger a RollBack operation.
+      // This doesn't trigger a RollBack operation.
+      throw new ExpiredVerificationCodeException("The activation code has expired.");
     }
     
+    // Activates the user account.
     user.setAccountStatus(EUserAccountStatus.ACTIVATED);
     em.merge(user);
     

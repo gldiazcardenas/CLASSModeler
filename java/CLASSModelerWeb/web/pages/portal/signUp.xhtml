@@ -24,16 +24,25 @@
             <p:password id="password" value="#{signUPController.password}" style="width:96%;" required="true"/>
             <p:watermark for="password" value="#{msgs.SIGN_UP_FORM_PASSWORD_FIELD}" />
             
-            <p:calendar id="birthdate" navigator="true" showOn="both" style="width:96%;" value="#{signUPController.birthdate}" />
+            <p:calendar id="birthdate" navigator="true" showOn="both" style="width:96%;" value="#{signUPController.birthdate}" locale="es" />
             <p:watermark for="birthdate" value="#{msgs.SIGN_UP_FORM_DATEOFBIRTH_FIELD}" />
             
             <p:selectOneRadio id="gender" value="#{signUPController.gender}" converter="genderConverter" required="true">
                 <f:selectItems value="#{signUPController.gendersForSelectOneRadio}" />
             </p:selectOneRadio>
             
+            <p:growl id="signUpMessage" for="signUpMessage" sticky="true" />
+            
             <p:separator/>
             
-            <p:commandButton ajax="false" value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" action="#{signUPController.actionPerformed()}" />
+            <h:panelGrid columns="2">
+                <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" actionListener="#{signUPController.processAJAX()}" onclick="jQuery(this).addClass('ui-state-disabled')" />
+                
+                <p:ajaxStatus style="width: 16px; height: 16px; display: inline;">
+                    <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                    <f:facet name="complete"><h:outputText value="" /></f:facet>
+               </p:ajaxStatus>
+            </h:panelGrid>
         </h:panelGrid>
     </h:form>
 </ui:composition>

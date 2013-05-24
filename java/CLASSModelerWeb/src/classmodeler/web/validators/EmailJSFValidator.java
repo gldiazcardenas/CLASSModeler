@@ -41,7 +41,7 @@ public class EmailJSFValidator implements Validator {
     if (!GenericUtils.isValidEmail(email)) {
       FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_INVALID_EMAIL_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
-      context.addMessage("customMessage", message);
+      context.addMessage("signUpMessage", message);
       
       throw new ValidatorException(message); // Not displayed
     }
@@ -50,7 +50,7 @@ public class EmailJSFValidator implements Validator {
     if (userService.existsUser(email)) {
       FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
-      context.addMessage("customMessage", message);
+      context.addMessage("signUpMessage", message);
       
       throw new ValidatorException(message); // Not displayed
     }

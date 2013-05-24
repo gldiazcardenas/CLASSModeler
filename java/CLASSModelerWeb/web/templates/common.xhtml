@@ -21,7 +21,7 @@
 </h:head>
 
 <h:body onload="#{executeOnload}">
-    <p:growl for="customMessage"/>
+    <p:growl id="generalMessage" for="generalMessage" sticky="true"/>
     
     <div id="header" class="ui-widget-content">
         <ui:insert name="header"/>

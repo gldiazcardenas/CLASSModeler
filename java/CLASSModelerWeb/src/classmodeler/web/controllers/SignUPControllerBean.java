@@ -24,7 +24,6 @@ import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFOutcomeUtil;
 
 
 /**
@@ -119,45 +118,58 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
   }
 
   @Override
-  public String actionPerformed() {
-    String outcome = null;
-    
-    if (isAllValid()) {
-      User newUser = new User();
-      newUser.setFirstName(firstName);
-      newUser.setLastName(lastName);
-      newUser.setBirthdate(birthdate);
-      newUser.setGender(gender);
-      newUser.setEmail(email);
-      newUser.setPassword(password);
-      newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
-      
-      try {
-        userService.insertUser(newUser);
-        outcome = JSFOutcomeUtil.SIGN_UP_CONFIRMATION;
-      }
-      catch (ExistingUserEmailException e) {
-        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
-      }
-      catch (SendEmailException e) {
-        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
-      }
-      catch (RuntimeException e) { // For unexpected exceptions
-        addErrorMessage("customMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
-      }
+  public String process() {
+    return null;
+  }
+  
+  @Override
+  public void processAJAX() {
+    if (!isAllValid()) {
+      return;
     }
     
-    return outcome;
+    User newUser = new User();
+    newUser.setFirstName(firstName);
+    newUser.setLastName(lastName);
+    newUser.setBirthdate(birthdate);
+    newUser.setGender(gender);
+    newUser.setEmail(email);
+    newUser.setPassword(password);
+    newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
+    
+    try {
+      userService.insertUser(newUser);
+      addInformationMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
+      
+      // Clears all previous information
+      firstName = null;
+      lastName = null;
+      birthdate = null;
+      gender = null;
+      email = null;
+      password = null;
+    }
+    catch (ExistingUserEmailException e) {
+      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
+    }
+    catch (SendEmailException e) {
+      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
+    }
+    catch (RuntimeException e) { // For unexpected exceptions
+      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
+    }
   }
 
   @Override
   public boolean isAllValid() {
     // Checks basic required information
+    if (gender == null) {
+      return false;
+    }
+    
     if (GenericUtils.isEmptyString(firstName) ||
         GenericUtils.isEmptyString(lastName) ||
-        GenericUtils.isEmptyString(email) ||
-        gender == null) {
-      
+        GenericUtils.isEmptyString(email)) {
       return false;
     }
     

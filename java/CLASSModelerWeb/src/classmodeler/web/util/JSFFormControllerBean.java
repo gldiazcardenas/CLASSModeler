@@ -16,16 +16,6 @@ package classmodeler.web.util;
 public interface JSFFormControllerBean {
   
   /**
-   * Use this method to implement the logic that catches and processes the
-   * values sent through the form.
-   * 
-   * @return The OUTCOME redirecting to another page, or <code>null</code> to
-   *         stay in the current page.
-   * @author Gabriel Leonardo Diaz, 02.03.2013.
-   */
-  public String actionPerformed ();
-  
-  /**
    * Use this method to validate the values given in the form before to process
    * them.
    * 
@@ -34,5 +24,22 @@ public interface JSFFormControllerBean {
    * @author Gabriel Leonardo Diaz, 02.03.2013.
    */
   public boolean isAllValid ();
+  
+  /**
+   * Use this method to implement the logic that handles the values provided by
+   * the form. This should be used when the it is an asynchronous request AJAX.
+   * @author Gabriel Leonardo Diaz, 23.05.2013.
+   */
+  public void processAJAX ();
+  
+  /**
+   * Use this method to implement the logic that handles the values provided by
+   * the form.
+   * 
+   * @return The OUTCOME redirecting to another page, or <code>null</code> to
+   *         stay in the current page.
+   * @author Gabriel Leonardo Diaz, 02.03.2013.
+   */
+  public String process ();
 
 }

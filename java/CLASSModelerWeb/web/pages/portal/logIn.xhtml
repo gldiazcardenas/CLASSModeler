@@ -7,7 +7,7 @@
         <h:panelGrid columns="3" cellpadding="0" cellspacing="1">
             <p:inputText id="nickname" value="#{logInController.nickname}" required="true" />
             <p:password id="password" value="#{logInController.password}" required="true" />
-            <p:commandButton ajax="false" value="#{msgs.LOGIN_FORM_BUTTON_LABEL}" action="#{logInController.logIn()}" />
+            <p:commandButton ajax="false" value="#{msgs.LOGIN_FORM_BUTTON_LABEL}" action="#{logInController.process()}" />
             
             <p:watermark for="nickname" value="#{msgs.LOGIN_FORM_EMAIL_FIELD}" />
             <h:link ajax="false" outcome="/pages/portal/forgotPassword.xhtml" value="#{msgs.LOGIN_FORM_FORGOT_PASSWORD_LABEL}" />

@@ -27,6 +27,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   // Data
   private String nickname;
   private String password;
+  private ELoginMode mode = ELoginMode.REGISTERED_USER;
   
   // Injected Beans
   @ManagedProperty("#{sessionController}")
@@ -63,36 +64,41 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
    * @throws InactivatedUserAccountException
    *           As a Guest user this exception never happens.
    */
-  public String logInGuest () throws InactivatedUserAccountException {
-    sessionController.login(Guest.GUEST_EMAIL, Guest.GUEST_PASSWORD);
-    
-    // Redirect to the designer page
-    return "pages/designer/designer.xhtml?faces-redirect=true";
+  public String processGuest () {
+    nickname = Guest.GUEST_EMAIL;
+    password = Guest.GUEST_PASSWORD;
+    mode = ELoginMode.GUEST_USER;
+    return process();
   }
-  
+
   /**
    * Logs into the system as a registered user.
    * 
    * @return The OUTCOME redirecting to the dashboard page.
-   * @throws InactivatedUserAccountException
-   *           If the user has not activate its account.
    */
-  public String logIn () throws InactivatedUserAccountException {
-    if (!isAllValid()) {
-      // stay at the same page
-      return null;
+  @Override
+  public String process() {
+    String outcome = null;
+    
+    if (isAllValid()) {
+      try {
+        sessionController.login(nickname, password);
+        
+        if (mode == ELoginMode.REGISTERED_USER) {
+          // Redirects to the DashBoard
+          outcome = "pages/dashboard/dashboard.xhtml?faces-redirect=true";
+        }
+        else {
+          // Redirects to the Designer Page
+          outcome = "pages/designer/designer.xhtml?faces-redirect=true";
+        }
+      }
+      catch (InactivatedUserAccountException e) {
+        addErrorMessage("", "", null);
+      }
     }
     
-    sessionController.login(nickname, password);
-    
-    // Redirects to the dashboard
-    return "pages/dashboard/dashboard.xhtml?faces-redirect=true";
-  }
-
-  @Override
-  public String actionPerformed() {
-    // Not used
-    return null;
+    return outcome;
   }
 
   @Override
@@ -106,6 +112,20 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
     }
     
     return true;
+  }
+  
+  @Override
+  public void processAJAX() {
+    // Not used.
+  }
+  
+  /**
+   * The type of user that is trying to login in.
+   * @author Gabriel Leonardo Diaz, 23.05.2013.
+   */
+  private static enum ELoginMode {
+    GUEST_USER,
+    REGISTERED_USER
   }
   
 }

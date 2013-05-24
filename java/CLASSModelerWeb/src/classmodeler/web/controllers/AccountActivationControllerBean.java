@@ -29,23 +29,13 @@ import classmodeler.web.util.JSFGenericBean;
  */
 @ManagedBean(name="verifyCodeController")
 @ViewScoped
-public class VerificationCodeControllerBean extends JSFGenericBean {
+public class AccountActivationControllerBean extends JSFGenericBean {
   
   @EJB
   private UserService userService;
   
-  private boolean validToReset;
-  
-  public VerificationCodeControllerBean() {
+  public AccountActivationControllerBean() {
     super();
-  }
-  
-  public void setValidToReset(boolean validToReset) {
-    this.validToReset = validToReset;
-  }
-  
-  public boolean isValidToReset() {
-    return validToReset;
   }
 
   private static final long serialVersionUID = 1L;
@@ -79,15 +69,6 @@ public class VerificationCodeControllerBean extends JSFGenericBean {
     }
     
     return resultMessage;
-  }
-  
-  /**
-   * Restores the pas
-   * @return
-   */
-  public String resetPassword () {
-    // TODO
-    return null;
   }
 
 }

@@ -14,29 +14,46 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
- * JSF Bean controller for Reset Password form.
+ * JSF Bean controller for the reset password form.
  * 
- * @author Gabriel Leonardo Diaz, 21.05.2013.
+ * @author Gabriel Leonardo Diaz, 23.05.2013.
  */
-@ManagedBean (name="forgotPasswordController")
+@ManagedBean(name="resetPasswordController")
 @ViewScoped
-public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFFormControllerBean {
+public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFormControllerBean {
 
   private static final long serialVersionUID = 1L;
-  
+
   private String email;
+  private String hashCode;
+  private String password;
+  private String confirmation;
   
   @EJB
   private UserService userService;
   
-  public ForgotPasswordControllerBean() {
+  public ResetPasswordControllerBean() {
     super();
+  }
+  
+  public String getPassword() {
+    return password;
+  }
+  
+  public void setPassword(String password) {
+    this.password = password;
+  }
+  
+  public String getConfirmation() {
+    return confirmation;
+  }
+  
+  public void setConfirmation(String confirmation) {
+    this.confirmation = confirmation;
   }
   
   public String getEmail() {
@@ -46,18 +63,19 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
   public void setEmail(String email) {
     this.email = email;
   }
+  
+  public String getHashCode() {
+    return hashCode;
+  }
+  
+  public void setHashCode(String hashCode) {
+    this.hashCode = hashCode;
+  }
 
   @Override
   public String process() {
-    String outcome = null;
-    
-    if (isAllValid()) {
-      userService.resetPassword(email);
-      outcome = JSFOutcomeUtil.INDEX;
-      addInformationMessage("customMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
-    }
-    
-    return outcome;
+    // TODO Auto-generated method stub
+    return null;
   }
   
   @Override
@@ -67,7 +85,7 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
 
   @Override
   public boolean isAllValid() {
-    return !GenericUtils.isEmptyString(email);
+    return !GenericUtils.isEmptyString(password) && GenericUtils.equals(password, confirmation);
   }
 
 }

@@ -59,6 +59,12 @@ public class Verification implements Serializable {
   private EVerificationType type;
   
   /**
+   * Whether the verification code is valid or not.
+   */
+  @Column (name="verification_valid", nullable = false)
+  private boolean valid;
+  
+  /**
    * The expiration date of the hash code, when the code has expired the user
    * has to generate a new code.
    */
@@ -116,6 +122,14 @@ public class Verification implements Serializable {
   
   public void setUser(User user) {
     this.user = user;
+  }
+  
+  public boolean isValid() {
+    return valid;
+  }
+  
+  public void setValid(boolean valid) {
+    this.valid = valid;
   }
 
   @Override
