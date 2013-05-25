@@ -11,6 +11,7 @@ package classmodeler.service.implementation;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.ejb.Stateless;
@@ -25,6 +26,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -33,6 +35,7 @@ import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.SendEmailException;
+import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 
 /**
@@ -164,6 +167,22 @@ public class VerificationServiceBean implements VerificationService {
     catch (MessagingException e) {
       throw new SendEmailException(e.getMessage(), e);
     }
+  }
+  
+  @Override
+  public Verification getVerificationCode(User user, String code, EVerificationType type) {
+    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
+    query.setParameter("user", user);
+    query.setParameter("code", code);
+    query.setParameter("verificationType", type);
+    
+    List<Verification> list = query.getResultList();
+    
+    if (CollectionUtils.isEmptyCollection(list)) {
+      return null;
+    }
+    
+    return list.get(0);
   }
 
   @Override

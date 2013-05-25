@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import classmodeler.domain.user.IUser;
 import classmodeler.service.UserService;
-import classmodeler.service.exception.InactivatedUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
@@ -98,7 +98,7 @@ public class SessionControllerBean extends JSFGenericBean {
    *          The password of the system.
    * @throws InactivatedUserAccountException 
    */
-  public void login (String nickname, String password) throws InactivatedUserAccountException {
+  public void login (String nickname, String password) throws InvalidUserAccountException {
     loggedUser = userServiceBean.logIn(nickname, password);
   }
   

@@ -14,6 +14,8 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -56,10 +58,22 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
       try {
         userService.sendResetPasswordEmail(email);
         outcome = JSFOutcomeUtil.INDEX;
-        addInformationMessage("customMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
+        addInformationMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
       catch (InvalidUserAccountException e) {
-        addInformationMessage("customMessage", "Invalid user account", null);
+        if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
+          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+        }
+        else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
+          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+        }
+        else {
+          // Should not happen
+          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        }
+      }
+      catch (SendEmailException e) {
+        addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
       }
     }
     
@@ -68,7 +82,7 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
   
   @Override
   public void processAJAX() {
-    // TODO Auto-generated method stub
+    // Not used.
   }
 
   @Override

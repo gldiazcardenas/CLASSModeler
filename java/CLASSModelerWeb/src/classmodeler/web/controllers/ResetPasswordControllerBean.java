@@ -15,9 +15,12 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import classmodeler.service.UserService;
+import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidVerificationCodeException;
+import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -81,24 +84,43 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
     
     try {
       valid = userService.isValidToResetPassword(email, code);
+      
+      if (!valid) {
+        message = JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_USED_MESSAGE");
+      }
     }
     catch (InvalidUserAccountException e) {
       valid = false;
+      message = JSFResourceBundle.getLocalizedMessage("RESET_PASSWORD_INVALID_STATE_MESSAGE");
     }
     catch (InvalidVerificationCodeException e) {
       valid = false;
+      message = JSFResourceBundle.getLocalizedMessage("VERIFICATION_CODE_INVALID_MESSAGE");
+    }
+    catch (ExpiredVerificationCodeException e) {
+      valid = false;
+      message = JSFResourceBundle.getLocalizedMessage("RESET_PASSWORD_EXPIRED_CODE_MESSAGE");
+    }
+    catch (SendEmailException e) {
+      valid = false;
+      message = JSFResourceBundle.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE");
     }
   }
 
   @Override
   public String process() {
-    // TODO Auto-generated method stub
-    return null;
+    String outcome = null;
+    
+    if (isAllValid()) {
+      
+    }
+    
+    return outcome;
   }
   
   @Override
   public void processAJAX() {
-    // TODO Auto-generated method stub
+    // Not used.
   }
 
   @Override

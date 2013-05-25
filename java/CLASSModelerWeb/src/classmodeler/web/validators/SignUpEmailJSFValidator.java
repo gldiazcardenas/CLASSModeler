@@ -26,9 +26,9 @@ import classmodeler.web.resources.JSFResourceBundle;
  * 
  * @author Gabriel Leonardo Diaz, 10.05.2013.
  */
-@ManagedBean(name="emailValidator")
+@ManagedBean(name="signUpEmailValidator")
 @RequestScoped
-public class EmailJSFValidator implements Validator {
+public class SignUpEmailJSFValidator implements Validator {
   
   @EJB
   private UserService userService;
@@ -39,7 +39,7 @@ public class EmailJSFValidator implements Validator {
     
     // Validates the email format
     if (!GenericUtils.isValidEmail(email)) {
-      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_INVALID_EMAIL_MESSAGE"));
+      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("INVALID_EMAIL_ADDRESS_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
       context.addMessage("signUpMessage", message);
       
@@ -48,7 +48,7 @@ public class EmailJSFValidator implements Validator {
     
     // Checks if the entered Email already exists.
     if (userService.existsUser(email)) {
-      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"));
+      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
       context.addMessage("signUpMessage", message);
       

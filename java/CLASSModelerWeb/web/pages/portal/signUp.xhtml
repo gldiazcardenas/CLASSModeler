@@ -17,7 +17,7 @@
             </h:panelGrid>
             
             <p:inputText id="email" value="#{signUPController.email}" style="width:96%;" required="true">
-                <f:validator binding="#{emailValidator}"/>
+                <f:validator binding="#{signUpEmailValidator}"/>
             </p:inputText>
             <p:watermark for="email" value="#{msgs.SIGN_UP_FORM_EMAIL_FIELD}" />
             

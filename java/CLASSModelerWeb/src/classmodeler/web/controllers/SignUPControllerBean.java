@@ -18,7 +18,7 @@ import javax.faces.model.SelectItem;
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
-import classmodeler.service.exception.ExistingUserEmailException;
+import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
@@ -143,30 +143,27 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       
       // Clears all previous information
       firstName = null;
-      lastName = null;
+      lastName  = null;
       birthdate = null;
-      gender = null;
-      email = null;
-      password = null;
+      gender    = null;
+      email     = null;
+      password  = null;
     }
-    catch (ExistingUserEmailException e) {
-      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_DUPLICATED_EMAIL_MESSAGE"), null);
+    catch (InvalidUserAccountException e) {
+      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
     }
     catch (SendEmailException e) {
-      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SIGN_UP_FORM_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
-    }
-    catch (RuntimeException e) { // For unexpected exceptions
-      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
+      addErrorMessage("signUpMessage", JSFResourceBundle.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
     }
   }
 
   @Override
   public boolean isAllValid() {
-    // Checks basic required information
     if (gender == null) {
       return false;
     }
     
+    // Checks basic required information
     if (GenericUtils.isEmptyString(firstName) ||
         GenericUtils.isEmptyString(lastName) ||
         GenericUtils.isEmptyString(email)) {

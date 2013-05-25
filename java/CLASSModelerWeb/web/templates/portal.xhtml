@@ -9,7 +9,7 @@
 <ui:define name="header">
     <div class="sectionsContainer">
         <div id="bannerSection">
-            <h1><h:outputText value="#{msgs.APPLICATION_NAME}" /></h1>
+            <h1><h:link value="#{msgs.APPLICATION_NAME}" outcome="/index.xhtml" style="text-decoration: none;" /></h1>
             <h3><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" styleClass="italic" /></h3>
         </div>
         <div id="userSection">

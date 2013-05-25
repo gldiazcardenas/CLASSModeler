@@ -12,9 +12,7 @@ import javax.ejb.Local;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
-import classmodeler.service.exception.ExistingUserEmailException;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
-import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
@@ -49,11 +47,11 @@ public interface UserService {
    *          The user email.
    * @param password
    *          The use password.
-   * @throws InactivatedUserAccountException
+   * @throws InvalidUserAccountException
    *           When the user is found but the account has not been activated.
    * @return A user bean or null if no one user is found.
    */
-  public IUser logIn (String email, String password) throws InactivatedUserAccountException;
+  public IUser logIn (String email, String password) throws InvalidUserAccountException;
   
   /**
    * Sends the link to reset the password of the user account represented by the
@@ -81,9 +79,20 @@ public interface UserService {
    * @return A boolean indicating whether the hash code is valid or not.
    * @throws InvalidUserAccountException
    *           When the user account doesn't exist or it's deactivated.
+   * @throws InvalidVerificationCodeException
+   *           When the system doesn't found a verification code that matches
+   *           with the given one.
+   * @throws ExpiredVerificationCodeException
+   *           When the verification code has expired, in this case the system
+   *           generates a new one and sends it to the user email address.
+   * @throws SendEmailException
+   *           When the system is not able to re-send the verification code.
    * @author Gabriel Leonardo Diaz, 24.05.2013.
    */
-  public boolean isValidToResetPassword (String email, String code) throws InvalidUserAccountException;
+  public boolean isValidToResetPassword (String email, String code) throws InvalidUserAccountException,
+                                                                           InvalidVerificationCodeException,
+                                                                           ExpiredVerificationCodeException,
+                                                                           SendEmailException;
   
   /**
    * Activates the user account of the given user.
@@ -91,19 +100,24 @@ public interface UserService {
    * @param email
    *          The email of user to activate its account.
    * @return The user after setting the account status.
-   * @throws ExpiredVerificationCodeException
-   *           When the activation code for the user account has expired.
    * @throws InvalidUserAccountException
    *           When the user account for the given email doesn't exist, was
    *           already ACTIVATED or was DEACTIVATED by the user.
    * @throws InvalidVerificationCodeException
    *           When the system doesn't found a verification code that matches
    *           with the given one.
+   * @throws ExpiredVerificationCodeException
+   *           When the verification code has expired, in this case the system
+   *           generates a new one and sends it to the user email address.
+   * @throws SendEmailException
+   *           The system is not able to re-send the activation code when the
+   *           current has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User activateUserAccount (String email, String verificationCode) throws ExpiredVerificationCodeException,
-                                                                                 InvalidUserAccountException,
-                                                                                 InvalidVerificationCodeException;
+  public User activateUserAccount (String email, String verificationCode) throws InvalidUserAccountException,
+                                                                                 InvalidVerificationCodeException,
+                                                                                 ExpiredVerificationCodeException,
+                                                                                 SendEmailException;
   
   /**
    * Inserts the given user into the database. This method also creates the user
@@ -112,14 +126,14 @@ public interface UserService {
    * @param user
    *          The new user to save.
    * @return The user bean after inserting in the database.
-   * @throws ExistingUserEmailException
+   * @throws InvalidUserAccountException
    *           When the user that is being inserted has an already existing
    *           email in database.
    * @throws SendEmailException
    *           When the system is not able to send the activation email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User insertUser (User user) throws ExistingUserEmailException, SendEmailException;
+  public User insertUser (User user) throws InvalidUserAccountException, SendEmailException;
   
   /**
    * Updates the fields of the given user into the database.

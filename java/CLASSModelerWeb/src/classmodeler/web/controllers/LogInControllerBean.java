@@ -13,7 +13,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.user.Guest;
-import classmodeler.service.exception.InactivatedUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
@@ -93,7 +93,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
           outcome = "pages/designer/designer.xhtml?faces-redirect=true";
         }
       }
-      catch (InactivatedUserAccountException e) {
+      catch (InvalidUserAccountException e) {
         addErrorMessage("", "", null);
       }
     }

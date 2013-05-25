@@ -11,10 +11,9 @@ package classmodeler.service.exception;
 import javax.ejb.ApplicationException;
 
 /**
- * Exception thrown when the user tries to activate its account but the
- * activation code has expired.
+ * Thrown when the verification code has expired.
  * 
- * @author Gabriel Leonardo Diaz, 20.05.2013.
+ * @author Gabriel Leonardo Diaz, 25.05.2013.
  */
 @ApplicationException (rollback = false)
 public class ExpiredVerificationCodeException extends ServiceException {
@@ -30,7 +29,7 @@ public class ExpiredVerificationCodeException extends ServiceException {
   }
   
   public ExpiredVerificationCodeException (String message, Throwable cause) {
-    super(message, cause);
+    super (message, cause);
   }
 
 }

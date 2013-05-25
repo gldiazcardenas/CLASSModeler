@@ -64,6 +64,20 @@ public interface VerificationService {
   public void sendResetPasswordEmail (User user, Verification verification) throws SendEmailException;
   
   /**
+   * Gets a verification code with the provided information.
+   * 
+   * @param user
+   *          The user owner of the verification code.
+   * @param code
+   *          The hash code MD5 representation.
+   * @param type
+   *          The verification type.
+   * @return An instance of verification or null is nothing is found.
+   * @author Gabriel Leonardo Diaz, 25.05.2013.
+   */
+  public Verification getVerificationCode (User user, String code, EVerificationType type);
+  
+  /**
    * Creates a hash code using MD5 encrypt algorithm, this uses the email and
    * the current date to build an special string that is parsed in MD5.
    * 

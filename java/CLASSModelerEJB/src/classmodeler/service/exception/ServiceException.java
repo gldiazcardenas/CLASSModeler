@@ -17,7 +17,7 @@ import javax.ejb.ApplicationException;
  * @author Gabriel Leonardo Diaz, 14.03.2013.
  */
 @ApplicationException (rollback = true, inherited = true)
-public abstract class ServiceException extends RuntimeException {
+public abstract class ServiceException extends Exception {
 
   private static final long serialVersionUID = 1L;
   

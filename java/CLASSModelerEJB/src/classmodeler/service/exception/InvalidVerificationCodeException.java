@@ -8,6 +8,7 @@
 
 package classmodeler.service.exception;
 
+
 /**
  * Thrown when the verification code is invalid for the user.
  * 

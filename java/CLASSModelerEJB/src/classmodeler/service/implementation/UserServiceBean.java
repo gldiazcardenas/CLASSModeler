@@ -25,13 +25,11 @@ import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
 import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
-import classmodeler.service.exception.ExistingUserEmailException;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
-import classmodeler.service.exception.InactivatedUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
-import classmodeler.service.exception.ServiceException;
+import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 
@@ -54,7 +52,7 @@ public @Stateless class UserServiceBean implements UserService {
   }
   
   @Override
-  public IUser logIn(String email, String password) throws InactivatedUserAccountException {
+  public IUser logIn(String email, String password) throws InvalidUserAccountException {
     if (Guest.GUEST_EMAIL.equals(email) && Guest.GUEST_PASSWORD.equals(password)) {
       return new Guest();
     }
@@ -63,7 +61,7 @@ public @Stateless class UserServiceBean implements UserService {
     
     if (user != null) {
       if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
-        throw new InactivatedUserAccountException("The user account is not activated.");
+        throw new InvalidUserAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
       }
       
       if (user.getPassword().equals(password)) {
@@ -76,39 +74,35 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User activateUserAccount(String email, String verificationCode) throws ServiceException {
+  public User activateUserAccount(String email, String verificationCode) throws InvalidUserAccountException,
+                                                                                InvalidVerificationCodeException,
+                                                                                ExpiredVerificationCodeException,
+                                                                                SendEmailException {
     User user = getUserByEmail(email);
     
     if (user == null) {
-      throw new InvalidUserAccountException("The user doesn't exist.");
+      throw new InvalidUserAccountException("The user doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
     if (user.getAccountStatus() == EUserAccountStatus.ACTIVATED) {
-      throw new InvalidUserAccountException("The user account is already activated.");
+      throw new InvalidUserAccountException("The user account is already activated.", EInvalidAccountErrorType.ACTIVATED_ACCOUNT);
     }
     
     if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The user account cannot activated because it is disabled.");
+      throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
-    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
-    query.setParameter("user", user);
-    query.setParameter("code", verificationCode);
-    query.setParameter("verificationType", EVerificationType.ACTIVATE_ACCOUNT);
+    Verification verification = vsb.getVerificationCode(user, verificationCode, EVerificationType.ACTIVATE_ACCOUNT);
     
-    List<Verification> verificationList = query.getResultList();
-    
-    if (CollectionUtils.isEmptyCollection(verificationList)) {
+    if (verification == null) {
       throw new InvalidVerificationCodeException("The verification code was not found for the user.");
     }
-    
-    Verification verification = verificationList.get(0); // Only one record should exists
     
     // The code won't be valid any more.
     verification.setValid(false);
     em.merge(verification);
     
-    if (verification.getExpirationDate().after(Calendar.getInstance().getTime())) {
+    if (verification.getExpirationDate().before(Calendar.getInstance().getTime())) {
       // The verification code has expired, the system should generate a new one.
       verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
       
@@ -127,15 +121,55 @@ public @Stateless class UserServiceBean implements UserService {
   }
   
   @Override
+  public boolean isValidToResetPassword(String email, String code) throws InvalidUserAccountException,
+                                                                          InvalidVerificationCodeException,
+                                                                          ExpiredVerificationCodeException,
+                                                                          SendEmailException {
+    User user = getUserByEmail(email);
+    
+    if (user == null) {
+      throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+      throw new InvalidUserAccountException("The use account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+    }
+    
+    // Gets the verification code.
+    Verification verification = vsb.getVerificationCode(user, code, EVerificationType.PASSWORD_RESET);
+    
+    if (verification == null) {
+      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
+    }
+    
+    // Verifies if the code has expired or was already used.
+    if (verification.isValid() && verification.getExpirationDate().before(Calendar.getInstance().getTime())) {
+      // Invalidates the current code.
+      verification.setValid(false);
+      em.merge(verification);
+      
+      // Generates a new code.
+      verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
+      
+      // Sends the email.
+      vsb.sendActivationEmail(user, verification);
+      
+      throw new ExpiredVerificationCodeException("The verification code has expired.");
+    }
+    
+    return verification.isValid();
+  }
+  
+  @Override
   public void sendResetPasswordEmail(String email) throws InvalidUserAccountException, SendEmailException {
     User user = getUserByEmail(email);
     
     if (user == null) {
-      throw new InvalidUserAccountException("The user account doesn't exist.");
+      throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
     if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The user account is deactivated");
+      throw new InvalidUserAccountException("The user account is deactivated", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
     // Creates the verification code.
@@ -144,39 +178,11 @@ public @Stateless class UserServiceBean implements UserService {
     // Sends the link to reset the password.
     vsb.sendResetPasswordEmail(user, verification);
   }
-  
-  @Override
-  public boolean isValidToResetPassword(String email, String code) throws InvalidUserAccountException {
-    User user = getUserByEmail(email);
-    
-    if (user == null) {
-      throw new InvalidUserAccountException("The user account doesn't exist");
-    }
-    
-    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The use account is deactivated.");
-    }
-    
-    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
-    query.setParameter("user", user);
-    query.setParameter("code", code);
-    query.setParameter("verificationType", EVerificationType.PASSWORD_RESET);
-    
-    List<Verification> verificationList = query.getResultList();
-    
-    if (CollectionUtils.isEmptyCollection(verificationList)) {
-      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
-    }
-    
-    Verification verification = verificationList.get(0);
-    
-    return verification.isValid();
-  }
 
   @Override
-  public User insertUser(User user) throws ExistingUserEmailException, SendEmailException {
+  public User insertUser(User user) throws InvalidUserAccountException, SendEmailException {
     if (existsUser(user.getEmail())) {
-      throw new ExistingUserEmailException("The user email already exists.", user.getEmail());
+      throw new InvalidUserAccountException("The user email already exists.", EInvalidAccountErrorType.DUPLICATED_ACCOUNT);
     }
     
     // Inserts the user
