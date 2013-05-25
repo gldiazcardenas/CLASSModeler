@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.service.UserService;
+import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -52,9 +53,14 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
     String outcome = null;
     
     if (isAllValid()) {
-      userService.resetPassword(email);
-      outcome = JSFOutcomeUtil.INDEX;
-      addInformationMessage("customMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
+      try {
+        userService.sendResetPasswordEmail(email);
+        outcome = JSFOutcomeUtil.INDEX;
+        addInformationMessage("customMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
+      }
+      catch (InvalidUserAccountException e) {
+        addInformationMessage("customMessage", "Invalid user account", null);
+      }
     }
     
     return outcome;

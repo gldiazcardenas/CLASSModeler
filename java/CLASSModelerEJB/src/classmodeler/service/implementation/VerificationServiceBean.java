@@ -77,10 +77,8 @@ public class VerificationServiceBean implements VerificationService {
       
       // Constructs the HTML message
       String subject = "CLASSModeler - Activación de Cuenta";
-      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.verify.code.address"))
-         .append("?code=").append(verification.getCode())
-         .append("&email=").append(user.getEmail())
-         .append("&action=").append(EVerificationType.ACTIVATE_ACCOUNT);
+      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.activate.address"))
+         .append("?code=").append(verification.getCode()).append("&email=").append(user.getEmail());
       
       StringBuilder msgHTML = new StringBuilder();
       msgHTML.append("<html>");
@@ -132,10 +130,8 @@ public class VerificationServiceBean implements VerificationService {
       
       // Constructs the HTML message
       String subject = "CLASSModeler - Restauración de Contraseña";
-      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.verify.code.address"))
-         .append("?code=").append(verification.getCode())
-         .append("&email=").append(user.getEmail())
-         .append("&action=").append(EVerificationType.PASSWORD_RESET);
+      StringBuilder link = new StringBuilder(props.getProperty("classmodeler.reset.address"))
+         .append("?code=").append(verification.getCode()).append("&email=").append(user.getEmail());
       
       StringBuilder msgHTML = new StringBuilder();
       msgHTML.append("<html>");

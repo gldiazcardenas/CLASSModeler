@@ -102,7 +102,7 @@ public @Stateless class UserServiceBean implements UserService {
       throw new InvalidVerificationCodeException("The verification code was not found for the user.");
     }
     
-    Verification verification = verificationList.get(0); // Only should exists one record.
+    Verification verification = verificationList.get(0); // Only one record should exists
     
     // The code won't be valid any more.
     verification.setValid(false);
@@ -127,10 +127,50 @@ public @Stateless class UserServiceBean implements UserService {
   }
   
   @Override
-  public void resetPassword(String email) {
+  public void sendResetPasswordEmail(String email) throws InvalidUserAccountException, SendEmailException {
     User user = getUserByEmail(email);
+    
+    if (user == null) {
+      throw new InvalidUserAccountException("The user account doesn't exist.");
+    }
+    
+    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+      throw new InvalidUserAccountException("The user account is deactivated");
+    }
+    
+    // Creates the verification code.
     Verification verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
+    
+    // Sends the link to reset the password.
     vsb.sendResetPasswordEmail(user, verification);
+  }
+  
+  @Override
+  public boolean isValidToResetPassword(String email, String code) throws InvalidUserAccountException {
+    User user = getUserByEmail(email);
+    
+    if (user == null) {
+      throw new InvalidUserAccountException("The user account doesn't exist");
+    }
+    
+    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+      throw new InvalidUserAccountException("The use account is deactivated.");
+    }
+    
+    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
+    query.setParameter("user", user);
+    query.setParameter("code", code);
+    query.setParameter("verificationType", EVerificationType.PASSWORD_RESET);
+    
+    List<Verification> verificationList = query.getResultList();
+    
+    if (CollectionUtils.isEmptyCollection(verificationList)) {
+      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
+    }
+    
+    Verification verification = verificationList.get(0);
+    
+    return verification.isValid();
   }
 
   @Override

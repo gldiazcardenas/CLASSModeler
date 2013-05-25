@@ -56,13 +56,34 @@ public interface UserService {
   public IUser logIn (String email, String password) throws InactivatedUserAccountException;
   
   /**
-   * Resets the password of the user account represented by the given email.
+   * Sends the link to reset the password of the user account represented by the
+   * given email.
    * 
    * @param email
    *          The user email.
+   * @throws InvalidUserAccountException
+   *           When the user account for the given email is invalid. Doesn't
+   *           exist or is deactivated.
+   * @throws SendEmailException
+   *           When the system is not able to send an email to the user address.
    * @author Gabriel Leonardo Diaz, 21.05.2013.
    */
-  public void resetPassword (String email);
+  public void sendResetPasswordEmail (String email) throws InvalidUserAccountException, SendEmailException;
+  
+  /**
+   * Validates the given email and hash code used to reset the user account
+   * password.
+   * 
+   * @param email
+   *          The user email.
+   * @param code
+   *          The hash code sent to the email address.
+   * @return A boolean indicating whether the hash code is valid or not.
+   * @throws InvalidUserAccountException
+   *           When the user account doesn't exist or it's deactivated.
+   * @author Gabriel Leonardo Diaz, 24.05.2013.
+   */
+  public boolean isValidToResetPassword (String email, String code) throws InvalidUserAccountException;
   
   /**
    * Activates the user account of the given user.
