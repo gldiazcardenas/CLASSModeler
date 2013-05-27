@@ -59,15 +59,12 @@ public @Stateless class UserServiceBean implements UserService {
     
     User user = getUserByEmail(email);
     
-    if (user != null) {
-      if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
-        throw new InvalidUserAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
-      }
-      
-      if (user.getPassword().equals(password)) {
-        // The password is invalid.
-        user = null;
-      }
+    if (user == null || !user.getPassword().equals(password)) {
+      throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
+      throw new InvalidUserAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
     }
     
     return user;
@@ -177,6 +174,24 @@ public @Stateless class UserServiceBean implements UserService {
     
     // Sends the link to reset the password.
     vsb.sendResetPasswordEmail(user, verification);
+  }
+  
+  @Override
+  public User resetPassword(String email, String newPassword) throws InvalidUserAccountException {
+    User user = getUserByEmail(email);
+    
+    if (user == null) {
+      throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+      throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+    }
+    
+    user.setPassword(newPassword);
+    em.merge(user);
+    
+    return user;
   }
 
   @Override

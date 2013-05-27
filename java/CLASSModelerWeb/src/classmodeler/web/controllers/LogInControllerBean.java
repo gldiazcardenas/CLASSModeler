@@ -14,9 +14,13 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.GenericUtils;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFMessageBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 @ManagedBean(name="logInController")
 @ViewScoped
@@ -67,7 +71,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   public String processGuest () {
     nickname = Guest.GUEST_EMAIL;
     password = Guest.GUEST_PASSWORD;
-    mode = ELoginMode.GUEST_USER;
+    mode     = ELoginMode.GUEST_USER;
     return process();
   }
 
@@ -86,15 +90,23 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         
         if (mode == ELoginMode.REGISTERED_USER) {
           // Redirects to the DashBoard
-          outcome = "pages/dashboard/dashboard.xhtml?faces-redirect=true";
+          outcome = JSFOutcomeUtil.DASHBOARD;
         }
         else {
           // Redirects to the Designer Page
-          outcome = "pages/designer/designer.xhtml?faces-redirect=true";
+          outcome = JSFOutcomeUtil.DESIGNER;
         }
       }
       catch (InvalidUserAccountException e) {
-        addErrorMessage("", "", null);
+        if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+        }
+        else if (e.getType() == EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT) {
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_ACTIVATED_MESSAGE"), null);
+        }
+        else {
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        }
       }
     }
     

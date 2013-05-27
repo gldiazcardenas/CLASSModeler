@@ -72,7 +72,7 @@ public class ActivateAccountControllerBean extends JSFGenericBean {
         addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_ACTIVATED_MESSAGE"), null);
       }
       else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_DEACTIVATED_MESSAGE"), null);
+        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
       }
       else {
         // Should not happen

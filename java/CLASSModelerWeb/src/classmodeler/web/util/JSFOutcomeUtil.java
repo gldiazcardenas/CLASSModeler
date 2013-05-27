@@ -17,11 +17,8 @@ public interface JSFOutcomeUtil {
   
   public static final String REDIRECT_SUFIX = "?faces-redirect=true";
   
-  public static final String PAGES_PREFIX = "/pages";
-  public static final String PORTAL_PREFIX = PAGES_PREFIX + "/portal";
-  public static final String INDEX     = "/index.xhtml" + REDIRECT_SUFIX;
-  public static final String DASHBOARD = PAGES_PREFIX + "/dashboard/dashboard.xhtml" + REDIRECT_SUFIX;
-  public static final String SIGN_UP_CONFIRMATION = PORTAL_PREFIX + "/signUpConfirmation.xhtml" + REDIRECT_SUFIX;
-  public static final String ACTIVATED_ACCOUNT_PAGE = PORTAL_PREFIX + "/activatedAccount.hxmlt";
+  public static final String INDEX          = "/index.xhtml" + REDIRECT_SUFIX;
+  public static final String DASHBOARD      = "/pages/dashboard/dashboard.xhtml" + REDIRECT_SUFIX;
+  public static final String DESIGNER       = "pages/designer/designer.xhtml" + REDIRECT_SUFIX;
   
 }

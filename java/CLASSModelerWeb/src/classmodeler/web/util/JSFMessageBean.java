@@ -18,6 +18,12 @@ package classmodeler.web.util;
 public interface JSFMessageBean {
   
   /**
+   * Use this always to add messages for the user. The component with this ID
+   * shows all messages added from the controller.
+   */
+  public static final String GENERAL_MESSAGE_ID = "generalMessage";
+  
+  /**
    * Adds an error message to the JSF context.
    * 
    * @param clientId

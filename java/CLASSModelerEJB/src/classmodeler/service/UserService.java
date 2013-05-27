@@ -120,6 +120,20 @@ public interface UserService {
                                                                                  SendEmailException;
   
   /**
+   * Resets the user password with a new one.
+   * 
+   * @param email
+   *          The user email.
+   * @param newPassword
+   *          The new password for the user account.
+   * @return The user updated.
+   * @throws InvalidUserAccountException
+   *           When the user email doesn't exist or it is deactivated.
+   * @author Gabriel Leonardo Diaz, 25.05.2013.
+   */
+  public User resetPassword (String email, String newPassword) throws InvalidUserAccountException;
+  
+  /**
    * Inserts the given user into the database. This method also creates the user
    * account verification code and sends it to the user email address.
    * 

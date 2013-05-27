@@ -20,6 +20,7 @@ import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFMessageBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
@@ -58,22 +59,27 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
       try {
         userService.sendResetPasswordEmail(email);
         outcome = JSFOutcomeUtil.INDEX;
-        addInformationMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
+        addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
+                              JSFResourceBundle.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
       catch (InvalidUserAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
+                          JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
         else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
+                          JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
         }
         else {
           // Should not happen
-          addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
+                          JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
         }
       }
       catch (SendEmailException e) {
-        addErrorMessage("generalMessage", JSFResourceBundle.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
+        addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
+                        JSFResourceBundle.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
       }
     }
     
