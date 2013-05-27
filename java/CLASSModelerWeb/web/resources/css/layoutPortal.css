@@ -3,6 +3,7 @@
 .sectionsContainer {
     width: 920px;
     margin: 0px auto 0px auto;
+    min-height: inherit;
 }
 
 #center {
@@ -66,5 +67,10 @@
     border-top: none;
     border-left: none;
     min-height: inherit;
+}
+
+#formButtonsProject > button {
+    width: 80%;
+    margin: 3px 10% 3px 10%;
 }
 

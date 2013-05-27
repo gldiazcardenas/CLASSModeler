@@ -135,7 +135,13 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     newUser.setGender(gender);
     newUser.setEmail(email);
     newUser.setPassword(password);
-    newUser.setAvatar(JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL);
+    
+    if (gender == EGender.MALE) {
+      newUser.setAvatar(JSFResourceBundle.DEFAULT_MALE_IMAGE_URL);
+    }
+    else {
+      newUser.setAvatar(JSFResourceBundle.DEFAULT_FEMALE_IMAGE_URL);
+    }
     
     try {
       userService.insertUser(newUser);

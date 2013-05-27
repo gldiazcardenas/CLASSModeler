@@ -83,7 +83,7 @@ public class SessionControllerBean extends JSFGenericBean {
     }
     
     if (!loggedUser.isRegisteredUser()) {
-      return JSFResourceBundle.GUEST_DEFAULT_IMAGE_URL;
+      return JSFResourceBundle.DEFAULT_MALE_IMAGE_URL;
     }
     
     return loggedUser.getAvatar();

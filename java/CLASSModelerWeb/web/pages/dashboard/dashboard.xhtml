@@ -14,19 +14,18 @@
 
 <ui:define name="centerContent">
     <div id="sidebarSection" class="ui-widget-content">
-        <h:form>
-            <p:commandButton value="New Folder" icon="ui-icon-folder-collapsed" />
+        <h:form id="formButtonsProject">
+            <p:commandButton value="New Project" icon="ui-icon-document" />
+            <p:commandButton value="Edit Project" icon="ui-icon-pencil" />
+            <p:commandButton value="Delete Project" icon="ui-icon-trash" />
+            <p:commandButton value="Open Designer" icon="ui-icon-folder-open" />
         </h:form>
     </div>
+    
     <div id="projectsSection" class="ui-widget-content">
         <h:form id="projectsForm">
-            <div style="width:40%; float: left;">
-                <p:commandButton value="New Project" icon="ui-icon-document" ajax="false" action="/pages/designer/designer.xhtml" />
-            </div>
-            
-            <div style="width: 60%; float: right; text-align: right; margin-bottom: 5px;">
+            <div style="float: right; text-align: right; margin-bottom: 5px;">
                 <p:commandButton value="Share" icon="ui-icon-star" />
-                <p:commandButton value="Configuration" icon="ui-icon-gear" />
             </div>
             
             <p:dataTable>

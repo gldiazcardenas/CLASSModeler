@@ -19,7 +19,8 @@ import javax.faces.context.FacesContext;
  */
 public final class JSFResourceBundle {
   
-  public static final String GUEST_DEFAULT_IMAGE_URL = "/resources/uploads/avatar.png";
+  public static final String DEFAULT_MALE_IMAGE_URL = "/resources/uploads/male_avatar.png";
+  public static final String DEFAULT_FEMALE_IMAGE_URL = "/resources/uploads/female_avatar.png";
   
   private JSFResourceBundle () {
     // This class CANNOT be instanced
