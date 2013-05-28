@@ -113,7 +113,7 @@ public class SessionControllerBean extends JSFGenericBean {
     if (session != null) {
       session.invalidate();
     }
-    return JSFOutcomeUtil.INDEX;
+    return JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   
   /**
@@ -122,7 +122,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the Dashboard page
    */
   public String goToDashboard () {
-    return JSFOutcomeUtil.DASHBOARD;
+    return JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   
 }

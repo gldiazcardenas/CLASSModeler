@@ -37,12 +37,14 @@
 
 #sidebarSection {
     float: left;
-    margin-top: 30px;
-    padding-bottom: 10px;
+    margin: 10px 0px;
     width: 20%;
-    border-top: none;
-    border-left: none;
-    border-right: none;
+    min-height: inherit;
+}
+
+#buttonsForm > button {
+    width: 80%;
+    margin: 3px 10% 3px 10%;
 }
 
 #projectsSection{
@@ -67,10 +69,5 @@
     border-top: none;
     border-left: none;
     min-height: inherit;
-}
-
-#formButtonsProject > button {
-    width: 80%;
-    margin: 3px 10% 3px 10%;
 }
 

@@ -90,11 +90,11 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         
         if (mode == ELoginMode.REGISTERED_USER) {
           // Redirects to the DashBoard
-          outcome = JSFOutcomeUtil.DASHBOARD;
+          outcome = JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
         else {
           // Redirects to the Designer Page
-          outcome = JSFOutcomeUtil.DESIGNER;
+          outcome = JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
       }
       catch (InvalidUserAccountException e) {

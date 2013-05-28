@@ -121,7 +121,7 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
     if (isAllValid()) {
       try {
         userService.resetPassword(email, password);
-        outcome = JSFOutcomeUtil.INDEX;
+        outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
         addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
                               JSFResourceBundle.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }

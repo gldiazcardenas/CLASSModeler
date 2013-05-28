@@ -18,9 +18,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import classmodeler.web.controllers.SessionControllerBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * Servlet Filter implementation to check the user session when a privileged
@@ -28,7 +30,7 @@ import classmodeler.web.controllers.SessionControllerBean;
  * 
  * @author Gabriel Leonardo Diaz, 15.04.2013.
  */
-@WebFilter(filterName="UserSessionValidationFilter", urlPatterns= {"/*"})
+@WebFilter(filterName="UserSessionValidationFilter", urlPatterns= {JSFOutcomeUtil.INDEX, JSFOutcomeUtil.PAGES_PATH})
 public class SessionFilter implements Filter {
   
   /**
@@ -51,15 +53,36 @@ public class SessionFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
                                                                                                    ServletException {
     
-    final HttpSession session = ((HttpServletRequest) request).getSession(false);  
+    HttpServletRequest req  = (HttpServletRequest) request;
+    HttpServletResponse res = (HttpServletResponse) response;
+    
+    final HttpSession session = req.getSession(false);
+    String url = req.getServletPath();
+    
     if (session != null) {
       SessionControllerBean sessionController = (SessionControllerBean) session.getAttribute("sessionController");
+      
       if (sessionController == null || sessionController.getLoggedUser() == null) {
-        // TODO put the error
+        if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
+          // Forbidden access, redirect to the index page.
+          session.setAttribute("from", req.getRequestURI());
+          res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
+          return;
+        }
+      }
+      else if (url.contains(JSFOutcomeUtil.INDEX) || url.contains(JSFOutcomeUtil.PORTAL_PATH)) {
+        // Avoids the user get out without closing the session.
+        session.setAttribute("from", req.getRequestURI());
+        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DASHBOARD);
+        return;
       }
     }
-    else {
-      // TODO put the error, there is no session and a privileged page was requested.
+    
+    // Forbidden access, redirect to the index page.
+    else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
+      req.getSession().setAttribute("from", req.getRequestURI());
+      res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
+      return;
     }
     
     // pass the request along the filter chain

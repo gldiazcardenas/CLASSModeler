@@ -17,8 +17,13 @@ public interface JSFOutcomeUtil {
   
   public static final String REDIRECT_SUFIX = "?faces-redirect=true";
   
-  public static final String INDEX          = "/index.xhtml" + REDIRECT_SUFIX;
-  public static final String DASHBOARD      = "/pages/dashboard/dashboard.xhtml" + REDIRECT_SUFIX;
-  public static final String DESIGNER       = "pages/designer/designer.xhtml" + REDIRECT_SUFIX;
+  public static final String PAGES_PATH     = "/pages/*";
+  public static final String DESIGNER_PATH  = "/designer";
+  public static final String DASHBOARD_PATH = "/dashboard";
+  public static final String PORTAL_PATH    = "/portal";
+  
+  public static final String INDEX          = "/index.xhtml";
+  public static final String DASHBOARD      = "/pages/dashboard/dashboard.xhtml";
+  public static final String DESIGNER       = "/pages/designer/designer.xhtml";
   
 }

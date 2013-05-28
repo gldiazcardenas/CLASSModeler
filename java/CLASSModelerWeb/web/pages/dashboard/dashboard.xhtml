@@ -13,13 +13,23 @@
 </ui:define>
 
 <ui:define name="centerContent">
-    <div id="sidebarSection" class="ui-widget-content">
-        <h:form id="formButtonsProject">
+    <div id="sidebarSection">
+        <h:form id="buttonsForm">
             <p:commandButton value="New Project" icon="ui-icon-document" />
             <p:commandButton value="Edit Project" icon="ui-icon-pencil" />
             <p:commandButton value="Delete Project" icon="ui-icon-trash" />
             <p:commandButton value="Open Designer" icon="ui-icon-folder-open" />
         </h:form>
+        
+        <p:separator style="margin: 10px 0; border-top: none;" />
+        
+        <h:form id="shareForm">
+            <p:dataTable>
+                <p:column headerText="Shared To"></p:column>
+                <p:column headerText="Privilege"></p:column>
+            </p:dataTable>
+        </h:form>
+        
     </div>
     
     <div id="projectsSection" class="ui-widget-content">
