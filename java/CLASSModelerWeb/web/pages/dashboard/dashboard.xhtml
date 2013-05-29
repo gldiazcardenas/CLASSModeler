@@ -13,20 +13,22 @@
 </ui:define>
 
 <ui:define name="centerContent">
+    <f:metadata>
+        <f:event listener="#{dashBoardController.configure()}" type="preRenderView" />
+    </f:metadata>
+    
     <div id="sidebarSection">
-        <h:form id="buttonsForm">
-            <p:commandButton value="New Project" icon="ui-icon-document" />
-            <p:commandButton value="Edit Project" icon="ui-icon-pencil" />
-            <p:commandButton value="Delete Project" icon="ui-icon-trash" />
-            <p:commandButton value="Open Designer" icon="ui-icon-folder-open" />
-        </h:form>
+        <p:commandButton value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" type="button" onclick="projectDialog.show();" icon="ui-icon-document" />
+        <p:commandButton value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" type="button" icon="ui-icon-pencil" />
+        <p:commandButton value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" type="button" icon="ui-icon-trash" />
+        <p:commandButton value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" type="button" icon="ui-icon-folder-open" />
         
         <p:separator style="margin: 10px 0; border-top: none;" />
         
-        <h:form id="shareForm">
-            <p:dataTable>
-                <p:column headerText="Shared To"></p:column>
-                <p:column headerText="Privilege"></p:column>
+        <h:form id="sharedForm">
+            <p:dataTable id="sharedTable" value="#{dashBoardController.sharings}">
+                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}"></p:column>
+                <p:column headerText="#{msgs.COLUMN_SHARED_PRIVILEGE_LABEL}"></p:column>
             </p:dataTable>
         </h:form>
         
@@ -35,17 +37,49 @@
     <div id="projectsSection" class="ui-widget-content">
         <h:form id="projectsForm">
             <div style="float: right; text-align: right; margin-bottom: 5px;">
-                <p:commandButton value="Share" icon="ui-icon-star" />
+                <p:commandButton value="#{msgs.BUTTON_SHARE_PROJECT_LABEL}" icon="ui-icon-star" />
             </div>
             
-            <p:dataTable>
-                <p:column headerText="Project Name"></p:column>
-                <p:column headerText="Owner"></p:column>
-                <p:column headerText="Modified Date"></p:column>
-                <p:column headerText="Modified by"></p:column>
+            <p:contextMenu for="projectsTable">
+                <p:menuitem value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" onclick="projectDialog.show();" icon="ui-icon-document" />
+                <p:menuitem value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" />
+                <p:menuitem value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" />
+                <p:menuitem value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-open" />
+            </p:contextMenu>
+            
+            <p:dataTable id="projectsTable"
+                         value="#{dashBoardController.projects}"
+                         var="project"
+                         rowKey="#{project.key}"
+                         selectionMode="single"
+                         selection="#{dashBoardController.selectedProject}"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="10, 20, 30"
+                         rows="30">
+                         
+                <p:column headerText="#{msgs.COLUMN_PROJECT_NAME_LABEL}" sortBy="#{project.name}">
+                    <h:outputText value="#{project.name}"/>
+                </p:column>
+                
+                <p:column headerText="#{msgs.COLUMN_PROJECT_OWNER_LABEL}" sortBy="#{project.createdBy.name}">
+                    <h:outputText value="#{project.createdBy.name}" />
+                </p:column>
+                
+                <p:column headerText="#{msgs.COLUMN_PROJECT_MODIFIER_LABEL}" sortBy="#{project.modifiedBy.name}">
+                    <h:outputText value="#{project.modifiedBy.name}" />
+                </p:column>
+                
+                <p:column headerText="#{msgs.COLUMN_PROJECT_MODIFIED_DATE_LABEL}" sortBy="#{project.modifiedDate}">
+                    <h:outputText value="#{project.modifiedDate}" />
+                </p:column>
             </p:dataTable>
         </h:form>
     </div>
+    
+    <ui:include src="/pages/dashboard/projectEditor.xhtml" />
+    
 </ui:define>
 
 </ui:composition>

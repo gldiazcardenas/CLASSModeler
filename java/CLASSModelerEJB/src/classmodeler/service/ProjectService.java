@@ -20,6 +20,13 @@ import classmodeler.domain.project.Project;
 @Local
 public interface ProjectService {
   
+  /**
+   * Inserts the given project in database.
+   * 
+   * @param project
+   *          The new project to be saved.
+   * @author Gabriel Leonardo Diaz, 28.05.2013.
+   */
   public void insertProject (Project project);
   
 }

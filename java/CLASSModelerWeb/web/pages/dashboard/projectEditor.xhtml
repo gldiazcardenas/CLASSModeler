@@ -1,0 +1,39 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+                
+    <h:form id="projectForm">
+        <p:dialog id="projectDialog" header="#{dashBoardController.operationTitle}" widgetVar="projectDialog" closable="true" modal="true" width="400">
+            <h:panelGrid id="projectDialogTable" columns="1" width="100%">
+                <p:inputText id="name" value="#{dashBoardController.name}" required="true" style="width: 97%" />
+                <p:watermark for="name" value="#{msgs.NEW_PROJECT_FORM_NAME_FIELD}" />
+                
+                <p:inputTextarea id="description" value="#{dashBoardController.description}" style="width: 97%" />
+                <p:watermark for="description" value="#{msgs.NEW_PROJECT_FORM_DESCRIPTION_FIELD}"/>
+                
+                <p:separator/>
+                
+                <h:panelGrid columns="2">
+                    <p:commandButton id="saveButton" value="#{msgs.SAVE_LABEL}" update="projectDialogTable, :generalMessage" actionListener="#{dashBoardController.newProject()}"
+                                     onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');" oncomplete="handleRequest(xhr, status, args)" />
+                    
+                    <p:ajaxStatus style="width: 16px; height: 16px; display: inline;">
+                        <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                        <f:facet name="complete"><h:outputText value="" /></f:facet>
+                    </p:ajaxStatus>
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:dialog>
+        
+        <!-- Callback function that hidden the dialog -->
+        <script type="text/javascript">  
+          function handleRequest(xhr, status, args) {
+            if (!args.validationFailed) {
+              projectDialog.hide();
+            }
+          }
+        </script>
+    </h:form>
+
+</ui:composition>

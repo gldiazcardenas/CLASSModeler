@@ -31,17 +31,15 @@
                 <f:selectItems value="#{signUPController.gendersForSelectOneRadio}" />
             </p:selectOneRadio>
             
-            <p:growl id="signUpMessage" for="signUpMessage" sticky="true" />
-            
             <p:separator/>
             
             <h:panelGrid columns="2">
-                <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel" actionListener="#{signUPController.processAJAX()}" onclick="jQuery(this).addClass('ui-state-disabled')" />
+                <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel, :generalMessage" actionListener="#{signUPController.processAJAX()}" onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');" />
                 
                 <p:ajaxStatus style="width: 16px; height: 16px; display: inline;">
                     <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
                     <f:facet name="complete"><h:outputText value="" /></f:facet>
-               </p:ajaxStatus>
+                </p:ajaxStatus>
             </h:panelGrid>
         </h:panelGrid>
     </h:form>
