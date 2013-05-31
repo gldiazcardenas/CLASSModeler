@@ -18,10 +18,12 @@
     </f:metadata>
     
     <div id="sidebarSection">
-        <p:commandButton value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" type="button" onclick="projectDialog.show();" icon="ui-icon-document" />
-        <p:commandButton value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" type="button" icon="ui-icon-pencil" />
-        <p:commandButton value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" type="button" icon="ui-icon-trash" />
-        <p:commandButton value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" type="button" icon="ui-icon-folder-open" />
+        <h:form id="sidebarButtonsForm">
+            <p:commandButton value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" type="button" onclick="projectDialog.show();" icon="ui-icon-document" />
+            <p:commandButton value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" />
+            <p:commandButton value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" />
+            <p:commandButton value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-open" />
+        </h:form>
         
         <p:separator style="margin: 10px 0; border-top: none;" />
         
@@ -41,7 +43,7 @@
             </div>
             
             <p:contextMenu for="projectsTable">
-                <p:menuitem value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" onclick="projectDialog.show();" icon="ui-icon-document" />
+                <p:menuitem value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" icon="ui-icon-document" />
                 <p:menuitem value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" />
                 <p:menuitem value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" />
                 <p:menuitem value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-open" />
@@ -52,12 +54,12 @@
                          var="project"
                          rowKey="#{project.key}"
                          selectionMode="single"
-                         selection="#{dashBoardController.selectedProject}"
+                         selection="#{dashBoardController.project}"
                          paginator="true"
                          paginatorPosition="bottom"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="10, 20, 30"
-                         rows="30">
+                         rows="20">
                          
                 <p:column headerText="#{msgs.COLUMN_PROJECT_NAME_LABEL}" sortBy="#{project.name}">
                     <h:outputText value="#{project.name}"/>
@@ -78,7 +80,7 @@
         </h:form>
     </div>
     
-    <ui:include src="/pages/dashboard/projectEditor.xhtml" />
+    <ui:include src="/pages/dashboard/projectDialog.xhtml" />
     
 </ui:define>
 

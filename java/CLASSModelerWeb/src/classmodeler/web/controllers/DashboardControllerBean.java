@@ -18,7 +18,6 @@ import javax.faces.bean.SessionScoped;
 import classmodeler.domain.project.Project;
 import classmodeler.domain.project.Shared;
 import classmodeler.domain.user.User;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -33,16 +32,11 @@ public class DashboardControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
-  private Project selectedProject;
-  private Shared selectedShared;
+  private Project project;
+  private Shared shared;
   
   private List<Project> projects;
   private List<Shared> sharings;
-  
-  // Used for the project form
-  private String operationTitle = JSFResourceBundle.getLocalizedMessage("BUTTON_NEW_PROJECT_LABEL");
-  private String name;
-  private String description;
   
   public DashboardControllerBean() {
     super();
@@ -59,40 +53,20 @@ public class DashboardControllerBean extends JSFGenericBean {
     return sharings;
   }
   
-  public Project getSelectedProject() {
-    return selectedProject;
+  public Project getProject() {
+    return project;
   }
   
-  public void setSelectedProject(Project selectedProject) {
-    this.selectedProject = selectedProject;
+  public void setProject(Project project) {
+    this.project = project;
   }
   
-  public Shared getSelectedShared() {
-    return selectedShared;
+  public Shared getShared() {
+    return shared;
   }
   
-  public void setSelectedShared(Shared selectedShared) {
-    this.selectedShared = selectedShared;
-  }
-  
-  public String getName() {
-    return name;
-  }
-  
-  public void setName(String name) {
-    this.name = name;
-  }
-  
-  public String getDescription() {
-    return description;
-  }
-  
-  public void setDescription(String description) {
-    this.description = description;
-  }
-  
-  public String getOperationTitle() {
-    return operationTitle;
+  public void setShared(Shared shared) {
+    this.shared = shared;
   }
   
   /**
@@ -102,7 +76,6 @@ public class DashboardControllerBean extends JSFGenericBean {
    */
   public void configure () {
     // TODO
-    System.out.println();
     
     Project project = new Project();
     project.setName("MyProject");
@@ -119,13 +92,34 @@ public class DashboardControllerBean extends JSFGenericBean {
   }
   
   /**
-   * Creates a new projects and adds it to the current list.
+   * Prepares the controller ({@link ProjectControllerBean}) to create a
+   * new project. Sets an empty object to the controller.
    * 
    * @author Gabriel Leonardo Diaz, 28.05.2013.
    */
-  public void newProject () {
-    // TODO
-    System.out.println();
+  public void prepareNewProject () {
+    ProjectControllerBean projectController = getJSFBean("projectController", ProjectControllerBean.class);
+    if (projectController != null) {
+      projectController.setProject(new Project());
+    }
+  }
+  
+  /**
+   * Prepares the controller ({@link ProjectControllerBean}) to edit a
+   * project by setting the selected project instance {@link #project}, if the
+   * object is null this method does nothing.
+   * 
+   * @author Gabriel Leonardo Diaz, 28.05.2013.
+   */
+  public void prepareEditProject () {
+    ProjectControllerBean projectController = getJSFBean("projectController", ProjectControllerBean.class);
+    if (projectController != null) {
+      if (project != null) {
+        projectController.setProject(project);
+      }
+      else {
+      }
+    }
   }
 
 }

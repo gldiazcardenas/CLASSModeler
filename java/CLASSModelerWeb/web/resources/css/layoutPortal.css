@@ -42,7 +42,7 @@
     min-height: inherit;
 }
 
-#buttonsForm > button {
+#sidebarSection > button {
     width: 80%;
     margin: 3px 10% 3px 10%;
 }

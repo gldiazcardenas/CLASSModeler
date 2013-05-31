@@ -29,4 +29,13 @@ public interface ProjectService {
    */
   public void insertProject (Project project);
   
+  /**
+   * Updates the information of the project in database.
+   * 
+   * @param project
+   *          The project to update.
+   * @author Gabriel Leonardo Diaz, 28.05.2013.
+   */
+  public void updateProject (Project project);
+  
 }

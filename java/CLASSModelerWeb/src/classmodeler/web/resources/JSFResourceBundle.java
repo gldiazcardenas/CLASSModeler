@@ -8,9 +8,12 @@
 
 package classmodeler.web.resources;
 
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import javax.faces.context.FacesContext;
+
+import classmodeler.service.util.CollectionUtils;
 
 /**
  * Utility class to get handle localized messages.
@@ -30,14 +33,27 @@ public final class JSFResourceBundle {
    * Looks for a localized message through the given <code>messageKey</code> in
    * the message resource bundle.
    * 
-   * @param messageKey
-   *          The key of the message.
+   * @param arguments
+   *          The values of the message, where the first element is the
+   *          messageKey and the other elements are the arguments of the
+   *          message..
    * @return The localized message represented by the given key.
    */
-  public static String getLocalizedMessage (String messageKey) {
+  public static String getLocalizedMessage (String... values) {
     FacesContext facesContext = FacesContext.getCurrentInstance();
     ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msgs");
-    return bundle.getString(messageKey);
+    
+    String messageKey = values[0];
+    Object [] arguments = null;
+    
+    if (CollectionUtils.size(values) > 1) {
+      arguments = new Object[values.length - 1];
+      for (int i = 0; i < arguments.length; i++) {
+        arguments[i] = values[i + 1];
+      }
+    }
+    
+    return MessageFormat.format(bundle.getString(messageKey), arguments);
   }
   
 }

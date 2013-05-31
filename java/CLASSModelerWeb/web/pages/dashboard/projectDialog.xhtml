@@ -1,0 +1,46 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+                
+        <p:dialog id="projectDialog" header="#{projectController.title}" widgetVar="projectDialog" closable="true" modal="true" width="400">
+            <h:panelGrid id="projectPanel" columns="1" width="100%">
+            
+                <h:form id="projectForm">
+                    <p:inputText id="name" value="#{projectController.name}" required="true" style="width: 97%" />
+                    <p:watermark for="name" value="#{msgs.PROJECT_FORM_NAME_FIELD}" />
+                    
+                    <p:inputTextarea id="description" value="#{projectController.description}" style="width: 97%" />
+                    <p:watermark for="description" value="#{msgs.PROJECT_FORM_DESCRIPTION_FIELD}"/>
+                    
+                    <p:separator/>
+                    
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="saveButton" value="#{msgs.SAVE_LABEL}" actionListener="#{projectController.processAJAX()}"
+                                         onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                         oncomplete="handleResponse(xhr, status, args)"
+                                         update="projectPanel, :generalMessage" />
+                        
+                        <p:ajaxStatus style="width: 16px; height: 16px;">
+                            <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                            <f:facet name="complete"><h:outputText value="" /></f:facet>
+                        </p:ajaxStatus>
+                    </h:panelGrid>
+                </h:form>
+                
+                <p:messages for="projectCustomMessage" />
+                
+            </h:panelGrid>
+        </p:dialog>
+        
+        <!-- Callback function that hides the dialog -->
+        <script type="text/javascript">  
+          function handleResponse(xhr, status, args) {
+            if (!args.validationFailed) {
+              projectDialog.hide();
+            }
+          }
+        </script>
+    
+
+</ui:composition>

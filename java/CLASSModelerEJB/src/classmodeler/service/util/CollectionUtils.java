@@ -49,5 +49,31 @@ public final class CollectionUtils {
   public static boolean isEmptyMap (Map<?, ?> map) {
     return map == null || map.isEmpty();
   }
+  
+  /**
+   * Generic method to get the size of a collection, if the collection is null
+   * this method will return zero(0).
+   * 
+   * @param collection
+   *          The collection to evaluate.
+   * @return The size of the collection.
+   * @author Gabriel Leonardo Diaz, 30.05.2013.
+   */
+  public static int size (Collection<?> collection) {
+    return collection == null ? 0 : collection.size();
+  }
+  
+  /**
+   * Generic method to get the size of an array, if the array is null this
+   * method will return zero(0).
+   * 
+   * @param array
+   *          The array to evaluate.
+   * @return The size of the array.
+   * @author Gabriel Leonardo Diaz, 30.05.2013.
+   */
+  public static <T extends Object> int size (T[] array) {
+    return array == null ? 0 : array.length;
+  }
 
 }
