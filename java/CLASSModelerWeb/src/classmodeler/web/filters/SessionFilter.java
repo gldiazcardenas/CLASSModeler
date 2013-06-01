@@ -61,7 +61,6 @@ public class SessionFilter implements Filter {
     
     if (session != null) {
       SessionControllerBean sessionController = (SessionControllerBean) session.getAttribute("sessionController");
-      
       if (sessionController == null || sessionController.getLoggedUser() == null) {
         if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
           // Forbidden access, redirect to the index page.
@@ -71,13 +70,20 @@ public class SessionFilter implements Filter {
         }
       }
       else if (url.contains(JSFOutcomeUtil.INDEX) || url.contains(JSFOutcomeUtil.PORTAL_PATH)) {
-        // Avoids the user get out without closing the session.
+        if (sessionController.isRegisteredUser()) {
+          // Avoids the user get out without closing the session.
+          session.setAttribute("from", req.getRequestURI());
+          res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DASHBOARD);
+          return;
+        }
+      }
+      else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) && !sessionController.isRegisteredUser()) {
+        // DashBoard page is only for registered users.
         session.setAttribute("from", req.getRequestURI());
-        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DASHBOARD);
+        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DESIGNER);
         return;
       }
     }
-    
     // Forbidden access, redirect to the index page.
     else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
       req.getSession().setAttribute("from", req.getRequestURI());

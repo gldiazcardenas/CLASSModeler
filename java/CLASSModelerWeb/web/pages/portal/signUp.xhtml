@@ -31,7 +31,7 @@
                 <f:selectItems value="#{signUPController.gendersForSelectOneRadio}" />
             </p:selectOneRadio>
             
-            <p:separator/>
+            <p:separator styleClass="customSeparator" />
             
             <h:panelGrid columns="2">
                 <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel, :generalMessage" actionListener="#{signUPController.processAJAX()}" onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');" />

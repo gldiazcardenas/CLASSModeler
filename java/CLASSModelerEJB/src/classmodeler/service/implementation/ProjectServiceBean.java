@@ -8,10 +8,17 @@
 
 package classmodeler.service.implementation;
 
+import java.util.Calendar;
+import java.util.List;
+
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import classmodeler.domain.project.Project;
+import classmodeler.domain.user.User;
 import classmodeler.service.ProjectService;
+import classmodeler.service.util.CollectionUtils;
 
 /**
  * Session bean implementation for Project service.
@@ -20,15 +27,43 @@ import classmodeler.service.ProjectService;
  */
 public @Stateless class ProjectServiceBean implements ProjectService {
   
+  @PersistenceContext(unitName="CLASSModelerPU")
+  private EntityManager em;
+  
   @Override
-  public void insertProject(Project project) {
-    // TODO Auto-generated method stub
+  public Project insertProject(Project project) {
+    if (project == null) {
+      return project;
+    }
+    
+    project.setCreatedDate(Calendar.getInstance().getTime());
+    project.setModifiedDate(project.getCreatedDate());
+    
+    em.persist(project);
+    
+    return project;
   }
   
   @Override
   public void updateProject(Project project) {
-    // TODO Auto-generated method stub
+    if (project == null) {
+      return;
+    }
     
+    em.merge(project);
+  }
+  
+  @Override
+  public List<Project> getAllProjectsByUser(User user) {
+    List<Project> ownedProjects = em.createQuery("SELECT p FROM Project p WHERE p.createdBy = :ownerUser", Project.class)
+                                    .setParameter("ownerUser", user)
+                                    .getResultList();
+    
+    List<Project> sharedProjects = em.createQuery("SELECT s.project FROM Shared s WHERE s.toUser = :sharedUser", Project.class)
+                                     .setParameter("sharedUser", user)
+                                     .getResultList();
+    
+    return CollectionUtils.mergeLists(ownedProjects, sharedProjects);
   }
   
 }

@@ -3,44 +3,39 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
                 
-        <p:dialog id="projectDialog" header="#{projectController.title}" widgetVar="projectDialog" closable="true" modal="true" width="400">
-            <h:panelGrid id="projectPanel" columns="1" width="100%">
+<p:dialog id="projectDialog" widgetVar="dlgProject" header="#{projectController.title}" closable="true" closeOnEscape="true" modal="true" width="400">
+    <h:form id="projectForm">
+        <h:panelGrid columns="1" width="100%">
+            <p:inputText id="name" value="#{projectController.name}" required="true" style="width: 97%" />
+            <p:watermark for="name" value="#{msgs.PROJECT_FORM_NAME_FIELD}" />
             
-                <h:form id="projectForm">
-                    <p:inputText id="name" value="#{projectController.name}" required="true" style="width: 97%" />
-                    <p:watermark for="name" value="#{msgs.PROJECT_FORM_NAME_FIELD}" />
-                    
-                    <p:inputTextarea id="description" value="#{projectController.description}" style="width: 97%" />
-                    <p:watermark for="description" value="#{msgs.PROJECT_FORM_DESCRIPTION_FIELD}"/>
-                    
-                    <p:separator/>
-                    
-                    <h:panelGrid columns="2">
-                        <p:commandButton id="saveButton" value="#{msgs.SAVE_LABEL}" actionListener="#{projectController.processAJAX()}"
-                                         onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
-                                         oncomplete="handleResponse(xhr, status, args)"
-                                         update="projectPanel, :generalMessage" />
-                        
-                        <p:ajaxStatus style="width: 16px; height: 16px;">
-                            <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
-                            <f:facet name="complete"><h:outputText value="" /></f:facet>
-                        </p:ajaxStatus>
-                    </h:panelGrid>
-                </h:form>
+            <p:inputTextarea id="description" value="#{projectController.description}" style="width: 97%" />
+            <p:watermark for="description" value="#{msgs.PROJECT_FORM_DESCRIPTION_FIELD}"/>
+            
+            <p:separator styleClass="customSeparator" />
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="#{msgs.SAVE_LABEL}" actionListener="#{projectController.processAJAX()}"
+                                 onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                 oncomplete="handleResponse(xhr, status, args)"
+                                 update=":projectsForm, :generalMessage, :projectForm" />
                 
-                <p:messages for="projectCustomMessage" />
-                
+                <p:ajaxStatus style="width: 16px; height: 16px;">
+                    <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                    <f:facet name="complete"><h:outputText value="" /></f:facet>
+                </p:ajaxStatus>
             </h:panelGrid>
-        </p:dialog>
+        </h:panelGrid>
         
         <!-- Callback function that hides the dialog -->
-        <script type="text/javascript">  
+        <script type="text/javascript">
           function handleResponse(xhr, status, args) {
             if (!args.validationFailed) {
-              projectDialog.hide();
+              dlgProject.hide();
             }
           }
         </script>
-    
+    </h:form>
+</p:dialog>
 
 </ui:composition>

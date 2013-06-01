@@ -8,7 +8,9 @@
 
 package classmodeler.service.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,6 +76,33 @@ public final class CollectionUtils {
    */
   public static <T extends Object> int size (T[] array) {
     return array == null ? 0 : array.length;
+  }
+  
+  /**
+   * Merges two lists in a single one, this method just adds the second list to
+   * the end of the first list and returns a new instance. This is null safe.
+   * 
+   * @param list1
+   *          The list one.
+   * @param list2
+   *          The list two.
+   * @return The concatenation of the lists.
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public static <T extends Object> List<T> mergeLists (List<T> list1, List<T> list2) {
+    if (list1 == null) {
+      return list2;
+    }
+    
+    if (list2 == null) {
+      return list1;
+    }
+    
+    List<T> newList = new ArrayList<T>();
+    newList.addAll(list1);
+    newList.addAll(list2);
+    
+    return newList;
   }
 
 }

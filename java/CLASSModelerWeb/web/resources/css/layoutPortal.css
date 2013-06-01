@@ -35,19 +35,14 @@
     text-align: center;
 }
 
-#sidebarSection {
+#shareSection {
     float: left;
     margin: 10px 0px;
     width: 20%;
     min-height: inherit;
 }
 
-#sidebarSection > button {
-    width: 80%;
-    margin: 3px 10% 3px 10%;
-}
-
-#projectsSection{
+#projectsSection {
     float: right;
     margin: 10px 0px;
     padding-left: 10px;

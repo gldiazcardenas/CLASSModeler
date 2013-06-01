@@ -9,15 +9,17 @@
 package classmodeler.web.controllers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import classmodeler.domain.project.Project;
 import classmodeler.domain.project.Shared;
 import classmodeler.domain.user.User;
+import classmodeler.service.ProjectService;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -37,6 +39,12 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   private List<Project> projects;
   private List<Shared> sharings;
+  
+  @ManagedProperty("#{sessionController}")
+  private SessionControllerBean sessionController;
+  
+  @EJB
+  private ProjectService projectService;
   
   public DashboardControllerBean() {
     super();
@@ -69,57 +77,36 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.shared = shared;
   }
   
+  public boolean isSelectedProject () {
+    return project != null;
+  }
+  
+  public void setSessionController(SessionControllerBean sessionController) {
+    this.sessionController = sessionController;
+  }
+  
+  /**
+   * Adds a single project to the current cached list.
+   * 
+   * @param project
+   *          The project to add.
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public void addProject (Project project) {
+    if (project == null) {
+      return;
+    }
+    
+    projects.add(project);
+  }
+  
   /**
    * Loads the initial configurations and data for the DashBoard page.
    * 
    * @author Gabriel Leonardo Diaz, 28.05.2013.
    */
   public void configure () {
-    // TODO
-    
-    Project project = new Project();
-    project.setName("MyProject");
-    project.setDescription("MyDescription");
-    
-    User user = new User();
-    
-    project.setCreatedBy(user);
-    project.setModifiedBy(user);
-    project.setModifiedDate(Calendar.getInstance().getTime());
-    project.setCreatedDate(Calendar.getInstance().getTime());
-    
-    projects.add(project);
-  }
-  
-  /**
-   * Prepares the controller ({@link ProjectControllerBean}) to create a
-   * new project. Sets an empty object to the controller.
-   * 
-   * @author Gabriel Leonardo Diaz, 28.05.2013.
-   */
-  public void prepareNewProject () {
-    ProjectControllerBean projectController = getJSFBean("projectController", ProjectControllerBean.class);
-    if (projectController != null) {
-      projectController.setProject(new Project());
-    }
-  }
-  
-  /**
-   * Prepares the controller ({@link ProjectControllerBean}) to edit a
-   * project by setting the selected project instance {@link #project}, if the
-   * object is null this method does nothing.
-   * 
-   * @author Gabriel Leonardo Diaz, 28.05.2013.
-   */
-  public void prepareEditProject () {
-    ProjectControllerBean projectController = getJSFBean("projectController", ProjectControllerBean.class);
-    if (projectController != null) {
-      if (project != null) {
-        projectController.setProject(project);
-      }
-      else {
-      }
-    }
+    projects = projectService.getAllProjectsByUser((User) sessionController.getLoggedUser());
   }
 
 }

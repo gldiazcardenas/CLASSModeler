@@ -99,7 +99,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
       }
       catch (InvalidUserAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+          addWarningMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
         else if (e.getType() == EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT) {
           addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_ACTIVATED_MESSAGE"), null);
