@@ -43,6 +43,15 @@ public interface ProjectService {
   public void updateProject (Project project);
   
   /**
+   * Deletes from database the project represented by the given key.
+   * 
+   * @param projectKey
+   *          The key of the project to delete.
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public void deleteProject (int projectKey);
+  
+  /**
    * Gets the list of project that the user can see, it means the projects owned
    * by the user and all the projects shared by other users.
    * 

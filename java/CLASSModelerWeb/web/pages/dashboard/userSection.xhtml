@@ -1,5 +1,6 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
     
     <h:panelGrid columns="3" border="0" cellpadding="0" cellspacing="0">
@@ -18,6 +19,38 @@
             <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
             <p:menuitem value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
         </p:menuButton>
+        
+        <!-- Change password dialog -->
+        <p:dialog id="changePasswordDialog" widgetVar="dlgChangePassword" width="400" closable="true" closeOnEscape="true" modal="true">
+            <h:panelGrid columns="2" width="100%">
+                <p:password id="oldPassword" value="#{changePasswordController.oldPassword}" style="width: 97%" required="true" />
+                <p:watermark for="oldPassword" value=""/>
+                
+                <p:password id="newPassword" value="#{changePasswordController.newPassword}" required="true" />
+                <p:watermark for="newPassword" value=""/>
+                
+                <p:password id="newConfirmation" value="#{changePasswordController.newConfirmation}" required="true" />
+                <p:watermark for="newConfirmation" value=""/>
+                
+                <p:messages for="changePasswordMessage" />
+                
+                <p:separator styleClass="customSeparator"/>
+                
+                <h:panelGrid columns="3">
+                    <p:commandButton value="#{msgs.SAVE_LABEL} " />
+                    <p:commandButton value="#{msgs.CANCEL_LABEL}" />
+                    
+                    <p:ajaxStatus style="width: 16px; height: 16px;">
+                        <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                        <f:facet name="complete"><h:outputText value="" /></f:facet>
+                    </p:ajaxStatus>
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:dialog>
+        
+        <!-- Edit Profile Dialog -->
+        <p:dialog id="profileDialog" widgetVar="dlgProfile" width="400" modal="true" closable="true" closeOnEscape="true">
+        </p:dialog>
     </h:panelGrid>
     
 </ui:composition>

@@ -88,16 +88,31 @@ public class DashboardControllerBean extends JSFGenericBean {
   /**
    * Adds a single project to the current cached list.
    * 
-   * @param project
+   * @param newProject
    *          The project to add.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public void addProject (Project project) {
-    if (project == null) {
+  public void addProject (Project newProject) {
+    if (newProject == null) {
       return;
     }
     
-    projects.add(project);
+    projects.add(newProject);
+  }
+  
+  /**
+   * Removes the given project from the current cached list.
+   * 
+   * @param deletedProject
+   *          The project to delete.
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public void deleteProject (Project deletedProject) {
+    if (deletedProject == null) {
+      return;
+    }
+    
+    projects.remove(deletedProject);
   }
   
   /**

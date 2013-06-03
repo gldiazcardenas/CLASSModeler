@@ -54,6 +54,14 @@ public @Stateless class ProjectServiceBean implements ProjectService {
   }
   
   @Override
+  public void deleteProject(int projectKey) {
+    Project project = em.find(Project.class, Integer.valueOf(projectKey));
+    if (project != null) {
+      em.remove(project);
+    }
+  }
+  
+  @Override
   public List<Project> getAllProjectsByUser(User user) {
     List<Project> ownedProjects = em.createQuery("SELECT p FROM Project p WHERE p.createdBy = :ownerUser", Project.class)
                                     .setParameter("ownerUser", user)

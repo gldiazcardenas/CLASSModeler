@@ -38,6 +38,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   private String description;
   private String title;
   private Project project;
+  private EProjectControllerMode mode;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -95,6 +96,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
     description = null;
     project     = new Project();
     title       = JSFResourceBundle.getLocalizedMessage("PROJECT_NEW_FORM_TITLE");
+    mode        = EProjectControllerMode.CREATE;
   }
   
   /**
@@ -110,6 +112,38 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
       name        = project.getName();
       description = project.getDescription();
       title       = JSFResourceBundle.getLocalizedMessage("PROJECT_EDIT_FORM_TITLE", name);
+      mode        = EProjectControllerMode.EDIT;
+    }
+  }
+  
+  /**
+   * Prepares the controller to delete the selected project in the table, this
+   * method takes the object from {@link DashboardControllerBean}.
+   * 
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public void prepareDeleteProject () {
+    project = dashBoardController.getProject();
+    if (project != null) {
+      name   = project.getName();
+      title  = JSFResourceBundle.getLocalizedMessage("PROJECT_DELETE_FORM_TITLE", name);
+      mode   = EProjectControllerMode.DELETE;
+    }
+  }
+  
+  /**
+   * Prepares the controller to create a new project based on the information
+   * copied from the selected project.
+   * 
+   * @author Gabriel Leonardo Diaz, 02.06.2013.
+   */
+  public void prepareCopyProject () {
+    project = dashBoardController.getProject();
+    if (project != null) {
+      name        = project.getName();
+      description = project.getDescription();
+      title       = JSFResourceBundle.getLocalizedMessage("PROJECT_COPY_FORM_TITLE", name);
+      mode        = EProjectControllerMode.COPY;
     }
   }
   
@@ -124,25 +158,44 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
       return;
     }
     
-    project.setName(name);
-    project.setDescription(description);
-    project.setCreatedBy((User) sessionController.getLoggedUser());
-    project.setModifiedBy((User) sessionController.getLoggedUser());
-    project.setProjectXMI("");
-    
     try {
-      if (project.getKey() > 0) {
-        projectService.updateProject(project);
-      }
-      else {
-        projectService.insertProject(project);
-        dashBoardController.addProject(project);
+      switch (mode) {
+      case CREATE:
+      case EDIT:
+      case COPY:
+        project.setName(name);
+        project.setDescription(description);
+        project.setModifiedBy((User) sessionController.getLoggedUser());
+        
+        if (mode == EProjectControllerMode.EDIT) {
+          projectService.updateProject(project);
+        }
+        else {
+          // Create mode set an empty XMI representation, In Copy Mode keep the XMI of the project.
+          if (mode == EProjectControllerMode.CREATE) {
+            project.setProjectXMI("");
+          }
+          
+          project.setCreatedBy((User) sessionController.getLoggedUser());
+          projectService.insertProject(project);
+          dashBoardController.addProject(project);
+        }
+        
+        break;
+      case DELETE:
+        projectService.deleteProject(project.getKey());
+        dashBoardController.deleteProject(project);
+        break;
+        
+      default:
+        break;
       }
       
       project     = null;
       name        = null;
       description = null;
       title       = null;
+      mode        = null;
     }
     catch (Exception e) {
       addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
@@ -152,6 +205,18 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   @Override
   public String process() {
     return null; // Not used.
+  }
+  
+  /**
+   * The operation modes of this controller.
+   *
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public enum EProjectControllerMode {
+    CREATE,
+    EDIT,
+    DELETE,
+    COPY,
   }
 
 }
