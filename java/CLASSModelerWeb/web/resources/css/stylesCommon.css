@@ -26,11 +26,6 @@ body {
     font-style: italic;
 }
 
-.customSeparator {
-    margin: 5px 0 5px 0;
-    border-top: none;
-}
-
 #avatar {
     margin: 3px 5px 0 5px;
 }

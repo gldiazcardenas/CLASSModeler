@@ -8,12 +8,18 @@
 
 package classmodeler.web.controllers;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import classmodeler.domain.user.User;
+import classmodeler.service.UserService;
+import classmodeler.service.util.GenericUtils;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFMessageBean;
 
 /**
  * JSF Bean controller to process changing password operation for the logged
@@ -31,8 +37,11 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
   private String newPassword;
   private String newConfirmation;
   
-  @ManagedProperty("#{sessionController}")
-  private SessionControllerBean sessionController;
+  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
+  private User loggedUser;
+  
+  @EJB
+  private UserService userService;
   
   public ChangePasswordControllerBean() {
     super();
@@ -62,25 +71,42 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     this.newPassword = newPassword;
   }
   
-  public void setSessionController(SessionControllerBean sessionController) {
-    this.sessionController = sessionController;
+  public void setLoggedUser(User loggedUser) {
+    this.loggedUser = loggedUser;
   }
 
   @Override
   public boolean isAllValid() {
-    // TODO Auto-generated method stub
-    return false;
+    if (loggedUser == null) {
+      return false;
+    }
+    
+    if (!GenericUtils.equals(oldPassword, loggedUser.getPassword())) {
+      return false;
+    }
+    
+    if (GenericUtils.isEmptyString(newConfirmation) || !GenericUtils.equals(newPassword, newConfirmation)) {
+      return false;
+    }
+    
+    return true;
   }
 
   @Override
   public void processAJAX() {
-    // TODO Auto-generated method stub
+    if (!isAllValid()) {
+      return;
+    }
+    
+    loggedUser.setPassword(newPassword);
+    userService.updateUser(loggedUser);
+    
+    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override
   public String process() {
-    // TODO Auto-generated method stub
-    return null;
+    return null; // Not null.
   }
   
 }

@@ -1,0 +1,87 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<!-- Change password dialog -->
+<p:dialog id="changePasswordDialog" widgetVar="dlgChangePassword" header="#{msgs.CHANGE_PASSWORD_FORM_TITLE}" width="400" closable="true" closeOnEscape="true" modal="true" rendered="#{sessionController.registeredUser}" appendToBody="true">
+    <h:form id="changePasswordForm">
+        <h:panelGrid columns="1" width="100%">
+            <p:password id="oldPassword" value="#{changePasswordController.oldPassword}" style="width: 97%" required="true">
+                <f:validator binding="#{changePasswordValidator}"/>
+            </p:password>
+            <p:watermark for="oldPassword" value="#{msgs.CHANGE_PASSWORD_FORM_OLD_PASSWORD_FIELD}"/>
+            
+            <p:password id="newPassword" value="#{changePasswordController.newPassword}" required="true" binding="#{newPassword}" style="width: 97%"/>
+            <p:watermark for="newPassword" value="#{msgs.CHANGE_PASSWORD_FORM_NEW_PASSWORD_FIELD}"/>
+            
+            <p:password id="newConfirmation" value="#{changePasswordController.newConfirmation}" required="true" style="width: 97%">
+                <f:attribute name="attrNewPassword" value="#{newPassword.value}" />
+                <f:validator binding="#{changePasswordValidator}"/>
+            </p:password>
+            <p:watermark for="newConfirmation" value="#{msgs.CHANGE_PASSWORD_FORM_NEW_CONFIRM_FIELD}"/>
+            
+            <p:messages for="changePasswordMessage" />
+            
+            <p:separator />
+            
+            <h:panelGrid columns="3">
+                <p:commandButton id="btSaveChangePassword" value="#{msgs.SAVE_LABEL}" actionListener="#{changePasswordController.processAJAX()}"
+                                 update=":changePasswordForm, :generalMessage"
+                                 onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                 oncomplete="responseChangePassword(xhr, status, args)" />
+                                 
+                <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgChangePassword.hide()" />
+                
+                <p:ajaxStatus style="width: 16px; height: 16px;">
+                    <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                    <f:facet name="complete"><h:outputText value="" /></f:facet>
+                </p:ajaxStatus>
+            </h:panelGrid>
+        </h:panelGrid>
+    </h:form>
+    
+    <!-- Callback function that hides the dialog -->
+    <script type="text/javascript">
+      function responseChangePassword(xhr, status, args) {
+        if (!args.validationFailed) {
+          dlgChangePassword.hide();
+        }
+      }
+    </script>
+</p:dialog>
+
+<!-- Edit Profile Dialog -->
+<p:dialog id="profileDialog" widgetVar="dlgProfile" width="400" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
+    <h:panelGrid columns="2" >
+        <h:panelGroup style="display:block;">
+            <p:graphicImage url=""/>
+            
+            <h:panelGrid columns="1">
+                <h:panelGrid columns="2">
+                    <p:inputText />
+                    <p:inputText />
+                </h:panelGrid>
+                
+                <p:calendar />
+                
+                <p:separator />
+                
+                <h:panelGrid columns="3">
+                    <p:commandButton value="#{msgs.SAVE_LABEL} " />
+                    <p:commandButton value="#{msgs.CANCEL_LABEL}" />
+                    
+                    <p:ajaxStatus style="width: 16px; height: 16px;">
+                        <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                        <f:facet name="complete"><h:outputText value="" /></f:facet>
+                    </p:ajaxStatus>
+                </h:panelGrid>
+            </h:panelGrid>
+        </h:panelGroup>
+    </h:panelGrid>
+    <h:panelGrid columns="1">
+        
+    </h:panelGrid>
+</p:dialog>
+    
+</ui:composition>

@@ -7,7 +7,7 @@
 <ui:param name="title" value="#{msgs.DASHBOARD_PAGE_BASE_TITLE}"/>
 
 <ui:define name="userSection">
-    <h:form prependId="false" style="float: right;">
+    <h:form style="float: right;">
         <ui:include src="/pages/dashboard/userSection.xhtml"/>
     </h:form>
 </ui:define>
@@ -90,6 +90,7 @@
         
     </div>
     
+    <ui:include src="/pages/dashboard/user.xhtml"/>
     <ui:include src="/pages/dashboard/project.xhtml"/>
     
 </ui:define>

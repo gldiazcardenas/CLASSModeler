@@ -18,7 +18,6 @@ import javax.faces.bean.SessionScoped;
 
 import classmodeler.domain.project.Project;
 import classmodeler.domain.project.Shared;
-import classmodeler.domain.user.User;
 import classmodeler.service.ProjectService;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -121,7 +120,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 28.05.2013.
    */
   public void configure () {
-    projects = projectService.getAllProjectsByUser((User) sessionController.getLoggedUser());
+    projects = projectService.getAllProjectsByUser(sessionController.getLoggedRegisteredUser());
   }
 
 }

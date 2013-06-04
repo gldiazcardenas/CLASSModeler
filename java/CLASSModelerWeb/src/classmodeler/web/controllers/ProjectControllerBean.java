@@ -43,8 +43,8 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
   
-  @ManagedProperty("#{sessionController}")
-  private SessionControllerBean sessionController;
+  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
+  private User loggedUser;
   
   @EJB
   private ProjectService projectService;
@@ -81,8 +81,8 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
     this.dashBoardController = dashBoardController;
   }
   
-  public void setSessionController(SessionControllerBean sessionController) {
-    this.sessionController = sessionController;
+  public void setLoggedUser(User loggedUser) {
+    this.loggedUser = loggedUser;
   }
   
   /**
@@ -149,7 +149,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   
   @Override
   public boolean isAllValid() {
-    return project != null && !GenericUtils.isEmptyString(name);
+    return project != null && loggedUser != null && !GenericUtils.isEmptyString(name);
   }
 
   @Override
@@ -165,7 +165,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
       case COPY:
         project.setName(name);
         project.setDescription(description);
-        project.setModifiedBy((User) sessionController.getLoggedUser());
+        project.setModifiedBy(loggedUser);
         
         if (mode == EProjectControllerMode.EDIT) {
           projectService.updateProject(project);
@@ -176,7 +176,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
             project.setProjectXMI("");
           }
           
-          project.setCreatedBy((User) sessionController.getLoggedUser());
+          project.setCreatedBy(loggedUser);
           projectService.insertProject(project);
           dashBoardController.addProject(project);
         }

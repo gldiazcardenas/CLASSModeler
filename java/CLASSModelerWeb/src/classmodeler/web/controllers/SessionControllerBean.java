@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import classmodeler.domain.user.IUser;
+import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.web.resources.JSFResourceBundle;
@@ -44,10 +45,22 @@ public class SessionControllerBean extends JSFGenericBean {
   /**
    * Gets the current user in session.
    * 
-   * @return An instance of IUser object.
+   * @return An instance of IUser.
    */
   public IUser getLoggedUser() {
     return loggedUser;
+  }
+  
+  /**
+   * Gets the logged registered user.
+   * 
+   * @return An instance of User.
+   */
+  public User getLoggedRegisteredUser () {
+    if (loggedUser instanceof User) {
+      return (User) loggedUser;
+    }
+    return null;
   }
   
   /**
