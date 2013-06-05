@@ -30,7 +30,7 @@
                                  update=":changePasswordForm, :generalMessage"
                                  onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
                                  oncomplete="responseChangePassword(xhr, status, args)" />
-                                 
+                
                 <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgChangePassword.hide()" />
                 
                 <p:ajaxStatus style="width: 16px; height: 16px;">
@@ -52,36 +52,64 @@
 </p:dialog>
 
 <!-- Edit Profile Dialog -->
-<p:dialog id="profileDialog" widgetVar="dlgProfile" width="400" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
-    <h:panelGrid columns="2" >
-        <h:panelGroup style="display:block;">
-            <p:graphicImage url=""/>
-            
-            <h:panelGrid columns="1">
-                <h:panelGrid columns="2">
-                    <p:inputText />
-                    <p:inputText />
-                </h:panelGrid>
-                
-                <p:calendar />
-                
-                <p:separator />
-                
-                <h:panelGrid columns="3">
-                    <p:commandButton value="#{msgs.SAVE_LABEL} " />
-                    <p:commandButton value="#{msgs.CANCEL_LABEL}" />
-                    
-                    <p:ajaxStatus style="width: 16px; height: 16px;">
-                        <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
-                        <f:facet name="complete"><h:outputText value="" /></f:facet>
-                    </p:ajaxStatus>
-                </h:panelGrid>
-            </h:panelGrid>
-        </h:panelGroup>
-    </h:panelGrid>
-    <h:panelGrid columns="1">
-        
-    </h:panelGrid>
+<p:dialog id="profileDialog" widgetVar="dlgProfile" width="450" header="#{msgs.USER_PROFILE_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
+    <h:form id="profileForm">
+        <table style="width: 100%;">
+            <tr>
+                <td width="30%">
+                    <h:panelGrid columns="1" styleClass="ui-widget-content" style="border-bottom: none; border-top: none; border-left: none;" width="95%">
+                        <p:graphicImage id="avatar" url="#{userProfileController.avatar}" />
+                        
+                        <h:panelGrid columns="2">
+                            <p:fileUpload update=":profileForm:avatar" auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="100000" label="#{msgs.USER_PROFILE_CHANGE_AVATAR_LABEL}" uploadLabel="#{msgs.USER_PROFILE_CHANGE_AVATAR_LABEL}" />
+                            <p:commandButton title="#{msgs.USER_PROFILE_DEFAULT_AVATAR_LABEL}" actionListener="#{userProfileController.setDefaultAvatar()}" update=":profileForm:avatar" icon="ui-icon-image" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </td>
+                <td width="70%">
+                    <h:panelGrid columns="1" width="100%">
+                        <p:inputText id="firstName" value="#{userProfileController.firstName}" style="width: 98%;" />
+                        <p:watermark for="firstName" value="#{msgs.SIGN_UP_FORM_FIRST_NAME_FIELD}" />
+                        
+                        <p:inputText id="lastName" value="#{userProfileController.lastName}"  style="width: 98%;" />
+                        <p:watermark for="lastName" value="#{msgs.SIGN_UP_FORM_LAST_NAME_FIELD}" />
+                        
+                        <p:calendar id="birthdate" value="#{userProfileController.birthdate}" navigator="true" showOn="both" style="width:96%;" />
+                        <p:watermark for="birthdate" value="#{msgs.SIGN_UP_FORM_DATEOFBIRTH_FIELD}" />
+                        
+                        <p:selectOneRadio id="gender" value="#{userProfileController.gender}" converter="genderConverter" required="true">
+                            <f:selectItems value="#{userProfileController.gendersForSelectOneRadio}" />
+                        </p:selectOneRadio>
+                        
+                        <p:separator />
+                        
+                        <h:panelGrid columns="3">
+                            <p:commandButton value="#{msgs.SAVE_LABEL}" actionListener="#{userProfileController.processAJAX()}"
+                                             update=":profileForm, :generalMessage"
+                                             onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                             oncomplete="responseProfile(xhr, status, args)" />
+                                             
+                            <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgProfile.hide()" />
+                            
+                            <p:ajaxStatus style="width: 16px; height: 16px;">
+                                <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                                <f:facet name="complete"><h:outputText value="" /></f:facet>
+                            </p:ajaxStatus>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </td>
+            </tr>
+        </table>
+    </h:form>
+    
+    <!-- Callback function that hides the dialog -->
+    <script type="text/javascript">
+      function responseProfile(xhr, status, args) {
+        if (!args.validationFailed) {
+          dlgProfile.hide();
+        }
+      }
+    </script>
 </p:dialog>
     
 </ui:composition>

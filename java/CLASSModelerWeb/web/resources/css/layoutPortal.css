@@ -66,3 +66,17 @@
     min-height: inherit;
 }
 
+#profileForm .fileupload-content {
+    display: none;
+}
+
+#profileForm .fileupload-buttonbar {
+    background: none;
+    padding: 0px;
+    border: none;
+}
+
+#profileForm .ui-fileupload {
+    border: none;
+}
+
