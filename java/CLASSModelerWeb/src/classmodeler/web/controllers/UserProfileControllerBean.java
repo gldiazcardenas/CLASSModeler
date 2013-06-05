@@ -10,16 +10,23 @@ package classmodeler.web.controllers;
 
 import java.util.Date;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
+import classmodeler.service.UserService;
+import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFMessageBean;
 
 /**
  * JSF Form Bean controller that handles user interactions with the edit user
@@ -35,6 +42,9 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
   private User loggedUser;
+  
+  @EJB
+  private UserService userService;
   
   private String firstName;
   private String lastName;
@@ -119,8 +129,18 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       return false;
     }
     
-    // TODO Auto-generated method stub
-    return false;
+    if (gender == null) {
+      return false;
+    }
+    
+    if (GenericUtils.isEmptyString(firstName) ||
+        GenericUtils.isEmptyString(lastName) ||
+        GenericUtils.isEmptyString(avatar)) {
+      
+      return false;
+    }
+    
+    return true;
   }
   
   /**
@@ -136,10 +156,38 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       avatar = JSFResourceBundle.DEFAULT_FEMALE_IMAGE_URL;
     }
   }
+  
+  /**
+   * Method that controls the process of uploading a new image file for the user
+   * avatar.
+   * 
+   * @param evt
+   *          The primefaces file upload event.
+   * @author Gabriel Leonardo Diaz, 04.06.2013.
+   */
+  public void handleFileUpload (FileUploadEvent evt) {
+    UploadedFile file = evt.getFile();
+    if (file != null) {
+      System.out.println();
+    }
+  }
 
   @Override
   public void processAJAX() {
-    // TODO Auto-generated method stub
+    if (!isAllValid()) {
+      return;
+    }
+    
+    
+    loggedUser.setFirstName(firstName);
+    loggedUser.setLastName(lastName);
+    loggedUser.setBirthdate(birthdate);
+    loggedUser.setGender(gender);
+    loggedUser.setAvatar(avatar);
+    
+    userService.updateUser(loggedUser);
+    
+    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override

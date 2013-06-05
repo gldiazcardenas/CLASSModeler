@@ -13,10 +13,6 @@
 </ui:define>
 
 <ui:define name="centerContent">
-    <f:metadata>
-        <f:event listener="#{dashBoardController.configure()}" type="preRenderView" />
-    </f:metadata>
-    
     <div id="shareSection">
         <h:form id="shareButtonForm" style="text-align: center;">
             <p:commandButton value="#{msgs.BUTTON_SHARE_PROJECT_LABEL}" icon="ui-icon-star" disabled="#{!dashBoardController.selectedProject}" style="width: 70%;" />

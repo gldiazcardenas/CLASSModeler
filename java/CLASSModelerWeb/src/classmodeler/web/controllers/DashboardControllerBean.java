@@ -14,10 +14,11 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.project.Project;
 import classmodeler.domain.project.Shared;
+import classmodeler.domain.user.User;
 import classmodeler.service.ProjectService;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -28,7 +29,7 @@ import classmodeler.web.util.JSFGenericBean;
  * @author Gabriel Leonardo Diaz, 28.05.2013.
  */
 @ManagedBean(name="dashBoardController")
-@SessionScoped
+@ViewScoped
 public class DashboardControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
@@ -39,24 +40,38 @@ public class DashboardControllerBean extends JSFGenericBean {
   private List<Project> projects;
   private List<Shared> sharings;
   
-  @ManagedProperty("#{sessionController}")
-  private SessionControllerBean sessionController;
+  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
+  private User loggedUser;
   
   @EJB
   private ProjectService projectService;
   
   public DashboardControllerBean() {
     super();
-    
-    projects = new ArrayList<Project>();
-    sharings = new ArrayList<Shared>();
   }
   
+  /**
+   * Gets the projects belonging to the user or shared by other users. This
+   * method loads the projects from the Service.
+   * 
+   * @return A list of projects.
+   */
   public List<Project> getProjects() {
+    if (projects == null) {
+      projects = projectService.getAllProjectsByUser(loggedUser); 
+    }
     return projects;
   }
   
+  /**
+   * Gets the sharings of the selected project.
+   * 
+   * @return A list of sharing bean.
+   */
   public List<Shared> getSharings() {
+    if (sharings == null) {
+      sharings = new ArrayList<Shared>();
+    }
     return sharings;
   }
   
@@ -80,8 +95,8 @@ public class DashboardControllerBean extends JSFGenericBean {
     return project != null;
   }
   
-  public void setSessionController(SessionControllerBean sessionController) {
-    this.sessionController = sessionController;
+  public void setLoggedUser(User loggedUser) {
+    this.loggedUser = loggedUser;
   }
   
   /**
@@ -112,15 +127,6 @@ public class DashboardControllerBean extends JSFGenericBean {
     }
     
     projects.remove(deletedProject);
-  }
-  
-  /**
-   * Loads the initial configurations and data for the DashBoard page.
-   * 
-   * @author Gabriel Leonardo Diaz, 28.05.2013.
-   */
-  public void configure () {
-    projects = projectService.getAllProjectsByUser(sessionController.getLoggedRegisteredUser());
   }
 
 }
