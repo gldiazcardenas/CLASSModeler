@@ -8,16 +8,23 @@
 
 package classmodeler.web.controllers;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
@@ -166,9 +173,29 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
    * @author Gabriel Leonardo Diaz, 04.06.2013.
    */
   public void handleFileUpload (FileUploadEvent evt) {
-    UploadedFile file = evt.getFile();
-    if (file != null) {
-      System.out.println();
+    try {
+      SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
+      
+      String path          = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+      String extension     = evt.getFile().getFileName().substring(evt.getFile().getFileName().lastIndexOf('.'));
+      String fileName      = JSFResourceBundle.UPLOADS_URL + fmt.format(Calendar.getInstance().getTime()) + extension;
+      File file            = new File(path + fileName);
+      
+      InputStream is = evt.getFile().getInputstream();
+      OutputStream out = new FileOutputStream(file);
+      byte buf[] = new byte[1024];
+      int len;
+      while ((len = is.read(buf)) > 0) {
+        out.write(buf, 0, len);
+      }
+      
+      is.close();
+      out.close();
+      
+      avatar = fileName;
+    }
+    catch (IOException e) {
+      addErrorMessage("profileMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
     }
   }
 

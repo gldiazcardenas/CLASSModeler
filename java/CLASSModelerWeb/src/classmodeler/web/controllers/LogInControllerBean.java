@@ -29,7 +29,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   private static final long serialVersionUID = 1L;
   
   // Data
-  private String nickname;
+  private String email;
   private String password;
   private ELoginMode mode = ELoginMode.REGISTERED_USER;
   
@@ -41,12 +41,12 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
     super();
   }
   
-  public String getNickname() {
-    return nickname;
+  public String getEmail() {
+    return email;
   }
   
-  public void setNickname(String nickname) {
-    this.nickname = nickname;
+  public void setEmail(String email) {
+    this.email = email;
   }
   
   public String getPassword() {
@@ -69,7 +69,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
    *           As a Guest user this exception never happens.
    */
   public String processGuest () {
-    nickname = Guest.GUEST_EMAIL;
+    email    = Guest.GUEST_EMAIL;
     password = Guest.GUEST_PASSWORD;
     mode     = ELoginMode.GUEST_USER;
     return process();
@@ -86,7 +86,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
     
     if (isAllValid()) {
       try {
-        sessionController.login(nickname, password);
+        sessionController.login(email, password);
         
         if (mode == ELoginMode.REGISTERED_USER) {
           // Redirects to the DashBoard
@@ -115,11 +115,9 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
 
   @Override
   public boolean isAllValid() {
-    if (GenericUtils.isEmptyString(nickname)) {
-      return false;
-    }
-    
-    if (GenericUtils.isEmptyString(password)) {
+    if (GenericUtils.isEmptyString(email) ||
+        GenericUtils.isEmptyString(password)) {
+      
       return false;
     }
     

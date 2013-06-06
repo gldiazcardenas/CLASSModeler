@@ -21,6 +21,7 @@ import classmodeler.domain.project.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.ProjectService;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * JSF Bean controller for the DashBoard page, this handles all interaction of
@@ -42,6 +43,9 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
   private User loggedUser;
+  
+  @ManagedProperty("#{designerController}")
+  private DesignerControllerBean designerController;
   
   @EJB
   private ProjectService projectService;
@@ -99,6 +103,10 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.loggedUser = loggedUser;
   }
   
+  public void setDesignerController(DesignerControllerBean designerController) {
+    this.designerController = designerController;
+  }
+  
   /**
    * Adds a single project to the current cached list.
    * 
@@ -127,6 +135,16 @@ public class DashboardControllerBean extends JSFGenericBean {
     }
     
     projects.remove(deletedProject);
+  }
+  
+  /**
+   * Prepares the designer for the selected project.
+   * @return The outcome to the DESIGNER page.
+   * @author Gabriel Leonardo Diaz, 01.06.2013.
+   */
+  public String prepareEditProject () {
+    designerController.setProject(project);
+    return JSFOutcomeUtil.DESIGNER;
   }
 
 }

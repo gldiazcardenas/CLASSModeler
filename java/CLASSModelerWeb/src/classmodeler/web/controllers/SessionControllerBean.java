@@ -105,14 +105,14 @@ public class SessionControllerBean extends JSFGenericBean {
   /**
    * Logs in the system the user represented by the given credentials.
    * 
-   * @param nickname
-   *          The user nickname.
+   * @param email
+   *          The user email.
    * @param password
    *          The password of the system.
    * @throws InactivatedUserAccountException 
    */
-  public void login (String nickname, String password) throws InvalidUserAccountException {
-    loggedUser = userServiceBean.logIn(nickname, password);
+  public void login (String email, String password) throws InvalidUserAccountException {
+    loggedUser = userServiceBean.logIn(email, password);
   }
   
   /**

@@ -3,7 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-    <h:form id="menuForm" prependId="false">
+    <h:form id="userForm">
         <p:menubar id="menu" autoDisplay="false">
             <p:submenu label="#{msgs.MENU_FILE_LABEL}" icon="ui-icon-document">
                 <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.loggedRegisteredUser}" />

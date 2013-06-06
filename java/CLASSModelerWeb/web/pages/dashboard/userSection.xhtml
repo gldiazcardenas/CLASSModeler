@@ -6,8 +6,8 @@
 <h:panelGrid columns="3" border="0" cellpadding="0" cellspacing="0">
     <h:outputText value="#{sessionController.userName}" />
     
-    <h:panelGroup>
-        <p:graphicImage id="avatar" url="#{sessionController.userAvatar}" width="25" height="25" />
+    <h:panelGroup id="userPanel">
+        <p:graphicImage id="avatar" url="#{sessionController.userAvatar}" style="margin: 3px 5px 0 5px;" width="25" height="25" />
         <p:tooltip for="avatar">
             <p:graphicImage url="#{sessionController.userAvatar}" />
         </p:tooltip>

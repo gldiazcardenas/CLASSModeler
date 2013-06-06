@@ -22,8 +22,9 @@ import classmodeler.service.util.CollectionUtils;
  */
 public final class JSFResourceBundle {
   
-  public static final String DEFAULT_MALE_IMAGE_URL = "/resources/uploads/male_avatar.png";
+  public static final String DEFAULT_MALE_IMAGE_URL   = "/resources/uploads/male_avatar.png";
   public static final String DEFAULT_FEMALE_IMAGE_URL = "/resources/uploads/female_avatar.png";
+  public static final String UPLOADS_URL              = "/resources/uploads/";
   
   private JSFResourceBundle () {
     // This class CANNOT be instanced

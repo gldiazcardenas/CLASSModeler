@@ -17,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import classmodeler.domain.project.Project;
 import classmodeler.web.data.PropertyValue;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -32,11 +33,10 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
-  // Components
   private TreeNode projectTree;
   private List<PropertyValue> propertyValues;
   
-  // Data
+  private Project project;
   
   public DesignerControllerBean() {
     super();
@@ -53,6 +53,14 @@ public class DesignerControllerBean extends JSFGenericBean {
     propertyValues = new ArrayList<PropertyValue>();
     propertyValues.add(new PropertyValue(1, "Name", "Name"));
     propertyValues.add(new PropertyValue(2, "Scope", "Public"));
+  }
+  
+  public Project getProject() {
+    return project;
+  }
+  
+  public void setProject(Project project) {
+    this.project = project;
   }
   
   public TreeNode getProjectTree() {
