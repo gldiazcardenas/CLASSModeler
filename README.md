@@ -1,4 +1,4 @@
 CLASSModeler
 ============
 
-Online class diagram modeler, project created as college degree work.
+Online class diagram modeler, project created as university degree work.
