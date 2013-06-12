@@ -35,17 +35,18 @@
         <h:form id="projectButtonsForm" style="text-align: right; margin-bottom: 5px;">
             <p:commandButton value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" icon="ui-icon-document" actionListener="#{projectController.prepareNewProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
             <p:commandButton title="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" actionListener="#{projectController.prepareEditProject()}" update=":projectDialog" oncomplete="dlgProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;" />
-            <p:commandButton title="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;" />
-            <p:commandButton title="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-collapsed" action="#{dashBoardController.prepareEditProject()}" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;"  />
             <p:commandButton title="#{msgs.BUTTON_COPY_PROJECT_LABEL}" icon="ui-icon-copy" actionListener="#{projectController.prepareCopyProject()}" update=":projectDialog" oncomplete="dlgProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;"  />
+            <p:commandButton title="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;" />
+            <p:commandButton title="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" ajax="false" action="#{dashBoardController.prepareEditProject()}" icon="ui-icon-folder-collapsed" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;"  />
         </h:form>
         
         <h:form id="projectsForm">
             <p:contextMenu for="projectsTable">
                 <p:menuitem value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" icon="ui-icon-document" actionListener="#{projectController.prepareNewProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
                 <p:menuitem value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" actionListener="#{projectController.prepareEditProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
-                <p:menuitem value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" />
                 <p:menuitem value="#{msgs.BUTTON_COPY_PROJECT_LABEL}" icon="ui-icon-copy" actionListener="#{projectController.prepareCopyProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
+                <p:menuitem value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" />
+                <p:menuitem value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-collapsed" ajax="false" action="#{dashBoardController.prepareEditProject()}" />
             </p:contextMenu>
             
             <p:dataTable id="projectsTable"
@@ -67,7 +68,8 @@
                 <p:ajax event="contextMenu" update=":shareButtonForm, :projectButtonsForm" />
                 
                 <p:column headerText="#{msgs.COLUMN_PROJECT_NAME_LABEL}" sortBy="#{project.name}">
-                    <p:commandLink id="projectName" value="#{project.name}" action="#{dashBoardController.prepareEditProject()}"/>
+                    <h:outputText id="projectName" value="#{project.name}" />
+                    <p:tooltip for="projectName" value="#{project.description}" />
                 </p:column>
                 
                 <p:column headerText="#{msgs.COLUMN_PROJECT_OWNER_LABEL}" sortBy="#{project.createdBy.name}">
@@ -89,7 +91,6 @@
     
     <ui:include src="/pages/dashboard/user.xhtml"/>
     <ui:include src="/pages/dashboard/project.xhtml"/>
-    
 </ui:define>
 
 </ui:composition>

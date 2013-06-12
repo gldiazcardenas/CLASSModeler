@@ -8,12 +8,16 @@
 
 package classmodeler.web.data;
 
+import java.io.Serializable;
+
 /**
  * Data bean to store the property values for the object in the designer.
  * 
  * @author Gabriel Leonardo Diaz, 19.04.2013.
  */
-public class PropertyValue {
+public class PropertyValue implements Serializable {
+  
+  private static final long serialVersionUID = 1L;
   
   private int key;
   private String name;

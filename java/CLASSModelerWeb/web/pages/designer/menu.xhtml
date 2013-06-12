@@ -6,17 +6,17 @@
     <h:form id="userForm">
         <p:menubar id="menu" autoDisplay="false">
             <p:submenu label="#{msgs.MENU_FILE_LABEL}" icon="ui-icon-document">
-                <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.loggedRegisteredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_OPEN_PROJECT_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.loggedRegisteredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_SAVE_PROJECT_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.loggedRegisteredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_COPY_PROJECT_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.loggedRegisteredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_NEW_PROJECT_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_OPEN_PROJECT_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SAVE_PROJECT_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_COPY_PROJECT_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.registeredUser}" />
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_IMPORT_LABEL}" icon="ui-icon-arrowthickstop-1-s" />
                 <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" />
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_PRINT_LABEL}" icon="ui-icon-print" />
                 <p:separator />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.loggedRegisteredUser}" action="#{sessionController.goToDashboard()}" />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_EDIT_LABEL}" icon="ui-icon-pencil">

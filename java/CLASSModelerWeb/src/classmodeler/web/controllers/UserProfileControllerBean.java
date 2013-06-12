@@ -205,7 +205,6 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       return;
     }
     
-    
     loggedUser.setFirstName(firstName);
     loggedUser.setLastName(lastName);
     loggedUser.setBirthdate(birthdate);

@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import classmodeler.domain.project.Project;
 import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
@@ -28,17 +29,20 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
 
   private static final long serialVersionUID = 1L;
   
-  // Data
   private String email;
   private String password;
-  private ELoginMode mode = ELoginMode.REGISTERED_USER;
+  private ELoginMode mode;
   
-  // Injected Beans
   @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
+  
+  @ManagedProperty("#{designerController}")
+  private DesignerControllerBean designerController;
 
   public LogInControllerBean() {
     super();
+    
+    mode = ELoginMode.REGISTERED_USER;
   }
   
   public String getEmail() {
@@ -59,6 +63,10 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   
   public void setSessionController(SessionControllerBean sessionController) {
     this.sessionController = sessionController;
+  }
+  
+  public void setDesignerController(DesignerControllerBean designerController) {
+    this.designerController = designerController;
   }
   
   /**
@@ -94,6 +102,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         }
         else {
           // Redirects to the Designer Page
+          designerController.setProject(new Project());
           outcome = JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
       }

@@ -134,11 +134,18 @@ public class DashboardControllerBean extends JSFGenericBean {
       return;
     }
     
+    // Remove from the list
     projects.remove(deletedProject);
+    
+    // Remove the selected object
+    if (deletedProject.equals(project)) {
+      project = null;
+    }
   }
   
   /**
    * Prepares the designer for the selected project.
+   * 
    * @return The outcome to the DESIGNER page.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */

@@ -33,10 +33,9 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
+  private Project project;
   private TreeNode projectTree;
   private List<PropertyValue> propertyValues;
-  
-  private Project project;
   
   public DesignerControllerBean() {
     super();
@@ -44,10 +43,14 @@ public class DesignerControllerBean extends JSFGenericBean {
     // Creating the tree
     projectTree = new DefaultTreeNode("root", null);
     
-    TreeNode childNode = new DefaultTreeNode("Project Root", projectTree);
-    childNode.setExpanded(true);
-    childNode = new DefaultTreeNode("Folder 1", childNode);
-    childNode = new DefaultTreeNode("Folder 2", childNode);
+    TreeNode rootNode = new DefaultTreeNode("Project Root", projectTree);
+    rootNode.setExpanded(true);
+    
+    TreeNode childNode = new DefaultTreeNode("Folder 1", rootNode);
+    childNode.setParent(rootNode);
+    
+    childNode = new DefaultTreeNode("Folder 2", rootNode);
+    childNode.setParent(rootNode);
     
     // Creating the table
     propertyValues = new ArrayList<PropertyValue>();
