@@ -19,16 +19,25 @@ body {
 }
 
 #center-layout .pe-layout-pane-content {
-    padding: 0px;
+    padding: 2px;
     overflow: hidden;
+}
+
+#sidebarRight .ui-tree {
+    width: 100%;
+    border: none;
+}
+
+#outline, #toolbox {
+    height: inherit;
+}
+
+#properties table thead {
+    display: none;
 }
 
 .editorComponent {
     height: inherit;
     width: inherit;
     background: url("#{resource['images:grid.gif']}");
-}
-
-#editorTabView .ui-tabs-panel {
-    padding: 1px;
 }

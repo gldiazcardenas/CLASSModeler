@@ -9,7 +9,7 @@
 <ui:param name="title" value="#{msgs.DESIGNER_PAGE_BASE_TITLE}"/>
 
 <!-- Installs the method JavaScript invoked after page is loaded -->
-<ui:param name="executeOnload" value="main('');" />
+<ui:param name="executeOnload" value="#{designerController.executeOnLoad}" />
 
 <ui:define name="stylesheet">
     <h:outputStylesheet name="layoutDesigner.css" library="css"/>

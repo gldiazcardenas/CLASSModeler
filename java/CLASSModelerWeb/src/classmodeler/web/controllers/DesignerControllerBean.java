@@ -33,29 +33,26 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
+  // Data
   private Project project;
-  private TreeNode projectTree;
-  private List<PropertyValue> propertyValues;
+  
+  // Components
+  private TreeNode tree;
+  private List<PropertyValue> properties;
   
   public DesignerControllerBean() {
     super();
     
     // Creating the tree
-    projectTree = new DefaultTreeNode("root", null);
-    
-    TreeNode rootNode = new DefaultTreeNode("Project Root", projectTree);
-    rootNode.setExpanded(true);
-    
-    TreeNode childNode = new DefaultTreeNode("Folder 1", rootNode);
-    childNode.setParent(rootNode);
-    
-    childNode = new DefaultTreeNode("Folder 2", rootNode);
-    childNode.setParent(rootNode);
+    tree = new DefaultTreeNode();
     
     // Creating the table
-    propertyValues = new ArrayList<PropertyValue>();
-    propertyValues.add(new PropertyValue(1, "Name", "Name"));
-    propertyValues.add(new PropertyValue(2, "Scope", "Public"));
+    properties = new ArrayList<PropertyValue>();
+    properties.add(new PropertyValue(1, "Name", ""));
+    properties.add(new PropertyValue(3, "Notes", ""));
+    properties.add(new PropertyValue(2, "Scope", ""));
+    properties.add(new PropertyValue(3, "Abstract", ""));
+    properties.add(new PropertyValue(3, "Multiplicity", ""));
   }
   
   public Project getProject() {
@@ -66,16 +63,17 @@ public class DesignerControllerBean extends JSFGenericBean {
     this.project = project;
   }
   
-  public TreeNode getProjectTree() {
-    return projectTree;
+  public TreeNode getTree() {
+    return tree;
   }
   
-  public List<PropertyValue> getPropertyValues() {
-    return propertyValues;
+  public List<PropertyValue> getProperties() {
+    return properties;
   }
   
-  public String getXMLCurrentDiagram () {
+  public String getExecuteOnLoad () {
     StringBuilder sb = new StringBuilder();
+    sb.append("main(\"");
     sb.append("<?xml version='1.0' encoding='UTF-8'?>");
     sb.append("<mxGraphModel>");
     sb.append("<root>");
@@ -101,7 +99,7 @@ public class DesignerControllerBean extends JSFGenericBean {
     sb.append("<Array as='points'><Object x='420' y='60'/></Array>");
     sb.append("</mxGeometry>");
     sb.append("</mxCell>");
-    sb.append("<mxCell id='8' edge='1' source='2' target='6' parent='1' value=''>");
+    sb.append("<mxCell id='8' edge='1' source='2' target='6' parent='1' value='Transfer2'>");
     sb.append("<mxGeometry as='geometry' relative='1' y='-30'>");
     sb.append("<Array as='points'><Object x='600' y='60'/></Array>");
     sb.append("</mxGeometry>");
@@ -123,7 +121,7 @@ public class DesignerControllerBean extends JSFGenericBean {
     sb.append("</mxCell>");
     sb.append("</root>");
     sb.append("</mxGraphModel>");
-    
+    sb.append("\")");
     return sb.toString();
   }
   
