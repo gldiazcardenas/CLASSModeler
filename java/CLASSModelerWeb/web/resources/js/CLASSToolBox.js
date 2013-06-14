@@ -45,9 +45,19 @@ CLASSToolBox.prototype.thumbHeight = 60;
 CLASSToolBox.prototype.thumbBorder = 2;
 
 /**
+ * Specifies the padding for the thumbnails. Default is 2px.
+ */
+CLASSToolBox.prototype.thumbPadding = 2;
+
+/**
  * Shifts the thumbnail by 1px.
  */
 CLASSToolBox.prototype.shiftThumbs = mxClient.IS_SVG;
+
+/**
+ * Specifies the size of the component titles.
+ */
+CLASSToolBox.prototype.componentTitleSize = 9;
 
 /**
  * Initializer method for the CLASS Modeler toolBox.
@@ -55,33 +65,93 @@ CLASSToolBox.prototype.shiftThumbs = mxClient.IS_SVG;
 CLASSToolBox.prototype.init = function (container) {
   this.container = container;
   
-  // Add class
+  //Package
+  var packageElement = new mxCell('Package', new mxGeometry(0, 0, 70, 50), 'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
+  packageElement.vertex = true;
+  this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 70, 50, 'Package'));
+  
+  // Class
   var classElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><b>Class</b></p><hr/><div style="height:2px;"></div>',
                                 new mxGeometry(0, 0, 140, 60),
                                 'verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1');
   classElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 140, 60));
+  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 140, 60, 'Class'));
   
-  // Add package
-  var packageElement = new mxCell('Package', new mxGeometry(0, 0, 70, 50), 'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
-  packageElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 70, 50));
+  // Interface
+  var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p>' +
+                                    '<hr/><p style="margin:0px;margin-left:4px;">+ field1: Type<br/>+ field2: Type</p>' +
+                                    '<hr/><p style="margin:0px;margin-left:4px;">+ method1(Type): Type<br/>+ method2(Type, Type): Type</p>',
+                                    new mxGeometry(0, 0, 190, 140),
+                                    'verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1');
+  interfaceElement.vertex = true;
+  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 190, 140, 'Interface'));
+  
+ // Enumeration
+  var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><b>Enumeration</b></p><hr/><div style="height:2px;"></div>',
+                                      new mxGeometry(0, 0, 140, 60),
+                                      'verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1');
+  enumerationElement.vertex = true;
+  this.container.appendChild(this.createVertexTemplateFromCells([enumerationElement], 140, 60, 'Enumeration'));
+  
+  // Association
+  var associationElement = new mxCell('name', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;');
+  associationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+  associationElement.geometry.setTerminalPoint(new mxPoint(160, 0), false);
+  associationElement.geometry.relative = true;
+  associationElement.geometry.x = -1;
+  associationElement.edge = true;
+  
+  var sourceLabel = new mxCell('1', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontSize=10');
+  sourceLabel.geometry.relative = true;
+  sourceLabel.setConnectable(false);
+  sourceLabel.vertex = true;
+  associationElement.insert(sourceLabel);
+  this.container.appendChild(this.createEdgeTemplateFromCells([associationElement], 160, 0, 'Relation'));
+  
+  // Aggregation
+  var aggregationElement = new mxCell('1', new mxGeometry(0, 0, 0, 0), 'endArrow=open;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=bottom;');
+  aggregationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+  aggregationElement.geometry.setTerminalPoint(new mxPoint(160, 0), false);
+  aggregationElement.geometry.relative = true;
+  aggregationElement.geometry.x = -1;
+  aggregationElement.edge = true;
+  
+  this.container.appendChild(this.createEdgeTemplateFromCells([aggregationElement], 160, 0, 'Aggregation'));
 };
-
 
 /**
  * Creates a drop handler for inserting the given cells.
  */
-CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, height) {
-  var item = this.createItem(cells);
-  var dragSource = this.createDragSource(item, this.createDropHandler(cells, true), this.createDragPreview(width, height));
+CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, height, title) {
+  var vertex = this.createItem(cells, title);
+  var dragSource = this.createDragSource(vertex, this.createDropHandler(cells, true), this.createDragPreview(width, height));
 
   // Uses guides for vertices only if enabled in graph
   dragSource.isGuidesEnabled = mxUtils.bind(this, function() {
     return this.editor.graph.graphHandler.guidesEnabled;
   });
   
-  return item;
+  return vertex;
+};
+
+/**
+ * Creates a drop handler for inserting the given cells.
+ */
+CLASSToolBox.prototype.createEdgeTemplateFromCells = function(cells, width, height, title) {
+  var edge = this.createItem(cells, title);
+  this.createDragSource(edge, this.createDropHandler(cells, false), this.createDragPreview(width, height));
+  
+  // Installs the default edge
+  var graph = this.editor.graph;
+  mxEvent.addListener(edge, 'click', mxUtils.bind(this, function(evt) {
+    if (this.installEdges) {
+      graph.setDefaultEdge(cells[0]);
+    }
+    window.setTimeout(function() { edge.style.backgroundColor = ''; }, 300);
+    mxEvent.consume(evt);
+  }));
+  
+  return edge;
 };
 
 /**
@@ -139,34 +209,35 @@ CLASSToolBox.prototype.createDropHandler = function(cells, allowSplit) {
  * Creates and returns a preview element for the given width and height.
  */
 CLASSToolBox.prototype.createDragPreview = function(width, height) {
-  var elt = document.createElement('div');
-  elt.style.border = '1px dashed black';
-  elt.style.width = width + 'px';
-  elt.style.height = height + 'px';
-  return elt;
+  var div = document.createElement('div');
+  div.style.border = '1px dashed black';
+  div.style.width = width + 'px';
+  div.style.height = height + 'px';
+  return div;
 };
 
 /**
  * Creates and returns a new palette item for the given image.
  */
-CLASSToolBox.prototype.createItem = function(cells) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'javascript:void(0);');
+CLASSToolBox.prototype.createItem = function(cells, title) {
+  var item = document.createElement('a');
+  item.setAttribute('href', 'javascript:void(0);');
+  item.style.display = 'inline-block';
   
   // Blocks default click action
-  mxEvent.addListener(element, 'click', function(evt) {
+  mxEvent.addListener(item, 'click', function(evt) {
     mxEvent.consume(evt);
   });
 
-  this.createThumb(cells, this.thumbWidth, this.thumbHeight, element);
+  this.createThumb(cells, this.thumbWidth, this.thumbHeight, element, title);
   
-  return element;
+  return item;
 };
 
 /**
  * Creates a thumbnail for the given cells.
  */
-CLASSToolBox.prototype.createThumb = function(cells, width, height, element) {
+CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, title) {
   // Workaround for off-screen text rendering in IE
   var old = mxText.prototype.getTableSize;
   
@@ -218,14 +289,37 @@ CLASSToolBox.prototype.createThumb = function(cells, width, height, element) {
   var dd = (this.shiftThumbs) ? 2 : 3;
   
   node.style.position = 'relative';
-  node.style.overflow = 'visible';
+  node.style.overflow = 'hidden';
   node.style.cursor = 'pointer';
   node.style.left = (dx + dd) + 'px';
   node.style.top = (dy + dd) + 'px';
   node.style.width = width + 'px';
   node.style.height = height + 'px';
+  node.style.visibility = '';
+  node.style.minWidth = '';
+  node.style.minHeight = '';
   
-  element.appendChild(node);
+  parent.appendChild(node);
+  
+  //Adds title for the component
+  if (title != null) {
+    var border = (mxClient.IS_QUIRKS) ? 2 * this.thumbPadding + 2: 0;
+    parent.style.height = (this.thumbHeight + border + this.componentTitleSize + 8) + 'px';
+      
+    var divTitle = document.createElement('div');
+    divTitle.style.fontSize = this.componentTitleSize + 'px';
+    divTitle.style.textAlign = 'center';
+    divTitle.style.whiteSpace = 'nowrap';
+      
+    if (mxClient.IS_IE) {
+      divTitle.style.height = (this.componentTitleSize + 12) + 'px';
+    }
+    
+    divTitle.style.paddingTop = '4px';
+    mxUtils.write(divTitle, title);
+    parent.appendChild(divTitle);
+  }
+  
   mxText.prototype.getTableSize = old;
 };
 
