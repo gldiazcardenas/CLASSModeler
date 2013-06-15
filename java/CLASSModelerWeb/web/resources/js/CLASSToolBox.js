@@ -140,17 +140,6 @@ CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, he
 CLASSToolBox.prototype.createEdgeTemplateFromCells = function(cells, width, height, title) {
   var edge = this.createItem(cells, title);
   this.createDragSource(edge, this.createDropHandler(cells, false), this.createDragPreview(width, height));
-  
-  // Installs the default edge
-  var graph = this.editor.graph;
-  mxEvent.addListener(edge, 'click', mxUtils.bind(this, function(evt) {
-    if (this.installEdges) {
-      graph.setDefaultEdge(cells[0]);
-    }
-    window.setTimeout(function() { edge.style.backgroundColor = ''; }, 300);
-    mxEvent.consume(evt);
-  }));
-  
   return edge;
 };
 
@@ -229,7 +218,7 @@ CLASSToolBox.prototype.createItem = function(cells, title) {
     mxEvent.consume(evt);
   });
 
-  this.createThumb(cells, this.thumbWidth, this.thumbHeight, element, title);
+  this.createThumb(cells, this.thumbWidth, this.thumbHeight, item, title);
   
   return item;
 };

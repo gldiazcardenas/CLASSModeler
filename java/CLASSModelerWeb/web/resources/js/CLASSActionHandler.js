@@ -13,7 +13,7 @@
  * selecting all components, delete, undo, redo, ..etc.
  */
 CLASSActionHandler = function (editor) {
-  this.editor = editor;
+  this.editor  = editor;
   this.actions = new Object();
 };
 
@@ -21,7 +21,9 @@ CLASSActionHandler = function (editor) {
  * Initializes the actions for the application.
  */
 CLASSActionHandler.prototype.init = function () {
+  var graph = this.editor.graph;
   
+  this.addAction('selectAll', function() { graph.selectAll(); }, true, null, 'Ctrl+A');
 };
 
 /**

@@ -47,6 +47,10 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContai
   this.toolbox = new CLASSToolBox(this);
   this.toolbox.init(this.toolboxContainer);
   
+  // Creates the Actions Handler
+  this.actionHandler = new CLASSActionHandler(this);
+  this.actionHandler.init();
+  
   // Creates the Undo-Redo Handler
   this.createUndoRedoManager();
 };

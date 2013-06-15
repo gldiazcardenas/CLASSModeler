@@ -73,7 +73,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   public String getExecuteOnLoad () {
     StringBuilder sb = new StringBuilder();
-    sb.append("main(\"");
+    sb.append("CLASSModeler.main(\"");
     sb.append("<?xml version='1.0' encoding='UTF-8'?>");
     sb.append("<mxGraphModel>");
     sb.append("<root>");
