@@ -43,7 +43,7 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContai
   this.outline.init(this.outlineContainer);
   this.outline.updateOnPan = true;
   
-  // Creates the toolBox component.
+  // Creates the ToolBox component.
   this.toolbox = new CLASSToolBox(this);
   this.toolbox.init(this.toolboxContainer);
   
@@ -51,8 +51,11 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContai
   this.actionHandler = new CLASSActionHandler(this);
   this.actionHandler.init();
   
-  // Creates the Undo-Redo Handler
+  // Creates the UnDo-ReDo Handler
   this.createUndoRedoManager();
+  
+  // Creates the Key Action Handler
+  this.createKeyManager();
 };
 
 /**
@@ -86,4 +89,50 @@ CLASSEditor.prototype.createUndoRedoManager = function () {
   
   undoRedoManager.addListener(mxEvent.UNDO, undoHandler);
   undoRedoManager.addListener(mxEvent.REDO, undoHandler);
+};
+
+/**
+ * Function that initializes the key handler for the graph component,
+ * this allows to process the key events made by the user.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.06.2013.
+ */
+CLASSEditor.prototype.createKeyManager = function () {
+  var graph = this.graph;
+  
+  // Helper function to move cells with the cursor keys
+  function moveCells(keyCodePress) {
+    if (!graph.isSelectionEmpty()) {
+      var dx = 0;
+      var dy = 0;
+      
+      if (keyCodePress == CLASSKeyCode.LEFT_KEY) {
+        dx = -5;
+      }
+      else if (keyCodePress == CLASSKeyCode.UP_KEY) {
+        dy = -5;
+      }
+      else if (keyCodePress == CLASSKeyCode.RIGHT_KEY) {
+        dx = 5;
+      }
+      else if (keyCodePress == CLASSKeyCode.DOWN_KEY) {
+        dy = 5;
+      }
+      
+      graph.moveCells(graph.getSelectionCells(), dx, dy);
+      graph.scrollCellToVisible(graph.getSelectionCell());
+    }
+  };
+  
+  
+  
+  // Instance the key handler object.
+  var keyHandler = new mxKeyHandler(graph);
+  
+  // Binding the functions executed on key pressed.
+  keyHandler.bindKey(CLASSKeyCode.LEFT_KEY, function() { moveCells(CLASSKeyCode.LEFT_KEY); });
+  keyHandler.bindKey(CLASSKeyCode.UP_KEY, function() { moveCells(CLASSKeyCode.UP_KEY); });
+  keyHandler.bindKey(CLASSKeyCode.RIGHT_KEY, function() { moveCells(CLASSKeyCode.RIGHT_KEY); });
+  keyHandler.bindKey(CLASSKeyCode.DOWN_KEY, function() { moveCells(CLASSKeyCode.DOWN_KEY); });
+  
 };

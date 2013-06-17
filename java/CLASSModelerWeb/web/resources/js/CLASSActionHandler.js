@@ -70,5 +70,17 @@ CLASSActionHandler.prototype.get = function (key) {
   return this.actions[key];
 };
 
+/**
+ * JavaScript Key codes, used to handle the key commands and short cuts.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.06.2013.
+ */
+var CLASSKeyCode = {
+  LEFT_KEY          : 37,
+  UP_KEY            : 38,
+  RIGHT_KEY         : 39,
+  DOWN_KEY          : 40
+};
+
 
 

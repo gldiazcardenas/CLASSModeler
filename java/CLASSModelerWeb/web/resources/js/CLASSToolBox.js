@@ -66,12 +66,14 @@ CLASSToolBox.prototype.init = function (container) {
   this.container = container;
   
   //Package
-  var packageElement = new mxCell('Package', new mxGeometry(0, 0, 70, 50), 'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
+  var packageElement = new mxCell('Package',
+                                  new mxGeometry(0, 0, 70, 50),
+                                  'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
   packageElement.vertex = true;
   this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 70, 50, 'Package'));
   
   // Class
-  var classElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><b>Class</b></p><hr/><div style="height:2px;"></div>',
+  var classElement = new mxCell('<p style="margin: 4px 0px 0px 0px; text-align:center;"><b>Class</b></p>',
                                 new mxGeometry(0, 0, 140, 60),
                                 'verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1');
   classElement.vertex = true;
@@ -86,12 +88,17 @@ CLASSToolBox.prototype.init = function (container) {
   interfaceElement.vertex = true;
   this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 190, 140, 'Interface'));
   
- // Enumeration
+  // Enumeration
   var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><b>Enumeration</b></p><hr/><div style="height:2px;"></div>',
                                       new mxGeometry(0, 0, 140, 60),
                                       'verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1');
   enumerationElement.vertex = true;
   this.container.appendChild(this.createVertexTemplateFromCells([enumerationElement], 140, 60, 'Enumeration'));
+  
+  // Note
+  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 100, 80),'shape=UMLNote');
+  noteElement.vertex = true;
+  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 100, 80, 'Note'));
   
   // Association
   var associationElement = new mxCell('name', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;');
@@ -200,7 +207,7 @@ CLASSToolBox.prototype.createDropHandler = function(cells, allowSplit) {
 CLASSToolBox.prototype.createDragPreview = function(width, height) {
   var div = document.createElement('div');
   div.style.border = '1px dashed black';
-  div.style.width = width + 'px';
+  div.style.width  = width + 'px';
   div.style.height = height + 'px';
   return div;
 };
@@ -261,15 +268,14 @@ CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, titl
   var dx = Math.max(0, Math.floor((width - bounds.width) / 2));
   var dy = Math.max(0, Math.floor((height - bounds.height) / 2));
   
-  var node = null;
+  var nodeImage = null;
   
   // For supporting HTML labels in IE9 standards mode the container is cloned instead
   if (this.graph.dialect == mxConstants.DIALECT_SVG && !mxClient.IS_IE) {
-    var canvas = this.graph.view.getCanvas();
-    node = canvas.ownerSVGElement.cloneNode(true);
+    nodeImage = this.graph.view.getCanvas().ownerSVGElement.cloneNode(true);
   }
   else {
-    node = this.graph.container.cloneNode(true);
+    nodeImage = this.graph.container.cloneNode(true);
   }
   
   this.graph.getModel().clear();
@@ -277,37 +283,35 @@ CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, titl
   // Outer dimension is (32, 32)
   var dd = (this.shiftThumbs) ? 2 : 3;
   
-  node.style.position = 'relative';
-  node.style.overflow = 'hidden';
-  node.style.cursor = 'pointer';
-  node.style.left = (dx + dd) + 'px';
-  node.style.top = (dy + dd) + 'px';
-  node.style.width = width + 'px';
-  node.style.height = height + 'px';
-  node.style.visibility = '';
-  node.style.minWidth = '';
-  node.style.minHeight = '';
+  nodeImage.style.position = 'relative';
+  nodeImage.style.overflow = 'hidden';
+  nodeImage.style.cursor = 'pointer';
+  nodeImage.style.left = (dx + dd) + 'px';
+  nodeImage.style.top = (dy + dd) + 'px';
+  nodeImage.style.width = width + 'px';
+  nodeImage.style.height = height + 'px';
+  nodeImage.style.visibility = '';
+  nodeImage.style.minWidth = '';
+  nodeImage.style.minHeight = '';
   
-  parent.appendChild(node);
+  parent.appendChild(nodeImage);
   
   //Adds title for the component
-  if (title != null) {
-    var border = (mxClient.IS_QUIRKS) ? 2 * this.thumbPadding + 2: 0;
-    parent.style.height = (this.thumbHeight + border + this.componentTitleSize + 8) + 'px';
-      
-    var divTitle = document.createElement('div');
-    divTitle.style.fontSize = this.componentTitleSize + 'px';
-    divTitle.style.textAlign = 'center';
-    divTitle.style.whiteSpace = 'nowrap';
-      
-    if (mxClient.IS_IE) {
-      divTitle.style.height = (this.componentTitleSize + 12) + 'px';
-    }
+  var border = (mxClient.IS_QUIRKS) ? 2 * this.thumbPadding + 2: 0;
+  parent.style.height = (this.thumbHeight + border + this.componentTitleSize + 8) + 'px';
     
-    divTitle.style.paddingTop = '4px';
-    mxUtils.write(divTitle, title);
-    parent.appendChild(divTitle);
+  var nodeTitle = document.createElement('div');
+  nodeTitle.style.fontSize = this.componentTitleSize + 'px';
+  nodeTitle.style.textAlign = 'center';
+  nodeTitle.style.whiteSpace = 'nowrap';
+    
+  if (mxClient.IS_IE) {
+    nodeTitle.style.height = (this.componentTitleSize + 12) + 'px';
   }
+  
+  nodeTitle.style.paddingTop = '4px';
+  mxUtils.write(nodeTitle, title);
+  parent.appendChild(nodeTitle);
   
   mxText.prototype.getTableSize = old;
 };

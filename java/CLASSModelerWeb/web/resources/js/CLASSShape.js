@@ -20,6 +20,7 @@ UMLPackage.prototype.tabWidth    = 60;
 UMLPackage.prototype.tabHeight   = 20;
 UMLPackage.prototype.tabPosition = 'left';
 UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
+  
   var tw = mxUtils.getValue(this.style, 'tabWidth', this.tabWidth);
   var th = mxUtils.getValue(this.style, 'tabHeight', this.tabHeight);
   var tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
@@ -64,12 +65,34 @@ UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
 mxCellRenderer.prototype.defaultShapes['UMLPackage'] = UMLPackage;
 
 /**
- * Defines the shape for UML class element.
+ * Defines the shape for a common UML comment appended to any element.
  * 
- * @author Gabriel Leonardo Diaz, 02.05.2013.
+ * @returns {UMLNote} The UMLNote share created.
+ * @author Gabriel Leonardo Diaz, 16.06.2013.
  */
-UMLClass = function () {
-  // TODO
+UMLNote = function () { };
+UMLNote.prototype = new mxCylinder();
+UMLNote.prototype.constructor = UMLNote;
+UMLNote.prototype.size = 30;
+UMLNote.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
+  
+  var s = Math.min(w, Math.min(h, mxUtils.getValue(this.style, 'size', this.size)));
+  
+  if (isForeground) {
+    path.moveTo(w - s, 0);
+    path.lineTo(w - s, s);
+    path.lineTo(w, s);
+    path.end();
+  }
+  else {
+    path.moveTo(0, 0);
+    path.lineTo(w - s, 0);
+    path.lineTo(w, s);
+    path.lineTo(w, h);
+    path.lineTo(0, h);
+    path.lineTo(0, 0);
+    path.close();
+    path.end();
+  }
 };
-UMLClass.prototype = new mxCylinder();
-UMLClass.prototype.constructor = UMLClass;
+mxCellRenderer.prototype.defaultShapes['UMLNote'] = UMLNote;
