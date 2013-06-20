@@ -32,12 +32,17 @@ CLASSToolBox = function (editor) {
 /**
  * Specifies the width of the thumbnails (Component Template).
  */
-CLASSToolBox.prototype.thumbWidth = 60;
+CLASSToolBox.prototype.thumbWidth = 50;
 
 /**
- * Specifies the height of the thumbnails (Component Template).
+ * Specifies the height of the vertex (Component Template).
  */
-CLASSToolBox.prototype.thumbHeight = 60;
+CLASSToolBox.prototype.thumbHeightVertex = 40;
+
+/**
+ * Specifies the height of the edge (Component Template).
+ */
+CLASSToolBox.prototype.thumbHeightEdge = 20;
 
 /**
  * Specifies the delay for the tooltip. Default is 2px.
@@ -94,20 +99,15 @@ CLASSToolBox.prototype.init = function (container) {
   // Package
   var packageElement = new mxCell('Package',
                                   new mxGeometry(0, 0, 100, 70),
-                                  'shape=UMLPackage;spacingTop=10;tabWidth=40;tabHeight=10;tabPosition=left;');
+                                  'shape=UMLPackage;spacingTop=10;');
   packageElement.vertex = true;
   this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 100, 70, 'Package'));
   
   
   // Note
-  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 80, 100),'shape=UMLNote');
+  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 80, 70),'shape=UMLNote');
   noteElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 80, 100, 'Note'));
-  
-  // Separator between ELEMENTS and RELATIONSHIPS
-  var separator = document.createElement('hr');
-  separator.className = 'ui-separator ui-state-default ui-corner-all';
-  this.container.appendChild(separator);
+  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 80, 70, 'Note'));
   
   // Association
   var associationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=none;edgeStyle=orthogonalEdgeStyle;');
@@ -171,7 +171,7 @@ CLASSToolBox.prototype.init = function (container) {
  * Creates a drop handler for inserting the given cells.
  */
 CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, height, title) {
-  var vertex = this.createItem(cells, title);
+  var vertex = this.createItem(cells, title, true);
   var dragSource = this.createDragSource(vertex, this.createDropHandler(cells, true), this.createDragPreview(width, height));
 
   // Uses guides for vertices only if enabled in graph
@@ -186,7 +186,7 @@ CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, he
  * Creates a drop handler for inserting the given cells.
  */
 CLASSToolBox.prototype.createEdgeTemplateFromCells = function(cells, width, height, title) {
-  var edge = this.createItem(cells, title);
+  var edge = this.createItem(cells, title, false);
   this.createDragSource(edge, this.createDropHandler(cells, false), this.createDragPreview(width, height));
   return edge;
 };
@@ -256,25 +256,36 @@ CLASSToolBox.prototype.createDragPreview = function(width, height) {
 /**
  * Creates and returns a new palette item for the given image.
  */
-CLASSToolBox.prototype.createItem = function(cells, title) {
-  var item = document.createElement('a');
-  item.setAttribute('href', 'javascript:void(0);');
-  item.style.display = 'inline-block';
+CLASSToolBox.prototype.createItem = function(cells, title, vertex) {
+  var table   = document.createElement('table');
+  var tbody   = document.createElement('tbody');
+  var tr      = document.createElement('tr');
+  var tdImage = document.createElement('td');
+  var tdText  = document.createElement('td');
   
-  // Blocks default click action
-  mxEvent.addListener(item, 'click', function(evt) {
-    mxEvent.consume(evt);
-  });
+  table.appendChild(tbody);
+  table.width = '100%';
+  table.cellspacing = '0';
+  table.cellpadding = '0';
+  
+  tbody.appendChild(tr);
+  tr.appendChild(tdImage);
+  tr.appendChild(tdText);
 
-  this.createThumb(cells, this.thumbWidth, this.thumbHeight, item, title);
+  if (vertex) {
+    this.createThumb(cells, this.thumbWidth, this.thumbHeightVertex, tdImage, tdText, title);
+  }
+  else {
+    this.createThumb(cells, this.thumbWidth, this.thumbHeightEdge, tdImage, tdText, title);
+  }
   
-  return item;
+  return table;
 };
 
 /**
  * Creates a thumbnail for the given cells.
  */
-CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, title) {
+CLASSToolBox.prototype.createThumb = function(cells, width, height, tdImage, tdText, title) {
   // Workaround for off-screen text rendering in IE
   var old = mxText.prototype.getTableSize;
   
@@ -303,15 +314,13 @@ CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, titl
   this.graph.view.rendering = true;
   this.graph.refresh();
   
-  mxImageShape.prototype.preserveImageAspect = prev;
-
   bounds = this.graph.getGraphBounds();
-  var dx = Math.max(0, Math.floor((width - bounds.width) / 2));
-  var dy = Math.max(0, Math.floor((height - bounds.height) / 2));
+  var dy = ((height - bounds.height) / 2) - 1;
   
-  var nodeImage = null;
+  mxImageShape.prototype.preserveImageAspect = prev;
   
   // For supporting HTML labels in IE9 standards mode the container is cloned instead
+  var nodeImage = null;
   if (this.graph.dialect == mxConstants.DIALECT_SVG && !mxClient.IS_IE) {
     nodeImage = this.graph.view.getCanvas().ownerSVGElement.cloneNode(true);
   }
@@ -321,38 +330,21 @@ CLASSToolBox.prototype.createThumb = function(cells, width, height, parent, titl
   
   this.graph.getModel().clear();
   
-  // Outer dimension is (32, 32)
-  var dd = (this.shiftThumbs) ? 2 : 3;
-  
-  nodeImage.style.position = 'relative';
-  nodeImage.style.overflow = 'hidden';
-  nodeImage.style.cursor = 'pointer';
-  nodeImage.style.left = (dx + dd) + 'px';
-  nodeImage.style.top = (dy + dd) + 'px';
-  nodeImage.style.width = width + 'px';
-  nodeImage.style.height = height + 'px';
+  // Adds the component image
+  nodeImage.style.position   = 'relative';
+  nodeImage.style.overflow   = 'hidden';
+  nodeImage.style.cursor     = 'pointer';
+  nodeImage.style.width      = width + 'px';
+  nodeImage.style.height     = height + 'px';
+  nodeImage.style.top        = dy + 'px';
   nodeImage.style.visibility = '';
-  nodeImage.style.minWidth = '';
-  nodeImage.style.minHeight = '';
+  nodeImage.style.minWidth   = '';
+  nodeImage.style.minHeight  = '';
+  tdImage.appendChild(nodeImage);
+  tdImage.style.width        = (width + 10) + 'px';
   
-  parent.appendChild(nodeImage);
-  
-  //Adds title for the component
-  var border = (mxClient.IS_QUIRKS) ? 2 * this.thumbPadding + 2: 0;
-  parent.style.height = (this.thumbHeight + border + this.componentTitleSize + 8) + 'px';
-    
-  var nodeTitle = document.createElement('div');
-  nodeTitle.style.fontSize = this.componentTitleSize + 'px';
-  nodeTitle.style.textAlign = 'center';
-  nodeTitle.style.whiteSpace = 'nowrap';
-    
-  if (mxClient.IS_IE) {
-    nodeTitle.style.height = (this.componentTitleSize + 12) + 'px';
-  }
-  
-  nodeTitle.style.paddingTop = '4px';
-  mxUtils.write(nodeTitle, title);
-  parent.appendChild(nodeTitle);
+  //Adds the component title
+  mxUtils.write(tdText, title);
   
   mxText.prototype.getTableSize = old;
 };

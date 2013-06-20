@@ -169,21 +169,21 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
    * avatar.
    * 
    * @param evt
-   *          The primefaces file upload event.
+   *          The PrimeFaces file upload event.
    * @author Gabriel Leonardo Diaz, 04.06.2013.
    */
   public void handleFileUpload (FileUploadEvent evt) {
     try {
       SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
-      
       String path          = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
       String extension     = evt.getFile().getFileName().substring(evt.getFile().getFileName().lastIndexOf('.'));
       String fileName      = JSFResourceBundle.UPLOADS_URL + fmt.format(Calendar.getInstance().getTime()) + extension;
       File file            = new File(path + fileName);
       
-      InputStream is = evt.getFile().getInputstream();
-      OutputStream out = new FileOutputStream(file);
-      byte buf[] = new byte[1024];
+      InputStream is       = evt.getFile().getInputstream();
+      OutputStream out     = new FileOutputStream(file);
+      byte buf[]           = new byte[1024];
+      
       int len;
       while ((len = is.read(buf)) > 0) {
         out.write(buf, 0, len);

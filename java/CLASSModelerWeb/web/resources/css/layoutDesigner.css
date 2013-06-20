@@ -28,6 +28,10 @@ body {
     border: none;
 }
 
+#toolbox {
+    overflow: auto;
+}
+
 #outline, #toolbox {
     height: inherit;
 }

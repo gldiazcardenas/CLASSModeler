@@ -16,16 +16,14 @@
 UMLPackage = function () { };
 UMLPackage.prototype = new mxCylinder();
 UMLPackage.prototype.constructor = UMLPackage;
-UMLPackage.prototype.tabWidth    = 60;
-UMLPackage.prototype.tabHeight   = 20;
 UMLPackage.prototype.tabPosition = 'left';
 UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
   
-  var tw = mxUtils.getValue(this.style, 'tabWidth', this.tabWidth);
-  var th = mxUtils.getValue(this.style, 'tabHeight', this.tabHeight);
   var tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
-  var dx = Math.min(w, tw * this.scale);
-  var dy = Math.min(h, th * this.scale);
+  var tw = w * 0.60;
+  var th = h * 0.20;
+  var dx = Math.min(w, tw);
+  var dy = Math.min(h, th);
 
   if (isForeground) {
     if (tp == 'left') {
@@ -73,10 +71,10 @@ mxCellRenderer.prototype.defaultShapes['UMLPackage'] = UMLPackage;
 UMLNote = function () { };
 UMLNote.prototype = new mxCylinder();
 UMLNote.prototype.constructor = UMLNote;
-UMLNote.prototype.size = 30;
 UMLNote.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
   
-  var s = Math.min(w, Math.min(h, mxUtils.getValue(this.style, 'size', this.size)));
+  this.size = w * 0.20;
+  var s = this.size;
   
   if (isForeground) {
     path.moveTo(w - s, 0);
