@@ -17,7 +17,7 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import classmodeler.domain.project.Project;
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.web.data.PropertyValue;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -34,7 +34,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   private static final long serialVersionUID = 1L;
   
   // Data
-  private Project project;
+  private Diagram diagram;
   
   // Components
   private TreeNode tree;
@@ -55,12 +55,12 @@ public class DesignerControllerBean extends JSFGenericBean {
     properties.add(new PropertyValue(3, "Multiplicity", ""));
   }
   
-  public Project getProject() {
-    return project;
+  public Diagram getDiagram() {
+    return diagram;
   }
   
-  public void setProject(Project project) {
-    this.project = project;
+  public void setDiagram(Diagram diagram) {
+    this.diagram = diagram;
   }
   
   public TreeNode getTree() {

@@ -13,9 +13,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.project.Project;
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.User;
-import classmodeler.service.ProjectService;
+import classmodeler.service.DiagramService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -28,17 +28,17 @@ import classmodeler.web.util.JSFMessageBean;
  * 
  * @author Gabriel Leonardo Diaz, 30.05.2013.
  */
-@ManagedBean(name="projectController")
+@ManagedBean(name="diagramController")
 @ViewScoped
-public class ProjectControllerBean extends JSFGenericBean implements JSFFormControllerBean {
+public class DiagramControllerBean extends JSFGenericBean implements JSFFormControllerBean {
 
   private static final long serialVersionUID = 1L;
   
   private String name;
   private String description;
   private String title;
-  private Project project;
-  private EProjectControllerMode mode;
+  private Diagram diagram;
+  private EDiagramControllerMode mode;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -47,9 +47,9 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   private User loggedUser;
   
   @EJB
-  private ProjectService projectService;
+  private DiagramService diagramService;
   
-  public ProjectControllerBean() {
+  public DiagramControllerBean() {
     super();
   }
   
@@ -86,70 +86,75 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
   }
   
   /**
-   * Prepares the controller to create a new project. Sets an empty object to
+   * Prepares the controller to create a new diagram. Sets an empty object to
    * the controller.
    * 
    * @author Gabriel Leonardo Diaz, 28.05.2013.
    */
-  public void prepareNewProject () {
+  public void prepareNewDiagram () {
     name        = null;
     description = null;
-    project     = new Project();
-    title       = JSFResourceBundle.getLocalizedMessage("PROJECT_NEW_FORM_TITLE");
-    mode        = EProjectControllerMode.CREATE;
+    diagram     = new Diagram();
+    title       = JSFResourceBundle.getLocalizedMessage("DIAGRAM_NEW_FORM_TITLE");
+    mode        = EDiagramControllerMode.CREATE;
   }
   
   /**
-   * Prepares the controller to edit a project by getting the selected project
-   * instance {@link DashboardControllerBean#project}, if the object is null
+   * Prepares the controller to edit a diagram by getting the selected diagram
+   * instance {@link DashboardControllerBean#diagram}, if the object is null
    * this method does nothing.
    * 
    * @author Gabriel Leonardo Diaz, 28.05.2013.
    */
-  public void prepareEditProject () {
-    project = dashBoardController.getProject();
-    if (project != null) {
-      name        = project.getName();
-      description = project.getDescription();
-      title       = JSFResourceBundle.getLocalizedMessage("PROJECT_EDIT_FORM_TITLE", name);
-      mode        = EProjectControllerMode.EDIT;
+  public void prepareEditDiagram () {
+    diagram = dashBoardController.getDiagram();
+    if (diagram != null) {
+      name        = diagram.getName();
+      description = diagram.getDescription();
+      title       = JSFResourceBundle.getLocalizedMessage("DIAGRAM_EDIT_FORM_TITLE", name);
+      mode        = EDiagramControllerMode.EDIT;
     }
   }
   
   /**
-   * Prepares the controller to delete the selected project in the table, this
+   * Prepares the controller to delete the selected diagram in the table, this
    * method takes the object from {@link DashboardControllerBean}.
    * 
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public void prepareDeleteProject () {
-    project = dashBoardController.getProject();
-    if (project != null) {
-      name   = project.getName();
-      title  = JSFResourceBundle.getLocalizedMessage("PROJECT_DELETE_FORM_TITLE", name);
-      mode   = EProjectControllerMode.DELETE;
+  public void prepareDeleteDiagram () {
+    diagram = dashBoardController.getDiagram();
+    if (diagram != null) {
+      name   = diagram.getName();
+      title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_DELETE_FORM_TITLE", name);
+      mode   = EDiagramControllerMode.DELETE;
     }
   }
   
   /**
-   * Prepares the controller to create a new project based on the information
-   * copied from the selected project.
+   * Prepares the controller to create a new diagram based on the information
+   * copied from the selected diagram.
    * 
    * @author Gabriel Leonardo Diaz, 02.06.2013.
    */
-  public void prepareCopyProject () {
-    project = dashBoardController.getProject();
-    if (project != null) {
-      name        = project.getName();
-      description = project.getDescription();
-      title       = JSFResourceBundle.getLocalizedMessage("PROJECT_COPY_FORM_TITLE", name);
-      mode        = EProjectControllerMode.COPY;
+  public void prepareCopyDiagram () {
+    diagram = dashBoardController.getDiagram();
+    if (diagram != null) {
+      name        = diagram.getName();
+      description = diagram.getDescription();
+      String copyXMI = diagram.getXMI();
+      
+      diagram = new Diagram();
+      diagram.setXMI(copyXMI);
+      
+      title   = JSFResourceBundle.getLocalizedMessage("DIAGRAM_COPY_FORM_TITLE", name);
+      mode    = EDiagramControllerMode.COPY;
     }
   }
   
   @Override
   public boolean isAllValid() {
-    return project != null && loggedUser != null && !GenericUtils.isEmptyString(name);
+    return diagram != null && loggedUser != null && !GenericUtils.isEmptyString(name);
   }
 
   @Override
@@ -163,35 +168,35 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
       case CREATE:
       case EDIT:
       case COPY:
-        project.setName(name);
-        project.setDescription(description);
-        project.setModifiedBy(loggedUser);
+        diagram.setName(name);
+        diagram.setDescription(description);
+        diagram.setModifiedBy(loggedUser);
         
-        if (mode == EProjectControllerMode.EDIT) {
-          projectService.updateProject(project);
+        if (mode == EDiagramControllerMode.EDIT) {
+          diagramService.updateDiagram(diagram);
         }
         else {
           // Create mode set an empty XMI representation, In Copy Mode keep the XMI of the project.
-          if (mode == EProjectControllerMode.CREATE) {
-            project.setProjectXMI("");
+          if (mode == EDiagramControllerMode.CREATE) {
+            diagram.setXMI("");
           }
           
-          project.setCreatedBy(loggedUser);
-          projectService.insertProject(project);
-          dashBoardController.addProject(project);
+          diagram.setCreatedBy(loggedUser);
+          diagramService.insertDiagram(diagram);
+          dashBoardController.addDiagram(diagram);
         }
         
         break;
       case DELETE:
-        projectService.deleteProject(project.getKey());
-        dashBoardController.deleteProject(project);
+        diagramService.deleteDiagram(diagram.getKey());
+        dashBoardController.deleteDiagram(diagram);
         break;
         
       default:
         break;
       }
       
-      project     = null;
+      diagram     = null;
       name        = null;
       description = null;
       title       = null;
@@ -212,7 +217,7 @@ public class ProjectControllerBean extends JSFGenericBean implements JSFFormCont
    *
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public enum EProjectControllerMode {
+  public enum EDiagramControllerMode {
     CREATE,
     EDIT,
     DELETE,

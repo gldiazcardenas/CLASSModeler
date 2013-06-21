@@ -12,7 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.project.Project;
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
@@ -102,7 +102,9 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         }
         else {
           // Redirects to the Designer Page
-          designerController.setProject(new Project());
+          Diagram diagram = new Diagram();
+          diagram.setName("Diagram (1)");
+          designerController.setDiagram(diagram);
           outcome = JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
       }

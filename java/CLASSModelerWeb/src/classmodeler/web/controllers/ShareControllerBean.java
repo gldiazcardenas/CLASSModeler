@@ -12,7 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.project.Project;
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -33,7 +33,7 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
   
-  private Project project;
+  private Diagram project;
   
   public ShareControllerBean() {
     super();

@@ -15,7 +15,7 @@
 <ui:define name="centerContent">
     <div id="shareSection">
         <h:form id="shareButtonForm" style="text-align: center;">
-            <p:commandButton value="#{msgs.BUTTON_SHARE_PROJECT_LABEL}" icon="ui-icon-star" disabled="#{!dashBoardController.selectedProject}" style="width: 70%;" />
+            <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" disabled="#{!dashBoardController.selectedDiagram}" style="width: 70%;" />
         </h:form>
         
         <p:separator styleClass="customSeparator" />
@@ -31,57 +31,57 @@
         </h:form>
     </div>
     
-    <div id="projectsSection" class="ui-widget-content">
-        <h:form id="projectButtonsForm" style="text-align: right; margin-bottom: 5px;">
-            <p:commandButton value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" icon="ui-icon-document" actionListener="#{projectController.prepareNewProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
-            <p:commandButton title="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" actionListener="#{projectController.prepareEditProject()}" update=":projectDialog" oncomplete="dlgProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;" />
-            <p:commandButton title="#{msgs.BUTTON_COPY_PROJECT_LABEL}" icon="ui-icon-copy" actionListener="#{projectController.prepareCopyProject()}" update=":projectDialog" oncomplete="dlgProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;"  />
-            <p:commandButton title="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;" />
-            <p:commandButton title="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" ajax="false" action="#{dashBoardController.prepareEditProject()}" icon="ui-icon-folder-collapsed" disabled="#{!dashBoardController.selectedProject}" style="margin-left: 3px;"  />
+    <div id="diagramsSection" class="ui-widget-content">
+        <h:form id="diagramButtonsForm" style="text-align: right; margin-bottom: 5px;">
+            <p:commandButton value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+            <p:commandButton title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" icon="ui-icon-pencil" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.selectedDiagram}" style="margin-left: 3px;" />
+            <p:commandButton title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" icon="ui-icon-copy" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.selectedDiagram}" style="margin-left: 3px;"  />
+            <p:commandButton title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" icon="ui-icon-trash" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.selectedDiagram}" style="margin-left: 3px;" />
+            <p:commandButton title="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}" ajax="false" action="#{dashBoardController.prepareEditDiagram()}" icon="ui-icon-folder-collapsed" disabled="#{!dashBoardController.selectedDiagram}" style="margin-left: 3px;"  />
         </h:form>
         
-        <h:form id="projectsForm">
-            <p:contextMenu for="projectsTable">
-                <p:menuitem value="#{msgs.BUTTON_NEW_PROJECT_LABEL}" icon="ui-icon-document" actionListener="#{projectController.prepareNewProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
-                <p:menuitem value="#{msgs.BUTTON_EDIT_PROJECT_LABEL}" icon="ui-icon-pencil" actionListener="#{projectController.prepareEditProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
-                <p:menuitem value="#{msgs.BUTTON_COPY_PROJECT_LABEL}" icon="ui-icon-copy" actionListener="#{projectController.prepareCopyProject()}" update=":projectDialog" oncomplete="dlgProject.show()" />
-                <p:menuitem value="#{msgs.BUTTON_DELETE_PROJECT_LABEL}" icon="ui-icon-trash" actionListener="#{projectController.prepareDeleteProject()}" update=":deleteProjectDialog" oncomplete="dlgDeleteProject.show()" />
-                <p:menuitem value="#{msgs.BUTTON_OPEN_DESIGNER_PROJECT_LABEL}" icon="ui-icon-folder-collapsed" ajax="false" action="#{dashBoardController.prepareEditProject()}" />
+        <h:form id="diagramsForm">
+            <p:contextMenu for="diagramsTable">
+                <p:menuitem value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                <p:menuitem value="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" icon="ui-icon-pencil" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                <p:menuitem value="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" icon="ui-icon-copy" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                <p:menuitem value="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" icon="ui-icon-trash" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" />
+                <p:menuitem value="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}" icon="ui-icon-folder-collapsed" ajax="false" action="#{dashBoardController.prepareEditDiagram()}" />
             </p:contextMenu>
             
-            <p:dataTable id="projectsTable"
-                         value="#{dashBoardController.projects}"
-                         var="project"
+            <p:dataTable id="diagramsTable"
+                         value="#{dashBoardController.diagrams}"
+                         var="diagram"
                          emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
                          resizableColumns="true"
-                         rowKey="#{project.key}"
+                         rowKey="#{diagram.key}"
                          selectionMode="single"
-                         selection="#{dashBoardController.project}"
+                         selection="#{dashBoardController.diagram}"
                          paginator="true"
                          paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="10, 20, 30"
                          rows="20">
                          
-                <p:ajax event="rowSelect" update=":shareButtonForm, :projectButtonsForm" />
-                <p:ajax event="rowUnselect" update=":shareButtonForm, :projectButtonsForm" />
-                <p:ajax event="contextMenu" update=":shareButtonForm, :projectButtonsForm" />
+                <p:ajax event="rowSelect" update=":shareButtonForm, :diagramButtonsForm" />
+                <p:ajax event="rowUnselect" update=":shareButtonForm, :diagramButtonsForm" />
+                <p:ajax event="contextMenu" update=":shareButtonForm, :diagramButtonsForm" />
                 
-                <p:column headerText="#{msgs.COLUMN_PROJECT_NAME_LABEL}" sortBy="#{project.name}">
-                    <h:outputText id="projectName" value="#{project.name}" />
-                    <p:tooltip for="projectName" value="#{project.description}" />
+                <p:column headerText="#{msgs.COLUMN_DIAGRAM_NAME_LABEL}" sortBy="#{diagram.name}">
+                    <h:outputText id="diagramName" value="#{diagram.name}" />
+                    <p:tooltip for="diagramName" value="#{diagram.description}" />
                 </p:column>
                 
-                <p:column headerText="#{msgs.COLUMN_PROJECT_OWNER_LABEL}" sortBy="#{project.createdBy.name}">
-                    <h:outputText value="#{project.createdBy.name}" />
+                <p:column headerText="#{msgs.COLUMN_DIAGRAM_OWNER_LABEL}" sortBy="#{diagram.createdBy.name}">
+                    <h:outputText value="#{diagram.createdBy.name}" />
                 </p:column>
                 
-                <p:column headerText="#{msgs.COLUMN_PROJECT_MODIFIER_LABEL}" sortBy="#{project.modifiedBy.name}">
-                    <h:outputText value="#{project.modifiedBy.name}" />
+                <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL}" sortBy="#{diagram.modifiedBy.name}">
+                    <h:outputText value="#{diagram.modifiedBy.name}" />
                 </p:column>
                 
-                <p:column headerText="#{msgs.COLUMN_PROJECT_MODIFIED_DATE_LABEL}" sortBy="#{project.modifiedDate}">
-                    <h:outputText value="#{project.modifiedDate}" />
+                <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIED_DATE_LABEL}" sortBy="#{diagram.modifiedDate}">
+                    <h:outputText value="#{diagram.modifiedDate}" />
                 </p:column>
             </p:dataTable>
         </h:form>
@@ -90,7 +90,7 @@
     </div>
     
     <ui:include src="/pages/dashboard/user.xhtml"/>
-    <ui:include src="/pages/dashboard/project.xhtml"/>
+    <ui:include src="/pages/dashboard/diagram.xhtml"/>
 </ui:define>
 
 </ui:composition>

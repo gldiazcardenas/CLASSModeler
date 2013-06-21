@@ -1,0 +1,50 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+<!-- Create and Edit Dialog -->
+<p:dialog id="diagramDialog" widgetVar="dlgDiagram" header="#{diagramController.title}" closable="true" closeOnEscape="true" modal="true" width="400">
+    <h:form id="diagramForm">
+        <h:panelGrid columns="1" width="100%">
+            <p:inputText id="name" value="#{diagramController.name}" required="true" style="width: 97%" />
+            <p:watermark for="name" value="#{msgs.DIAGRAM_FORM_NAME_FIELD}" />
+            
+            <p:inputTextarea id="description" value="#{diagramController.description}" style="width: 97%" />
+            <p:watermark for="description" value="#{msgs.DIAGRAM_FORM_DESCRIPTION_FIELD}"/>
+            
+            <p:separator />
+            
+            <h:panelGrid columns="3">
+                <p:commandButton value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"
+                                 onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                 oncomplete="responseDiagramDialog(xhr, status, args)"
+                                 update=":diagramsForm, :generalMessage, :diagramForm" />
+                                 
+                <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgDiagram.hide()"/>
+                
+                <p:ajaxStatus style="width: 16px; height: 16px;">
+                    <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                    <f:facet name="complete"><h:outputText value="" /></f:facet>
+                </p:ajaxStatus>
+            </h:panelGrid>
+        </h:panelGrid>
+        
+        <!-- Callback function that hides the dialog -->
+        <script type="text/javascript">
+          function responseDiagramDialog(xhr, status, args) {
+            if (!args.validationFailed) {
+              dlgDiagram.hide();
+            }
+          }
+        </script>
+    </h:form>
+</p:dialog>
+
+<!-- Delete Dialog -->
+<p:confirmDialog id="deleteDiagramDialog" widgetVar="dlgDeleteDiagram" header="#{diagramController.title}" severity="alert" message="#{msgs.DIAGRAM_DELETE_CONFIRMATION_MESSAGE}" width="400">
+    <p:commandButton value="#{msgs.YES_LABEL}" actionListener="#{diagramController.processAJAX()}" update=":diagramsForm, :generalMessage, :diagramButtonsForm, :shareButtonForm" oncomplete="dlgDeleteDiagram.hide()" />
+    <p:commandButton value="#{msgs.NO_LABEL}" type="button" onclick="dlgDeleteDiagram.hide()" />
+</p:confirmDialog>
+
+</ui:composition>

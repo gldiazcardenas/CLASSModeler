@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
                 
     <pe:layoutPane position="center">
-        <f:facet name="header"><h:outputText value="#{msgs.PROJECT_BROWSER_PANEL_LABEL}" /></f:facet>
+        <f:facet name="header"><h:outputText value="#{msgs.DIAGRAM_BROWSER_PANEL_LABEL}" /></f:facet>
         <p:tree id="tree" value="#{designerController.tree}" var="node">
             <p:treeNode>
                 <h:outputText value="#{node}" />
@@ -13,23 +13,11 @@
         </p:tree>
     </pe:layoutPane>
     
-    <pe:layoutPane position="south" size="250" minSize="100" maxSize="350">
-        <f:facet name="header"><h:outputText value="#{msgs.PROPERTIES_PANEL_LABEL}" /></f:facet>
-        <h:form prependId="false">
-            <p:dataTable id="properties" value="#{designerController.properties}" var="property">
-                <!-- Property name -->
-                <p:column>
-                    <h:outputText value="#{property.name}" />
-                </p:column>
-                
-                <!-- Property value -->
-                <p:column>
-                    <p:inplace id="propertyEditor" editor="true">
-                        <p:inputText value="#{property.value}" />
-                    </p:inplace>
-                </p:column>
-            </p:dataTable>
-        </h:form>
+    <pe:layoutPane position="south" minSize="100" size="135" maxSize="200">
+        <f:facet name="header"><h:outputText value="#{msgs.OUTLINE_PANEL_LABEL}" /></f:facet>
+        <div id="outline">
+            <!-- CLASSModeler.js library automatically puts the components inside of this tag -->
+        </div>
     </pe:layoutPane>
     
 </ui:composition>

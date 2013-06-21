@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.project;
+package classmodeler.domain.diagram;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,7 +29,7 @@ import javax.persistence.TemporalType;
 import classmodeler.domain.user.User;
 
 /**
- * Bean that represents a project shared between two users.
+ * Bean that represents a diagram shared between two users.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
  */
@@ -40,7 +40,7 @@ public class Shared implements Serializable {
   private static final long serialVersionUID = 1L;
   
   /**
-   * The identifier of the sharing process of a project. This is an
+   * The identifier of the sharing process of a diagram. This is an
    * auto-incremental value.
    */
   @Id
@@ -49,37 +49,37 @@ public class Shared implements Serializable {
   private int key;
   
   /**
-   * The date in which the project was shared.
+   * The date in which the diagram was shared.
    */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name="shared_date", nullable=false)
   private Date date;
   
   /**
-   * A general comment made by the owner of the project.
+   * A general comment made by the owner of the diagram.
    */
   @Lob
   @Column(name="shared_comment")
   private String comment;
   
   /**
-   * The privileged given to the user who receives the project.
+   * The privileged given to the user who receives the diagram.
    */
   @Enumerated(EnumType.STRING)
   @Column(name="shared_privilege", nullable=false)
-  private EProjectPrivilege privilege;
+  private EDiagramPrivilege privilege;
   
   /**
-   * UNI-Directional many-to-one association to Project. This is the reference
-   * to the shared project.
+   * UNI-Directional many-to-one association to diagram. This is the reference
+   * to the shared diagram.
    */
   @ManyToOne
-  @JoinColumn(name="shared_project_key", nullable=false)
-  private Project project;
+  @JoinColumn(name="shared_diagram_key", nullable=false)
+  private Diagram diagram;
   
   /**
    * UNI-Directional many-to-one association to User. This is the reference of
-   * the owner of the project.
+   * the owner of the diagram.
    */
   @ManyToOne
   @JoinColumn(name="shared_from_user", nullable=false)
@@ -87,7 +87,7 @@ public class Shared implements Serializable {
   
   /**
    * UNI-Directional many-to-one association to User. This is the reference to
-   * the user who receives the project.
+   * the user who receives the diagram.
    */
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="shared_to_user", nullable=false)
@@ -121,20 +121,20 @@ public class Shared implements Serializable {
     this.comment = comment;
   }
   
-  public EProjectPrivilege getPrivilege() {
+  public EDiagramPrivilege getPrivilege() {
     return privilege;
   }
   
-  public void setPrivilege(EProjectPrivilege privilege) {
+  public void setPrivilege(EDiagramPrivilege privilege) {
     this.privilege = privilege;
   }
   
-  public Project getProject() {
-    return project;
+  public Diagram getDiagram() {
+    return diagram;
   }
   
-  public void setProject(Project project) {
-    this.project = project;
+  public void setDiagram(Diagram diagram) {
+    this.diagram = diagram;
   }
   
   public User getFromUser() {

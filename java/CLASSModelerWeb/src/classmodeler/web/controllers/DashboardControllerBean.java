@@ -16,10 +16,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.project.Project;
-import classmodeler.domain.project.Shared;
+import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
-import classmodeler.service.ProjectService;
+import classmodeler.service.DiagramService;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -35,10 +35,10 @@ public class DashboardControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
-  private Project project;
+  private Diagram diagram;
   private Shared shared;
   
-  private List<Project> projects;
+  private List<Diagram> diagrams;
   private List<Shared> sharings;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
@@ -48,7 +48,7 @@ public class DashboardControllerBean extends JSFGenericBean {
   private DesignerControllerBean designerController;
   
   @EJB
-  private ProjectService projectService;
+  private DiagramService diagramService;
   
   public DashboardControllerBean() {
     super();
@@ -60,11 +60,11 @@ public class DashboardControllerBean extends JSFGenericBean {
    * 
    * @return A list of projects.
    */
-  public List<Project> getProjects() {
-    if (projects == null) {
-      projects = projectService.getAllProjectsByUser(loggedUser); 
+  public List<Diagram> getDiagrams() {
+    if (diagrams == null) {
+      diagrams = diagramService.getAllDiagramsByUser(loggedUser); 
     }
-    return projects;
+    return diagrams;
   }
   
   /**
@@ -79,12 +79,12 @@ public class DashboardControllerBean extends JSFGenericBean {
     return sharings;
   }
   
-  public Project getProject() {
-    return project;
+  public Diagram getDiagram() {
+    return diagram;
   }
   
-  public void setProject(Project project) {
-    this.project = project;
+  public void setDiagram(Diagram diagram) {
+    this.diagram = diagram;
   }
   
   public Shared getShared() {
@@ -95,8 +95,8 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.shared = shared;
   }
   
-  public boolean isSelectedProject () {
-    return project != null;
+  public boolean isSelectedDiagram () {
+    return diagram != null;
   }
   
   public void setLoggedUser(User loggedUser) {
@@ -110,16 +110,16 @@ public class DashboardControllerBean extends JSFGenericBean {
   /**
    * Adds a single project to the current cached list.
    * 
-   * @param newProject
+   * @param newDiagram
    *          The project to add.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public void addProject (Project newProject) {
-    if (newProject == null) {
+  public void addDiagram (Diagram newDiagram) {
+    if (newDiagram == null) {
       return;
     }
     
-    projects.add(newProject);
+    diagrams.add(newDiagram);
   }
   
   /**
@@ -129,17 +129,17 @@ public class DashboardControllerBean extends JSFGenericBean {
    *          The project to delete.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public void deleteProject (Project deletedProject) {
-    if (deletedProject == null) {
+  public void deleteDiagram (Diagram deletedDiagram) {
+    if (deletedDiagram == null) {
       return;
     }
     
     // Remove from the list
-    projects.remove(deletedProject);
+    diagrams.remove(deletedDiagram);
     
     // Remove the selected object
-    if (deletedProject.equals(project)) {
-      project = null;
+    if (deletedDiagram.equals(diagram)) {
+      diagram = null;
     }
   }
   
@@ -149,8 +149,8 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return The outcome to the DESIGNER page.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public String prepareEditProject () {
-    designerController.setProject(project);
+  public String prepareEditDiagram () {
+    designerController.setDiagram(diagram);
     return JSFOutcomeUtil.DESIGNER;
   }
 

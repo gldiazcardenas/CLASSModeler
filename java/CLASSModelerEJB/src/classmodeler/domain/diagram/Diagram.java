@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.project;
+package classmodeler.domain.diagram;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,80 +26,80 @@ import javax.persistence.TemporalType;
 import classmodeler.domain.user.User;
 
 /**
- * Projects are containers of models created by the user, these organize the
- * models in a logical and customizable structure for the user.
+ * Diagram are containers of UML elements created by the user, these organize the
+ * elements in a logical and customizable structure for the user.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
  */
 @Entity
-@Table(name="project")
-public class Project implements Serializable {
+@Table(name="diagram")
+public class Diagram implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
   /**
-   * The key of the project, this is used as the object identifier. This is an
+   * The key of the diagram, this is used as the object identifier. This is an
    * auto-incremental value.
    */
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  @Column(name="project_key", unique=true, nullable=false)
+  @Column(name="diagram_key", unique=true, nullable=false)
   private int key;
   
   /**
-   * The name of the project, this is a custom name the user assigns to its
-   * project.
+   * The name of the diagram, this is a custom name the user assigns to its
+   * diagram.
    */
-  @Column(name="project_name", nullable=false, length=255)
+  @Column(name="diagram_name", nullable=false, length=255)
   private String name;
   
   /**
-   * A description of the purpose of this project or a general comment the user
+   * A description of the purpose of this diagram or a general comment the user
    * makes about it.
    */
   @Lob
-  @Column(name="project_description")
+  @Column(name="diagram_description")
   private String description;
   
   /**
    * UNI-Directional many-to-one association to User. Basically this is the
-   * owner of the project.
+   * owner of the diagram.
    */
   @ManyToOne
-  @JoinColumn(name = "project_created_by", nullable = false)
+  @JoinColumn(name = "diagram_created_by", nullable = false)
   private User createdBy;
   
   /**
-   * The creation date of this project.
+   * The creation date of this diagram.
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="project_created_date", nullable=false)
+  @Column(name="diagram_created_date", nullable=false)
   private Date createdDate;
   
   /**
    * UNI-Directional many-to-one association to User. This is the reference to
-   * the last user who modified this project, if the project was shared this is
-   * used to know who modified the project instead of the owner.
+   * the last user who modified this diagram, if the project was shared this is
+   * used to know who modified the diagram instead of the owner.
    */
   @ManyToOne
-  @JoinColumn(name="project_modified_by", nullable=false)
+  @JoinColumn(name="diagram_modified_by", nullable=false)
   private User modifiedBy;
   
   /**
-   * Last modification date of this project.
+   * Last modification date of this diagram.
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="project_modified_date", nullable=false)
+  @Column(name="diagram_modified_date", nullable=false)
   private Date modifiedDate;
   
   /**
-   * XMI representation of the project structure, this is a well formed XML document.
+   * XMI representation of the diagram structure, this is a well formed XML document.
    */
   @Lob
-  @Column(name="project_xmi", nullable=false)
-  private String projectXMI;
+  @Column(name="diagram_xmi", nullable=false)
+  private String XMI;
 
-  public Project() {
+  public Diagram() {
     super();
   }
   
@@ -159,12 +159,12 @@ public class Project implements Serializable {
     this.modifiedDate = modifiedDate;
   }
   
-  public String getProjectXMI() {
-    return projectXMI;
+  public String getXMI() {
+    return XMI;
   }
   
-  public void setProjectXMI(String projectXMI) {
-    this.projectXMI = projectXMI;
+  public void setXMI(String XMI) {
+    this.XMI = XMI;
   }
 
   @Override
@@ -185,7 +185,7 @@ public class Project implements Serializable {
       return false;
     }
     
-    Project other = (Project) obj;
+    Diagram other = (Diagram) obj;
     if (key != other.key) {
       return false;
     }
