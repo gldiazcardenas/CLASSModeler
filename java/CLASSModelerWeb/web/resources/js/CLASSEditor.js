@@ -27,10 +27,10 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContainer, outlineContainer) {
+CLASSEditor.prototype.init = function (initialXML, graphContainer, paletteContainer, outlineContainer) {
   // Gets the containers
   this.graphContainer   = graphContainer;
-  this.toolboxContainer = toolboxContainer;
+  this.paletteContainer = paletteContainer;
   this.outlineContainer = outlineContainer;
   
   // Creates the Graph
@@ -43,9 +43,9 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, toolboxContai
   this.outline.init(this.outlineContainer);
   this.outline.updateOnPan = true;
   
-  // Creates the ToolBox component.
-  this.toolbox = new CLASSToolBox(this);
-  this.toolbox.init(this.toolboxContainer);
+  // Creates the Palette component.
+  this.palette = new CLASSPalette(this);
+  this.palette.init(this.paletteContainer);
   
   // Creates the Actions Handler
   this.actionHandler = new CLASSActionHandler(this);
@@ -107,16 +107,16 @@ CLASSEditor.prototype.createKeyManager = function () {
       var dy = 0;
       
       if (keyCodePress == CLASSKeyCode.LEFT_KEY) {
-        dx = -5;
+        dx = -10;
       }
       else if (keyCodePress == CLASSKeyCode.UP_KEY) {
-        dy = -5;
+        dy = -10;
       }
       else if (keyCodePress == CLASSKeyCode.RIGHT_KEY) {
-        dx = 5;
+        dx = 10;
       }
       else if (keyCodePress == CLASSKeyCode.DOWN_KEY) {
-        dy = 5;
+        dy = 10;
       }
       
       graph.moveCells(graph.getSelectionCells(), dx, dy);

@@ -11,7 +11,7 @@
 /**
  * JavaScript CLASS that defines the designer toolBox.
  */
-CLASSToolBox = function (editor) {
+CLASSPalette = function (editor) {
   this.editor = editor;
   
   this.graph = new CLASSGraph(document.createElement('div'), null, null, this.editor.graph.getStylesheet());
@@ -32,47 +32,47 @@ CLASSToolBox = function (editor) {
 /**
  * Specifies the width of the thumbnails (Component Template).
  */
-CLASSToolBox.prototype.thumbWidth = 50;
+CLASSPalette.prototype.thumbWidth = 50;
 
 /**
  * Specifies the height of the vertex (Component Template).
  */
-CLASSToolBox.prototype.thumbHeightVertex = 40;
+CLASSPalette.prototype.thumbHeightVertex = 40;
 
 /**
  * Specifies the height of the edge (Component Template).
  */
-CLASSToolBox.prototype.thumbHeightEdge = 20;
+CLASSPalette.prototype.thumbHeightEdge = 30;
 
 /**
  * Specifies the delay for the tooltip. Default is 2px.
  */
-CLASSToolBox.prototype.thumbBorder = 2;
+CLASSPalette.prototype.thumbBorder = 2;
 
 /**
  * Specifies the padding for the thumbnails. Default is 2px.
  */
-CLASSToolBox.prototype.thumbPadding = 2;
+CLASSPalette.prototype.thumbPadding = 2;
 
 /**
  * Shifts the thumbnail by 1px.
  */
-CLASSToolBox.prototype.shiftThumbs = mxClient.IS_SVG;
+CLASSPalette.prototype.shiftThumbs = mxClient.IS_SVG;
 
 /**
  * Specifies the size of the component titles.
  */
-CLASSToolBox.prototype.componentTitleSize = 9;
+CLASSPalette.prototype.componentTitleSize = 9;
 
 /**
  * Initializer method for the CLASS Modeler toolBox.
  */
-CLASSToolBox.prototype.init = function (container) {
+CLASSPalette.prototype.init = function (container) {
   this.container = container;
   
  // Enumeration
   var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Enumeration&gt;&gt;</i><br/><b>Enumeration</b></p><hr/>' +
-                                      '<p style="margin:0px;margin-left:4px;">+ field: Type</p>',
+                                      '<p style="margin:0px;margin-left:4px;">&nbsp;</p>',
                                       new mxGeometry(0, 0, 160, 70),
                                       'align=left;overflow=fill;html=1');
   enumerationElement.vertex = true;
@@ -82,19 +82,18 @@ CLASSToolBox.prototype.init = function (container) {
   var classElement = new mxCell('<p style="margin: 4px 0px 0px 0px; text-align:center;"><b>Class</b></p><hr/>' +
                                 '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
                                 '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
-                                new mxGeometry(0, 0, 160, 90),
+                                new mxGeometry(0, 0, 160, 80),
                                 'align=left;overflow=fill;html=1');
   classElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 160, 90, 'Class'));
+  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 160, 80, 'Class'));
   
   // Interface
   var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p><hr/>' +
-                                    '<p style="margin:0px;margin-left:4px;">+ field: Type</p><hr/>' +
-                                    '<p style="margin:0px;margin-left:4px;">+ method(): Type</p>',
-                                    new mxGeometry(0, 0, 160, 100),
+                                    '<p style="margin:0px;margin-left:4px;">&nbsp;</p>',
+                                    new mxGeometry(0, 0, 160, 70),
                                     'align=left;overflow=fill;html=1');
   interfaceElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 100, 'Interface'));
+  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 70, 'Interface'));
   
   // Package
   var packageElement = new mxCell('Package',
@@ -105,72 +104,72 @@ CLASSToolBox.prototype.init = function (container) {
   
   
   // Note
-  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 80, 70),'shape=UMLNote');
+  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 60, 70),'shape=UMLNote');
   noteElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 80, 70, 'Note'));
+  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 60, 70, 'Note'));
   
   // Association
   var associationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=none;edgeStyle=orthogonalEdgeStyle;');
   associationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  associationElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  associationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   associationElement.edge = true;
   
-  var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=bottom;labelBackgroundColor=#ffffff');
+  var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=bottom');
   sourceLabel.geometry.relative = true;
   sourceLabel.setConnectable(false);
   sourceLabel.vertex = true;
   associationElement.insert(sourceLabel);
 
-  var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom;labelBackgroundColor=#ffffff');
+  var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom');
   targetLabel.geometry.relative = true;
   targetLabel.setConnectable(false);
   targetLabel.vertex = true;
   associationElement.insert(targetLabel);
-  this.container.appendChild(this.createEdgeTemplateFromCells([associationElement], 120, 0, 'Association', true));
+  this.container.appendChild(this.createEdgeTemplateFromCells([associationElement], 140, 0, 'Association', true));
   
   // Aggregation
   var aggregationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=0;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
   aggregationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  aggregationElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  aggregationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   aggregationElement.geometry.relative = true;
   aggregationElement.geometry.x = -1;
   aggregationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([aggregationElement], 120, 0, 'Aggregation'));
+  this.container.appendChild(this.createEdgeTemplateFromCells([aggregationElement], 140, 0, 'Aggregation'));
   
   // Composition
   var compositionElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=1;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
   compositionElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  compositionElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  compositionElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   compositionElement.edge = true;
   
-  this.container.appendChild(this.createEdgeTemplateFromCells([compositionElement], 120, 0, 'Composition'));
+  this.container.appendChild(this.createEdgeTemplateFromCells([compositionElement], 140, 0, 'Composition'));
   
   // Generalization
   var generalizationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=0');
   generalizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  generalizationElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  generalizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   generalizationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([generalizationElement], 120, 0, 'Generalization'));
+  this.container.appendChild(this.createEdgeTemplateFromCells([generalizationElement], 140, 0, 'Generalization'));
   
  // Realization
   var realizationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=1');
   realizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  realizationElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  realizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   realizationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([realizationElement], 120, 0, 'Realization'));
+  this.container.appendChild(this.createEdgeTemplateFromCells([realizationElement], 140, 0, 'Realization'));
   
   // Note Link
   var noteLinkElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=none;startArrow=none;edgeStyle=orthogonalEdgeStyle;dashed=1');
   noteLinkElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  noteLinkElement.geometry.setTerminalPoint(new mxPoint(120, 0), false);
+  noteLinkElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
   noteLinkElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([noteLinkElement], 120, 0, 'Note Link'));
+  this.container.appendChild(this.createEdgeTemplateFromCells([noteLinkElement], 140, 0, 'Note Link'));
 };
 
 /**
  * Creates a drop handler for inserting the given cells.
  */
-CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, height, title) {
+CLASSPalette.prototype.createVertexTemplateFromCells = function(cells, width, height, title) {
   var vertex = this.createItem(cells, title, true);
   var dragSource = this.createDragSource(vertex, this.createDropHandler(cells, true), this.createDragPreview(width, height));
 
@@ -185,7 +184,7 @@ CLASSToolBox.prototype.createVertexTemplateFromCells = function(cells, width, he
 /**
  * Creates a drop handler for inserting the given cells.
  */
-CLASSToolBox.prototype.createEdgeTemplateFromCells = function(cells, width, height, title) {
+CLASSPalette.prototype.createEdgeTemplateFromCells = function(cells, width, height, title) {
   var edge = this.createItem(cells, title, false);
   this.createDragSource(edge, this.createDropHandler(cells, false), this.createDragPreview(width, height));
   return edge;
@@ -194,7 +193,7 @@ CLASSToolBox.prototype.createEdgeTemplateFromCells = function(cells, width, heig
 /**
  * Creates a drag source for the given element.
  */
-CLASSToolBox.prototype.createDragSource = function(elt, dropHandler, preview) {
+CLASSPalette.prototype.createDragSource = function(elt, dropHandler, preview) {
   var dragSource = mxUtils.makeDraggable(elt, this.editor.graph, dropHandler, preview, 0, 0, this.editor.graph.autoscroll, true, true);
 
   // Allows drop into cell only if target is a valid root
@@ -213,7 +212,7 @@ CLASSToolBox.prototype.createDragSource = function(elt, dropHandler, preview) {
 /**
  * Creates a drop handler for inserting the given cells.
  */
-CLASSToolBox.prototype.createDropHandler = function(cells, allowSplit) {
+CLASSPalette.prototype.createDropHandler = function(cells, allowSplit) {
   return function (graph, evt, target, x, y) {
     cells = graph.getImportableCells(cells);
     
@@ -245,7 +244,7 @@ CLASSToolBox.prototype.createDropHandler = function(cells, allowSplit) {
 /**
  * Creates and returns a preview element for the given width and height.
  */
-CLASSToolBox.prototype.createDragPreview = function(width, height) {
+CLASSPalette.prototype.createDragPreview = function(width, height) {
   var div = document.createElement('div');
   div.style.border = '1px dashed black';
   div.style.width  = width + 'px';
@@ -256,7 +255,7 @@ CLASSToolBox.prototype.createDragPreview = function(width, height) {
 /**
  * Creates and returns a new palette item for the given image.
  */
-CLASSToolBox.prototype.createItem = function(cells, title, vertex) {
+CLASSPalette.prototype.createItem = function(cells, title, vertex) {
   var table   = document.createElement('table');
   var tbody   = document.createElement('tbody');
   var tr      = document.createElement('tr');
@@ -285,7 +284,7 @@ CLASSToolBox.prototype.createItem = function(cells, title, vertex) {
 /**
  * Creates a thumbnail for the given cells.
  */
-CLASSToolBox.prototype.createThumb = function(cells, width, height, tdImage, tdText, title) {
+CLASSPalette.prototype.createThumb = function(cells, width, height, tdImage, tdText, title) {
   // Workaround for off-screen text rendering in IE
   var old = mxText.prototype.getTableSize;
   

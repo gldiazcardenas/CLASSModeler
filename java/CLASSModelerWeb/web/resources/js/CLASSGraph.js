@@ -14,6 +14,9 @@
 CLASSGraph = function (container, model, renderHint, stylesheet) {
   // Call super
   mxGraph.call(this, container, model, renderHint, stylesheet);
+  
+  // Stylesheet
+  this.loadStylesheet();
 };
 
 // Graph inherits from mxGraph
@@ -64,6 +67,15 @@ CLASSGraph.prototype.init = function (container) {
 };
 
 /**
+ * Loads the XML that contains the basic styles for graph elements.
+ */
+CLASSGraph.prototype.loadStylesheet = function () {
+  var node = mxUtils.load('/CLASSModeler/resources/config/CLASSGraphStyles.xml').getDocumentElement();
+  var dec = new mxCodec(node.ownerDocument);
+  dec.decode(node, this.getStylesheet());
+};
+
+/**
  * Method that creates the popUp menu after RBM Click.
  * 
  * @param menu
@@ -77,6 +89,7 @@ CLASSGraph.prototype.createPopupMenu = function (menu, cell, evt) {
   var callbackFunction = function() {
     mxUtils.alert('MenuItem1');
   };
+  
   menu.addItem('MyItem', null, callbackFunction, null, 'ui-icon-gear', true);
 };
 

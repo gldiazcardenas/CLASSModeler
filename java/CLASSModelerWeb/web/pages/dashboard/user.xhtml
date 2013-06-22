@@ -53,7 +53,7 @@
 
 <!-- Edit Profile Dialog -->
 <p:dialog id="profileDialog" widgetVar="dlgProfile" width="550" header="#{msgs.USER_PROFILE_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
-    <h:form id="profileForm">
+    <h:form id="profileForm" enctype="multipart/form-data">
         <table style="width: 100%;">
             <tr>
                 <td width="30%" align="center" style="border-bottom: none; border-top: none; border-left: none;" class="ui-widget-content">
