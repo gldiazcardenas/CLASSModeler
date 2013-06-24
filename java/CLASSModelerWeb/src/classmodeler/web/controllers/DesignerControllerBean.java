@@ -8,9 +8,6 @@
 
 package classmodeler.web.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -18,7 +15,6 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.web.data.PropertyValue;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -38,42 +34,41 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   // Components
   private TreeNode tree;
-  private List<PropertyValue> properties;
   
   public DesignerControllerBean() {
     super();
-    
-    // Creating the tree
-    tree = new DefaultTreeNode();
-    
-    // Creating the table
-    properties = new ArrayList<PropertyValue>();
-    properties.add(new PropertyValue(1, "Name", ""));
-    properties.add(new PropertyValue(3, "Notes", ""));
-    properties.add(new PropertyValue(2, "Scope", ""));
-    properties.add(new PropertyValue(3, "Abstract", ""));
-    properties.add(new PropertyValue(3, "Multiplicity", ""));
   }
   
-  public Diagram getDiagram() {
+  public Diagram getDiagram () {
     return diagram;
-  }
-  
-  public void setDiagram(Diagram diagram) {
-    this.diagram = diagram;
   }
   
   public TreeNode getTree() {
     return tree;
   }
   
-  public List<PropertyValue> getProperties() {
-    return properties;
+  /**
+   * Initializes this controller to edit the given diagram, this loads the XMI
+   * of the diagram and configures the components.
+   * 
+   * @param diagramToEdit
+   *          The diagram to edit.
+   * @author Gabriel Leonardo Diaz, 23.06.2013.
+   */
+  public void initEditDiagram (Diagram diagramToEdit) {
+    diagram = diagramToEdit;
+    
+    // Re-creates the tree
+    tree = new DefaultTreeNode();
+    DefaultTreeNode root = new DefaultTreeNode(diagramToEdit.getName(), tree);
+    root.setParent(root);
   }
+  
+  
   
   public String getExecuteOnLoad () {
     StringBuilder sb = new StringBuilder();
-    sb.append("CLASSModeler.main(\"");
+    sb.append("main(\"");
     sb.append("<?xml version='1.0' encoding='UTF-8'?>");
     sb.append("<mxGraphModel>");
     sb.append("<root>");

@@ -11,7 +11,7 @@
 /**
  * JavaScript Class for the editor, this inherits from mxEditor.
  */
-CLASSEditor = function (initialXML, urlInit, urlImage, urlPoll, urlNotify) {
+CLASSEditor = function (urlInit, urlImage, urlPoll, urlNotify) {
   this.urlInit   = urlInit;
   this.urlImage  = urlImage;
   this.urlPoll   = urlPoll;

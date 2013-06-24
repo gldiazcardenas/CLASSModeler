@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import classmodeler.web.controllers.DesignerControllerBean;
 import classmodeler.web.controllers.SessionControllerBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -61,6 +62,8 @@ public class SessionFilter implements Filter {
     
     if (session != null) {
       SessionControllerBean sessionController = (SessionControllerBean) session.getAttribute("sessionController");
+      DesignerControllerBean designerController = (DesignerControllerBean) session.getAttribute("designerController");
+      
       if (sessionController == null || sessionController.getLoggedUser() == null) {
         if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
           // Forbidden access, redirect to the index page.
@@ -81,6 +84,12 @@ public class SessionFilter implements Filter {
         // DashBoard page is only for registered users.
         session.setAttribute("from", req.getRequestURI());
         res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DESIGNER);
+        return;
+      }
+      else if (url.contains(JSFOutcomeUtil.DESIGNER_PATH) && (designerController == null || designerController.getDiagram() == null)) {
+        // Requested the Designer Page but the data is invalid.
+        req.getSession().setAttribute("from", req.getRequestURI());
+        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
         return;
       }
     }

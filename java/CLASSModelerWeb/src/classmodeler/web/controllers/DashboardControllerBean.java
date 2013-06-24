@@ -150,7 +150,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
   public String prepareEditDiagram () {
-    designerController.setDiagram(diagram);
+    designerController.initEditDiagram(diagram);
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
 

@@ -72,7 +72,7 @@ CLASSPalette.prototype.init = function (container) {
   
  // Enumeration
   var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Enumeration&gt;&gt;</i><br/><b>Enumeration</b></p><hr/>' +
-                                      '<p style="margin:0px;margin-left:4px;">&nbsp;</p>',
+                                      '<p style="margin:0px;margin-left:4px;">+ field: Type</p>',
                                       new mxGeometry(0, 0, 160, 70),
                                       'align=left;overflow=fill;html=1');
   enumerationElement.vertex = true;
@@ -89,7 +89,8 @@ CLASSPalette.prototype.init = function (container) {
   
   // Interface
   var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p><hr/>' +
-                                    '<p style="margin:0px;margin-left:4px;">&nbsp;</p>',
+                                    '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
+                                    '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
                                     new mxGeometry(0, 0, 160, 70),
                                     'align=left;overflow=fill;html=1');
   interfaceElement.vertex = true;
@@ -314,7 +315,7 @@ CLASSPalette.prototype.createThumb = function(cells, width, height, tdImage, tdT
   this.graph.refresh();
   
   bounds = this.graph.getGraphBounds();
-  var dy = ((height - bounds.height) / 2) - 1;
+  var dy = (height - bounds.height) / 2;
   
   mxImageShape.prototype.preserveImageAspect = prev;
   

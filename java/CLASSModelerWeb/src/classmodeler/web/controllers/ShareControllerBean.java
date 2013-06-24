@@ -33,7 +33,7 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
   
-  private Diagram project;
+  private Diagram diagram;
   
   public ShareControllerBean() {
     super();
@@ -49,7 +49,7 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
 
   @Override
   public boolean isAllValid() {
-    return project != null;
+    return diagram != null;
   }
 
   @Override

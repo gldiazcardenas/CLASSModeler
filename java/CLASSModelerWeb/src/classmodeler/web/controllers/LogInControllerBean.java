@@ -102,9 +102,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         }
         else {
           // Redirects to the Designer Page
-          Diagram diagram = new Diagram();
-          diagram.setName("Diagram (1)");
-          designerController.setDiagram(diagram);
+          designerController.initEditDiagram(new Diagram());
           outcome = JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
       }
