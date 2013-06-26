@@ -91,10 +91,10 @@ CLASSPalette.prototype.init = function (container) {
   var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p><hr/>' +
                                     '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
                                     '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
-                                    new mxGeometry(0, 0, 160, 70),
+                                    new mxGeometry(0, 0, 160, 85),
                                     'align=left;overflow=fill;html=1');
   interfaceElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 70, 'Interface'));
+  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 85, 'Interface'));
   
   // Package
   var packageElement = new mxCell('Package',

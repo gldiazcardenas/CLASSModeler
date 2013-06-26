@@ -52,7 +52,7 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, paletteContai
   this.actionHandler.init();
   
   // Creates the UnDo-ReDo Handler
-  this.createUndoRedoManager();
+  this.undoManager = this.createUndoRedoManager();
   
   // Creates the Key Action Handler
   this.createKeyManager();
@@ -64,31 +64,49 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, paletteContai
  */
 CLASSEditor.prototype.createUndoRedoManager = function () {
   var undoRedoManager = new mxUndoManager();
+  var graph           = this.graph;
   
   // Installs the command history
-  var listener = function(sender, evt) {
+  var undoListener = function(sender, evt) {
     undoRedoManager.undoableEditHappened(evt.getProperty('edit'));
   };
   
-  this.graph.getModel().addListener(mxEvent.UNDO, listener);
-  this.graph.getView().addListener(mxEvent.UNDO, listener);
-  
+  graph.getModel().addListener(mxEvent.UNDO, undoListener);
+  graph.getView().addListener(mxEvent.UNDO, undoListener);
+
   // Keeps the selection in sync with the history
   var undoHandler = function(sender, evt) {
-    var cand = this.graph.getSelectionCellsForChanges(evt.getProperty('edit').changes);
+    var cand = graph.getSelectionCellsForChanges(evt.getProperty('edit').changes);
     var cells = [];
     
     for (var i = 0; i < cand.length; i++) {
-      if (this.graph.view.getState(cand[i]) != null) {
+      if (graph.view.getState(cand[i]) != null) {
         cells.push(cand[i]);
       }
     }
-    
-    this.graph.setSelectionCells(cells);
+    graph.setSelectionCells(cells);
   };
   
   undoRedoManager.addListener(mxEvent.UNDO, undoHandler);
   undoRedoManager.addListener(mxEvent.REDO, undoHandler);
+  
+  // Update actions handler
+  var undoAction    = this.actionHandler.get(CLASSActionName.UNDO);
+  var redoAction    = this.actionHandler.get(CLASSActionName.REDO);
+  var updateActions = function() {
+    undoAction.setEnabled(undoRedoManager.canUndo());
+    redoAction.setEnabled(undoRedoManager.canRedo());
+  };
+
+  undoRedoManager.addListener(mxEvent.ADD, updateActions);
+  undoRedoManager.addListener(mxEvent.CLEAR, updateActions);
+  undoRedoManager.addListener(mxEvent.UNDO, updateActions);
+  undoRedoManager.addListener(mxEvent.REDO, updateActions);
+
+  // Updates the button states once
+  updateActions();
+  
+  return undoRedoManager;
 };
 
 /**
@@ -100,39 +118,50 @@ CLASSEditor.prototype.createUndoRedoManager = function () {
 CLASSEditor.prototype.createKeyManager = function () {
   var graph = this.graph;
   
-  // Helper function to move cells with the cursor keys
-  function moveCells(keyCodePress) {
-    if (!graph.isSelectionEmpty()) {
-      var dx = 0;
-      var dy = 0;
-      
-      if (keyCodePress == CLASSKeyCode.LEFT_KEY) {
-        dx = -10;
-      }
-      else if (keyCodePress == CLASSKeyCode.UP_KEY) {
-        dy = -10;
-      }
-      else if (keyCodePress == CLASSKeyCode.RIGHT_KEY) {
-        dx = 10;
-      }
-      else if (keyCodePress == CLASSKeyCode.DOWN_KEY) {
-        dy = 10;
-      }
-      
-      graph.moveCells(graph.getSelectionCells(), dx, dy);
-      graph.scrollCellToVisible(graph.getSelectionCell());
-    }
-  };
-  
-  
-  
   // Instance the key handler object.
   var keyHandler = new mxKeyHandler(graph);
   
-  // Binding the functions executed on key pressed.
-  keyHandler.bindKey(CLASSKeyCode.LEFT_KEY, function() { moveCells(CLASSKeyCode.LEFT_KEY); });
-  keyHandler.bindKey(CLASSKeyCode.UP_KEY, function() { moveCells(CLASSKeyCode.UP_KEY); });
-  keyHandler.bindKey(CLASSKeyCode.RIGHT_KEY, function() { moveCells(CLASSKeyCode.RIGHT_KEY); });
-  keyHandler.bindKey(CLASSKeyCode.DOWN_KEY, function() { moveCells(CLASSKeyCode.DOWN_KEY); });
+  // Binds keystrokes to actions
+  var setAction = mxUtils.bind(this, function(keyCode, control, keyAction, shift, parameter) {
+    var action = this.actionHandler.get(keyAction);
+    
+    if (action != null) {
+      var f = function() {
+        if (action.enabled) {
+          if (parameter != null) {
+            action.funct(parameter);
+          }
+          else {
+            action.funct();
+          }
+        }
+      };
+      
+      if (control) {
+        if (shift) {
+          keyHandler.bindControlShiftKey(keyCode, f);
+        }
+        else {
+          keyHandler.bindControlKey(keyCode, f);
+        }
+      }
+      else if (shift) {
+        keyHandler.bindShiftKey(keyCode, f);
+      }
+      else {
+        keyHandler.bindKey(keyCode, f);
+      }
+    }
+  });
+  
+  // Binding the functions with the actions in CLASSActionHandler
+  setAction(CLASSKeyCode.LEFT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.LEFT_KEY);
+  setAction(CLASSKeyCode.UP_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.UP_KEY);
+  setAction(CLASSKeyCode.RIGHT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.RIGHT_KEY);
+  setAction(CLASSKeyCode.DOWN_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.DOWN_KEY);
+  setAction(CLASSKeyCode.A_KEY, true, CLASSActionName.SELECT_ALL);
+  setAction(CLASSKeyCode.DELETE_KEY, false, CLASSActionName.DELETE);
+  setAction(CLASSKeyCode.Z_KEY, true, CLASSActionName.UNDO);
+  setAction(CLASSKeyCode.Y_KEY, true, CLASSActionName.REDO);
   
 };

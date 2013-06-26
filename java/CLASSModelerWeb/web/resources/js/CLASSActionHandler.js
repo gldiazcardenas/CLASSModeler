@@ -21,9 +21,52 @@ CLASSActionHandler = function (editor) {
  * Initializes the actions for the application.
  */
 CLASSActionHandler.prototype.init = function () {
+  var editor = this.editor;
   var graph = this.editor.graph;
   
-  this.addAction('selectAll', function() { graph.selectAll(); }, true, null, 'Ctrl+A');
+  // Select all 
+  this.addAction(CLASSActionName.SELECT_ALL, true, function() {
+    graph.selectAll();
+  });
+  
+  // Move cell with navigation buttons
+  this.addAction(CLASSActionName.MOVE_CELLS, true, function(keyCodePress) {
+    if (!graph.isSelectionEmpty()) {
+      var dx = 0;
+      var dy = 0;
+      
+      if (keyCodePress == CLASSKeyCode.LEFT_KEY) {
+        dx = -10;
+      }
+      else if (keyCodePress == CLASSKeyCode.UP_KEY) {
+        dy = -10;
+      }
+      else if (keyCodePress == CLASSKeyCode.RIGHT_KEY) {
+        dx = 10;
+      }
+      else if (keyCodePress == CLASSKeyCode.DOWN_KEY) {
+        dy = 10;
+      }
+      
+      graph.moveCells(graph.getSelectionCells(), dx, dy);
+      graph.scrollCellToVisible(graph.getSelectionCell());
+    }
+  });
+  
+  // Delete cells
+  this.addAction(CLASSActionName.DELETE, true, function() {
+    // Handles special case where delete is pressed while connecting
+    if (graph.connectionHandler.isConnecting()) {
+      graph.connectionHandler.reset();
+    }
+    else {
+      graph.removeCells();
+    }
+  });
+  
+  // Undo/Redo
+  this.addAction(CLASSActionName.UNDO, true, function() { editor.undoManager.undo(); });
+  this.addAction(CLASSActionName.REDO, true, function() { editor.undoManager.redo(); });
 };
 
 /**
@@ -31,17 +74,13 @@ CLASSActionHandler.prototype.init = function () {
  * 
  * @param key
  *          The key of the action, this is an identifier in the map.
- * @param callbackFunction
- *          The function to invoke when the action is executed.
  * @param enabled
  *          A flag to indicate the initial state of the action.
- * @param iconCSSClass
- *          The CSS class for the icon of the action.
- * @param shortcut
- *          The keyboard shortcut to execute the action.
+ * @param callbackFunction
+ *          The function to invoke when the action is executed.
  */
-CLASSActionHandler.prototype.addAction = function (key, callbackFunction, enabled, iconCSSClass, shortcut) {
-  return this.put(key, new CLASSAction('label', callbackFunction, enabled, iconCSSClass, shortcut));
+CLASSActionHandler.prototype.addAction = function (key, enabled, callbackFunction) {
+  return this.put(key, new CLASSAction('Action', callbackFunction, enabled));
 };
 
 /**
@@ -79,7 +118,27 @@ var CLASSKeyCode = {
   LEFT_KEY          : 37,
   UP_KEY            : 38,
   RIGHT_KEY         : 39,
-  DOWN_KEY          : 40
+  DOWN_KEY          : 40,
+  
+  BACKSPACE_KEY     : 8,
+  DELETE_KEY        : 46,
+  
+  A_KEY             : 65,
+  Y_KEY             : 89,
+  Z_KEY             : 90
+};
+
+/**
+ * Enumeration that contains all actions names in the Action Handler.
+ * 
+ * @author Gabriel Leonardo Diaz, 25.06.2013.
+ */
+var CLASSActionName = {
+  SELECT_ALL        : 'selectAll',
+  MOVE_CELLS        : 'moveCells',
+  DELETE            : 'delete',
+  UNDO              : 'undo',
+  REDO              : 'redo'
 };
 
 

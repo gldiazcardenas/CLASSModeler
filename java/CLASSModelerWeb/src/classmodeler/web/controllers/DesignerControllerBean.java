@@ -57,6 +57,10 @@ public class DesignerControllerBean extends JSFGenericBean {
    */
   public void initEditDiagram (Diagram diagramToEdit) {
     diagram = diagramToEdit;
+    if (diagram.getName() == null) {
+      // Guest user
+      diagram.setName("New Diagram");
+    }
     
     // Re-creates the tree
     tree = new DefaultTreeNode();

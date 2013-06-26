@@ -20,8 +20,17 @@ UMLPackage.prototype.tabPosition = 'left';
 UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
   
   var tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
-  var tw = w * 0.60;
+  var tw = w * 0.50;
   var th = h * 0.20;
+  
+  if (th > 20) {
+    th = 20; // Not more than 20px.
+  }
+  
+  if (tw > 80) {
+    tw = 80; // Not more than 80px.
+  }
+  
   var dx = Math.min(w, tw);
   var dy = Math.min(h, th);
 
@@ -73,8 +82,12 @@ UMLNote.prototype = new mxCylinder();
 UMLNote.prototype.constructor = UMLNote;
 UMLNote.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
   
-  this.size = w * 0.20;
-  var s = this.size;
+  var s = w * 0.20;
+  if (s > 15) {
+    s = 15; // Not more than 15px.
+  }
+  
+  this.size = s;
   
   if (isForeground) {
     path.moveTo(w - s, 0);

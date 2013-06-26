@@ -9,7 +9,6 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_OPEN_DIAGRAM_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_COPY_DIAGRAM_LABEL}" icon="ui-icon-copy" disabled="#{!sessionController.registeredUser}" />
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_IMPORT_LABEL}" icon="ui-icon-arrowthickstop-1-s" />
                 <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" />
@@ -51,12 +50,10 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script"/>
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image"/>
                 <p:separator/>
-                <p:menuitem value="#{msgs.MENU_ITEM_AUTOMATIC_LAYOUT_LABEL}"/>
                 <p:menuitem value="#{msgs.MENU_ITEM_CONSOLE_LABEL}" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_HELP_LABEL}" icon="ui-icon-help">
-                <p:menuitem value="#{msgs.MENU_ITEM_CONTENTS_LABEL}"  icon="ui-icon-bookmark" />
                 <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" />
             </p:submenu>
             

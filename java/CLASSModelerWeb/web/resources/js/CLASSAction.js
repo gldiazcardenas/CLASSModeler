@@ -11,14 +11,12 @@
 /**
  * Constructs a new action for the given parameters.
  */
-CLASSAction = function (label, callbackFunction, enabled, iconCSSClass, shortcut) {
+CLASSAction = function (label, funct, enabled) {
   mxEventSource.call(this);
   
-  this.label            = label;
-  this.callbackFunction = callbackFunction;
-  this.enabled          = enabled;
-  this.iconCSSClass     = iconCSSClass;
-  this.shortcut         = shortcut;
+  this.label    = label;
+  this.funct    = funct;
+  this.enabled  = enabled;
 };
 
 // CLASSAction inherits from mxEventSource
