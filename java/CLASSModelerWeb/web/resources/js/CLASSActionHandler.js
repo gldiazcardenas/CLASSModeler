@@ -67,6 +67,17 @@ CLASSActionHandler.prototype.init = function () {
   // Undo/Redo
   this.addAction(CLASSActionName.UNDO, true, function() { editor.undoManager.undo(); });
   this.addAction(CLASSActionName.REDO, true, function() { editor.undoManager.redo(); });
+  
+  // Copy/Cut/Paste
+  this.addAction(CLASSActionName.COPY, true, function() { mxClipboard.copy(graph); });
+  this.addAction(CLASSActionName.CUT, true, function() { mxClipboard.cut(graph); });
+  this.addAction(CLASSActionName.PASTE, true, function() { mxClipboard.paste(graph); });
+  
+  // View
+  this.addAction(CLASSActionName.ZOOM_RESTORE, true, function() { graph.zoomTo(1); });
+  this.addAction(CLASSActionName.ZOOM_IN, true, function() { graph.zoomIn(); });
+  this.addAction(CLASSActionName.ZOOM_OUT, true, function() { graph.zoomOut(); });
+  this.addAction(CLASSActionName.ZOOM_CUSTOM, true, function (value) { graph.zoomTo(parseInt(value) / 100); });
 };
 
 /**
@@ -124,6 +135,9 @@ var CLASSKeyCode = {
   DELETE_KEY        : 46,
   
   A_KEY             : 65,
+  C_KEY             : 67,
+  V_KEY             : 86,
+  X_KEY             : 88,
   Y_KEY             : 89,
   Z_KEY             : 90
 };
@@ -138,7 +152,14 @@ var CLASSActionName = {
   MOVE_CELLS        : 'moveCells',
   DELETE            : 'delete',
   UNDO              : 'undo',
-  REDO              : 'redo'
+  REDO              : 'redo',
+  COPY              : 'copy',
+  CUT               : 'cut',
+  PASTE             : 'paste',
+  ZOOM_IN           : 'zoomIn',
+  ZOOM_OUT          : 'zoomOut',
+  ZOOM_CUSTOM       : 'zoomCustom',
+  ZOOM_RESTORE      : 'zoomRestore'
 };
 
 

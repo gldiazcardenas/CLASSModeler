@@ -12,16 +12,16 @@
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" />
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_PRINT_LABEL}" icon="ui-icon-print" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="EDITOR.executeAction(CLASSActionName.CUT)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="EDITOR.executeAction(CLASSActionName.COPY)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" onclick="EDITOR.executeAction(CLASSActionName.PASTE)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" onclick="EDITOR.executeAction(CLASSActionName.DELETE)" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" onclick="EDITOR.executeAction(CLASSActionName.UNDO)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" onclick="EDITOR.executeAction(CLASSActionName.REDO)" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_IN)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_OUT)" />
             </p:toolbarGroup>
         </p:toolbar>
     </h:form>

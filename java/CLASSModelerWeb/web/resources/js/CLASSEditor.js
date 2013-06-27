@@ -122,8 +122,8 @@ CLASSEditor.prototype.createKeyManager = function () {
   var keyHandler = new mxKeyHandler(graph);
   
   // Binds keystrokes to actions
-  var setAction = mxUtils.bind(this, function(keyCode, control, keyAction, shift, parameter) {
-    var action = this.actionHandler.get(keyAction);
+  var setActionKeyHandler = mxUtils.bind(this, function (keyCode, control, actionNameCode, shift, parameter) {
+    var action = this.actionHandler.get(actionNameCode);
     
     if (action != null) {
       var f = function() {
@@ -155,13 +155,35 @@ CLASSEditor.prototype.createKeyManager = function () {
   });
   
   // Binding the functions with the actions in CLASSActionHandler
-  setAction(CLASSKeyCode.LEFT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.LEFT_KEY);
-  setAction(CLASSKeyCode.UP_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.UP_KEY);
-  setAction(CLASSKeyCode.RIGHT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.RIGHT_KEY);
-  setAction(CLASSKeyCode.DOWN_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.DOWN_KEY);
-  setAction(CLASSKeyCode.A_KEY, true, CLASSActionName.SELECT_ALL);
-  setAction(CLASSKeyCode.DELETE_KEY, false, CLASSActionName.DELETE);
-  setAction(CLASSKeyCode.Z_KEY, true, CLASSActionName.UNDO);
-  setAction(CLASSKeyCode.Y_KEY, true, CLASSActionName.REDO);
+  setActionKeyHandler(CLASSKeyCode.LEFT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.LEFT_KEY);
+  setActionKeyHandler(CLASSKeyCode.UP_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.UP_KEY);
+  setActionKeyHandler(CLASSKeyCode.RIGHT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.RIGHT_KEY);
+  setActionKeyHandler(CLASSKeyCode.DOWN_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.DOWN_KEY);
+  setActionKeyHandler(CLASSKeyCode.A_KEY, true, CLASSActionName.SELECT_ALL);
+  setActionKeyHandler(CLASSKeyCode.DELETE_KEY, false, CLASSActionName.DELETE);
+  setActionKeyHandler(CLASSKeyCode.Z_KEY, true, CLASSActionName.UNDO);
+  setActionKeyHandler(CLASSKeyCode.Y_KEY, true, CLASSActionName.REDO);
+  setActionKeyHandler(CLASSKeyCode.C_KEY, true, CLASSActionName.COPY);
+  setActionKeyHandler(CLASSKeyCode.X_KEY, true, CLASSActionName.CUT);
+  setActionKeyHandler(CLASSKeyCode.V_KEY, true, CLASSActionName.PASTE);
   
+};
+
+/**
+ * Executes the action represented by the given action name code. This allows to
+ * use the action externally to this object.
+ * 
+ * @author Gabriel Leonardo Diaz, 26.06.2013.
+ */
+CLASSEditor.prototype.executeAction = function (actionNameCode, parameter) {
+  var action = this.actionHandler.get(actionNameCode);
+  
+  if (action != null && action.enabled) {
+    if (parameter != null) {
+      action.funct(parameter);
+    }
+    else {
+      action.funct();
+    }
+  }
 };
