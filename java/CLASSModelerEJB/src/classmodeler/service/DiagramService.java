@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 
 /**
@@ -61,5 +62,15 @@ public interface DiagramService {
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
   public List<Diagram> getAllDiagramsByUser (User user);
+  
+  /**
+   * Gets all sharing made of the given diagram.
+   * 
+   * @param diagram
+   *          The diagram to process.
+   * @return A list of Shared objects.
+   * @author Gabriel Leonardo Diaz, 03.07.2013.
+   */
+  public List<Shared> getSharingsByDiagram (Diagram diagram);
   
 }

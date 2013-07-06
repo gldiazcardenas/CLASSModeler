@@ -15,20 +15,37 @@
 <ui:define name="centerContent">
     <div id="shareSection">
         <h:form id="shareButtonForm" style="text-align: center;">
-            <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" disabled="#{!dashBoardController.selectedDiagram}" style="width: 70%;" />
+            <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" update=":shareDialog" oncomplete="dlgShare.show();" disabled="#{!dashBoardController.selectedDiagram}" style="width: 60%;" />
         </h:form>
         
         <p:separator styleClass="customSeparator" />
         
-        <h:form id="sharedForm">
-            <p:dataTable id="sharedTable" value="#{dashBoardController.sharings}" emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}">
-                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}">
-                </p:column>
-                
-                <p:column headerText="#{msgs.COLUMN_SHARED_PRIVILEGE_LABEL}">
-                </p:column>
-            </p:dataTable>
-        </h:form>
+        <p:panel id="diagramDetails" header="#{msgs.DIAGRAM_DETAILS_TITLE}">
+            <h:panelGroup styleClass="diagramDetailsSection">
+                <h:outputText value="#{msgs.COLUMN_DIAGRAM_NAME_LABEL} " styleClass="diagramDetailsSection-name" />
+                <h:outputText value="#{dashBoardController.diagramName}" />
+            </h:panelGroup>
+            
+            <h:panelGroup styleClass="diagramDetailsSection">
+                <h:outputText value="#{msgs.COLUMN_DIAGRAM_DESCRIPTION_LABEL} " styleClass="diagramDetailsSection-name" />
+                <h:outputText value="#{dashBoardController.diagramDescription}" />
+            </h:panelGroup>
+            
+            <h:panelGroup styleClass="diagramDetailsSection">
+                <h:outputText value="#{msgs.COLUMN_DIAGRAM_OWNER_LABEL} " styleClass="diagramDetailsSection-name" />
+                <h:outputText value="#{dashBoardController.diagramOwner}" />
+            </h:panelGroup>
+            
+            <h:panelGroup styleClass="diagramDetailsSection">
+                <h:outputText value="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL} " styleClass="diagramDetailsSection-name" />
+                <h:outputText value="#{dashBoardController.diagramModifier}" />
+            </h:panelGroup>
+            
+            <h:panelGroup styleClass="diagramDetailsSection">
+                <h:outputText value="#{msgs.COLUMN_DIAGRAM_MODIFIED_DATE_LABEL} " styleClass="diagramDetailsSection-name" />
+                <h:outputText value="#{dashBoardController.diagramModifiedDate}" />
+            </h:panelGroup>
+        </p:panel>
     </div>
     
     <div id="diagramsSection" class="ui-widget-content">
@@ -63,21 +80,16 @@
                          rowsPerPageTemplate="10, 20, 30"
                          rows="20">
                          
-                <p:ajax event="rowSelect" update=":shareButtonForm, :diagramButtonsForm" />
-                <p:ajax event="rowUnselect" update=":shareButtonForm, :diagramButtonsForm" />
-                <p:ajax event="contextMenu" update=":shareButtonForm, :diagramButtonsForm" />
+                <p:ajax event="rowSelect" update=":shareButtonForm, :diagramDetails, :diagramButtonsForm" />
+                <p:ajax event="rowUnselect" update=":shareButtonForm, :diagramDetails, :diagramButtonsForm" />
+                <p:ajax event="contextMenu" update=":shareButtonForm, :diagramDetails, :diagramButtonsForm" />
                 
                 <p:column headerText="#{msgs.COLUMN_DIAGRAM_NAME_LABEL}" sortBy="#{diagram.name}">
                     <h:outputText id="diagramName" value="#{diagram.name}" />
-                    <p:tooltip for="diagramName" value="#{diagram.description}" />
                 </p:column>
                 
                 <p:column headerText="#{msgs.COLUMN_DIAGRAM_OWNER_LABEL}" sortBy="#{diagram.createdBy.name}">
                     <h:outputText value="#{diagram.createdBy.name}" />
-                </p:column>
-                
-                <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL}" sortBy="#{diagram.modifiedBy.name}">
-                    <h:outputText value="#{diagram.modifiedBy.name}" />
                 </p:column>
                 
                 <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIED_DATE_LABEL}" sortBy="#{diagram.modifiedDate}">
@@ -91,6 +103,7 @@
     
     <ui:include src="/pages/dashboard/user.xhtml"/>
     <ui:include src="/pages/dashboard/diagram.xhtml"/>
+    <ui:include src="/pages/dashboard/sharing.xhtml"/>
 </ui:define>
 
 </ui:composition>

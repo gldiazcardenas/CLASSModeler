@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
@@ -71,7 +72,12 @@ public @Stateless class DiagramServiceBean implements DiagramService {
                                      .setParameter("sharedUser", user)
                                      .getResultList();
     
-    return CollectionUtils.mergeLists(ownedDiagrams, sharedDiagrams);
+    return CollectionUtils.union(ownedDiagrams, sharedDiagrams);
+  }
+  
+  @Override
+  public List<Shared> getSharingsByDiagram(Diagram diagram) {
+    return em.createQuery("SELECT s FROM Shared s WHERE s.diagram = :diagram", Shared.class).setParameter("diagram", diagram).getResultList();
   }
   
 }

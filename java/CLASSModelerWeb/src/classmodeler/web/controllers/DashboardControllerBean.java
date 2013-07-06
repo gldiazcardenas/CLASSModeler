@@ -8,7 +8,6 @@
 
 package classmodeler.web.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -39,7 +38,6 @@ public class DashboardControllerBean extends JSFGenericBean {
   private Shared shared;
   
   private List<Diagram> diagrams;
-  private List<Shared> sharings;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
   private User loggedUser;
@@ -65,18 +63,6 @@ public class DashboardControllerBean extends JSFGenericBean {
       diagrams = diagramService.getAllDiagramsByUser(loggedUser); 
     }
     return diagrams;
-  }
-  
-  /**
-   * Gets the sharings of the selected project.
-   * 
-   * @return A list of sharing bean.
-   */
-  public List<Shared> getSharings() {
-    if (sharings == null) {
-      sharings = new ArrayList<Shared>();
-    }
-    return sharings;
   }
   
   public Diagram getDiagram() {
@@ -105,6 +91,46 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   public void setDesignerController(DesignerControllerBean designerController) {
     this.designerController = designerController;
+  }
+  
+  public String getDiagramName () {
+    if (diagram != null) {
+      return diagram.getName();
+    }
+    
+    return "";
+  }
+  
+  public String getDiagramDescription () {
+    if (diagram != null) {
+      return diagram.getDescription();
+    }
+    
+    return "";
+  }
+  
+  public String getDiagramOwner () {
+    if (diagram != null) {
+      return diagram.getCreatedBy().getName();
+    }
+    
+    return "";
+  }
+  
+  public String getDiagramModifier () {
+    if (diagram != null) {
+      return diagram.getModifiedBy().getName();
+    }
+    
+    return "";
+  }
+  
+  public String getDiagramModifiedDate () {
+    if (diagram != null) {
+      return diagram.getModifiedDate().toString();
+    }
+    
+    return "";
   }
   
   /**

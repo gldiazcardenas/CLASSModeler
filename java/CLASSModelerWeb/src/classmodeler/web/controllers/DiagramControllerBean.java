@@ -8,12 +8,16 @@
 
 package classmodeler.web.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.GenericUtils;
@@ -39,6 +43,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   private String title;
   private Diagram diagram;
   private EDiagramControllerMode mode;
+  private List<Shared> sharings;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -83,6 +88,13 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   public void setLoggedUser(User loggedUser) {
     this.loggedUser = loggedUser;
+  }
+  
+  public List<Shared> getSharings() {
+    if (sharings == null) {
+      sharings = new ArrayList<Shared>();
+    }
+    return sharings;
   }
   
   /**
@@ -152,6 +164,22 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     }
   }
   
+  /**
+   * Prepares the controller to share a diagram with other users.
+   * 
+   * @author Gabriel Leonardo Diaz, 05.07.2013.
+   */
+  public void prepareShareDiagram () {
+    diagram = dashBoardController.getDiagram();
+    if (diagram != null) {
+      name       = diagram.getName();
+      sharings   = diagramService.getSharingsByDiagram(diagram);
+      
+      title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
+      mode   = EDiagramControllerMode.SHARE;
+    }
+  }
+  
   @Override
   public boolean isAllValid() {
     return diagram != null && loggedUser != null && !GenericUtils.isEmptyString(name);
@@ -191,6 +219,9 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         diagramService.deleteDiagram(diagram.getKey());
         dashBoardController.deleteDiagram(diagram);
         break;
+      
+      case SHARE:
+        break;
         
       default:
         break;
@@ -222,6 +253,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     EDIT,
     DELETE,
     COPY,
+    SHARE
   }
 
 }

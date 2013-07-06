@@ -89,7 +89,7 @@ public final class CollectionUtils {
    * @return The concatenation of the lists.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public static <T extends Object> List<T> mergeLists (List<T> list1, List<T> list2) {
+  public static <T extends Object> List<T> union (List<T> list1, List<T> list2) {
     if (list1 == null) {
       return list2;
     }
