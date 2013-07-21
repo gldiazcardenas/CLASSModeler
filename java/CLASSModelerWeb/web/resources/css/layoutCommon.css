@@ -1,20 +1,13 @@
 @CHARSET "ISO-8859-1";
 
-#header {
-    border-top: none;
-    border-left: none;
-    border-right: none;
+#header, #center {
+    background-image: url("#{resource['images:background.jpg']}");
+    /*background-color: #EDEDED;*/
 }
 
 #footer {
-    padding: 10px 0px;
+    color: #FFFFFF;
     text-align: center;
-    border-right: none;
-    border-left: none;
-    border-bottom: none;
-}
-
-#header, #center, #footer {
-    width: 100%;
-    display: inline-block;
+    padding: 15px 0px;
+    border-top: 3px solid #E1061A;
 }

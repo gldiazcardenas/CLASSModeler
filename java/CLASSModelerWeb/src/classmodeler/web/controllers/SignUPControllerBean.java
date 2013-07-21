@@ -8,8 +8,6 @@
 
 package classmodeler.web.controllers;
 
-import java.util.Date;
-
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -44,7 +42,6 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
   private String lastName;
   private String email;
   private String password;
-  private Date birthdate;
   private EGender gender;
   
   // Services
@@ -87,14 +84,6 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     this.password = password;
   }
 
-  public Date getBirthdate() {
-    return birthdate;
-  }
-
-  public void setBirthdate(Date birthdate) {
-    this.birthdate = birthdate;
-  }
-
   public EGender getGender() {
     return gender;
   }
@@ -132,7 +121,6 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     User newUser = new User();
     newUser.setFirstName(firstName);
     newUser.setLastName(lastName);
-    newUser.setBirthdate(birthdate);
     newUser.setGender(gender);
     newUser.setEmail(email);
     newUser.setPassword(password);
@@ -151,7 +139,6 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       // Clears all previous information
       firstName = null;
       lastName  = null;
-      birthdate = null;
       gender    = null;
       email     = null;
       password  = null;

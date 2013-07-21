@@ -7,20 +7,27 @@
 <ui:define name="stylesheet"><h:outputStylesheet name="layoutPortal.css" library="css"/></ui:define>
 
 <ui:define name="header">
-    <div class="sectionsContainer">
-        <div id="bannerSection">
-            <h1><h:link value="#{msgs.APPLICATION_NAME}" outcome="/index.xhtml" style="text-decoration: none;" /></h1>
-            <h3><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" styleClass="italic" /></h3>
+    <div class="container">
+        <div style="float: left; width: 60%;">
+            <div style="float:left; width: 20%; text-align: center; margin-top: 15px;">
+                <h:graphicImage value="/resources/images/logo.png" style="margin-rigth: 5px;"/>
+            </div>
+            
+            <div style="float:left; width: 80%;">
+                <h1><h:link value="#{msgs.APPLICATION_NAME}" outcome="/index.xhtml" style="text-decoration: none;" /></h1>
+                <h3><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" styleClass="italic" /></h3>
+            </div>
         </div>
-        <div id="userSection">
+        
+        <div style="float: right; width: 40%;">
             <ui:insert name="userSection"/>
         </div>
     </div>
 </ui:define>
 
 <ui:define name="center">
-    <div class="sectionsContainer">
-        <ui:insert name="centerContent"/>
+    <div class="container">
+        <ui:insert name="centerContent" />
     </div>
 </ui:define>
 

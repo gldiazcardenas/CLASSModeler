@@ -1,16 +1,12 @@
 @CHARSET "ISO-8859-1";
 
-body {
-    overflow: hidden;
-}
-
 #toolbar {
     border:none;
     background: none;
 }
 
 #center {
-    min-height: 530px;
+    min-height: 520px;
 }
 
 #center-layout {
@@ -19,7 +15,7 @@ body {
 }
 
 #center-layout .pe-layout-pane-content {
-    padding: 2px;
+    padding: 0px;
     overflow: hidden;
 }
 

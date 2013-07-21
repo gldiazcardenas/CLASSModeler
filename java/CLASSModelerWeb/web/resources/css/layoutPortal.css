@@ -1,38 +1,85 @@
 @CHARSET "ISO-8859-1";
 
-.sectionsContainer {
-    width: 920px;
+.container {
+    width: 900px;
+    height: inherit;
     margin: 0px auto 0px auto;
-    min-height: inherit;
+    background-color: #FFFFFF;
+}
+
+#header {
+    height: 106px;
+    padding-top: 10px;
+}
+
+#header > .container {
+    height: 102px;
+    border-bottom: 3px solid #E1061A;
+    
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    
+    background: rgb(237,237,237); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 17%, rgba(255,255,255,1) 66%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(237,237,237,1)), color-stop(17%,rgba(246,246,246,1)), color-stop(66%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EDEDED', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
 }
 
 #center {
-    min-height: 500px;
-}
-
-#bannerSection {
-    float: left;
-    width: 62%;
-}
-
-#userSection {
-    float: right;
-    width: 38%;
-    margin-top: 30px;
+    height: 500px;
 }
 
 #signUpSection {
     float: left;
     width: 45%;
-    margin-left: 5%;
+    height: 100%;
+    padding-left: 5%;
+}
+
+#signUpForm {
+    margin: 60px 0;
+    padding: 35px 0;
+    border-bottom: none;
+    border-top: none;
+    border-left: none;
+    min-height: inherit;
 }
 
 #tryDemoSection {
     float: left;
     width: 45%;
-    margin-right: 5%;
     height: 100%;
     text-align: center;
+    padding-right: 5%;
+    background-image: url("#{resource['images:diagrams.png']}");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#tryDemoCommand {
+    margin-top: 50%;
+    background-color: #E1061A;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    border: 0px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+    
+    -webkit-box-shadow: 4px 3px 10px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    4px 3px 10px rgba(50, 50, 50, 0.75);
+    box-shadow:         4px 3px 10px rgba(50, 50, 50, 0.75);
 }
 
 #shareSection {
@@ -50,19 +97,6 @@
     border-top: none;
     border-bottom: none;
     width: 73%;
-    min-height: inherit;
-}
-
-#tryDemoCommand {
-    margin-top: 50%;
-}
-
-#signUpForm {
-    margin: 60px 0;
-    padding: 35px 0;
-    border-bottom: none;
-    border-top: none;
-    border-left: none;
     min-height: inherit;
 }
 

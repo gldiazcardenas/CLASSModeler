@@ -38,6 +38,10 @@
     <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
     <param-value>resources.application</param-value>
   </context-param>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>ufps</param-value>
+  </context-param>
   
   <!-- Listeners -->
   <listener>

@@ -11,8 +11,9 @@
     <!-- Scripts -->
     <ui:insert name="script"/>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/CLASSModeler/resources/images/favicon.ico" />
+    <!-- Icon -->
+    <link rel="icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
     
     <!-- Style-sheets -->
     <h:outputStylesheet name="layoutCommon.css" library="css"/>
@@ -23,7 +24,7 @@
 <h:body onload="#{executeOnload}">
     <p:growl id="generalMessage" for="generalMessage" sticky="true" />
     
-    <div id="header" class="ui-widget-content">
+    <div id="header">
         <ui:insert name="header"/>
     </div>
     
@@ -31,7 +32,7 @@
         <ui:insert name="center"/>
     </div>
     
-    <div id="footer" class="ui-widget-content">
+    <div id="footer">
         <ui:insert name="footer"><ui:include src="/templates/sections/footer.xhtml" /></ui:insert>
     </div>
 </h:body>
