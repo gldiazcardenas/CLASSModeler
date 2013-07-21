@@ -7,7 +7,7 @@
 <ui:define name="stylesheet"><h:outputStylesheet name="layoutPortal.css" library="css"/></ui:define>
 
 <ui:define name="header">
-    <div class="container">
+    <div id="header-content" class="container">
         <div style="float: left; width: 60%;">
             <div style="float:left; width: 20%; text-align: center; margin-top: 15px;">
                 <h:graphicImage value="/resources/images/logo.png" style="margin-rigth: 5px;"/>
@@ -22,6 +22,22 @@
         <div style="float: right; width: 40%;">
             <ui:insert name="userSection"/>
         </div>
+    </div>
+    <div id="header-links" class="container">
+        <a href="/CLASSModeler/index.xhtml" title="#{msgs.HOME_LABEL}"
+           onmouseover="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature_gray.png';"
+           onmouseout="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature.png';">
+           <img id="home-img" src="/CLASSModeler/resources/images/home_miniature.png" /></a>
+        
+        <a href="http://ufps.edu.co" title="#{msgs.GOTO_UFPS_LABEL}" target="_blank" 
+           onmouseover="document.getElementById('ufps-link').src='/CLASSModeler/resources/images/ufps_miniature_gray.png';"
+           onmouseout="document.getElementById('ufps-link').src='/CLASSModeler/resources/images/ufps_miniature.png';">
+           <img id="ufps-link" src="/CLASSModeler/resources/images/ufps_miniature.png" /></a>
+           
+        <a href="http://ingsistemas.ufps.edu.co" title="#{msgs.GOTO_INGSISTEMAS_LABEL}" target="_blank"
+           onmouseover="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature_gray.png';"
+           onmouseout="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature.png';">
+           <img id="ing-link" src="/CLASSModeler/resources/images/ingsistemas_miniature.png" /></a>
     </div>
 </ui:define>
 
