@@ -5,16 +5,20 @@
     background: none;
 }
 
-#center {
+#header {
+    background-image: url("#{resource['images:background.jpg']}");
+}
+
+#content {
     min-height: 520px;
 }
 
-#center-layout {
+#content-layout {
     margin: 2px;
     min-height: inherit;
 }
 
-#center-layout .pe-layout-pane-content {
+#content-layout .pe-layout-pane-content {
     padding: 0px;
     overflow: hidden;
 }

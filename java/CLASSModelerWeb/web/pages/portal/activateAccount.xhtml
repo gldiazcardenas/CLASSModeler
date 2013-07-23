@@ -10,12 +10,12 @@
   <ui:include src="/pages/portal/logIn.xhtml" />
 </ui:define>
 
-<ui:define name="centerContent">
+<ui:define name="center">
     <f:metadata>
         <f:event listener="#{activateAccountController.process()}" type="preRenderView"/>
     </f:metadata>
     
-    <div style="margin: 60px 0; width: 600px;">
+    <div class="portal-content">
         <p:messages id="activationMessage" for="activationMessage" />
     </div>
 </ui:define>

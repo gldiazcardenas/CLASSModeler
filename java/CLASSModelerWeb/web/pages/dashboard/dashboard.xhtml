@@ -12,7 +12,12 @@
     </h:form>
 </ui:define>
 
-<ui:define name="centerContent">
+<ui:define name="links">
+    <!-- Removing the links -->
+    <h:outputText value="" />
+</ui:define>
+
+<ui:define name="center">
     <div id="shareSection">
         <h:form id="shareButtonForm" style="text-align: center;">
             <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" update=":shareDialog" oncomplete="dlgShare.show();" disabled="#{!dashBoardController.selectedDiagram}" style="width: 60%;" />
@@ -48,7 +53,7 @@
         </p:panel>
     </div>
     
-    <div id="diagramsSection" class="ui-widget-content">
+    <div id="diagramsSection">
         <h:form id="diagramButtonsForm" style="text-align: right; margin-bottom: 5px;">
             <p:commandButton value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
             <p:commandButton title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" icon="ui-icon-pencil" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.selectedDiagram}" style="margin-left: 3px;" />

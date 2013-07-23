@@ -1,8 +1,7 @@
 @CHARSET "ISO-8859-1";
 
-#header, #center {
+#content {
     background-image: url("#{resource['images:background.jpg']}");
-    /*background-color: #EDEDED;*/
 }
 
 #footer {

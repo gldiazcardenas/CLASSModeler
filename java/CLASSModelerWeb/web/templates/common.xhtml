@@ -24,12 +24,11 @@
 <h:body onload="#{executeOnload}">
     <p:growl id="generalMessage" for="generalMessage" sticky="true" />
     
-    <div id="header">
-        <ui:insert name="header"/>
-    </div>
+    <!-- Optional tag (Used for designer) -->
+    <ui:insert name="header"/>
     
-    <div id="center">
-        <ui:insert name="center"/>
+    <div id="content">
+        <ui:insert name="content"/>
     </div>
     
     <div id="footer">
