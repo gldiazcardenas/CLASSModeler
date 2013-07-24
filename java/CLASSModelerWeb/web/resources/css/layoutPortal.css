@@ -43,12 +43,14 @@
 }
 
 #center {
-    min-height: 410px;
+    width: 100%;
+    display: inline-block;
 }
 
 .portal-content {
     min-height: inherit;
     padding: 3% 5%;
+    min-height: 410px;
 }
 
 .portal-content > div {
@@ -92,17 +94,16 @@
 #shareSection {
     float: left;
     width: 25%;
-    min-height: inherit;
+    min-height: 490px;
+    margin-right: 1%;
 }
 
 #diagramsSection {
     float: right;
-    padding-left: 10px;
-    border-right: none;
-    border-top: none;
-    border-bottom: none;
-    width: 73%;
-    min-height: inherit;
+    border-left: 1px solid #CCCCCC;
+    width: 72.5%;
+    padding-left: 1%;
+    min-height: 490px;
 }
 
 .diagramDetailsSection {

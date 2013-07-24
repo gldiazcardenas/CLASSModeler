@@ -25,9 +25,8 @@
             </div>
         </div>
         
-        
-        <div id="links">
-            <ui:insert name="links">
+        <ui:insert name="links">
+            <div id="links">
                 <a href="/CLASSModeler/index.xhtml" title="#{msgs.HOME_LABEL}"
                    onmouseover="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature_gray.png';"
                    onmouseout="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature.png';">
@@ -42,8 +41,8 @@
                    onmouseover="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature_gray.png';"
                    onmouseout="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature.png';">
                    <img id="ing-link" src="/CLASSModeler/resources/images/ingsistemas_miniature.png" /></a>
-            </ui:insert>
-        </div>
+            </div>
+        </ui:insert>
         
         <div id="center">
             <ui:insert name="center" />

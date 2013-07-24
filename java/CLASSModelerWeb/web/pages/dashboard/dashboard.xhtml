@@ -6,8 +6,13 @@
                 
 <ui:param name="title" value="#{msgs.DASHBOARD_PAGE_BASE_TITLE}"/>
 
+<ui:define name="stylesheet">
+     <h:outputStylesheet name="layoutDashboard.css" library="css"/>
+     <h:outputStylesheet name="layoutPortal.css" library="css"/>
+</ui:define>
+
 <ui:define name="userSection">
-    <h:form id="userForm" style="float: right;">
+    <h:form id="userForm" style="float: right; margin: 40px 7px 0 0;">
         <ui:include src="/pages/dashboard/userSection.xhtml"/>
     </h:form>
 </ui:define>

@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+#header {
+    border-bottom: 3px solid #E1061A;
+}
+
+#center {
+    padding: 1%;
+    width: 98% !important;
+}
