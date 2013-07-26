@@ -25,10 +25,13 @@
 <ui:define name="center">
     <div id="shareSection">
         <h:form id="shareButtonForm" style="text-align: center;">
-            <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" update=":shareDialog" oncomplete="dlgShare.show();" disabled="#{!dashBoardController.selectedDiagram}" style="width: 60%;" />
+            <p:commandButton value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" icon="ui-icon-star" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show();" disabled="#{!dashBoardController.selectedDiagram}" style="width: 60%;" />
         </h:form>
         
         <p:separator styleClass="customSeparator" />
+        
+        <p:dataTable>
+        </p:dataTable>
         
         <p:panel id="diagramDetails" header="#{msgs.DIAGRAM_DETAILS_TITLE}">
             <h:panelGroup styleClass="diagramDetailsSection">

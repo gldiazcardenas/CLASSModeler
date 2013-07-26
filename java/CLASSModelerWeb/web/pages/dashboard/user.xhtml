@@ -56,11 +56,11 @@
     <h:form id="profileForm" enctype="multipart/form-data">
         <table style="width: 100%;">
             <tr>
-                <td width="30%" align="center" style="border-bottom: none; border-top: none; border-left: none;" class="ui-widget-content">
+                <td width="100" align="center" style="border-bottom: none; border-top: none; border-left: none;" class="ui-widget-content">
                     <p:graphicImage id="avatar" url="#{userProfileController.avatar}" width="128" height="128" style="display: block; margin-bottom: 5px;" />
                     <p:commandButton value="#{msgs.USER_PROFILE_DEFAULT_AVATAR_LABEL}" actionListener="#{userProfileController.setDefaultAvatar()}" update=":profileForm:avatar" icon="ui-icon-image" />
                 </td>
-                <td width="70%">
+                <td>
                     <h:panelGrid columns="1" width="100%">
                         <p:inputText id="firstName" value="#{userProfileController.firstName}" style="width: 99%;" />
                         <p:watermark for="firstName" value="#{msgs.SIGN_UP_FORM_FIRST_NAME_FIELD}" />
