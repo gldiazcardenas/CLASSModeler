@@ -49,13 +49,6 @@ public class User implements IUser {
   private EUserAccountStatus accountStatus;
   
   /**
-   * The date of birth of this user.
-   */
-  @Temporal(TemporalType.DATE)
-  @Column(name = "user_birthdate")
-  private Date birthdate;
-  
-  /**
    * The date in which was created this user.
    */
   @Temporal(TemporalType.TIMESTAMP)
@@ -119,14 +112,6 @@ public class User implements IUser {
   
   public void setAccountStatus(EUserAccountStatus accountStatus) {
     this.accountStatus = accountStatus;
-  }
-  
-  public Date getBirthdate() {
-    return this.birthdate;
-  }
-  
-  public void setBirthdate(Date birthdate) {
-    this.birthdate = birthdate;
   }
   
   public Date getCreatedDate() {

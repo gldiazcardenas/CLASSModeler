@@ -14,6 +14,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
 import classmodeler.domain.diagram.EDiagramPrivilege;
+import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.util.GenericUtils;
@@ -55,7 +56,9 @@ public class FormatControllerBean extends JSFGenericBean {
   
   /**
    * Gets the image URL for the given privilege.
-   * @param privilege The privilege.
+   * 
+   * @param privilege
+   *          The privilege.
    * @return The URL to the image.
    * @author Gabriel Leonardo Diaz, 26.07.2013.
    */
@@ -104,6 +107,56 @@ public class FormatControllerBean extends JSFGenericBean {
     
     default:
       return JSFResourceBundle.getLocalizedMessage("PRIVILEGE_NAME_OWNER");
+    }
+  }
+  
+  /**
+   * Retrieves a localized name of the given user account status.
+   * 
+   * @param status
+   *          The status.
+   * @return A string representation of the status.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public String getUserAccountStatusName (EUserAccountStatus status) {
+    if (status == null) {
+      return null;
+    }
+    
+    switch (status) {
+    case ACTIVATED:
+      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_ACTIVATED_NAME");
+      
+    case DEACTIVATED:
+      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_DEACTIVATED_NAME");
+      
+    default:
+      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_INACTIVATED_NAME");
+    }
+  }
+  
+  /**
+   * Gets the image URL for the user account status.
+   * 
+   * @param status
+   *          The status.
+   * @return The relative URL to the image for the user account status.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public String getUserAccountStatusImage (EUserAccountStatus status) {
+    if (status == null) {
+      return null;
+    }
+    
+    switch (status) {
+    case ACTIVATED:
+      return "/resources/images/accept.png";
+      
+    case DEACTIVATED:
+      return "/resources/images/block.png";
+      
+    default:
+      return "/resources/images/warning.png";
     }
   }
   

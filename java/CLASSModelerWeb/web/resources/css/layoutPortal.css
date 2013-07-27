@@ -95,28 +95,18 @@
     color: #DDDDDD;
 }
 
-#shareSection {
+#diagramsSection {
     float: left;
+    border-right: 1px solid #CCCCCC;
+    width: 70.5%;
+    padding-right: 1%;
+    min-height: 490px;
+}
+
+#shareSection {
+    float: right;
     width: 27%;
     min-height: 490px;
-    margin-right: 1%;
-}
-
-#diagramsSection {
-    float: right;
-    border-left: 1px solid #CCCCCC;
-    width: 70.5%;
-    padding-left: 1%;
-    min-height: 490px;
-}
-
-.diagramDetailsSection {
-    margin: 8px 0px;
-    display: block;
-}
-
-.diagramDetailsSection-name {
-    display: block;
-    font-weight: bold;
+    margin-left: 1%;
 }
 

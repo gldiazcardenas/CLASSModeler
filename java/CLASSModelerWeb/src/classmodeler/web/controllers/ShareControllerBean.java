@@ -8,11 +8,15 @@
 
 package classmodeler.web.controllers;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.EDiagramPrivilege;
+import classmodeler.domain.user.User;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -34,6 +38,8 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   private SessionControllerBean sessionController;
   
   private Diagram diagram;
+  private EDiagramPrivilege privilege;
+  private List<User> users;
   
   public ShareControllerBean() {
     super();
@@ -45,6 +51,30 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   
   public void setSessionController(SessionControllerBean sessionController) {
     this.sessionController = sessionController;
+  }
+  
+  public Diagram getDiagram() {
+    return diagram;
+  }
+  
+  public void setDiagram(Diagram diagram) {
+    this.diagram = diagram;
+  }
+  
+  public EDiagramPrivilege getPrivilege() {
+    return privilege;
+  }
+  
+  public void setPrivilege(EDiagramPrivilege privilege) {
+    this.privilege = privilege;
+  }
+  
+  public List<User> getUsers() {
+    return users;
+  }
+  
+  public void setUsers(List<User> users) {
+    this.users = users;
   }
 
   @Override

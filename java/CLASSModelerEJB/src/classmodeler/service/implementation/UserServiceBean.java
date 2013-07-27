@@ -8,6 +8,7 @@
 
 package classmodeler.service.implementation;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
@@ -27,9 +29,9 @@ import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 
@@ -251,6 +253,21 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     return user;
+  }
+  
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<User> getUsersToShareDiagram(Diagram diagram) {
+    List<User> users = new ArrayList<User>();
+    
+    if (diagram != null) {
+      users = em.createNativeQuery("SELECT * FROM user WHERE user_key <> ?ownerKey AND user_key NOT IN (SELECT shared_to_user FROM shared WHERE shared_diagram_key = ?diagramKey)", User.class)
+                .setParameter("ownerKey", Integer.valueOf(diagram.getCreatedBy().getKey()))
+                .setParameter("diagramKey", Integer.valueOf(diagram.getKey()))
+                .getResultList();
+    }
+    
+    return users;
   }
 
 }

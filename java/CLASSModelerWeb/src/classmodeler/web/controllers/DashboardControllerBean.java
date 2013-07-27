@@ -17,9 +17,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
+import classmodeler.service.util.CollectionUtils;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -35,6 +37,8 @@ public class DashboardControllerBean extends JSFGenericBean {
   private static final long serialVersionUID = 1L;
   
   private Diagram diagram;
+  private Shared shared;
+  
   private List<Shared> sharings;
   private List<Diagram> diagrams;
   
@@ -83,13 +87,22 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   public void setDiagram(Diagram diagram) {
     this.diagram = diagram;
+    this.shared = null;
+    
     if (diagram != null) {
       sharings = diagramService.getSharingsByDiagram(diagram);
     }
+    else {
+      sharings = new ArrayList<Shared>();
+    }
   }
   
-  public boolean isSelectedDiagram () {
-    return diagram != null;
+  public Shared getShared() {
+    return shared;
+  }
+  
+  public void setShared(Shared shared) {
+    this.shared = shared;
   }
   
   public void setLoggedUser(User loggedUser) {
@@ -98,6 +111,111 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   public void setDesignerController(DesignerControllerBean designerController) {
     this.designerController = designerController;
+  }
+  
+  /**
+   * Determines if the logged user is able to share the selected diagram.
+   * 
+   * @return True if the user is owner of has SHARE privilege over the diagram.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedShareDiagram () {
+    if (diagram == null || loggedUser == null) {
+      return false;
+    }
+    
+    if (!CollectionUtils.isEmptyCollection(sharings)) {
+      for (Shared sharing : sharings) {
+        if (diagram.equals(sharing.getDiagram()) && (sharing.getPrivilege() == EDiagramPrivilege.OWNER ||
+                                                     sharing.getPrivilege() == EDiagramPrivilege.SHARE)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Determines if the logged user is able to edit the selected diagram.
+   * 
+   * @return True if the user is the owner or has EDITION privilege.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedEditDiagram () {
+    if (diagram == null || loggedUser == null) {
+      return false;
+    }
+    
+    if (!CollectionUtils.isEmptyCollection(sharings)) {
+      for (Shared sharing : sharings) {
+        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege() != EDiagramPrivilege.READ) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Determines if the logged user is able to copy the selected diagram.
+   * 
+   * @return True if the user is the owner or has EDITION privileges.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedCopyDiagram () {
+    if (diagram == null || loggedUser == null) {
+      return false;
+    }
+    
+    if (!CollectionUtils.isEmptyCollection(sharings)) {
+      for (Shared sharing : sharings) {
+        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege() != EDiagramPrivilege.READ) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Determines if the logged user is able to delete the selected diagram.
+   * 
+   * @return True if there is a diagram selected.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedDeleteDiagram () {
+    return diagram != null && loggedUser != null;
+  }
+  
+  /**
+   * Determines if the logged user is able to change the privilege of the
+   * diagram shared.
+   * 
+   * @return True if the user is the owner of the diagram, but the selected
+   *         object has not OWNER privilege itself.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedChangePrivilege () {
+    if (shared == null || loggedUser == null) {
+      return false;
+    }
+    
+    return shared.getPrivilege() != EDiagramPrivilege.OWNER && loggedUser.equals(shared.getDiagram().getCreatedBy());
+  }
+  
+  /**
+   * Determines if the logged user is able to delete the privilege of the
+   * diagram shared.
+   * 
+   * @return True if the user is the owner of the diagram, but the selected
+   *         object has not OWNER privilege itself.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isAllowedDeletePrivilege () {
+    return false;
   }
   
   /**

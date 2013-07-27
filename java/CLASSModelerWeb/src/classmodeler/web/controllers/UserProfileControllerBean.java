@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -55,7 +54,6 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
   
   private String firstName;
   private String lastName;
-  private Date birthdate;
   private EGender gender;
   private String avatar;
   
@@ -69,7 +67,6 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     if (loggedUser != null) {
       firstName = loggedUser.getFirstName();
       lastName  = loggedUser.getLastName();
-      birthdate = loggedUser.getBirthdate();
       gender    = loggedUser.getGender();
       avatar    = loggedUser.getAvatar();
     }
@@ -89,14 +86,6 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
   
   public void setLastName(String lastName) {
     this.lastName = lastName;
-  }
-  
-  public Date getBirthdate() {
-    return birthdate;
-  }
-  
-  public void setBirthdate(Date birthdate) {
-    this.birthdate = birthdate;
   }
   
   public EGender getGender() {
@@ -207,7 +196,6 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     
     loggedUser.setFirstName(firstName);
     loggedUser.setLastName(lastName);
-    loggedUser.setBirthdate(birthdate);
     loggedUser.setGender(gender);
     loggedUser.setAvatar(avatar);
     

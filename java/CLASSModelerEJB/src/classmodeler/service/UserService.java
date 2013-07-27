@@ -7,8 +7,11 @@
  ****************************************************/
 package classmodeler.service;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
@@ -188,5 +191,14 @@ public interface UserService {
    */
   public User getUserByEmail (String email);
   
+  /**
+   * Retrieves a list of users that have not the given diagram viewed.
+   * 
+   * @param diagram
+   *          The diagram to share.
+   * @return A list of users, never null.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public List<User> getUsersToShareDiagram (Diagram diagram);
   
 }

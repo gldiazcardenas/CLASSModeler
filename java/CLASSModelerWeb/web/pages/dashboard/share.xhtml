@@ -3,8 +3,65 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
                 
-<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="500">
+<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="600">
     <h:form id="shareForm">
+        <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic" />
+        <p:dataTable id="usersTable"
+                     value="#{diagramController.users}"
+                     var="user"
+                     rowKey="#{user.key}"
+                     selectionMode="multiple"
+                     selection="#{diagramController.toShare}"
+                     emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
+                     paginator="true"
+                     paginatorPosition="bottom"
+                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="10, 20, 30"
+                     rows="20">
+            
+            <p:column headerText="#{msgs.COLUMN_USER_NAME_LABEL}" sortBy="#{user.name}">
+                <h:outputText value="#{user.name}" />
+            </p:column>
+            
+            <p:column headerText="#{msgs.COLUMN_USER_ACCOUNT_STATUS_LABEL}" sortBy="#{user.accountStatus}" style="width: 50px; text-align: center; padding-top: 1px; padding-bottom: 1px;">
+                <h:graphicImage url="#{formatController.getUserAccountStatusImage(user.accountStatus)}" title="#{formatController.getUserAccountStatusName(user.accountStatus)}" />
+            </p:column>
+        </p:dataTable>
+        
+        <br/>
+        <h:outputText value="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic" />
+        <p:selectOneRadio id="privilege" value="#{diagramController.privilege}" converter="privilegeConverter" required="true">
+            <f:selectItems value="#{diagramController.privilegesForSelectOneRadio}" />
+        </p:selectOneRadio>
+        
+        <p class="justify" style="margin-top: 25px;">
+            <h:outputText value="#{msgs.NOTE_LABEL}: " styleClass="bold" />
+            <h:outputText value="#{msgs.SHARE_FORM_USER_ACCOUNT_STATUS_MESSAGE}" />
+        </p>
+        
+        <p:separator/>
+        
+        <h:panelGrid columns="3">
+            <p:commandButton id="btSaveSharingDiagram" value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"/>
+            
+            <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgShare.hide()" />
+            
+            <p:ajaxStatus style="width: 16px; height: 16px;">
+                <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                <f:facet name="complete"><h:outputText value="" /></f:facet>
+            </p:ajaxStatus>
+        </h:panelGrid>
+    </h:form>
+</p:dialog>
+
+<p:dialog id="changePrivDialog" header="" widgetVar="dlgChangePriv" closable="true" closeOnEscape="true" modal="true" width="400">
+    <h:form id="changePrivForm">
+        
+    </h:form>
+</p:dialog>
+
+<p:dialog id="deletePrivDialog" header="" widgetVar="dlgDeletePriv" closable="true" closeOnEscape="true" modal="true" width="400">
+    <h:form id="deletePrivForm">
         
     </h:form>
 </p:dialog>

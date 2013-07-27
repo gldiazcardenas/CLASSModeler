@@ -8,18 +8,19 @@
 
 package classmodeler.web.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.Shared;
+import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
+import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -43,7 +44,11 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   private String title;
   private Diagram diagram;
   private EDiagramControllerMode mode;
-  private List<Shared> sharings;
+  
+  // Fields used to share a diagram
+  private EDiagramPrivilege privilege;
+  private List<User> users;
+  private List<User> toShare;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -51,8 +56,14 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
   private User loggedUser;
   
+  @ManagedProperty("#{formatController}")
+  private FormatControllerBean formatController;
+  
   @EJB
   private DiagramService diagramService;
+  
+  @EJB
+  private UserService userService;
   
   public DiagramControllerBean() {
     super();
@@ -90,11 +101,49 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.loggedUser = loggedUser;
   }
   
-  public List<Shared> getSharings() {
-    if (sharings == null) {
-      sharings = new ArrayList<Shared>();
+  public void setFormatController(FormatControllerBean formatController) {
+    this.formatController = formatController;
+  }
+  
+  public EDiagramPrivilege getPrivilege() {
+    return privilege;
+  }
+  
+  public void setPrivilege(EDiagramPrivilege privilege) {
+    this.privilege = privilege;
+  }
+  
+  public List<User> getToShare() {
+    return toShare;
+  }
+  
+  public void setToShare(List<User> toShare) {
+    this.toShare = toShare;
+  }
+  
+  public List<User> getUsers() {
+    return users;
+  }
+  
+  /**
+   * Gets the items for Radio button group used to select a privilege.
+   * 
+   * @return An array with the select items.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public SelectItem[] getPrivilegesForSelectOneRadio () {
+    SelectItem[] items = new SelectItem[EDiagramPrivilege.values().length - 1];
+    
+    int i = 0;
+    for (EDiagramPrivilege p : EDiagramPrivilege.values()) {
+      if (p == EDiagramPrivilege.OWNER) {
+        continue;
+      }
+      
+      items[i++] = new SelectItem(p, formatController.getDiagramPrivilegeName(p));
     }
-    return sharings;
+    
+    return items;
   }
   
   /**
@@ -172,8 +221,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public void prepareShareDiagram () {
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
-      name       = diagram.getName();
-      sharings   = diagramService.getSharingsByDiagram(diagram);
+      name   = diagram.getName();
+      users  = userService.getUsersToShareDiagram(diagram);
       
       title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.SHARE;

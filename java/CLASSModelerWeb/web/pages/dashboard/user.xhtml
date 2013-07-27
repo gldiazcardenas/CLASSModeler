@@ -52,11 +52,11 @@
 </p:dialog>
 
 <!-- Edit Profile Dialog -->
-<p:dialog id="profileDialog" widgetVar="dlgProfile" width="550" header="#{msgs.USER_PROFILE_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
+<p:dialog id="profileDialog" widgetVar="dlgProfile" width="600" header="#{msgs.USER_PROFILE_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
     <h:form id="profileForm" enctype="multipart/form-data">
         <table style="width: 100%;">
             <tr>
-                <td width="100" align="center" style="border-bottom: none; border-top: none; border-left: none;" class="ui-widget-content">
+                <td width="100" align="center" style="border-right: 1px solid #CCCCCC; padding-right: 5px;">
                     <p:graphicImage id="avatar" url="#{userProfileController.avatar}" width="128" height="128" style="display: block; margin-bottom: 5px;" />
                     <p:commandButton value="#{msgs.USER_PROFILE_DEFAULT_AVATAR_LABEL}" actionListener="#{userProfileController.setDefaultAvatar()}" update=":profileForm:avatar" icon="ui-icon-image" />
                 </td>
@@ -67,9 +67,6 @@
                         
                         <p:inputText id="lastName" value="#{userProfileController.lastName}" style="width: 99%;" />
                         <p:watermark for="lastName" value="#{msgs.SIGN_UP_FORM_LAST_NAME_FIELD}" />
-                        
-                        <p:calendar id="birthdate" value="#{userProfileController.birthdate}" navigator="true" showOn="both" />
-                        <p:watermark for="birthdate" value="#{msgs.SIGN_UP_FORM_DATEOFBIRTH_FIELD}" />
                         
                         <p:selectOneRadio id="gender" value="#{userProfileController.gender}" converter="genderConverter" required="true">
                             <f:selectItems value="#{userProfileController.gendersForSelectOneRadio}" />

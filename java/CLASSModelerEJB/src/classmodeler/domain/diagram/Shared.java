@@ -20,7 +20,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -54,13 +53,6 @@ public class Shared implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name="shared_date", nullable=false)
   private Date date;
-  
-  /**
-   * A general comment made by the owner of the diagram.
-   */
-  @Lob
-  @Column(name="shared_comment")
-  private String comment;
   
   /**
    * The privileged given to the user who receives the diagram.
@@ -111,14 +103,6 @@ public class Shared implements Serializable {
   
   public void setDate(Date date) {
     this.date = date;
-  }
-  
-  public String getComment() {
-    return comment;
-  }
-  
-  public void setComment(String comment) {
-    this.comment = comment;
   }
   
   public EDiagramPrivilege getPrivilege() {
