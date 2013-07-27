@@ -86,23 +86,6 @@ public class SessionControllerBean extends JSFGenericBean {
   }
   
   /**
-   * Gets the URL to the image that represents the avatar of the logged user.
-   * 
-   * @return The URL to the image.
-   */
-  public String getUserAvatar () {
-    if (loggedUser == null) {
-      return null;
-    }
-    
-    if (!loggedUser.isRegisteredUser()) {
-      return JSFResourceBundle.DEFAULT_MALE_IMAGE_URL;
-    }
-    
-    return loggedUser.getAvatar();
-  }
-  
-  /**
    * Logs in the system the user represented by the given credentials.
    * 
    * @param email

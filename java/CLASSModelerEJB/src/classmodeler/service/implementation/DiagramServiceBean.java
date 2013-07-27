@@ -8,6 +8,7 @@
 
 package classmodeler.service.implementation;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
@@ -77,7 +79,22 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @Override
   public List<Shared> getSharingsByDiagram(Diagram diagram) {
-    return em.createQuery("SELECT s FROM Shared s WHERE s.diagram = :diagram", Shared.class).setParameter("diagram", diagram).getResultList();
+    List<Shared> sharings = new ArrayList<Shared>();
+    
+    if (diagram != null) {
+      Shared share = new Shared();
+      share.setFromUser(diagram.getCreatedBy());
+      share.setToUser(diagram.getModifiedBy());
+      share.setPrivilege(EDiagramPrivilege.OWNER);
+      share.setDate(diagram.getCreatedDate());
+      share.setKey(Integer.MAX_VALUE);
+      share.setDiagram(diagram);
+      
+      sharings.add(share);
+      sharings.addAll(em.createQuery("SELECT s FROM Shared s WHERE s.diagram = :diagram", Shared.class).setParameter("diagram", diagram).getResultList());
+    }
+    
+    return sharings;
   }
   
 }

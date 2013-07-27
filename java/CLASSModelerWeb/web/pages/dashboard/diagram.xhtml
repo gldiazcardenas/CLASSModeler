@@ -19,7 +19,7 @@
                 <p:commandButton value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"
                                  onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
                                  oncomplete="responseDiagramDialog(xhr, status, args)"
-                                 update=":diagramsForm, :generalMessage, :diagramDetails, :diagramForm" />
+                                 update=":diagramsForm, :generalMessage, :sharingsForm, :diagramForm" />
                                  
                 <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgDiagram.hide()"/>
                 

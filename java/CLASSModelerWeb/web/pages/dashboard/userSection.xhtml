@@ -7,16 +7,16 @@
     <h:outputText value="#{sessionController.userName}" />
     
     <h:panelGroup id="userPanel">
-        <p:graphicImage id="avatar" url="#{sessionController.userAvatar}" style="margin: 3px 5px 0 5px;" width="25" height="25" />
+        <p:graphicImage id="avatar" url="#{formatController.getUserAvatar(sessionController.loggedUser)}" style="margin: 3px 5px 0 5px;" width="25" height="25" />
         <p:tooltip for="avatar">
-            <p:graphicImage url="#{sessionController.userAvatar}" />
+            <p:graphicImage url="#{formatController.getUserAvatar(sessionController.loggedUser)}" />
         </p:tooltip>
     </h:panelGroup>
     
     <p:menuButton id="optionsMenuButton" value="#{msgs.USER_SECTION_OPTIONS_MENU_BUTTON_LABEL}">
         <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" icon="ui-icon-key" onclick="dlgChangePassword.show()" disabled="#{!sessionController.registeredUser}" />
         <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" icon="ui-icon-contact" update=":profileForm" oncomplete="dlgProfile.show()" disabled="#{!sessionController.registeredUser}" />
-        <p:menuitem value="#{msgs.USER_SECTION_DEACTIVATE_ACCOUNT_LABEL}" icon="ui-icon-locked" disabled="#{!sessionController.registeredUser}" />
+        <p:menuitem value="#{msgs.USER_SECTION_DEACTIVATE_ACCOUNT_LABEL}" icon="ui-icon-cancel" disabled="#{!sessionController.registeredUser}" />
         <p:menuitem ajax="false" value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
         <p:menuitem ajax="false" value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
     </p:menuButton>

@@ -12,7 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
@@ -102,8 +101,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
         }
         else {
           // Redirects to the Designer Page
-          designerController.initEditDiagram(new Diagram());
-          outcome = JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
+          outcome = designerController.initEditDiagram();
         }
       }
       catch (InvalidUserAccountException e) {

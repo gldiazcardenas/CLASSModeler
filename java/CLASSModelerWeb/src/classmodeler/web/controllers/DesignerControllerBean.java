@@ -15,7 +15,9 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * JSF bean that handles the interactions of the user with the CLASS
@@ -43,6 +45,10 @@ public class DesignerControllerBean extends JSFGenericBean {
     return diagram;
   }
   
+  public void setDiagram(Diagram diagram) {
+    this.diagram = diagram;
+  }
+  
   public TreeNode getTree() {
     return tree;
   }
@@ -55,20 +61,19 @@ public class DesignerControllerBean extends JSFGenericBean {
    *          The diagram to edit.
    * @author Gabriel Leonardo Diaz, 23.06.2013.
    */
-  public void initEditDiagram (Diagram diagramToEdit) {
-    diagram = diagramToEdit;
-    if (diagram.getName() == null) {
-      // Guest user
-      diagram.setName("New Diagram");
+  public String initEditDiagram () {
+    if (diagram == null) {
+      diagram = new Diagram();
+      diagram.setName(JSFResourceBundle.getLocalizedMessage("NEW_DIAGRAM_NAME"));
     }
     
     // Re-creates the tree
     tree = new DefaultTreeNode();
-    DefaultTreeNode root = new DefaultTreeNode(diagramToEdit.getName(), tree);
+    DefaultTreeNode root = new DefaultTreeNode(diagram.getName(), tree);
     root.setParent(root);
+    
+    return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
-  
-  
   
   public String getExecuteOnLoad () {
     StringBuilder sb = new StringBuilder();

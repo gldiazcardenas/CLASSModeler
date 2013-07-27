@@ -8,6 +8,8 @@
 
 package classmodeler.service.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,6 +108,27 @@ public final class GenericUtils {
     Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
     Matcher m = p.matcher(email);
     return m.matches();
+  }
+  
+  /**
+   * Checks if the given date is today by ignoring the time.
+   * 
+   * @param date
+   *          The date to check.
+   * @return True if the date is today, otherwise false.
+   * @author Gabriel Leonardo Diaz, 26.07.2013.
+   */
+  public static boolean isToday (Date date) {
+    if (date == null) {
+      return false;
+    }
+    
+    Calendar now = Calendar.getInstance();
+    Calendar time = Calendar.getInstance();
+    time.setTime(date);
+    
+    return now.get(Calendar.ERA) == time.get(Calendar.ERA) && now.get(Calendar.YEAR) == time.get(Calendar.YEAR) &&
+           now.get(Calendar.DAY_OF_YEAR) == time.get(Calendar.DAY_OF_YEAR);
   }
   
 }

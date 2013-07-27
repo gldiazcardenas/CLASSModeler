@@ -8,6 +8,7 @@
 
 package classmodeler.web.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,7 +21,6 @@ import classmodeler.domain.diagram.Shared;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * JSF Bean controller for the DashBoard page, this handles all interaction of
@@ -35,8 +35,7 @@ public class DashboardControllerBean extends JSFGenericBean {
   private static final long serialVersionUID = 1L;
   
   private Diagram diagram;
-  private Shared shared;
-  
+  private List<Shared> sharings;
   private List<Diagram> diagrams;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
@@ -53,16 +52,29 @@ public class DashboardControllerBean extends JSFGenericBean {
   }
   
   /**
-   * Gets the projects belonging to the user or shared by other users. This
-   * method loads the projects from the Service.
+   * Gets the diagrams belonging to the user or shared by other users. This
+   * method loads them from the Service.
    * 
-   * @return A list of projects.
+   * @return A list of diagrams.
    */
-  public List<Diagram> getDiagrams() {
+  public List<Diagram> getDiagrams () {
     if (diagrams == null) {
       diagrams = diagramService.getAllDiagramsByUser(loggedUser); 
     }
     return diagrams;
+  }
+  
+  /**
+   * Gets the sharings of the selected diagram.
+   * 
+   * @return A list of shared objects.
+   * @author Gabriel Leonardo Diaz, 26.07.2013.
+   */
+  public List<Shared> getSharings () {
+    if (sharings == null) {
+      sharings = new ArrayList<Shared>();
+    }
+    return sharings;
   }
   
   public Diagram getDiagram() {
@@ -71,14 +83,9 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   public void setDiagram(Diagram diagram) {
     this.diagram = diagram;
-  }
-  
-  public Shared getShared() {
-    return shared;
-  }
-  
-  public void setShared(Shared shared) {
-    this.shared = shared;
+    if (diagram != null) {
+      sharings = diagramService.getSharingsByDiagram(diagram);
+    }
   }
   
   public boolean isSelectedDiagram () {
@@ -91,46 +98,6 @@ public class DashboardControllerBean extends JSFGenericBean {
   
   public void setDesignerController(DesignerControllerBean designerController) {
     this.designerController = designerController;
-  }
-  
-  public String getDiagramName () {
-    if (diagram != null) {
-      return diagram.getName();
-    }
-    
-    return "";
-  }
-  
-  public String getDiagramDescription () {
-    if (diagram != null) {
-      return diagram.getDescription();
-    }
-    
-    return "";
-  }
-  
-  public String getDiagramOwner () {
-    if (diagram != null) {
-      return diagram.getCreatedBy().getName();
-    }
-    
-    return "";
-  }
-  
-  public String getDiagramModifier () {
-    if (diagram != null) {
-      return diagram.getModifiedBy().getName();
-    }
-    
-    return "";
-  }
-  
-  public String getDiagramModifiedDate () {
-    if (diagram != null) {
-      return diagram.getModifiedDate().toString();
-    }
-    
-    return "";
   }
   
   /**
@@ -168,16 +135,4 @@ public class DashboardControllerBean extends JSFGenericBean {
       diagram = null;
     }
   }
-  
-  /**
-   * Prepares the designer for the selected project.
-   * 
-   * @return The outcome to the DESIGNER page.
-   * @author Gabriel Leonardo Diaz, 01.06.2013.
-   */
-  public String prepareEditDiagram () {
-    designerController.initEditDiagram(diagram);
-    return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
-  }
-
 }
