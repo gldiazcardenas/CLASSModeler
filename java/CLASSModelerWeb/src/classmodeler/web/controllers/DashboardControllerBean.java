@@ -126,8 +126,7 @@ public class DashboardControllerBean extends JSFGenericBean {
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {
       for (Shared sharing : sharings) {
-        if (diagram.equals(sharing.getDiagram()) && (sharing.getPrivilege() == EDiagramPrivilege.OWNER ||
-                                                     sharing.getPrivilege() == EDiagramPrivilege.SHARE)) {
+        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.EDIT)) {
           return true;
         }
       }
@@ -149,7 +148,7 @@ public class DashboardControllerBean extends JSFGenericBean {
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {
       for (Shared sharing : sharings) {
-        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege() != EDiagramPrivilege.READ) {
+        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.READ)) {
           return true;
         }
       }
@@ -165,19 +164,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedCopyDiagram () {
-    if (diagram == null || loggedUser == null) {
-      return false;
-    }
-    
-    if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (Shared sharing : sharings) {
-        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege() != EDiagramPrivilege.READ) {
-          return true;
-        }
-      }
-    }
-    
-    return false;
+    return isAllowedEditDiagram();
   }
   
   /**

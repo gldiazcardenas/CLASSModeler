@@ -42,7 +42,7 @@
 </p:dialog>
 
 <!-- Delete Dialog -->
-<p:confirmDialog id="deleteDiagramDialog" widgetVar="dlgDeleteDiagram" header="#{diagramController.title}" severity="alert" message="#{msgs.DIAGRAM_DELETE_CONFIRMATION_MESSAGE}" width="400">
+<p:confirmDialog id="deleteDiagramDialog" widgetVar="dlgDeleteDiagram" header="#{diagramController.title}" severity="alert" message="#{diagramController.deleteDiagramMessage}" width="400">
     <p:commandButton value="#{msgs.YES_LABEL}" actionListener="#{diagramController.processAJAX()}" update=":diagramsForm, :generalMessage, :diagramButtonsForm" oncomplete="dlgDeleteDiagram.hide()" />
     <p:commandButton value="#{msgs.NO_LABEL}" type="button" onclick="dlgDeleteDiagram.hide()" />
 </p:confirmDialog>

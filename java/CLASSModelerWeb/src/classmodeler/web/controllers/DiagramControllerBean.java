@@ -47,8 +47,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   // Fields used to share a diagram
   private EDiagramPrivilege privilege;
-  private List<User> users;
-  private List<User> toShare;
+  private List<User> availableUsers;
+  private List<User> selectedUsers;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -113,16 +113,16 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.privilege = privilege;
   }
   
-  public List<User> getToShare() {
-    return toShare;
+  public List<User> getAvailableUsers() {
+    return availableUsers;
   }
   
-  public void setToShare(List<User> toShare) {
-    this.toShare = toShare;
+  public List<User> getSelectedUsers() {
+    return selectedUsers;
   }
   
-  public List<User> getUsers() {
-    return users;
+  public void setSelectedUsers(List<User> selectedUsers) {
+    this.selectedUsers = selectedUsers;
   }
   
   /**
@@ -144,6 +144,25 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     }
     
     return items;
+  }
+  
+  /**
+   * Retrieves the localized message for deleting a diagram (either by the owner
+   * or another user). When the owner deletes the diagram this is in fact
+   * deleted with all sharing, but when a user who had the diagram shared only
+   * is able to delete the sharing.
+   * 
+   * @return The localized message.
+   * @author Gabriel Leonardo Diaz, 10.08.2013.
+   */
+  public String getDeleteDiagramMessage () {
+    StringBuilder sb = new StringBuilder();
+    
+    if (mode == EDiagramControllerMode.DELETE && diagram != null && loggedUser != null) {
+      sb.append(JSFResourceBundle.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
+    }
+    
+    return sb.toString();
   }
   
   /**
@@ -222,7 +241,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
       name   = diagram.getName();
-      users  = userService.getUsersToShareDiagram(diagram);
+      availableUsers  = userService.getUsersToShareDiagram(diagram);
       
       title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.SHARE;

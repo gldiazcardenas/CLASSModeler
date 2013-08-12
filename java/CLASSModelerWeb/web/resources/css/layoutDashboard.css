@@ -8,3 +8,7 @@
     padding: 1%;
     width: 98% !important;
 }
+
+#diagramButtonsForm button, #sharingButtonsForm button {
+    margin-right: 3px;
+}

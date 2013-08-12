@@ -7,11 +7,11 @@
     <h:form id="shareForm">
         <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic" />
         <p:dataTable id="usersTable"
-                     value="#{diagramController.users}"
+                     value="#{diagramController.availableUsers}"
                      var="user"
                      rowKey="#{user.key}"
                      selectionMode="multiple"
-                     selection="#{diagramController.toShare}"
+                     selection="#{diagramController.selectedUsers}"
                      emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
                      paginator="true"
                      paginatorPosition="bottom"
