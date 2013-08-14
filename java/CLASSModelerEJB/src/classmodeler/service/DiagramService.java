@@ -73,4 +73,18 @@ public interface DiagramService {
    */
   public List<Shared> getSharingsByDiagram (Diagram diagram);
   
+  /**
+   * Shares the given diagram from the specific user to the users in the list
+   * parameter.
+   * 
+   * @param diagram
+   *          The diagram to share.
+   * @param fromUser
+   *          The user that shared the diagram.
+   * @param toUsers
+   *          The users that will receive the diagram.
+   * @author Gabriel Leonardo Diaz, 12.08.2013.
+   */
+  public void shareDiagram (Diagram diagram, User fromUser, List<User> toUsers);
+  
 }

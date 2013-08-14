@@ -5,12 +5,11 @@
                 
 <p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="600">
     <h:form id="shareForm">
-        <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic" />
+        <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic, bold" />
         <p:dataTable id="usersTable"
                      value="#{diagramController.availableUsers}"
                      var="user"
                      rowKey="#{user.key}"
-                     selectionMode="multiple"
                      selection="#{diagramController.selectedUsers}"
                      emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
                      paginator="true"
@@ -19,7 +18,9 @@
                      rowsPerPageTemplate="10, 20, 30"
                      rows="20">
             
-            <p:column headerText="#{msgs.COLUMN_USER_NAME_LABEL}" sortBy="#{user.name}">
+            <p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!formatController.isActivatedAccount(user.accountStatus)}" />
+            
+            <p:column headerText="#{msgs.COLUMN_USER_NAME_LABEL}" sortBy="#{user.name}" disabledSelection="#{!formatController.isActivatedAccount(user.accountStatus)}">
                 <h:outputText value="#{user.name}" />
             </p:column>
             
@@ -29,7 +30,8 @@
         </p:dataTable>
         
         <br/>
-        <h:outputText value="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic" />
+        <br/>
+        <h:outputText value="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic, bold" />
         <p:selectOneRadio id="privilege" value="#{diagramController.privilege}" converter="privilegeConverter" required="true">
             <f:selectItems value="#{diagramController.privilegesForSelectOneRadio}" />
         </p:selectOneRadio>
@@ -39,10 +41,15 @@
             <h:outputText value="#{msgs.SHARE_FORM_USER_ACCOUNT_STATUS_MESSAGE}" />
         </p>
         
+        <p:messages for="shareDialogMessage" />
+        
         <p:separator/>
         
         <h:panelGrid columns="3">
-            <p:commandButton id="btSaveSharingDiagram" value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"/>
+            <p:commandButton id="btSaveSharingDiagram" value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"
+                             onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                             update=":shareForm, :generalMessage"
+                             oncomplete="responseShareDiagram(xhr, status, args)"/>
             
             <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgShare.hide()" />
             
@@ -52,6 +59,15 @@
             </p:ajaxStatus>
         </h:panelGrid>
     </h:form>
+    
+    <!-- Callback function that hides the dialog -->
+    <script type="text/javascript">
+      function responseShareDiagram(xhr, status, args) {
+        if (!args.validationFailed) {
+          dlgShare.hide();
+        }
+      }
+    </script>
 </p:dialog>
 
 <p:dialog id="changePrivDialog" header="" widgetVar="dlgChangePriv" closable="true" closeOnEscape="true" modal="true" width="400">

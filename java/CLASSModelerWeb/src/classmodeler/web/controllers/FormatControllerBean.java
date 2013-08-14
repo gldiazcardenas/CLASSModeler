@@ -161,6 +161,19 @@ public class FormatControllerBean extends JSFGenericBean {
   }
   
   /**
+   * Determines whether the given user account status corresponds the ACTIVATED
+   * status.
+   * 
+   * @param status
+   *          The status to compare.
+   * @return True or False based on the given status.
+   * @author Gabriel Leonardo Diaz, 12.08.2013.
+   */
+  public boolean isActivatedAccount (EUserAccountStatus status) {
+    return status == EUserAccountStatus.ACTIVATED;
+  }
+  
+  /**
    * Formats the given date in the pattern: dd/MM/yyyy. If the date is today
    * this method returns a localized label as "Today".
    * 

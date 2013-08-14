@@ -289,6 +289,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         break;
       
       case SHARE:
+        diagramService.shareDiagram(diagram, loggedUser, selectedUsers);
         break;
         
       default:

@@ -97,4 +97,9 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     return sharings;
   }
   
+  @Override
+  public void shareDiagram(Diagram diagram, User fromUser, List<User> toUsers) {
+    // TODO Auto-generated method stub
+  }
+  
 }

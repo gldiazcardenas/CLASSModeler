@@ -16,7 +16,9 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
+import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.User;
+import classmodeler.service.util.CollectionUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 
@@ -79,11 +81,25 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
 
   @Override
   public boolean isAllValid() {
-    return diagram != null;
+    if (diagram == null || privilege == null || CollectionUtils.isEmptyCollection(users)) {
+      return false;
+    }
+    
+    for (User user : users) {
+      if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
+        return false;
+      }
+    }
+    
+    return true;
   }
 
   @Override
   public void processAJAX() {
+    if (!isAllValid()) {
+      return;
+    }
+    
     // TODO Auto-generated method stub
   }
 
@@ -91,6 +107,5 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   public String process() {
     return null; // Not used.
   }
-  
   
 }
