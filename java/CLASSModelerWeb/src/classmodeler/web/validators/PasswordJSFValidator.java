@@ -28,16 +28,21 @@ import classmodeler.web.util.JSFMessageBean;
  */
 @ManagedBean(name="passwordValidator")
 @RequestScoped
-public class PasswordLengthJSFValidator implements Validator {
+public class PasswordJSFValidator implements Validator {
 
   @Override
   public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
     String password = (String) value;
     
-    if (GenericUtils.isEmptyString(password)) {
+    if (!GenericUtils.isValidPassword(password)) {
+      String clientId = (String) component.getAttributes().get("messageOutput");
+      if (clientId == null) {
+        clientId = JSFMessageBean.GENERAL_MESSAGE_ID;
+      }
+      
       FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("PASSWORD_INVALID_LENGTH_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
-      context.addMessage(JSFMessageBean.GENERAL_MESSAGE_ID, message);
+      context.addMessage(clientId, message);
       
       throw new ValidatorException(message); // Not displayed
     }

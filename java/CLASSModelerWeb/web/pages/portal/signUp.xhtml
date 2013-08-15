@@ -22,7 +22,7 @@
             <p:watermark for="email" value="#{msgs.SIGN_UP_FORM_EMAIL_FIELD}" />
             
             <p:password id="password" value="#{signUPController.password}" style="width:97%;" required="true">
-                <f:validateLength minimum="5" maximum="20" />
+                <f:validator binding="#{passwordValidator}" />
             </p:password>
             <p:watermark for="password" value="#{msgs.SIGN_UP_FORM_PASSWORD_FIELD}" />
             
@@ -33,7 +33,9 @@
             <p:separator />
             
             <h:panelGrid columns="2">
-                <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel, :generalMessage" actionListener="#{signUPController.processAJAX()}" onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');" />
+                <p:commandButton value="#{msgs.SIGN_UP_FORM_APPY_BUTTON_LABEL}" update="signUpPanel, :generalMessage"
+                                 actionListener="#{signUPController.processAJAX()}"
+                                 onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');" />
                 
                 <p:ajaxStatus style="width: 16px; height: 16px;">
                     <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>

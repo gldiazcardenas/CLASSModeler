@@ -164,8 +164,9 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       return false;
     }
     
-    // Checks the email validity
-    if (!GenericUtils.isValidEmail(email)) {
+    // Checks the email and password validity
+    if (!GenericUtils.isValidEmail(email) ||
+        !GenericUtils.isValidPassword(password)) {
       return false;
     }
     

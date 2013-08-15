@@ -12,7 +12,10 @@
             </p:password>
             <p:watermark for="oldPassword" value="#{msgs.CHANGE_PASSWORD_FORM_OLD_PASSWORD_FIELD}"/>
             
-            <p:password id="newPassword" value="#{changePasswordController.newPassword}" required="true" binding="#{newPassword}" style="width: 97%"/>
+            <p:password id="newPassword" value="#{changePasswordController.newPassword}" required="true" binding="#{newPassword}" style="width: 97%">
+                <f:attribute  name="messageOutput" value="changePasswordMessage" />
+                <f:validator binding="#{passwordValidator}"/>
+            </p:password>
             <p:watermark for="newPassword" value="#{msgs.CHANGE_PASSWORD_FORM_NEW_PASSWORD_FIELD}"/>
             
             <p:password id="newConfirmation" value="#{changePasswordController.newConfirmation}" required="true" style="width: 97%">

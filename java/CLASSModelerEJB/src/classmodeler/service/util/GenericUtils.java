@@ -111,6 +111,23 @@ public final class GenericUtils {
   }
   
   /**
+   * Determines if the given string that represents the user account password is
+   * valid.
+   * 
+   * @param password
+   *          The user account password.
+   * @return True or False based on the length of the password.
+   * @author Gabriel Leonardo Diaz, 14.08.2013.
+   */
+  public static boolean isValidPassword (String password) {
+    if (isEmptyString(password)) {
+      return false;
+    }
+    
+    return password.length() >= 5 && password.length() <= 20;
+  }
+  
+  /**
    * Checks if the given date is today by ignoring the time.
    * 
    * @param date
