@@ -17,7 +17,6 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFMessageBean;
 
 /**
@@ -40,7 +39,7 @@ public class PasswordJSFValidator implements Validator {
         clientId = JSFMessageBean.GENERAL_MESSAGE_ID;
       }
       
-      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("PASSWORD_INVALID_LENGTH_MESSAGE"));
+      FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("PASSWORD_INVALID_LENGTH_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
       context.addMessage(clientId, message);
       

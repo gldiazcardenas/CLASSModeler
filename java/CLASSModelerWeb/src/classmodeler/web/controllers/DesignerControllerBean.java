@@ -15,7 +15,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.web.resources.JSFResourceBundle;
+import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -64,7 +64,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   public String initEditDiagram () {
     if (diagram == null) {
       diagram = new Diagram();
-      diagram.setName(JSFResourceBundle.getLocalizedMessage("NEW_DIAGRAM_NAME"));
+      diagram.setName(GenericUtils.getLocalizedMessage("NEW_DIAGRAM_NAME"));
     }
     
     // Re-creates the tree

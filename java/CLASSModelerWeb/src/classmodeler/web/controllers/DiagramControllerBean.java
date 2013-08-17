@@ -22,7 +22,6 @@ import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -159,7 +158,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     StringBuilder sb = new StringBuilder();
     
     if (mode == EDiagramControllerMode.DELETE && diagram != null && loggedUser != null) {
-      sb.append(JSFResourceBundle.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
+      sb.append(GenericUtils.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
     }
     
     return sb.toString();
@@ -175,7 +174,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     name        = null;
     description = null;
     diagram     = new Diagram();
-    title       = JSFResourceBundle.getLocalizedMessage("DIAGRAM_NEW_FORM_TITLE");
+    title       = GenericUtils.getLocalizedMessage("DIAGRAM_NEW_FORM_TITLE");
     mode        = EDiagramControllerMode.CREATE;
   }
   
@@ -191,7 +190,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     if (diagram != null) {
       name        = diagram.getName();
       description = diagram.getDescription();
-      title       = JSFResourceBundle.getLocalizedMessage("DIAGRAM_EDIT_FORM_TITLE", name);
+      title       = GenericUtils.getLocalizedMessage("DIAGRAM_EDIT_FORM_TITLE", name);
       mode        = EDiagramControllerMode.EDIT;
     }
   }
@@ -206,7 +205,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
       name   = diagram.getName();
-      title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_DELETE_FORM_TITLE", name);
+      title  = GenericUtils.getLocalizedMessage("DIAGRAM_DELETE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.DELETE;
     }
   }
@@ -227,7 +226,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       diagram = new Diagram();
       diagram.setXMI(copyXMI);
       
-      title   = JSFResourceBundle.getLocalizedMessage("DIAGRAM_COPY_FORM_TITLE", name);
+      title   = GenericUtils.getLocalizedMessage("DIAGRAM_COPY_FORM_TITLE", name);
       mode    = EDiagramControllerMode.COPY;
     }
   }
@@ -243,7 +242,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       name   = diagram.getName();
       availableUsers  = userService.getUsersToShareDiagram(diagram);
       
-      title  = JSFResourceBundle.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
+      title  = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.SHARE;
     }
   }
@@ -303,7 +302,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       mode        = null;
     }
     catch (Exception e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
+      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
     }
   }
 

@@ -29,7 +29,6 @@ import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -113,7 +112,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
 
     int i = 0;
     for (EGender g : EGender.values()) {
-      items[i++] = new SelectItem(g, JSFResourceBundle.getLocalizedMessage(g.getName()));
+      items[i++] = new SelectItem(g, GenericUtils.getLocalizedMessage(g.getName()));
     }
     
     return items;
@@ -146,10 +145,10 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
    */
   public void setDefaultAvatar () {
     if (gender == EGender.MALE) {
-      avatar = JSFResourceBundle.DEFAULT_MALE_IMAGE_URL;
+      avatar = GenericUtils.DEFAULT_MALE_IMAGE_URL;
     }
     else {
-      avatar = JSFResourceBundle.DEFAULT_FEMALE_IMAGE_URL;
+      avatar = GenericUtils.DEFAULT_FEMALE_IMAGE_URL;
     }
   }
   
@@ -166,7 +165,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
       String path          = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
       String extension     = evt.getFile().getFileName().substring(evt.getFile().getFileName().lastIndexOf('.'));
-      String fileName      = JSFResourceBundle.UPLOADS_URL + fmt.format(Calendar.getInstance().getTime()) + extension;
+      String fileName      = GenericUtils.UPLOADS_URL + fmt.format(Calendar.getInstance().getTime()) + extension;
       File file            = new File(path + fileName);
       
       InputStream is       = evt.getFile().getInputstream();
@@ -184,7 +183,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       avatar = fileName;
     }
     catch (IOException e) {
-      addErrorMessage("profileMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
+      addErrorMessage("profileMessage", GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
     }
   }
 
@@ -201,7 +200,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     
     userService.updateUser(loggedUser);
     
-    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
+    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override

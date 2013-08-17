@@ -21,7 +21,6 @@ import javax.faces.validator.ValidatorException;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.controllers.SessionControllerBean;
-import classmodeler.web.resources.JSFResourceBundle;
 
 /**
  * JSF Validator for changing password form.
@@ -51,7 +50,7 @@ public class ChangePasswordJSFValidator implements Validator {
     if (component.getId().equals("oldPassword")) {
       String oldPassword = (String) value;
       if (!sessionController.getLoggedRegisteredUser().getPassword().equals(oldPassword)) {
-        FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("CHANGE_PASSWORD_INVALID_OLD_MESSAGE"));
+        FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("CHANGE_PASSWORD_INVALID_OLD_MESSAGE"));
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
         context.addMessage("changePasswordMessage", message);
         
@@ -63,7 +62,7 @@ public class ChangePasswordJSFValidator implements Validator {
       String newConfirmation = (String) value;
       
       if (!GenericUtils.equals(newPassword, newConfirmation)) {
-        FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("CHANGE_PASSWORD_INVALID_CONFIRM_MESSAGE"));
+        FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("CHANGE_PASSWORD_INVALID_CONFIRM_MESSAGE"));
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
         context.addMessage("changePasswordMessage", message);
         

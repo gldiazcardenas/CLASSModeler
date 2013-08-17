@@ -9,15 +9,12 @@
 package classmodeler.service.implementation;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -30,7 +27,6 @@ import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -61,9 +57,7 @@ public class VerificationServiceBean implements VerificationService {
     verification.setExpirationDate(getExpirationDate());
     verification.setCode(getHashCodeMD5(user.getEmail()));
     verification.setValid(true);
-    
     em.persist(verification);
-    
     return verification;
   }
 
@@ -82,23 +76,26 @@ public class VerificationServiceBean implements VerificationService {
       });
       
       // Constructs the HTML message
-      StringBuilder link = new StringBuilder(getApplicationURL()).append("/pages/portal/activateAccount.xhtml?").append("code=").append(verification.getCode()).append("&email=").append(user.getEmail());
+      StringBuilder link = new StringBuilder(GenericUtils.getApplicationURL()).append("/pages/portal/activateAccount.xhtml?").append("code=").append(verification.getCode()).append("&email=").append(user.getEmail());
       
       StringBuilder msgHTML = new StringBuilder();
       msgHTML.append("<html>")
+             .append("<head></head>")
+             .append("<body>")
              .append("<p>Hola <b>").append(user.getName()).append("</b>,")
              .append("<br/><br/>")
-             .append("<div>").append(getLocalizedMessage("EMAIL_BODY_ACCOUNT_ACTIVATION_MESSAGE"))
+             .append("<div>").append(GenericUtils.getLocalizedMessage("EMAIL_BODY_ACCOUNT_ACTIVATION_MESSAGE"))
              .append("<a href='").append(link.toString()).append("' target='_blank'>").append(link.toString()).append("</a>")
              .append("</div>")
              .append("</p>")
+             .append("</body>")
              .append("</html>");
       
       // Constructs the email
       Message msg = new MimeMessage(session);
       msg.setFrom(new InternetAddress(props.getProperty("mail.user")));
       msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail(), false));
-      msg.setSubject(getLocalizedMessage("EMAIL_SUBJECT_ACCOUNT_ACTIVATION_MESSAGE"));
+      msg.setSubject(GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_TITLE", GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_ACCOUNT_ACTIVATION_MESSAGE")));
       msg.setContent(msgHTML.toString(), "text/html");
       msg.setSentDate(Calendar.getInstance().getTime());
       
@@ -131,13 +128,13 @@ public class VerificationServiceBean implements VerificationService {
       });
       
       // Constructs the HTML message
-      StringBuilder link = new StringBuilder(getApplicationURL()).append("/pages/portal/resetPassword.xhtml?").append("code=").append(verification.getCode()).append("&email=").append(user.getEmail());
+      StringBuilder link = new StringBuilder(GenericUtils.getApplicationURL()).append("/pages/portal/resetPassword.xhtml?").append("code=").append(verification.getCode()).append("&email=").append(user.getEmail());
       
       StringBuilder msgHTML = new StringBuilder();
       msgHTML.append("<html>")
              .append("<p>Hola <b>").append(user.getName()).append("</b>,")
              .append("<br/><br/>")
-             .append("<div>").append(getLocalizedMessage("EMAIL_BODY_RESET_PASSWORD_MESSAGE"))
+             .append("<div>").append(GenericUtils.getLocalizedMessage("EMAIL_BODY_RESET_PASSWORD_MESSAGE"))
              .append("<a href='").append(link.toString()).append("' target='_blank'>").append(link.toString()).append("</a>")
              .append("</div>")
              .append("</p>")
@@ -147,7 +144,7 @@ public class VerificationServiceBean implements VerificationService {
       Message msg = new MimeMessage(session);
       msg.setFrom(new InternetAddress(props.getProperty("mail.user")));
       msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail(), false));
-      msg.setSubject(getLocalizedMessage("EMAIL_SUBJECT_RESET_PASSWORD_MESSAGE"));
+      msg.setSubject(GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_RESET_PASSWORD_MESSAGE"));
       msg.setContent(msgHTML.toString(), "text/html");
       msg.setSentDate(Calendar.getInstance().getTime());
       
@@ -214,42 +211,6 @@ public class VerificationServiceBean implements VerificationService {
     return expirationDate;
   }
   
-  /**
-   * Looks for a localized message through the given <code>messageKey</code> in
-   * the message resource bundle.
-   * 
-   * @param arguments
-   *          The values of the message, where the first element is the
-   *          messageKey and the other elements are the arguments of the
-   *          message..
-   * @return The localized message represented by the given key.
-   */
-  private static String getLocalizedMessage (String... values) {
-    FacesContext facesContext = FacesContext.getCurrentInstance();
-    ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msgs");
-    
-    String messageKey = values[0];
-    Object [] arguments = null;
-    
-    if (CollectionUtils.size(values) > 1) {
-      arguments = new Object[values.length - 1];
-      for (int i = 0; i < arguments.length; i++) {
-        arguments[i] = values[i + 1];
-      }
-    }
-    
-    return MessageFormat.format(bundle.getString(messageKey), arguments);
-  }
   
-  /**
-   * Provides the URL to the application until the application name.
-   * 
-   * @return The URL to the application used to send emails.
-   * @author Gabriel Leonardo Diaz, 14.08.2013.
-   */
-  private static String getApplicationURL () {
-    HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-  }
   
 }

@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
-import classmodeler.web.resources.JSFResourceBundle;
+import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -56,31 +56,31 @@ public class ActivateAccountControllerBean extends JSFGenericBean {
     try {
       userService.activateUserAccount(email, code);
       
-      addInformationMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE"), null);
+      addInformationMessage("activationMessage", GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE"), null);
     }
     catch (ExpiredVerificationCodeException e) {
-      addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
+      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
     }
     catch (InvalidVerificationCodeException e) {
-      addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
+      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
     }
     catch (InvalidUserAccountException e) {
       if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
       }
       else if (e.getType() == EInvalidAccountErrorType.ACTIVATED_ACCOUNT) {
-        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("ACCOUNT_ACTIVATION_ACTIVATED_MESSAGE"), null);
+        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_ACTIVATED_MESSAGE"), null);
       }
       else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
       }
       else {
         // Should not happen
-        addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
       }
     }
     catch (SendEmailException e) {
-      addErrorMessage("activationMessage", JSFResourceBundle.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), null);
+      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), null);
     }
   }
 

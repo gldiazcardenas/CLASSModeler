@@ -19,7 +19,6 @@ import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -101,7 +100,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
 
     int i = 0;
     for (EGender g : EGender.values()) {
-      items[i++] = new SelectItem(g, JSFResourceBundle.getLocalizedMessage(g.getName()));
+      items[i++] = new SelectItem(g, GenericUtils.getLocalizedMessage(g.getName()));
     }
     
     return items;
@@ -126,15 +125,15 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     newUser.setPassword(password);
     
     if (gender == EGender.MALE) {
-      newUser.setAvatar(JSFResourceBundle.DEFAULT_MALE_IMAGE_URL);
+      newUser.setAvatar(GenericUtils.DEFAULT_MALE_IMAGE_URL);
     }
     else {
-      newUser.setAvatar(JSFResourceBundle.DEFAULT_FEMALE_IMAGE_URL);
+      newUser.setAvatar(GenericUtils.DEFAULT_FEMALE_IMAGE_URL);
     }
     
     try {
       userService.insertUser(newUser);
-      addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
+      addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
       
       // Clears all previous information
       firstName = null;
@@ -144,10 +143,10 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       password  = null;
     }
     catch (InvalidUserAccountException e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
+      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
     }
     catch (SendEmailException e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
+      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
     }
   }
 

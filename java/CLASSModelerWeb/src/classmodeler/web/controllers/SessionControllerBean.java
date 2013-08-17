@@ -18,7 +18,7 @@ import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.web.resources.JSFResourceBundle;
+import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -75,7 +75,7 @@ public class SessionControllerBean extends JSFGenericBean {
     }
     
     if (!loggedUser.isRegisteredUser()) {
-      return JSFResourceBundle.getLocalizedMessage(loggedUser.getName());
+      return GenericUtils.getLocalizedMessage(loggedUser.getName());
     }
     
     return loggedUser.getName();

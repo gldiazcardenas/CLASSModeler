@@ -8,10 +8,15 @@
 
 package classmodeler.service.util;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Utility class that contains generic method to handle common operations like
@@ -20,6 +25,10 @@ import java.util.regex.Pattern;
  * @author Gabriel Leonardo Diaz, 07.01.2013.
  */
 public final class GenericUtils {
+  
+  public static final String DEFAULT_MALE_IMAGE_URL   = "/resources/uploads/male_avatar.png";
+  public static final String DEFAULT_FEMALE_IMAGE_URL = "/resources/uploads/female_avatar.png";
+  public static final String UPLOADS_URL              = "/resources/uploads/";
   
   private GenericUtils() {
     // This class CANNOT BE INSTANCED.
@@ -146,6 +155,66 @@ public final class GenericUtils {
     
     return now.get(Calendar.ERA) == time.get(Calendar.ERA) && now.get(Calendar.YEAR) == time.get(Calendar.YEAR) &&
            now.get(Calendar.DAY_OF_YEAR) == time.get(Calendar.DAY_OF_YEAR);
+  }
+  
+  /**
+   * Provides the URL to the application until the application name.
+   * 
+   * @return The URL to the application used to send emails.
+   * @author Gabriel Leonardo Diaz, 14.08.2013.
+   */
+  public static String getApplicationURL () {
+    HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+  }
+  
+  /**
+   * Looks for a localized message through the given <code>messageKey</code> in
+   * the message resource bundle.
+   * 
+   * @param arguments
+   *          The values of the message, where the first element is the
+   *          messageKey and the other elements are the arguments of the
+   *          message..
+   * @return The localized message represented by the given key.
+   */
+  public static String getLocalizedMessage (String... values) {
+    FacesContext facesContext = FacesContext.getCurrentInstance();
+    ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msgs");
+    
+    String messageKey = values[0];
+    Object [] arguments = null;
+    
+    if (CollectionUtils.size(values) > 1) {
+      arguments = new Object[values.length - 1];
+      for (int i = 0; i < arguments.length; i++) {
+        arguments[i] = values[i + 1];
+      }
+    }
+    
+    return MessageFormat.format(bundle.getString(messageKey), arguments);
+  }
+  
+  /**
+   * Processes the given parameters and creates the HTML body of the email to be
+   * sent to the user(s).
+   * 
+   * @param title
+   *          The title of the e-mail, this is a header of the message.
+   * @param greetings
+   *          Greetings for the users, can be null.
+   * @param message
+   *          The message body of the e-mail.
+   * @return The HTML code for the e-mail.
+   * @author Gabriel Leonardo Diaz, 16.08.2013.
+   */
+  public static String getEmailHTMLCode (String title, String greetings, String message) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("<html>");
+    sb.append("<head>");
+    sb.append("</head>");
+    sb.append("</html>");
+    return sb.toString();
   }
   
 }

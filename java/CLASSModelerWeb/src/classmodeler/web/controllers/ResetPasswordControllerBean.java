@@ -21,7 +21,6 @@ import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccoun
 import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -85,32 +84,32 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
       valid = userService.isValidToResetPassword(emailParameter, codeParameter);
       email = emailParameter;
       if (!valid) {
-        addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_USED_MESSAGE"), null);
+        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_USED_MESSAGE"), null);
       }
     }
     catch (InvalidUserAccountException e) {
       valid = false;
       if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-        addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
       }
       else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
       }
       else {
-        addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
       }
     }
     catch (InvalidVerificationCodeException e) {
       valid = false;
-      addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
+      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
     }
     catch (ExpiredVerificationCodeException e) {
       valid = false;
-      addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
+      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
     }
     catch (SendEmailException e) {
       valid = false;
-      addErrorMessage("resetMessage", JSFResourceBundle.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
+      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
     }
   }
 
@@ -122,21 +121,17 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
       try {
         userService.resetPassword(email, password);
         outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
-        addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
-                              JSFResourceBundle.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
+        addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
       catch (InvalidUserAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
-                          JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
         else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
-                          JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
         }
         else {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID,
-                          JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
         }
       }
     }

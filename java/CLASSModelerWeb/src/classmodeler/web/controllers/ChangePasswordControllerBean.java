@@ -16,7 +16,6 @@ import javax.faces.bean.ViewScoped;
 import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -101,7 +100,7 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     loggedUser.setPassword(newPassword);
     userService.updateUser(loggedUser);
     
-    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
+    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override

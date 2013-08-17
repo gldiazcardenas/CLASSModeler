@@ -19,7 +19,6 @@ import javax.faces.validator.ValidatorException;
 
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFMessageBean;
 
 /**
@@ -40,7 +39,7 @@ public class SignUpEmailJSFValidator implements Validator {
     
     // Validates the email format
     if (!GenericUtils.isValidEmail(email)) {
-      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("INVALID_EMAIL_ADDRESS_MESSAGE"));
+      FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("INVALID_EMAIL_ADDRESS_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
       context.addMessage(JSFMessageBean.GENERAL_MESSAGE_ID, message);
       
@@ -49,7 +48,7 @@ public class SignUpEmailJSFValidator implements Validator {
     
     // Checks if the entered Email already exists.
     if (userService.existsUser(email)) {
-      FacesMessage message = new FacesMessage(JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"));
+      FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"));
       message.setSeverity(FacesMessage.SEVERITY_ERROR);
       context.addMessage(JSFMessageBean.GENERAL_MESSAGE_ID, message);
       

@@ -18,7 +18,6 @@ import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFGenericBean;
 
 /**
@@ -48,7 +47,7 @@ public class FormatControllerBean extends JSFGenericBean {
     }
     
     if (!user.isRegisteredUser()) {
-      return JSFResourceBundle.DEFAULT_MALE_IMAGE_URL;
+      return GenericUtils.DEFAULT_MALE_IMAGE_URL;
     }
     
     return user.getAvatar();
@@ -97,16 +96,16 @@ public class FormatControllerBean extends JSFGenericBean {
     
     switch (privilege) {
     case READ:
-      return JSFResourceBundle.getLocalizedMessage("PRIVILEGE_NAME_READ");
+      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_READ");
       
     case EDIT:
-      return JSFResourceBundle.getLocalizedMessage("PRIVILEGE_NAME_EDIT");
+      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_EDIT");
       
     case SHARE:
-      return JSFResourceBundle.getLocalizedMessage("PRIVILEGE_NAME_SHARE");
+      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_SHARE");
     
     default:
-      return JSFResourceBundle.getLocalizedMessage("PRIVILEGE_NAME_OWNER");
+      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_OWNER");
     }
   }
   
@@ -125,13 +124,13 @@ public class FormatControllerBean extends JSFGenericBean {
     
     switch (status) {
     case ACTIVATED:
-      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_ACTIVATED_NAME");
+      return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_ACTIVATED_NAME");
       
     case DEACTIVATED:
-      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_DEACTIVATED_NAME");
+      return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_DEACTIVATED_NAME");
       
     default:
-      return JSFResourceBundle.getLocalizedMessage("USER_ACCOUNT_STATUS_INACTIVATED_NAME");
+      return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_INACTIVATED_NAME");
     }
   }
   
@@ -188,7 +187,7 @@ public class FormatControllerBean extends JSFGenericBean {
     }
     
     if (GenericUtils.isToday(date)) {
-      return JSFResourceBundle.getLocalizedMessage("TODAY_LABEL");
+      return GenericUtils.getLocalizedMessage("TODAY_LABEL");
     }
     
     return new SimpleDateFormat("dd/MM/yyyy").format(date);
@@ -206,7 +205,7 @@ public class FormatControllerBean extends JSFGenericBean {
     }
     
     if (!user.isRegisteredUser()) {
-      return JSFResourceBundle.getLocalizedMessage(user.getName());
+      return GenericUtils.getLocalizedMessage(user.getName());
     }
     
     User registeredUser = (User) user;

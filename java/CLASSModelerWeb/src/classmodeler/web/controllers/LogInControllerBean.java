@@ -16,7 +16,6 @@ import classmodeler.domain.user.Guest;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.resources.JSFResourceBundle;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFMessageBean;
@@ -106,13 +105,13 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
       }
       catch (InvalidUserAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-          addWarningMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+          addWarningMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
         else if (e.getType() == EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("INVALID_ACCOUNT_NON_ACTIVATED_MESSAGE"), null);
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_ACTIVATED_MESSAGE"), null);
         }
         else {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, JSFResourceBundle.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
         }
       }
     }
