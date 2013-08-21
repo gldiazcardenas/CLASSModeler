@@ -31,7 +31,6 @@ import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFMessageBean;
 
 /**
  * JSF Form Bean controller that handles user interactions with the edit user
@@ -200,7 +199,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     
     userService.updateUser(loggedUser);
     
-    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
+    addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override

@@ -21,7 +21,6 @@ import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFMessageBean;
 
 
 /**
@@ -133,7 +132,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     
     try {
       userService.insertUser(newUser);
-      addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
+      addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
       
       // Clears all previous information
       firstName = null;
@@ -143,10 +142,10 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       password  = null;
     }
     catch (InvalidUserAccountException e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
+      addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
     }
     catch (SendEmailException e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
+      addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), e.getMessage());
     }
   }
 

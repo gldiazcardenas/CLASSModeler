@@ -257,7 +257,7 @@ public @Stateless class UserServiceBean implements UserService {
   
   @Override
   @SuppressWarnings("unchecked")
-  public List<User> getUsersToShareDiagram(Diagram diagram) {
+  public List<User> getUsersAllowedToShareDiagram(Diagram diagram) {
     List<User> users = new ArrayList<User>();
     
     if (diagram != null) {

@@ -17,7 +17,7 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.util.JSFMessageBean;
+import classmodeler.web.util.JSFGenericBean;
 
 /**
  * JSF validator used to control the minimum and maximum length of the password
@@ -36,7 +36,7 @@ public class PasswordJSFValidator implements Validator {
     if (!GenericUtils.isValidPassword(password)) {
       String clientId = (String) component.getAttributes().get("messageOutput");
       if (clientId == null) {
-        clientId = JSFMessageBean.GENERAL_MESSAGE_ID;
+        clientId = JSFGenericBean.GENERAL_MESSAGE_ID;
       }
       
       FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("PASSWORD_INVALID_LENGTH_MESSAGE"));

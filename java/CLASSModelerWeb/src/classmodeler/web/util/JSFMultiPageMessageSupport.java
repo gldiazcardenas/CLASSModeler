@@ -59,7 +59,7 @@ public class JSFMultiPageMessageSupport implements PhaseListener {
   @SuppressWarnings("unchecked")
   private int saveMessages(final FacesContext facesContext) {
     List<FacesMessage> messages = new ArrayList<FacesMessage>();
-    for (Iterator<FacesMessage> iter = facesContext.getMessages(JSFMessageBean.GENERAL_MESSAGE_ID); iter.hasNext();) {
+    for (Iterator<FacesMessage> iter = facesContext.getMessages(JSFGenericBean.GENERAL_MESSAGE_ID); iter.hasNext();) {
       messages.add(iter.next());
       iter.remove();
     }
@@ -91,7 +91,7 @@ public class JSFMultiPageMessageSupport implements PhaseListener {
     int restoredCount = messages.size();
     
     for (Object element : messages) {
-      facesContext.addMessage(JSFMessageBean.GENERAL_MESSAGE_ID, (FacesMessage) element);
+      facesContext.addMessage(JSFGenericBean.GENERAL_MESSAGE_ID, (FacesMessage) element);
     }
     return restoredCount;
   }

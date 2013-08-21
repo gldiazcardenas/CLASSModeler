@@ -199,6 +199,6 @@ public interface UserService {
    * @return A list of users, never null.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public List<User> getUsersToShareDiagram (Diagram diagram);
+  public List<User> getUsersAllowedToShareDiagram (Diagram diagram);
   
 }

@@ -21,26 +21,68 @@ import javax.faces.context.FacesContext;
  * 
  * @author Gabriel Leonardo Diaz, 23.02.2013.
  */
-public class JSFGenericBean implements JSFMessageBean, Serializable {
+public abstract class JSFGenericBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  
+  /**
+   * Use this always to add messages for the user. The component with this ID
+   * shows all messages added from the controller.
+   */
+  public static final String GENERAL_MESSAGE_ID = "generalMessage";
 
-  @Override
+  /**
+   * Adds an error message to the JSF context.
+   * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
+   * @param message
+   *          The text of the message, this parameter should not be null.
+   * @param details
+   *          The details of the message, null value is allowed.
+   */
   public void addErrorMessage(String clientId, String message, String details) {
     addMessage(FacesMessage.SEVERITY_ERROR, clientId, message, details);
   }
 
-  @Override
+  /**
+   * Adds a warning message to the JSF context.
+   * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
+   * @param message
+   *          The text of the message, this parameter should not be null.
+   * @param details
+   *          The details of the message, null value is allowed.
+   */
   public void addWarningMessage(String clientId, String message, String details) {
     addMessage(FacesMessage.SEVERITY_WARN, clientId, message, details);
   }
 
-  @Override
+  /**
+   * Adds an information message to the JSF context.
+   * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
+   * @param message
+   *          The text of the message, this parameter should not be null.
+   * @param details
+   *          The details of the message, null value is allowed.
+   */
   public void addInformationMessage(String clientId, String message, String details) {
     addMessage(FacesMessage.SEVERITY_INFO, clientId, message, details);
   }
   
-  @Override
+  /**
+   * Adds a fatal error message to the JSF context.
+   * 
+   * @param clientId
+   *          The ID of the component in which the message will be displayed.
+   * @param message
+   *          The text of the message, this parameter should not be null.
+   * @param details
+   *          The details of the message, null value is allowed.
+   */
   public void addFatalMessage(String clientId, String message, String details) {
     addMessage(FacesMessage.SEVERITY_FATAL, clientId, message, details);
   }

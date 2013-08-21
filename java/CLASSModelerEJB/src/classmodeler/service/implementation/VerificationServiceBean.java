@@ -175,7 +175,6 @@ public class VerificationServiceBean implements VerificationService {
    * 
    * For example:
    * - Email: gabriel.leonardo.diaz@gmail.com
-   * - Key  : 25
    * 
    * The result string is: "gabriel.leonardo.diaz@gmail.com" + "+%+" + Calendar.getInstance().getTimeInMillis().
    * Later this is parsed to MD5 and converted to the specific format.

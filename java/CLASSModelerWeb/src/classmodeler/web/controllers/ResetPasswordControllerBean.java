@@ -23,7 +23,6 @@ import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFMessageBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
@@ -121,17 +120,17 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
       try {
         userService.resetPassword(email, password);
         outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
-        addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
+        addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
       catch (InvalidUserAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+          addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
         else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+          addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
         }
         else {
-          addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+          addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
         }
       }
     }

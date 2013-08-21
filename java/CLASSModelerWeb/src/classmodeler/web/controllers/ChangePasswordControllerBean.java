@@ -18,7 +18,6 @@ import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFMessageBean;
 
 /**
  * JSF Bean controller to process changing password operation for the logged
@@ -100,7 +99,7 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     loggedUser.setPassword(newPassword);
     userService.updateUser(loggedUser);
     
-    addInformationMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
+    addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }
 
   @Override

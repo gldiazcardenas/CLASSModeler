@@ -22,9 +22,9 @@ import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
+import classmodeler.web.util.FormatControllerBean;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
-import classmodeler.web.util.JSFMessageBean;
 
 /**
  * JSF Bean controller to manage the interactions of the user with the form to
@@ -239,8 +239,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public void prepareShareDiagram () {
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
-      name   = diagram.getName();
-      availableUsers  = userService.getUsersToShareDiagram(diagram);
+      name           = diagram.getName();
+      availableUsers = userService.getUsersAllowedToShareDiagram(diagram);
       
       title  = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.SHARE;
@@ -302,7 +302,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       mode        = null;
     }
     catch (Exception e) {
-      addErrorMessage(JSFMessageBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
+      addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
     }
   }
 

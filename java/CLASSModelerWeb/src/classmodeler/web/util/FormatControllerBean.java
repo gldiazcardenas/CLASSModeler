@@ -5,7 +5,7 @@
  * 
  ****************************************************/
 
-package classmodeler.web.controllers;
+package classmodeler.web.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +18,6 @@ import classmodeler.domain.user.EUserAccountStatus;
 import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.util.JSFGenericBean;
 
 /**
  * JSF Bean used to format some data in order to get user friendly output.
