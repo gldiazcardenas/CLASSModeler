@@ -36,9 +36,19 @@ public class ActivateAccountControllerBean extends JSFGenericBean {
   
   @EJB
   private UserService userService;
+  private boolean successful;
+  private String message;
   
   public ActivateAccountControllerBean() {
     super();
+  }
+  
+  public boolean isSuccessful() {
+    return successful;
+  }
+  
+  public String getMessage() {
+    return message;
   }
   
   /**
@@ -56,31 +66,36 @@ public class ActivateAccountControllerBean extends JSFGenericBean {
     try {
       userService.activateUserAccount(email, code);
       
-      addInformationMessage("activationMessage", GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE"), null);
+      successful = true;
+      message = GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE");
     }
     catch (ExpiredVerificationCodeException e) {
-      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
+      successful = false;
+      message = GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE");
     }
     catch (InvalidVerificationCodeException e) {
-      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
+      successful = false;
+      message = GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE");
     }
     catch (InvalidUserAccountException e) {
+      successful = false;
+      message = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE");
       if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
+        message = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE");
       }
       else if (e.getType() == EInvalidAccountErrorType.ACTIVATED_ACCOUNT) {
-        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_ACTIVATED_MESSAGE"), null);
+        message = GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_ACTIVATED_MESSAGE");
       }
       else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+        message = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE");
       }
       else {
         // Should not happen
-        addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        message = GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE");
       }
     }
     catch (SendEmailException e) {
-      addErrorMessage("activationMessage", GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE"), null);
+      message = GenericUtils.getLocalizedMessage("SEND_ACTIVATION_EMAIL_MESSAGE");
     }
   }
 

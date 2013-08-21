@@ -46,7 +46,7 @@ public interface VerificationService {
    *           When the system is not able to perform the operation.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public void sendActivationEmail(User user, Verification verification) throws SendEmailException;
+  public void sendAccountActivationEmail(User user, Verification verification) throws SendEmailException;
   
   /**
    * Sends the reset password email to the address provided by the user.

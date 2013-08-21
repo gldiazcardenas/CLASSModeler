@@ -106,7 +106,7 @@ public @Stateless class UserServiceBean implements UserService {
       verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
       
       // Sends the email with the new activation code.
-      vsb.sendActivationEmail(user, verification);
+      vsb.sendAccountActivationEmail(user, verification);
       
       // This doesn't trigger a RollBack operation.
       throw new ExpiredVerificationCodeException("The activation code has expired.");
@@ -151,7 +151,7 @@ public @Stateless class UserServiceBean implements UserService {
       verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
       
       // Sends the email.
-      vsb.sendActivationEmail(user, verification);
+      vsb.sendResetPasswordEmail(user, verification);
       
       throw new ExpiredVerificationCodeException("The verification code has expired.");
     }
@@ -211,7 +211,7 @@ public @Stateless class UserServiceBean implements UserService {
     Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
     
     // Sends the activation email
-    vsb.sendActivationEmail(user, verification);
+    vsb.sendAccountActivationEmail(user, verification);
     
     return user;
   }

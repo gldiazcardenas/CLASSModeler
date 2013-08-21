@@ -19,7 +19,17 @@
         <h:form id="resetPassForm" style="width: 500px; margin: auto; margin-top: 20px;">
             <h1><h:outputText value="#{msgs.ACCOUNT_ACTIVATION_FORM_TITLE}" /></h1>
             
-            <p:messages id="activationMessage" for="activationMessage" />
+            <table style="width: 100%">
+                <tr>
+                    <td width="5%">
+                        <h:graphicImage name="accept.png" library="images" rendered="#{activateAccountController.successful}" />
+                        <h:graphicImage name="block.png" library="images" rendered="#{!activateAccountController.successful}" />
+                    </td>
+                    <td>
+                        <h:outputText value="#{activateAccountController.message}" style="padding: 3px 0px;" />
+                    </td>
+                </tr>
+            </table>
         </h:form>
     </div>
 </ui:define>

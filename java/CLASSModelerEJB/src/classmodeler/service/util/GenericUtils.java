@@ -195,26 +195,4 @@ public final class GenericUtils {
     return MessageFormat.format(bundle.getString(messageKey), arguments);
   }
   
-  /**
-   * Processes the given parameters and creates the HTML body of the email to be
-   * sent to the user(s).
-   * 
-   * @param title
-   *          The title of the e-mail, this is a header of the message.
-   * @param greetings
-   *          Greetings for the users, can be null.
-   * @param message
-   *          The message body of the e-mail.
-   * @return The HTML code for the e-mail.
-   * @author Gabriel Leonardo Diaz, 16.08.2013.
-   */
-  public static String getEmailHTMLCode (String title, String greetings, String message) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("<html>");
-    sb.append("<head>");
-    sb.append("</head>");
-    sb.append("</html>");
-    return sb.toString();
-  }
-  
 }
