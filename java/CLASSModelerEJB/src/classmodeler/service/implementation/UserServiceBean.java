@@ -19,10 +19,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.user.EUserAccountStatus;
+import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.Guest;
-import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
 import classmodeler.service.UserService;
@@ -50,22 +50,22 @@ public @Stateless class UserServiceBean implements UserService {
   
   @Override
   public boolean existsUser(String email) {
-    return getUserByEmail(email) != null;
+    return getDiagrammerByEmail(email) != null;
   }
   
   @Override
-  public IUser logIn(String email, String password) throws InvalidUserAccountException {
+  public User logIn(String email, String password) throws InvalidUserAccountException {
     if (Guest.GUEST_EMAIL.equals(email) && Guest.GUEST_PASSWORD.equals(password)) {
       return new Guest();
     }
     
-    User user = getUserByEmail(email);
+    Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null || !user.getPassword().equals(password)) {
       throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
+    if (user.getAccountStatus() != EDiagrammerAccountStatus.ACTIVATED) {
       throw new InvalidUserAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
     }
     
@@ -73,21 +73,21 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User activateUserAccount(String email, String verificationCode) throws InvalidUserAccountException,
+  public Diagrammer activateUserAccount(String email, String verificationCode) throws InvalidUserAccountException,
                                                                                 InvalidVerificationCodeException,
                                                                                 ExpiredVerificationCodeException,
                                                                                 SendEmailException {
-    User user = getUserByEmail(email);
+    Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
       throw new InvalidUserAccountException("The user doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EUserAccountStatus.ACTIVATED) {
+    if (user.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) {
       throw new InvalidUserAccountException("The user account is already activated.", EInvalidAccountErrorType.ACTIVATED_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
       throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
@@ -113,7 +113,7 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     // Activates the user account.
-    user.setAccountStatus(EUserAccountStatus.ACTIVATED);
+    user.setAccountStatus(EDiagrammerAccountStatus.ACTIVATED);
     em.merge(user);
     
     return user;
@@ -124,13 +124,13 @@ public @Stateless class UserServiceBean implements UserService {
                                                                           InvalidVerificationCodeException,
                                                                           ExpiredVerificationCodeException,
                                                                           SendEmailException {
-    User user = getUserByEmail(email);
+    Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
       throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
       throw new InvalidUserAccountException("The use account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
@@ -161,13 +161,13 @@ public @Stateless class UserServiceBean implements UserService {
   
   @Override
   public void sendResetPasswordEmail(String email) throws InvalidUserAccountException, SendEmailException {
-    User user = getUserByEmail(email);
+    Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
       throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
       throw new InvalidUserAccountException("The user account is deactivated", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
@@ -179,14 +179,14 @@ public @Stateless class UserServiceBean implements UserService {
   }
   
   @Override
-  public User resetPassword(String email, String newPassword) throws InvalidUserAccountException {
-    User user = getUserByEmail(email);
+  public Diagrammer resetPassword(String email, String newPassword) throws InvalidUserAccountException {
+    Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
       throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EUserAccountStatus.DEACTIVATED) {
+    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
       throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
@@ -197,28 +197,28 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public User insertUser(User user) throws InvalidUserAccountException, SendEmailException {
-    if (existsUser(user.getEmail())) {
+  public Diagrammer insertDiagrammer(Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException {
+    if (existsUser(diagrammer.getEmail())) {
       throw new InvalidUserAccountException("The user email already exists.", EInvalidAccountErrorType.DUPLICATED_ACCOUNT);
     }
     
     // Inserts the user
-    user.setAccountStatus(EUserAccountStatus.INACTIVATED);
-    user.setCreatedDate(Calendar.getInstance().getTime());
-    em.persist(user);
+    diagrammer.setAccountStatus(EDiagrammerAccountStatus.INACTIVATED);
+    diagrammer.setCreatedDate(Calendar.getInstance().getTime());
+    em.persist(diagrammer);
     
     // Inserts the verification
-    Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
+    Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, diagrammer);
     
     // Sends the activation email
-    vsb.sendAccountActivationEmail(user, verification);
+    vsb.sendAccountActivationEmail(diagrammer, verification);
     
-    return user;
+    return diagrammer;
   }
 
   @Override
-  public User updateUser(User user) {
-    User existingUser = em.find(User.class, Integer.valueOf(user.getKey()));
+  public Diagrammer updateDiagrammer(Diagrammer user) {
+    Diagrammer existingUser = em.find(Diagrammer.class, Integer.valueOf(user.getKey()));
     if (existingUser != null) {
       em.merge(user);
     }
@@ -226,26 +226,26 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public void deleteUser(int userKey) {
-    User user = em.find(User.class, Integer.valueOf(userKey));
+  public void deleteDiagrammer(int userKey) {
+    Diagrammer user = em.find(Diagrammer.class, Integer.valueOf(userKey));
     if (user != null) {
       em.remove(user);
     }
   }
 
   @Override
-  public User getUserByKey(int userKey) {
-    return em.find(User.class, Integer.valueOf(userKey));
+  public Diagrammer getDiagrammerByKey(int userKey) {
+    return em.find(Diagrammer.class, Integer.valueOf(userKey));
   }
   
   @Override
-  public User getUserByEmail(String email) {
-    User user = null;
+  public Diagrammer getDiagrammerByEmail(String email) {
+    Diagrammer user = null;
     if (!GenericUtils.isEmptyString(email)) {
-      TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.email) = :userEmail", User.class);
-      query.setParameter("userEmail", email.toLowerCase());
+      TypedQuery<Diagrammer> query = em.createQuery("SELECT d FROM Diagrammer d WHERE LOWER(d.email) = :diagrammerEmail", Diagrammer.class);
+      query.setParameter("diagrammerEmail", email.toLowerCase());
       
-      List<User> userList = query.getResultList();
+      List<Diagrammer> userList = query.getResultList();
       
       if (!CollectionUtils.isEmptyCollection(userList)) {
         user = userList.get(0);
@@ -257,11 +257,11 @@ public @Stateless class UserServiceBean implements UserService {
   
   @Override
   @SuppressWarnings("unchecked")
-  public List<User> getUsersAllowedToShareDiagram(Diagram diagram) {
-    List<User> users = new ArrayList<User>();
+  public List<Diagrammer> getDiagrammersAllowedToShareDiagram(Diagram diagram) {
+    List<Diagrammer> users = new ArrayList<Diagrammer>();
     
     if (diagram != null) {
-      users = em.createNativeQuery("SELECT * FROM user WHERE user_key <> ?ownerKey AND user_key NOT IN (SELECT shared_to_user FROM shared WHERE shared_diagram_key = ?diagramKey)", User.class)
+      users = em.createNativeQuery("SELECT * FROM diagrammer WHERE diagrammer_key <> ?ownerKey AND diagrammer_key NOT IN (SELECT shared_to_diagrammer FROM shared WHERE shared_diagram_key = ?diagramKey)", Diagrammer.class)
                 .setParameter("ownerKey", Integer.valueOf(diagram.getCreatedBy().getKey()))
                 .setParameter("diagramKey", Integer.valueOf(diagram.getKey()))
                 .getResultList();

@@ -14,9 +14,9 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
 import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.user.EUserAccountStatus;
-import classmodeler.domain.user.IUser;
+import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.util.GenericUtils;
 
 /**
@@ -40,7 +40,7 @@ public class FormatControllerBean extends JSFGenericBean {
    * @return The URL to the image.
    * @author Gabriel Leonardo Diaz, 26.07.2013.
    */
-  public String getUserAvatar (IUser user) {
+  public String getUserAvatar (User user) {
     if (user == null) {
       return null;
     }
@@ -116,7 +116,7 @@ public class FormatControllerBean extends JSFGenericBean {
    * @return A string representation of the status.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public String getUserAccountStatusName (EUserAccountStatus status) {
+  public String getUserAccountStatusName (EDiagrammerAccountStatus status) {
     if (status == null) {
       return null;
     }
@@ -141,7 +141,7 @@ public class FormatControllerBean extends JSFGenericBean {
    * @return The relative URL to the image for the user account status.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public String getUserAccountStatusImage (EUserAccountStatus status) {
+  public String getUserAccountStatusImage (EDiagrammerAccountStatus status) {
     if (status == null) {
       return null;
     }
@@ -167,8 +167,8 @@ public class FormatControllerBean extends JSFGenericBean {
    * @return True or False based on the given status.
    * @author Gabriel Leonardo Diaz, 12.08.2013.
    */
-  public boolean isActivatedAccount (EUserAccountStatus status) {
-    return status == EUserAccountStatus.ACTIVATED;
+  public boolean isActivatedAccount (EDiagrammerAccountStatus status) {
+    return status == EDiagrammerAccountStatus.ACTIVATED;
   }
   
   /**
@@ -198,7 +198,7 @@ public class FormatControllerBean extends JSFGenericBean {
    * @return The name formatted.
    * @author Gabriel Leonardo Diaz, 26.07.2013.
    */
-  public String getFormattedUserName (IUser user) {
+  public String getFormattedUserName (User user) {
     if (user == null) {
       return null;
     }
@@ -207,7 +207,7 @@ public class FormatControllerBean extends JSFGenericBean {
       return GenericUtils.getLocalizedMessage(user.getName());
     }
     
-    User registeredUser = (User) user;
+    Diagrammer registeredUser = (Diagrammer) user;
     return registeredUser.getFirstName();
   }
   

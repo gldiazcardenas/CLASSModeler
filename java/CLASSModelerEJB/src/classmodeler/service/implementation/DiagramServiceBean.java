@@ -19,7 +19,7 @@ import javax.persistence.PersistenceContext;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.Shared;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
 
@@ -65,7 +65,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public List<Diagram> getAllDiagramsByUser(User user) {
+  public List<Diagram> getAllDiagramsByUser(Diagrammer user) {
     List<Diagram> ownedDiagrams = em.createQuery("SELECT d FROM Diagram d WHERE d.createdBy = :ownerUser", Diagram.class)
                                     .setParameter("ownerUser", user)
                                     .getResultList();
@@ -83,8 +83,8 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     
     if (diagram != null) {
       Shared share = new Shared();
-      share.setFromUser(diagram.getCreatedBy());
-      share.setToUser(diagram.getModifiedBy());
+      share.setFromDiagrammer(diagram.getCreatedBy());
+      share.setToDiagrammer(diagram.getModifiedBy());
       share.setPrivilege(EDiagramPrivilege.OWNER);
       share.setDate(diagram.getCreatedDate());
       share.setKey(Integer.MAX_VALUE);
@@ -98,7 +98,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public void shareDiagram(Diagram diagram, User fromUser, List<User> toUsers) {
+  public void shareDiagram(Diagram diagram, Diagrammer fromUser, List<Diagrammer> toUsers) {
     // TODO Auto-generated method stub
   }
   

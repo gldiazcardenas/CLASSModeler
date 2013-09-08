@@ -30,7 +30,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
 import classmodeler.service.VerificationService;
@@ -50,9 +50,9 @@ public class VerificationServiceBean implements VerificationService {
   private EntityManager em;
   
   @Override
-  public Verification insertVerification(EVerificationType type, User user) {
+  public Verification insertVerification(EVerificationType type, Diagrammer user) {
     Verification verification = new Verification();
-    verification.setUser(user);
+    verification.setDiagrammer(user);
     verification.setType(type);
     verification.setExpirationDate(getExpirationDate());
     verification.setCode(getHashCodeMD5(user.getEmail()));
@@ -62,7 +62,7 @@ public class VerificationServiceBean implements VerificationService {
   }
   
   @Override
-  public Verification getVerificationCode(User user, String code, EVerificationType type) {
+  public Verification getVerificationCode(Diagrammer user, String code, EVerificationType type) {
     TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
     query.setParameter("user", user);
     query.setParameter("code", code);
@@ -78,7 +78,7 @@ public class VerificationServiceBean implements VerificationService {
   }
 
   @Override
-  public void sendAccountActivationEmail(User user, Verification verification) throws SendEmailException {
+  public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException {
     try {
       
       // Constructs the HTML message
@@ -105,7 +105,7 @@ public class VerificationServiceBean implements VerificationService {
   }
   
   @Override
-  public void sendResetPasswordEmail(User user, Verification verification) throws SendEmailException {
+  public void sendResetPasswordEmail(Diagrammer user, Verification verification) throws SendEmailException {
     try {
       
       // Constructs the HTML message

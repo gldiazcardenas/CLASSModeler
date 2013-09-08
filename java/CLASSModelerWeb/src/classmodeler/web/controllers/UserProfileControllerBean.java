@@ -26,7 +26,7 @@ import javax.faces.model.SelectItem;
 import org.primefaces.event.FileUploadEvent;
 
 import classmodeler.domain.user.EGender;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -45,7 +45,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
   private static final long serialVersionUID = 1L;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private User loggedUser;
+  private Diagrammer loggedUser;
   
   @EJB
   private UserService userService;
@@ -59,7 +59,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     super();
   }
   
-  public void setLoggedUser(User loggedUser) {
+  public void setLoggedUser(Diagrammer loggedUser) {
     this.loggedUser = loggedUser;
     
     if (loggedUser != null) {
@@ -197,7 +197,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
     loggedUser.setGender(gender);
     loggedUser.setAvatar(avatar);
     
-    userService.updateUser(loggedUser);
+    userService.updateDiagrammer(loggedUser);
     
     addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }

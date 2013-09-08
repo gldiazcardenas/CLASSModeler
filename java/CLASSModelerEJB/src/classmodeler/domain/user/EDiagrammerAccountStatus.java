@@ -9,22 +9,22 @@
 package classmodeler.domain.user;
 
 /**
- * This represents the possible values for user account status.
+ * This represents the possible values for diagrammer account status.
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2013.
  */
-public enum EUserAccountStatus {
+public enum EDiagrammerAccountStatus {
 
   /**
-   * The user created his/her account but hasn't activated it.
+   * The diagrammer created his/her account but hasn't activated it.
    */
   INACTIVATED,
   /**
-   * The user created his/her account and activated it.
+   * The diagrammer created his/her account and activated it.
    */
   ACTIVATED,
   /**
-   * The user had an account but decided to deactivate it by himself/herself
+   * The diagrammer had an account but decided to deactivate it by himself/herself
    */
   DEACTIVATED
 

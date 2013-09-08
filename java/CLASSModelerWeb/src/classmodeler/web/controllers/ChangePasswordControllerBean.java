@@ -13,7 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -36,7 +36,7 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
   private String newConfirmation;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private User loggedUser;
+  private Diagrammer loggedUser;
   
   @EJB
   private UserService userService;
@@ -69,7 +69,7 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     this.newPassword = newPassword;
   }
   
-  public void setLoggedUser(User loggedUser) {
+  public void setLoggedUser(Diagrammer loggedUser) {
     this.loggedUser = loggedUser;
   }
 
@@ -97,7 +97,7 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     }
     
     loggedUser.setPassword(newPassword);
-    userService.updateUser(loggedUser);
+    userService.updateDiagrammer(loggedUser);
     
     addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }

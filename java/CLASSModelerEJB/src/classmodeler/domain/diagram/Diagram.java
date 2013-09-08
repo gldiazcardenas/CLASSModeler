@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 
 /**
  * Diagram are containers of UML elements created by the user, these organize the
@@ -67,7 +67,7 @@ public class Diagram implements Serializable {
    */
   @ManyToOne
   @JoinColumn(name = "diagram_created_by", nullable = false)
-  private User createdBy;
+  private Diagrammer createdBy;
   
   /**
    * The creation date of this diagram.
@@ -77,13 +77,13 @@ public class Diagram implements Serializable {
   private Date createdDate;
   
   /**
-   * UNI-Directional many-to-one association to User. This is the reference to
+   * UNI-Directional many-to-one association to Diagrammer. This is the reference to
    * the last user who modified this diagram, if the project was shared this is
    * used to know who modified the diagram instead of the owner.
    */
   @ManyToOne
   @JoinColumn(name="diagram_modified_by", nullable=false)
-  private User modifiedBy;
+  private Diagrammer modifiedBy;
   
   /**
    * Last modification date of this diagram.
@@ -127,11 +127,11 @@ public class Diagram implements Serializable {
     this.description = description;
   }
   
-  public User getCreatedBy() {
+  public Diagrammer getCreatedBy() {
     return createdBy;
   }
   
-  public void setCreatedBy(User createdBy) {
+  public void setCreatedBy(Diagrammer createdBy) {
     this.createdBy = createdBy;
   }
   
@@ -143,11 +143,11 @@ public class Diagram implements Serializable {
     this.createdDate = createdDate;
   }
   
-  public User getModifiedBy() {
+  public Diagrammer getModifiedBy() {
     return modifiedBy;
   }
   
-  public void setModifiedBy(User modifiedBy) {
+  public void setModifiedBy(Diagrammer modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
   

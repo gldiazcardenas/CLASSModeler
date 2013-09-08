@@ -14,8 +14,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.util.GenericUtils;
@@ -33,7 +33,7 @@ public class SessionControllerBean extends JSFGenericBean {
   
   private static final long serialVersionUID = 1L;
   
-  private IUser loggedUser;
+  private User loggedUser;
   
   @EJB
   private UserService userServiceBean;
@@ -47,7 +47,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * 
    * @return An instance of IUser.
    */
-  public IUser getLoggedUser() {
+  public User getLoggedUser() {
     return loggedUser;
   }
   
@@ -56,9 +56,9 @@ public class SessionControllerBean extends JSFGenericBean {
    * 
    * @return An instance of User.
    */
-  public User getLoggedRegisteredUser () {
-    if (loggedUser instanceof User) {
-      return (User) loggedUser;
+  public Diagrammer getLoggedRegisteredUser () {
+    if (loggedUser instanceof Diagrammer) {
+      return (Diagrammer) loggedUser;
     }
     return null;
   }

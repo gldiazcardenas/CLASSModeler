@@ -10,7 +10,7 @@ package classmodeler.service;
 
 import javax.ejb.Local;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
 import classmodeler.service.exception.SendEmailException;
@@ -33,7 +33,7 @@ public interface VerificationService {
    *          The user that verification is created for.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public Verification insertVerification(EVerificationType type, User user);
+  public Verification insertVerification(EVerificationType type, Diagrammer user);
   
   /**
    * Sends the activation account email to the address provided by the user.
@@ -46,7 +46,7 @@ public interface VerificationService {
    *           When the system is not able to perform the operation.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public void sendAccountActivationEmail(User user, Verification verification) throws SendEmailException;
+  public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException;
   
   /**
    * Sends the reset password email to the address provided by the user.
@@ -59,7 +59,7 @@ public interface VerificationService {
    *           When the system is not able to perform the operation.
    * @author Gabriel Leonardo Diaz, 21.05.2013.
    */
-  public void sendResetPasswordEmail (User user, Verification verification) throws SendEmailException;
+  public void sendResetPasswordEmail (Diagrammer user, Verification verification) throws SendEmailException;
   
   /**
    * Gets a verification code with the provided information.
@@ -73,6 +73,6 @@ public interface VerificationService {
    * @return An instance of verification or null is nothing is found.
    * @author Gabriel Leonardo Diaz, 25.05.2013.
    */
-  public Verification getVerificationCode (User user, String code, EVerificationType type);
+  public Verification getVerificationCode (Diagrammer user, String code, EVerificationType type);
   
 }

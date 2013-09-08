@@ -18,7 +18,7 @@ import javax.faces.model.SelectItem;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
@@ -46,14 +46,14 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   // Fields used to share a diagram
   private EDiagramPrivilege privilege;
-  private List<User> availableUsers;
-  private List<User> selectedUsers;
+  private List<Diagrammer> availableUsers;
+  private List<Diagrammer> selectedUsers;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private User loggedUser;
+  private Diagrammer loggedUser;
   
   @ManagedProperty("#{formatController}")
   private FormatControllerBean formatController;
@@ -96,7 +96,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.dashBoardController = dashBoardController;
   }
   
-  public void setLoggedUser(User loggedUser) {
+  public void setLoggedUser(Diagrammer loggedUser) {
     this.loggedUser = loggedUser;
   }
   
@@ -112,15 +112,15 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.privilege = privilege;
   }
   
-  public List<User> getAvailableUsers() {
+  public List<Diagrammer> getAvailableUsers() {
     return availableUsers;
   }
   
-  public List<User> getSelectedUsers() {
+  public List<Diagrammer> getSelectedUsers() {
     return selectedUsers;
   }
   
-  public void setSelectedUsers(List<User> selectedUsers) {
+  public void setSelectedUsers(List<Diagrammer> selectedUsers) {
     this.selectedUsers = selectedUsers;
   }
   
@@ -240,7 +240,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
       name           = diagram.getName();
-      availableUsers = userService.getUsersAllowedToShareDiagram(diagram);
+      availableUsers = userService.getDiagrammersAllowedToShareDiagram(diagram);
       
       title  = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode   = EDiagramControllerMode.SHARE;

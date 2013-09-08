@@ -13,8 +13,8 @@ import javax.ejb.Local;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Guest;
-import classmodeler.domain.user.IUser;
 import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidVerificationCodeException;
@@ -54,7 +54,7 @@ public interface UserService {
    *           When the user is found but the account has not been activated.
    * @return A user bean or null if no one user is found.
    */
-  public IUser logIn (String email, String password) throws InvalidUserAccountException;
+  public User logIn (String email, String password) throws InvalidUserAccountException;
   
   /**
    * Sends the link to reset the password of the user account represented by the
@@ -117,7 +117,7 @@ public interface UserService {
    *           current has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User activateUserAccount (String email, String verificationCode) throws InvalidUserAccountException,
+  public Diagrammer activateUserAccount (String email, String verificationCode) throws InvalidUserAccountException,
                                                                                  InvalidVerificationCodeException,
                                                                                  ExpiredVerificationCodeException,
                                                                                  SendEmailException;
@@ -134,14 +134,14 @@ public interface UserService {
    *           When the user email doesn't exist or it is deactivated.
    * @author Gabriel Leonardo Diaz, 25.05.2013.
    */
-  public User resetPassword (String email, String newPassword) throws InvalidUserAccountException;
+  public Diagrammer resetPassword (String email, String newPassword) throws InvalidUserAccountException;
   
   /**
-   * Inserts the given user into the database. This method also creates the user
+   * Inserts the given diagrammer into the database. This method also creates the diagrammer
    * account verification code and sends it to the user email address.
    * 
-   * @param user
-   *          The new user to save.
+   * @param diagrammer
+   *          The new diagrammer to save.
    * @return The user bean after inserting in the database.
    * @throws InvalidUserAccountException
    *           When the user that is being inserted has an already existing
@@ -150,55 +150,55 @@ public interface UserService {
    *           When the system is not able to send the activation email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User insertUser (User user) throws InvalidUserAccountException, SendEmailException;
+  public Diagrammer insertDiagrammer (Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException;
   
   /**
-   * Updates the fields of the given user into the database.
+   * Updates the fields of the given diagrammer into the database.
    * 
-   * @param user
-   *          The user to update its information.
-   * @return The user bean after setting the fields.
+   * @param diagrammer
+   *          The diagrammer to update its information.
+   * @return The diagrammer bean after setting the fields.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User updateUser (User user);
+  public Diagrammer updateDiagrammer (Diagrammer diagrammer);
   
   /**
-   * Deletes the information of the given user key from database.
+   * Deletes the information of the given diagrammer key from database.
    * 
-   * @param userKey
-   *          The key of the user to delete.
+   * @param diagrammerKey
+   *          The key of the diagrammer to delete.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public void deleteUser (int userKey);
+  public void deleteDiagrammer (int diagrammerKey);
   
   /**
-   * Gets the user bean by its key.
+   * Gets the diagrammer bean by its key.
    * 
-   * @param userKey
+   * @param diagrammerKey
    *          The key of the user to get.
    * @return A user bean.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public User getUserByKey (int userKey);
+  public Diagrammer getDiagrammerByKey (int diagrammerKey);
   
   /**
-   * Gets the user who owns the given email.
+   * Gets the diagrammer who owns the given email.
    * 
    * @param email
-   *          The email of the user.
+   *          The email of the diagrammer.
    * @return The user that has the email associated.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public User getUserByEmail (String email);
+  public Diagrammer getDiagrammerByEmail (String email);
   
   /**
-   * Retrieves a list of users that have not the given diagram viewed.
+   * Retrieves a list of diagrammers that have not the given diagram viewed.
    * 
    * @param diagram
    *          The diagram to share.
    * @return A list of users, never null.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public List<User> getUsersAllowedToShareDiagram (Diagram diagram);
+  public List<Diagrammer> getDiagrammersAllowedToShareDiagram (Diagram diagram);
   
 }

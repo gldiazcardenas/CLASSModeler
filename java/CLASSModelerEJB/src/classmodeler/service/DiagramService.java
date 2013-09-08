@@ -14,7 +14,7 @@ import javax.ejb.Local;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.Shared;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 
 /**
  * Service that handles all basic operations (CRUD) over Diagrams.
@@ -61,7 +61,7 @@ public interface DiagramService {
    * @return A list with all diagrams of the user. Can be null.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public List<Diagram> getAllDiagramsByUser (User user);
+  public List<Diagram> getAllDiagramsByUser (Diagrammer user);
   
   /**
    * Gets all sharing made of the given diagram.
@@ -85,6 +85,6 @@ public interface DiagramService {
    *          The users that will receive the diagram.
    * @author Gabriel Leonardo Diaz, 12.08.2013.
    */
-  public void shareDiagram (Diagram diagram, User fromUser, List<User> toUsers);
+  public void shareDiagram (Diagram diagram, Diagrammer fromUser, List<Diagrammer> toUsers);
   
 }

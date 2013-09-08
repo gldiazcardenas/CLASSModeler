@@ -16,8 +16,8 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.user.EUserAccountStatus;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.EDiagrammerAccountStatus;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
@@ -41,7 +41,7 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
   
   private Diagram diagram;
   private EDiagramPrivilege privilege;
-  private List<User> users;
+  private List<Diagrammer> users;
   
   public ShareControllerBean() {
     super();
@@ -71,11 +71,11 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
     this.privilege = privilege;
   }
   
-  public List<User> getUsers() {
+  public List<Diagrammer> getUsers() {
     return users;
   }
   
-  public void setUsers(List<User> users) {
+  public void setUsers(List<Diagrammer> users) {
     this.users = users;
   }
 
@@ -85,8 +85,8 @@ public class ShareControllerBean extends JSFGenericBean implements JSFFormContro
       return false;
     }
     
-    for (User user : users) {
-      if (user.getAccountStatus() != EUserAccountStatus.ACTIVATED) {
+    for (Diagrammer user : users) {
+      if (user.getAccountStatus() != EDiagrammerAccountStatus.ACTIVATED) {
         return false;
       }
     }

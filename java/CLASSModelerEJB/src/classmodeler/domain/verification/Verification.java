@@ -24,7 +24,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 
 /**
  * The persistent class for the email_verification database table.
@@ -73,12 +73,12 @@ public class Verification implements Serializable {
   private Date expirationDate;
   
   /**
-   * UNI-Directional many-to-one association to User. The user which the
+   * UNI-Directional many-to-one association to Diagrammer. The diagrammer which the
    * confirmation code was generated for.
    */
   @ManyToOne
-  @JoinColumn(name = "user_key", nullable = false)
-  private User user;
+  @JoinColumn(name = "diagrammer_key", nullable = false)
+  private Diagrammer diagrammer;
   
   public Verification() {
     super();
@@ -116,12 +116,12 @@ public class Verification implements Serializable {
     this.expirationDate = expirationDate;
   }
   
-  public User getUser() {
-    return this.user;
+  public Diagrammer getDiagrammer() {
+    return this.diagrammer;
   }
   
-  public void setUser(User user) {
-    this.user = user;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
   }
   
   public boolean isValid() {

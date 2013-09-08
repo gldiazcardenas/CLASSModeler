@@ -19,7 +19,7 @@ import javax.faces.bean.ViewScoped;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.Shared;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.web.util.JSFGenericBean;
@@ -43,7 +43,7 @@ public class DashboardControllerBean extends JSFGenericBean {
   private List<Diagram> diagrams;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private User loggedUser;
+  private Diagrammer loggedUser;
   
   @ManagedProperty("#{designerController}")
   private DesignerControllerBean designerController;
@@ -105,7 +105,7 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.shared = shared;
   }
   
-  public void setLoggedUser(User loggedUser) {
+  public void setLoggedUser(Diagrammer loggedUser) {
     this.loggedUser = loggedUser;
   }
   

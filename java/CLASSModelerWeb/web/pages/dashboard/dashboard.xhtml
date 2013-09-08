@@ -105,8 +105,8 @@
                     <h:graphicImage url="#{formatController.getDiagramPrivilegeImage(shared.privilege)}" title="#{formatController.getDiagramPrivilegeName(shared.privilege)}" />
                 </p:column>
                 
-                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.toUser.name}">
-                    <h:outputText value="#{formatController.getFormattedUserName(shared.toUser)}" />
+                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.toDiagrammer.name}">
+                    <h:outputText value="#{formatController.getFormattedUserName(shared.toDiagrammer)}" />
                 </p:column>
             </p:dataTable>
         </h:form>

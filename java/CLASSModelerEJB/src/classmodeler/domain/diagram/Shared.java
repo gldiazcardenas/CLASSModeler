@@ -25,7 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 
 /**
  * Bean that represents a diagram shared between two users.
@@ -74,16 +74,16 @@ public class Shared implements Serializable {
    * the owner of the diagram.
    */
   @ManyToOne
-  @JoinColumn(name="shared_from_user", nullable=false)
-  private User fromUser;
+  @JoinColumn(name="shared_from_diagrammer", nullable=false)
+  private Diagrammer fromDiagrammer;
   
   /**
    * UNI-Directional many-to-one association to User. This is the reference to
    * the user who receives the diagram.
    */
   @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name="shared_to_user", nullable=false)
-  private User toUser;
+  @JoinColumn(name="shared_to_diagrammer", nullable=false)
+  private Diagrammer toDiagrammer;
 
   public Shared() {
     super();
@@ -121,20 +121,20 @@ public class Shared implements Serializable {
     this.diagram = diagram;
   }
   
-  public User getFromUser() {
-    return fromUser;
+  public Diagrammer getFromDiagrammer() {
+    return fromDiagrammer;
   }
   
-  public void setFromUser(User fromUser) {
-    this.fromUser = fromUser;
+  public void setFromDiagrammer(Diagrammer fromDiagrammer) {
+    this.fromDiagrammer = fromDiagrammer;
   }
   
-  public User getToUser() {
-    return toUser;
+  public Diagrammer getToDiagrammer() {
+    return toDiagrammer;
   }
   
-  public void setToUser(User toUser) {
-    this.toUser = toUser;
+  public void setToDiagrammer(Diagrammer toDiagrammer) {
+    this.toDiagrammer = toDiagrammer;
   }
 
   @Override

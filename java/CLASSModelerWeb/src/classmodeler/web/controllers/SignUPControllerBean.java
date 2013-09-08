@@ -14,7 +14,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import classmodeler.domain.user.EGender;
-import classmodeler.domain.user.User;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
@@ -116,7 +116,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       return;
     }
     
-    User newUser = new User();
+    Diagrammer newUser = new Diagrammer();
     newUser.setFirstName(firstName);
     newUser.setLastName(lastName);
     newUser.setGender(gender);
@@ -131,7 +131,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
     }
     
     try {
-      userService.insertUser(newUser);
+      userService.insertDiagrammer(newUser);
       addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SIGN_UP_CONFIRMATION_MESSAGE"), null);
       
       // Clears all previous information

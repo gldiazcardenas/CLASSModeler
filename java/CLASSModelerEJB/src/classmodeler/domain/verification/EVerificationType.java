@@ -16,7 +16,7 @@ package classmodeler.domain.verification;
 public enum EVerificationType {
   
   /**
-   * When the user is signed up, the system sends an email to the confirm the
+   * When the user is signed up, the system sends an email to confirm the
    * account.
    */
   ACTIVATE_ACCOUNT,

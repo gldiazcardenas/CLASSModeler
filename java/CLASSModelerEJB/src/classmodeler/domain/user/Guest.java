@@ -14,7 +14,7 @@ package classmodeler.domain.user;
  * 
  * @author Gabriel Leonardo Diaz, 07.04.2013.
  */
-public class Guest implements IUser {
+public class Guest implements User {
 
   private static final long serialVersionUID = 1L;
   
