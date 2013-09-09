@@ -12,18 +12,11 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.mail.Authenticator;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -33,6 +26,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
+import classmodeler.service.EmailService;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.CollectionUtils;
@@ -48,6 +42,9 @@ public class VerificationServiceBean implements VerificationService {
 
   @PersistenceContext(unitName="CLASSModelerPU")
   private EntityManager em;
+  
+  @EJB
+  private EmailService emailService;
   
   @Override
   public Verification insertVerification(EVerificationType type, Diagrammer user) {
@@ -80,7 +77,6 @@ public class VerificationServiceBean implements VerificationService {
   @Override
   public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException {
     try {
-      
       // Constructs the HTML message
       String link           = getEmailVerificationURL("/pages/portal/activateAccount.xhtml?", user.getEmail(), verification.getCode());
       String title          = GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_ACCOUNT_ACTIVATION_MESSAGE");
@@ -91,7 +87,7 @@ public class VerificationServiceBean implements VerificationService {
       message.append(" <a href=\"").append(link).append("\" target=\"_blank\">").append(link).append("</a>");
       
       // Send the email
-      sendEmail(user.getEmail(), GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_TITLE", title), getEmailHTMLCode(title, greetings, message.toString()));
+      emailService.sendEmail(GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_TITLE", title), getEmailHTMLCode(title, greetings, message.toString()), user.getEmail());
     }
     catch (IOException e) {
       throw new SendEmailException(e.getMessage(), e);
@@ -107,7 +103,6 @@ public class VerificationServiceBean implements VerificationService {
   @Override
   public void sendResetPasswordEmail(Diagrammer user, Verification verification) throws SendEmailException {
     try {
-      
       // Constructs the HTML message
       String link           = getEmailVerificationURL("/pages/portal/resetPassword.xhtml?", user.getEmail(), verification.getCode());
       String title          = GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_RESET_PASSWORD_MESSAGE");
@@ -118,7 +113,7 @@ public class VerificationServiceBean implements VerificationService {
       message.append(" <a href=\"").append(link).append("\" target=\"_blank\">").append(link).append("</a>");
       
       // Send the email.
-      sendEmail(user.getEmail(), GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_TITLE", title), getEmailHTMLCode(title, greetings, message.toString()));
+      emailService.sendEmail(GenericUtils.getLocalizedMessage("EMAIL_SUBJECT_TITLE", title), getEmailHTMLCode(title, greetings, message.toString()), user.getEmail());
     }
     catch (IOException e) {
       throw new SendEmailException(e.getMessage(), e);
@@ -129,44 +124,6 @@ public class VerificationServiceBean implements VerificationService {
     catch (MessagingException e) {
       throw new SendEmailException(e.getMessage(), e);
     }
-  }
-  
-  /**
-   * Utility method that sends an email with the given information. This looks
-   * for the configurations in "smtp_email_config.properties" file and takes
-   * from it the credentials used to connect with mail server.
-   * 
-   * @param emailTo
-   *          The e-mail address of the user receiver.
-   * @param subject
-   *          The subject of the email.
-   * @param htmlBody
-   *          The HTML code of the e-mail body.
-   * @throws MessagingException
-   * @throws IOException
-   * @author Gabriel Leonardo Diaz, 18.08.2013.
-   */
-  private void sendEmail (String emailTo, String subject, String htmlBody) throws MessagingException, IOException {
-    final Properties props = new Properties();
-    props.load(GenericUtils.class.getResourceAsStream("smtp_email_config.properties"));
-    
-    // Get a Session object
-    Session session = Session.getInstance(props, new Authenticator() {
-      @Override protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(props.getProperty("mail.user"), props.getProperty("mail.password"));
-      }
-    });
-    
-    // Constructs the email
-    Message msg = new MimeMessage(session);
-    msg.setFrom(new InternetAddress(props.getProperty("mail.user")));
-    msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo, false));
-    msg.setSubject(subject);
-    msg.setContent(htmlBody, "text/html");
-    msg.setSentDate(Calendar.getInstance().getTime());
-    
-    // Send the thing off
-    Transport.send(msg);
   }
   
   /**
