@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.domain.user.EGender;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
@@ -36,7 +37,14 @@ public class UserServiceTest extends ServiceTest {
    */
   @Test
   public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException  {
-    userService.insertDiagrammer(new Diagrammer());
+    Diagrammer diagrammer = new Diagrammer();
+    diagrammer.setFirstName("Gabrielito");
+    diagrammer.setLastName("JOJOJO");
+    diagrammer.setEmail("leonar248@gmail.com");
+    diagrammer.setPassword("12345");
+    diagrammer.setGender(EGender.MALE);
+    
+    userService.insertDiagrammer(diagrammer);
   }
   
 }
