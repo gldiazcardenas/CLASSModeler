@@ -164,8 +164,19 @@ public final class GenericUtils {
    * @author Gabriel Leonardo Diaz, 14.08.2013.
    */
   public static String getApplicationURL () {
-    HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    String applicationURL = "";
+    FacesContext context  = FacesContext.getCurrentInstance();
+    
+    if (context != null) {
+      HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+      applicationURL = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+    else {
+      // Should not happen
+      applicationURL = "http://localhost:8080/CLASSModeler/";
+    }
+    
+    return applicationURL;
   }
   
   /**
@@ -180,6 +191,10 @@ public final class GenericUtils {
    */
   public static String getLocalizedMessage (String... values) {
     FacesContext facesContext = FacesContext.getCurrentInstance();
+    if (facesContext == null) {
+      return values[0];
+    }
+    
     ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msgs");
     
     String messageKey = values[0];

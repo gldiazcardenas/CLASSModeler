@@ -9,31 +9,34 @@ import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.SendEmailException;
+import classmodeler.service.implementation.UserServiceBean;
 
-@Test
+/**
+ * Class that contains all unit tests developed to verify the correct operation
+ * of User Service.
+ * 
+ * @author Gabriel Leonardo Diaz, 11.09.2013.
+ */
 public class UserServiceTest extends ServiceTest {
   
   private UserService userService;
   
   @Override
   @BeforeClass
-  public void setUp() throws NamingException {
-    super.setUp();
-    userService = (UserService) ejbContainer.getContext().lookup("java:global/CLASSModeler/CLASSModelerEJB/UserServiceBean");
+  public void configureService() throws NamingException {
+    userService = (UserService) context.lookup(getServiceObjectName(UserServiceBean.class.getSimpleName()));
   }
   
-  public void testInsertDiagrammer () {
-    try {
-      userService.insertDiagrammer(new Diagrammer());
-    }
-    catch (InvalidUserAccountException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch (SendEmailException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  /**
+   * Unit test to verify the service method {@link UserServiceBean#insertDiagrammer(Diagrammer)}.
+   * 
+   * @throws SendEmailException
+   * @throws InvalidUserAccountException 
+   * @author Gabriel Leonardo Diaz, 11.09.2013.
+   */
+  @Test
+  public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException  {
+    userService.insertDiagrammer(new Diagrammer());
   }
   
 }
