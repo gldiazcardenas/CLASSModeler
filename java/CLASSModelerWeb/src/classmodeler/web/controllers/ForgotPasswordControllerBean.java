@@ -55,7 +55,7 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
     
     if (isAllValid()) {
       try {
-        userService.sendResetPasswordEmail(email);
+        userService.requestResetPassword(email);
         outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
         addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }

@@ -69,7 +69,7 @@ public interface UserService {
    *           When the system is not able to send an email to the user address.
    * @author Gabriel Leonardo Diaz, 21.05.2013.
    */
-  public void sendResetPasswordEmail (String email) throws InvalidUserAccountException, SendEmailException;
+  public void requestResetPassword (String email) throws InvalidUserAccountException, SendEmailException;
   
   /**
    * Validates the given email and hash code used to reset the user account
@@ -98,10 +98,13 @@ public interface UserService {
                                                                            SendEmailException;
   
   /**
-   * Activates the user account of the given user.
+   * Activates the diagrammer account of the given email address and
+   * verification code..
    * 
    * @param email
-   *          The email of user to activate its account.
+   *          The email of diagrammer to activate its account.
+   * @param verificationCode
+   *          The code generated to activate the account.
    * @return The user after setting the account status.
    * @throws InvalidUserAccountException
    *           When the user account for the given email doesn't exist, was
@@ -117,10 +120,10 @@ public interface UserService {
    *           current has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public Diagrammer activateUserAccount (String email, String verificationCode) throws InvalidUserAccountException,
-                                                                                 InvalidVerificationCodeException,
-                                                                                 ExpiredVerificationCodeException,
-                                                                                 SendEmailException;
+  public Diagrammer activateDiagrammerAccount (String email, String verificationCode) throws InvalidUserAccountException,
+                                                                                             InvalidVerificationCodeException,
+                                                                                             ExpiredVerificationCodeException,
+                                                                                             SendEmailException;
   
   /**
    * Resets the user password with a new one.

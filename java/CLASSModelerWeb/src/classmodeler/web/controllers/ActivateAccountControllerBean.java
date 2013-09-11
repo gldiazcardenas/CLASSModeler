@@ -64,7 +64,7 @@ public class ActivateAccountControllerBean extends JSFGenericBean {
     String email = request.getParameter("email");
     
     try {
-      userService.activateUserAccount(email, code);
+      userService.activateDiagrammerAccount(email, code);
       
       successful = true;
       message = GenericUtils.getLocalizedMessage("ACCOUNT_ACTIVATION_SUCCESSFUL_MESSAGE");

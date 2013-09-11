@@ -13,6 +13,10 @@ import java.io.IOException;
 import javax.ejb.Local;
 import javax.mail.MessagingException;
 
+import classmodeler.domain.user.Diagrammer;
+import classmodeler.domain.verification.Verification;
+import classmodeler.service.exception.SendEmailException;
+
 /**
  * Definition of the service used to send e-mails.
  * 
@@ -40,5 +44,31 @@ public interface EmailService {
    * @author Gabriel Leonardo Diaz, 09.09.2013.
    */
   void sendEmail (String subject, String htmlBody, String addresses) throws MessagingException, IOException;
+  
+  /**
+   * Sends the activation account email to the address provided by the user.
+   * 
+   * @param user
+   *          The user owner of the email address.
+   * @param verification
+   *          The verification object created for the email.
+   * @throws SendEmailException
+   *           When the system is not able to perform the operation.
+   * @author Gabriel Leonardo Diaz, 18.05.2013.
+   */
+  public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException;
+  
+  /**
+   * Sends the reset password email to the address provided by the user.
+   * 
+   * @param user
+   *          The user owner of the email address.
+   * @param verification
+   *          The verification object created for the email.
+   * @throws SendEmailException
+   *           When the system is not able to perform the operation.
+   * @author Gabriel Leonardo Diaz, 21.05.2013.
+   */
+  public void sendResetPasswordEmail (Diagrammer user, Verification verification) throws SendEmailException;
 
 }

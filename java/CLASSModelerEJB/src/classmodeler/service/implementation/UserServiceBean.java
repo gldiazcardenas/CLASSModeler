@@ -19,12 +19,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.User;
-import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.verification.EVerificationType;
 import classmodeler.domain.verification.Verification;
+import classmodeler.service.EmailService;
 import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
@@ -46,7 +47,10 @@ public @Stateless class UserServiceBean implements UserService {
   private EntityManager em;
   
   @EJB
-  private VerificationService vsb;
+  private VerificationService verificationService;
+  
+  @EJB
+  private EmailService emailService;
   
   @Override
   public boolean existsUser(String email) {
@@ -73,10 +77,10 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public Diagrammer activateUserAccount(String email, String verificationCode) throws InvalidUserAccountException,
-                                                                                InvalidVerificationCodeException,
-                                                                                ExpiredVerificationCodeException,
-                                                                                SendEmailException {
+  public Diagrammer activateDiagrammerAccount(String email, String verificationCode) throws InvalidUserAccountException,
+                                                                                            InvalidVerificationCodeException,
+                                                                                            ExpiredVerificationCodeException,
+                                                                                            SendEmailException {
     Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
@@ -91,7 +95,7 @@ public @Stateless class UserServiceBean implements UserService {
       throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
-    Verification verification = vsb.getVerificationCode(user, verificationCode, EVerificationType.ACTIVATE_ACCOUNT);
+    Verification verification = verificationService.getVerificationCode(user, verificationCode, EVerificationType.ACTIVATE_ACCOUNT);
     
     if (verification == null) {
       throw new InvalidVerificationCodeException("The verification code was not found for the user.");
@@ -103,10 +107,10 @@ public @Stateless class UserServiceBean implements UserService {
     
     if (verification.getExpirationDate().before(Calendar.getInstance().getTime())) {
       // The verification code has expired, the system should generate a new one.
-      verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
+      verification = verificationService.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
       
       // Sends the email with the new activation code.
-      vsb.sendAccountActivationEmail(user, verification);
+      emailService.sendAccountActivationEmail(user, verification);
       
       // This doesn't trigger a RollBack operation.
       throw new ExpiredVerificationCodeException("The activation code has expired.");
@@ -135,7 +139,7 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     // Gets the verification code.
-    Verification verification = vsb.getVerificationCode(user, code, EVerificationType.PASSWORD_RESET);
+    Verification verification = verificationService.getVerificationCode(user, code, EVerificationType.PASSWORD_RESET);
     
     if (verification == null) {
       throw new InvalidVerificationCodeException("The verification code was not found for the user.");
@@ -148,10 +152,10 @@ public @Stateless class UserServiceBean implements UserService {
       em.merge(verification);
       
       // Generates a new code.
-      verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
+      verification = verificationService.insertVerification(EVerificationType.PASSWORD_RESET, user);
       
       // Sends the email.
-      vsb.sendResetPasswordEmail(user, verification);
+      emailService.sendResetPasswordEmail(user, verification);
       
       throw new ExpiredVerificationCodeException("The verification code has expired.");
     }
@@ -160,7 +164,7 @@ public @Stateless class UserServiceBean implements UserService {
   }
   
   @Override
-  public void sendResetPasswordEmail(String email) throws InvalidUserAccountException, SendEmailException {
+  public void requestResetPassword (String email) throws InvalidUserAccountException, SendEmailException {
     Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
@@ -172,10 +176,10 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     // Creates the verification code.
-    Verification verification = vsb.insertVerification(EVerificationType.PASSWORD_RESET, user);
+    Verification verification = verificationService.insertVerification(EVerificationType.PASSWORD_RESET, user);
     
     // Sends the link to reset the password.
-    vsb.sendResetPasswordEmail(user, verification);
+    emailService.sendResetPasswordEmail(user, verification);
   }
   
   @Override
@@ -208,10 +212,10 @@ public @Stateless class UserServiceBean implements UserService {
     em.persist(diagrammer);
     
     // Inserts the verification
-    Verification verification = vsb.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, diagrammer);
+    Verification verification = verificationService.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, diagrammer);
     
     // Sends the activation email
-    vsb.sendAccountActivationEmail(diagrammer, verification);
+    emailService.sendAccountActivationEmail(diagrammer, verification);
     
     return diagrammer;
   }
