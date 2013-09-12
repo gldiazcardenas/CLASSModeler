@@ -2,6 +2,7 @@ package classmodeler.service.test;
 
 import javax.naming.NamingException;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -26,6 +27,12 @@ public class UserServiceTest extends ServiceTest {
   @BeforeClass
   public void configureService() throws NamingException {
     userService = (UserService) context.lookup(getServiceObjectName(UserServiceBean.class.getSimpleName()));
+  }
+  
+  @Override
+  @AfterClass
+  public void removeCreatedData() {
+    // TODO Auto-generated method stub
   }
   
   /**

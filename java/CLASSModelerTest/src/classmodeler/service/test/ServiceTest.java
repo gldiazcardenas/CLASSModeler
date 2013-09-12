@@ -44,6 +44,7 @@ public abstract class ServiceTest {
   public void setUp () {
     Map<String, String> properties = new HashMap<String, String>();
     properties.put(EJBContainer.APP_NAME, APP_TEST_NAME);
+    properties.put ("org.glassfish.ejb.embedded.glassfish.installation.root", "/path/to/glassfish");
     
     ejbContainer = EJBContainer.createEJBContainer(properties);
     context      = ejbContainer.getContext();
@@ -74,5 +75,12 @@ public abstract class ServiceTest {
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
   public abstract void configureService () throws NamingException;
+  
+  /**
+   * Implement this method to remove the data created by the test.
+   * 
+   * @author Gabriel Leonardo Diaz, 11.09.2013.
+   */
+  public abstract void removeCreatedData ();
   
 }
