@@ -44,7 +44,10 @@ public abstract class ServiceTest {
   public void setUp () {
     Map<String, String> properties = new HashMap<String, String>();
     properties.put(EJBContainer.APP_NAME, APP_TEST_NAME);
-    properties.put ("org.glassfish.ejb.embedded.glassfish.installation.root", "/path/to/glassfish");
+    properties.put("org.glassfish.ejb.embedded.glassfish.installation.root",    "./glassfish-install/glassfish");
+    properties.put("org.glassfish.ejb.embedded.glassfish.instance.root",        "./glassfish-install/glassfish/domains/domain1");
+    properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file",   "./glassfish-install/glassfish/domains/domain1/config/domain.xml");
+    properties.put("org.glassfish.ejb.embedded.glassfish.keep-temporary-files", "true");
     
     ejbContainer = EJBContainer.createEJBContainer(properties);
     context      = ejbContainer.getContext();

@@ -1,0 +1,31 @@
+/* AUTOMATICALLY GENERATED ON Thu Sep 12 13:28:33 COT 2013*/
+/* DO NOT EDIT */
+
+grant {
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "insertDiagrammer,Local,classmodeler.domain.user.Diagrammer";
+  permission javax.security.jacc.EJBMethodPermission "VerificationServiceBean", "generateExpirationDate,Local,";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "updateDiagram,Local,classmodeler.domain.diagram.Diagram";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "resetPassword,Local,java.lang.String,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "logIn,Local,java.lang.String,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "VerificationServiceBean", "insertVerification,Local,classmodeler.domain.verification.EVerificationType,classmodeler.domain.user.Diagrammer";
+  permission javax.security.jacc.EJBMethodPermission "VerificationServiceBean", "getVerificationCode,Local,classmodeler.domain.user.Diagrammer,java.lang.String,classmodeler.domain.verification.EVerificationType";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "getDiagrammersAllowedToShareDiagram,Local,classmodeler.domain.diagram.Diagram";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "getDiagrammerByEmail,Local,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "deleteDiagram,Local,int";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "updateDiagrammer,Local,classmodeler.domain.user.Diagrammer";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "getDiagrammerByKey,Local,int";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "getSharingsByDiagram,Local,classmodeler.domain.diagram.Diagram";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "isValidToResetPassword,Local,java.lang.String,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "EmailServiceBean", "sendEmail,Local,java.lang.String,java.lang.String,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "getAllDiagramsByUser,Local,classmodeler.domain.user.Diagrammer";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "shareDiagram,Local,classmodeler.domain.diagram.Diagram,classmodeler.domain.user.Diagrammer,java.util.List";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "requestResetPassword,Local,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "EmailServiceBean", "sendResetPasswordEmail,Local,classmodeler.domain.user.Diagrammer,classmodeler.domain.verification.Verification";
+  permission javax.security.jacc.EJBMethodPermission "VerificationServiceBean", "generateHashCodeMD5,Local,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "existsUser,Local,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "DiagramServiceBean", "insertDiagram,Local,classmodeler.domain.diagram.Diagram";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "activateDiagrammerAccount,Local,java.lang.String,java.lang.String";
+  permission javax.security.jacc.EJBMethodPermission "UserServiceBean", "deleteDiagrammer,Local,int";
+  permission javax.security.jacc.EJBMethodPermission "EmailServiceBean", "sendAccountActivationEmail,Local,classmodeler.domain.user.Diagrammer,classmodeler.domain.verification.Verification";
+};
+

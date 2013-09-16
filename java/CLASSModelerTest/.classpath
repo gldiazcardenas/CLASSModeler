@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CLASSModelerEJB"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/glassfishv3/glassfish/lib/embedded/glassfish-embedded-static-shell.jar"/>
 	<classpathentry kind="lib" path="C:/glassfishv3/glassfish/modules/javax.ejb.jar"/>
+	<classpathentry kind="lib" path="C:/glassfishv3/glassfish/lib/embedded/glassfish-embedded-static-shell.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
