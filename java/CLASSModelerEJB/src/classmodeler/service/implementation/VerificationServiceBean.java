@@ -54,9 +54,9 @@ public class VerificationServiceBean implements VerificationService {
   }
   
   @Override
-  public Verification getVerificationCode(Diagrammer user, String code, EVerificationType type) {
-    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.user = :user AND v.type = :verificationType AND v.code = :code", Verification.class);
-    query.setParameter("user", user);
+  public Verification getVerificationCode(Diagrammer diagrammer, String code, EVerificationType type) {
+    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.diagrammer = :diagrammer AND v.type = :verificationType AND v.code = :code", Verification.class);
+    query.setParameter("diagrammer", diagrammer);
     query.setParameter("code", code);
     query.setParameter("verificationType", type);
     
