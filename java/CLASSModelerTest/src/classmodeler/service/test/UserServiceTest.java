@@ -43,11 +43,11 @@ public class UserServiceTest extends ServiceTest {
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
   @Test
-  public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException  {
+  public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException {
     Diagrammer diagrammer = new Diagrammer();
     diagrammer.setFirstName("Gabrielito");
     diagrammer.setLastName("JOJOJO");
-    diagrammer.setEmail("leonar248@gmail.com");
+    diagrammer.setEmail("leonar248@hotmail.com");
     diagrammer.setPassword("12345");
     diagrammer.setGender(EGender.MALE);
     

@@ -54,14 +54,14 @@ public interface DiagramService {
   
   /**
    * Gets the list of diagram that the user can see, it means the diagrams owned
-   * by the user and all the diagrams shared by other users.
+   * by the diagrammer and all the diagrams shared by other diagrammers.
    * 
-   * @param user
-   *          The user to get all the diagram it can see.
+   * @param diagrammer
+   *          The diagrammer to get all the diagram it can see.
    * @return A list with all diagrams of the user. Can be null.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public List<Diagram> getAllDiagramsByUser (Diagrammer user);
+  public List<Diagram> getAllDiagramsByUser (Diagrammer diagrammer);
   
   /**
    * Gets all sharing made of the given diagram.

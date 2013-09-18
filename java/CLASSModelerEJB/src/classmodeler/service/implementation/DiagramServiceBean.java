@@ -65,13 +65,13 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public List<Diagram> getAllDiagramsByUser(Diagrammer user) {
-    List<Diagram> ownedDiagrams = em.createQuery("SELECT d FROM Diagram d WHERE d.createdBy = :ownerUser", Diagram.class)
-                                    .setParameter("ownerUser", user)
+  public List<Diagram> getAllDiagramsByUser(Diagrammer diagrammer) {
+    List<Diagram> ownedDiagrams = em.createQuery("SELECT d FROM Diagram d WHERE d.createdBy = :owner", Diagram.class)
+                                    .setParameter("owner", diagrammer)
                                     .getResultList();
     
-    List<Diagram> sharedDiagrams = em.createQuery("SELECT s.diagram FROM Shared s WHERE s.toUser = :sharedUser", Diagram.class)
-                                     .setParameter("sharedUser", user)
+    List<Diagram> sharedDiagrams = em.createQuery("SELECT s.diagram FROM Shared s WHERE s.toDiagrammer = :sharedTo", Diagram.class)
+                                     .setParameter("sharedTo", diagrammer)
                                      .getResultList();
     
     return CollectionUtils.union(ownedDiagrams, sharedDiagrams);

@@ -47,7 +47,7 @@ public abstract class ServiceTest {
     properties.put("org.glassfish.ejb.embedded.glassfish.installation.root",    "./glassfish-install/glassfish");
     properties.put("org.glassfish.ejb.embedded.glassfish.instance.root",        "./glassfish-install/glassfish/domains/domain1");
     properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file",   "./glassfish-install/glassfish/domains/domain1/config/domain.xml");
-    properties.put("org.glassfish.ejb.embedded.glassfish.keep-temporary-files", "true");
+    properties.put("org.glassfish.ejb.embedded.glassfish.instance.reuse",       "true");
     
     ejbContainer = EJBContainer.createEJBContainer(properties);
     context      = ejbContainer.getContext();
@@ -68,7 +68,7 @@ public abstract class ServiceTest {
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
   public String getServiceObjectName (String simpleClassName) {
-    return "java:global/" + APP_TEST_NAME + "/" + simpleClassName;
+    return "java:global/" + APP_TEST_NAME + "/classes/" + simpleClassName;
   }
   
   /**
