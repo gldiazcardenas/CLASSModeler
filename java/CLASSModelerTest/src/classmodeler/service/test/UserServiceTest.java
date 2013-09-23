@@ -19,13 +19,14 @@ import classmodeler.service.implementation.UserServiceBean;
  * 
  * @author Gabriel Leonardo Diaz, 11.09.2013.
  */
+@Test
 public class UserServiceTest extends ServiceTest {
   
   private UserService userService;
   
   @Override
   @BeforeClass
-  public void configureService() throws NamingException {
+  public void configureServices() throws NamingException {
     userService = (UserService) context.lookup(getServiceObjectName(UserServiceBean.class.getSimpleName()));
   }
   
@@ -36,13 +37,32 @@ public class UserServiceTest extends ServiceTest {
   }
   
   /**
+   * Unit test to verify the diagrammer is correctly found by the method.
+   * 
+   * @throws InvalidUserAccountException
+   * @throws SendEmailException
+   * @author Gabriel Leonardo Diaz, 22.09.2013.
+   */
+  public void testExistsUser () throws InvalidUserAccountException, SendEmailException {
+    Diagrammer diagrammer = new Diagrammer();
+    diagrammer.setFirstName("Gabrielito");
+    diagrammer.setLastName("JOJOJO");
+    diagrammer.setEmail("leonar248@hotmail.com");
+    diagrammer.setPassword("12345");
+    diagrammer.setGender(EGender.MALE);
+    
+    userService.insertDiagrammer(diagrammer);
+    
+    assert (userService.existsUser("leonar248@hotmail.com")) : "The user was not found.";
+  }
+  
+  /**
    * Unit test to verify the service method {@link UserServiceBean#insertDiagrammer(Diagrammer)}.
    * 
    * @throws SendEmailException
    * @throws InvalidUserAccountException 
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
-  @Test
   public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException {
     Diagrammer diagrammer = new Diagrammer();
     diagrammer.setFirstName("Gabrielito");

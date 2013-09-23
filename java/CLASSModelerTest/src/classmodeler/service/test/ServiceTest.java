@@ -77,7 +77,7 @@ public abstract class ServiceTest {
    * 
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
-  public abstract void configureService () throws NamingException;
+  public abstract void configureServices () throws NamingException;
   
   /**
    * Implement this method to remove the data created by the test.
