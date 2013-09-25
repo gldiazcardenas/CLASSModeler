@@ -44,16 +44,7 @@ public class UserServiceTest extends ServiceTest {
    * @author Gabriel Leonardo Diaz, 22.09.2013.
    */
   public void testExistsUser () throws InvalidUserAccountException, SendEmailException {
-    Diagrammer diagrammer = new Diagrammer();
-    diagrammer.setFirstName("Gabrielito");
-    diagrammer.setLastName("JOJOJO");
-    diagrammer.setEmail("leonar248@hotmail.com");
-    diagrammer.setPassword("12345");
-    diagrammer.setGender(EGender.MALE);
-    
-    userService.insertDiagrammer(diagrammer);
-    
-    assert (userService.existsUser("leonar248@hotmail.com")) : "The user was not found.";
+    // TODO
   }
   
   /**
@@ -72,6 +63,27 @@ public class UserServiceTest extends ServiceTest {
     diagrammer.setGender(EGender.MALE);
     
     userService.insertDiagrammer(diagrammer);
+  }
+  
+  /**
+   * Unit test to verify an alternate flow of
+   * {@link UserService#insertDiagrammer(Diagrammer)} service, when the email
+   * used to create a diagrammer account is the same than other account.
+   * 
+   * @author Gabriel Leonardo Diaz, 24.09.2013.
+   */
+  public void testInsertDiagrammer_failAlreadyExisting () {
+    // TODO
+  }
+  
+  /**
+   * Unit test to verify the normal flow of activating the account of a
+   * diagrammer.
+   * 
+   * @author Gabriel Leonardo Diaz, 24.09.2013.
+   */
+  public void testActivateDiagrammerAccount() {
+    // TODO
   }
   
 }
