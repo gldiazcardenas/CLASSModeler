@@ -53,4 +53,34 @@ public interface User extends Serializable {
    * @return A boolean value depending on the user implementation.
    */
   public boolean isRegisteredUser();
+  
+  /**
+   * Documentación en formato JavaDoc de la case NombreClase.
+   * 
+   * @author Gabriel Leonardo Diaz, 27.09.2013.
+   */
+  package examples;
+  
+  public class NombreClase {
+    
+    // Atributos
+    private int atributoTipoEntero;
+    private String atributoTipoCadena;
+    private float atributoTipoFlotante;
+   
+    // Constructor
+    public NombreClase () {
+    }
+    
+    // Operaciones o métodos
+    public void metodo () {
+    }
+    
+    public void metodoConParametro (int parametro) {
+    }
+    
+    public String metodoConRetorno () {
+      return "una cadena";
+    }
+  }
 }
