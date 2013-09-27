@@ -9,8 +9,12 @@ import org.testng.annotations.Test;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.EGender;
+import classmodeler.domain.verification.Verification;
 import classmodeler.service.UserService;
+import classmodeler.service.beans.InsertDiagrammerResult;
+import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidVerificationCodeException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.implementation.UserServiceBean;
 
@@ -24,6 +28,7 @@ import classmodeler.service.implementation.UserServiceBean;
 public class UserServiceTest extends ServiceTest {
   
   private Diagrammer diagrammerBasic;
+  private Verification verificationBasic;
   private UserService userService;
   
   @Override
@@ -39,7 +44,9 @@ public class UserServiceTest extends ServiceTest {
     diagrammerBasic.setGender(EGender.MALE);
     
     try {
-      userService.insertDiagrammer(diagrammerBasic);
+      InsertDiagrammerResult result = userService.insertDiagrammer(diagrammerBasic);
+      diagrammerBasic = result.getDiagrammer();
+      verificationBasic = result.getVerification();
     }
     catch (InvalidUserAccountException e) {
       // Do nothing
@@ -53,9 +60,6 @@ public class UserServiceTest extends ServiceTest {
   @AfterClass
   public void destroy() {
     userService.deleteDiagrammer(diagrammerBasic.getKey());
-    
-    diagrammerBasic = null;
-    userService     = null;
   }
   
   /**
@@ -77,7 +81,7 @@ public class UserServiceTest extends ServiceTest {
    * @author Gabriel Leonardo Diaz, 11.09.2013.
    */
   public void testInsertDiagrammer () throws InvalidUserAccountException, SendEmailException {
-    String email = "leonar24834544646@gmail.com";
+    String email = "gabriel.test.12345@gmail.com";
     
     Diagrammer diagrammer = new Diagrammer();
     diagrammer.setFirstName("Nombre Diagramador");
@@ -114,7 +118,7 @@ public class UserServiceTest extends ServiceTest {
     Diagrammer diagrammer = new Diagrammer();
     diagrammer.setFirstName("Nombre Diagramador");
     diagrammer.setLastName("Apellido Diagramador");
-    diagrammer.setEmail(diagrammerBasic.getEmail());
+    diagrammer.setEmail(diagrammerBasic.getEmail()); // Use the same than an already existing account.
     diagrammer.setPassword("12345");
     diagrammer.setGender(EGender.MALE);
     
@@ -126,9 +130,20 @@ public class UserServiceTest extends ServiceTest {
    * diagrammer.
    * 
    * @author Gabriel Leonardo Diaz, 24.09.2013.
+   * @throws SendEmailException 
+   * @throws ExpiredVerificationCodeException 
+   * @throws InvalidVerificationCodeException 
+   * @throws InvalidUserAccountException 
    */
-  public void testActivateDiagrammerAccount () {
-    // TODO
+  public void testActivateDiagrammerAccount () throws InvalidUserAccountException,
+                                                      InvalidVerificationCodeException,
+                                                      ExpiredVerificationCodeException,
+                                                      SendEmailException {
+    
+    Diagrammer activatetAccount = userService.activateDiagrammerAccount(diagrammerBasic.getEmail(), verificationBasic.getCode());
+    
+    assert (activatetAccount != null) : "Error: The diagrammer edited was null";
+    assert (activatetAccount.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) : "Error: The account was not activated";
   }
   
   /**
@@ -137,9 +152,18 @@ public class UserServiceTest extends ServiceTest {
    * non existing email.
    * 
    * @author Gabriel Leonardo Diaz, 25.09.2013.
+   * @throws SendEmailException 
+   * @throws ExpiredVerificationCodeException 
+   * @throws InvalidVerificationCodeException 
+   * @throws InvalidUserAccountException 
    */
-  public void testActivateDiagrammerAccount_failNonExisting () {
-    // TODO
+  @Test (expectedExceptions = InvalidUserAccountException.class)
+  public void testActivateDiagrammerAccount_failNonExisting () throws InvalidUserAccountException,
+                                                                      InvalidVerificationCodeException,
+                                                                      ExpiredVerificationCodeException,
+                                                                      SendEmailException {
+    
+    userService.activateDiagrammerAccount("nonexistingaccount@none.com", verificationBasic.getCode());
   }
   
   /**
@@ -202,7 +226,9 @@ public class UserServiceTest extends ServiceTest {
    * @author Gabriel Leonardo Diaz, 25.09.2013
    */
   public void testGetDiagrammerByEmail () {
-    // TODO
+    Diagrammer diagrammer = userService.getDiagrammerByEmail(diagrammerBasic.getEmail());
+    
+    assert (diagrammer != null) : "Error: The diagrammer was not found.";
   }
   
 }

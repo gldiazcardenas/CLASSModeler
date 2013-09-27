@@ -28,6 +28,7 @@ import classmodeler.domain.verification.Verification;
 import classmodeler.service.EmailService;
 import classmodeler.service.UserService;
 import classmodeler.service.VerificationService;
+import classmodeler.service.beans.InsertDiagrammerResult;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
@@ -201,7 +202,7 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public Diagrammer insertDiagrammer(Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException {
+  public InsertDiagrammerResult insertDiagrammer(Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException {
     if (existsUser(diagrammer.getEmail())) {
       throw new InvalidUserAccountException("The user email already exists.", EInvalidAccountErrorType.DUPLICATED_ACCOUNT);
     }
@@ -217,7 +218,7 @@ public @Stateless class UserServiceBean implements UserService {
     // Sends the activation email
     emailService.sendAccountActivationEmail(diagrammer, verification);
     
-    return diagrammer;
+    return new InsertDiagrammerResult(diagrammer, verification);
   }
 
   @Override

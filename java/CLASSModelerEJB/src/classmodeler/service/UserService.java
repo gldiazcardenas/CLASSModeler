@@ -15,6 +15,7 @@ import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Guest;
 import classmodeler.domain.user.User;
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.service.beans.InsertDiagrammerResult;
 import classmodeler.service.exception.ExpiredVerificationCodeException;
 import classmodeler.service.exception.InvalidUserAccountException;
 import classmodeler.service.exception.InvalidVerificationCodeException;
@@ -145,7 +146,7 @@ public interface UserService {
    * 
    * @param diagrammer
    *          The new diagrammer to save.
-   * @return The user bean after inserting in the database.
+   * @return The bean with the information after inserting in the database.
    * @throws InvalidUserAccountException
    *           When the user that is being inserted has an already existing
    *           email in database.
@@ -153,7 +154,7 @@ public interface UserService {
    *           When the system is not able to send the activation email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public Diagrammer insertDiagrammer (Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException;
+  public InsertDiagrammerResult insertDiagrammer (Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException;
   
   /**
    * Updates the fields of the given diagrammer into the database.
