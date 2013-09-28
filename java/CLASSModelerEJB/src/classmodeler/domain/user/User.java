@@ -54,13 +54,66 @@ public interface User extends Serializable {
    */
   public boolean isRegisteredUser();
   
+  
+  package examples;
+  
+  /**
+   * Documentacion en Javadoc para ClaseA.
+   *
+   * @author Gabriel Leonardo Diaz, 27.09.2013.
+   */
+  public class ClaseA {
+    
+    public int atributoEnA;
+    
+    public void metodoEnA() {
+      
+    }
+  }
+  
+  package examples;
+  /**
+   * Documentación en JavaDoc para ClaseB.
+   *
+   * @author Gabriel Leonardo Diaz, 27.09.2013.
+   */
+  public class ClaseB {
+    
+    private int atributoEnB;
+    
+    
+  }
+  
+  /**
+   * Documentacion en formato JavaDoc de la interfaz NombreInterfaz
+   *
+   * @author Gabriel Leonardo Diaz, 27.09.2013.
+   */
+  public interface NombreInterfaz {
+    
+    public static final int ATRIBUTO_CONSTANTE = 5;
+    
+    public void metodoDeInterfaz();
+  }
+  
+  /**
+   * Documentacion en formato JavaDoc de la enumeracion NombreEnumeracion.
+   *
+   * @author Gabriel Leonardo Diaz, 27.09.2013.
+   */
+  public enum NombreEnumeracion {
+    
+    LITERAL_UNO,
+    LITERAL_DOS,
+    LITERAL_TRES
+    
+  }
+  
   /**
    * Documentación en formato JavaDoc de la case NombreClase.
    * 
    * @author Gabriel Leonardo Diaz, 27.09.2013.
    */
-  package examples;
-  
   public class NombreClase {
     
     // Atributos
@@ -74,9 +127,11 @@ public interface User extends Serializable {
     
     // Operaciones o métodos
     public void metodo () {
+      // Vacio
     }
     
     public void metodoConParametro (int parametro) {
+      // Vacio
     }
     
     public String metodoConRetorno () {
