@@ -12,7 +12,7 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_OPEN_DIAGRAM_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
                 <p:separator />
-                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
+                <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-bookmark" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_EDIT_LABEL}" icon="ui-icon-pencil">

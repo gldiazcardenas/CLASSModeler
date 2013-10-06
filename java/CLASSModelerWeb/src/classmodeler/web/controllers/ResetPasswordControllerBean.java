@@ -15,10 +15,10 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import classmodeler.service.UserService;
-import classmodeler.service.exception.ExpiredVerificationCodeException;
-import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
-import classmodeler.service.exception.InvalidVerificationCodeException;
+import classmodeler.service.exception.ExpiredSecurityCodeException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.InvalidSecurityCodeException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -40,6 +40,7 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
   private String email;
   private String password;
   private String confirmation;
+  private String errorMessage;
   
   @EJB
   private UserService userService;
@@ -68,6 +69,10 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
     return valid;
   }
   
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+  
   /**
    * Loads the parameters from the request and verifies if the values are valid.
    * 
@@ -76,39 +81,39 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
   public void configure () {
     HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
     
-    String codeParameter = request.getParameter("code");
-    String emailParameter = request.getParameter("email");
+    String codeParameter       = request.getParameter("code");
+    String emailParameter      = request.getParameter("email");
+    
+    valid                      = false;
     
     try {
-      valid = userService.isValidToResetPassword(emailParameter, codeParameter);
-      email = emailParameter;
-      if (!valid) {
-        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_USED_MESSAGE"), null);
-      }
-    }
-    catch (InvalidUserAccountException e) {
-      valid = false;
-      if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
-        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
-      }
-      else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
+      if (userService.isValidToResetPassword(emailParameter, codeParameter)) {
+        valid = true;
+        email = emailParameter;
       }
       else {
-        addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());
+        errorMessage = GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_USED_MESSAGE");
       }
     }
-    catch (InvalidVerificationCodeException e) {
-      valid = false;
-      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE"), null);
+    catch (InvalidDiagrammerAccountException e) {
+      if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
+        errorMessage = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE");
+      }
+      else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
+        errorMessage = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE");
+      }
+      else {
+        errorMessage = GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE");
+      }
     }
-    catch (ExpiredVerificationCodeException e) {
-      valid = false;
-      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE"), null);
+    catch (InvalidSecurityCodeException e) {
+      errorMessage = GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_MESSAGE");
+    }
+    catch (ExpiredSecurityCodeException e) {
+      errorMessage = GenericUtils.getLocalizedMessage("INVALID_VERIFICATION_CODE_EXPIRED_MESSAGE");
     }
     catch (SendEmailException e) {
-      valid = false;
-      addErrorMessage("resetMessage", GenericUtils.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE"), null);
+      errorMessage = GenericUtils.getLocalizedMessage("SEND_RESET_PASSWORD_EMAIL_MESSAGE");
     }
   }
 
@@ -122,7 +127,7 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
         outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
         addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("RESET_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
-      catch (InvalidUserAccountException e) {
+      catch (InvalidDiagrammerAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
@@ -145,7 +150,7 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
 
   @Override
   public boolean isAllValid() {
-    return GenericUtils.isValidEmail(email) && !GenericUtils.isEmptyString(password) && GenericUtils.equals(password, confirmation);
+    return GenericUtils.isValidPassword(password) && GenericUtils.equals(password, confirmation);
   }
 
 }

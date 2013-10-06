@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.ejb.Local;
 import javax.mail.MessagingException;
 
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.domain.verification.Verification;
 import classmodeler.service.exception.SendEmailException;
 
 /**
@@ -56,7 +56,7 @@ public interface EmailService {
    *           When the system is not able to perform the operation.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException;
+  public void sendAccountActivationEmail(Diagrammer user, SecurityCode verification) throws SendEmailException;
   
   /**
    * Sends the reset password email to the address provided by the user.
@@ -69,6 +69,6 @@ public interface EmailService {
    *           When the system is not able to perform the operation.
    * @author Gabriel Leonardo Diaz, 21.05.2013.
    */
-  public void sendResetPasswordEmail (Diagrammer user, Verification verification) throws SendEmailException;
+  public void sendResetPasswordEmail (Diagrammer user, SecurityCode verification) throws SendEmailException;
 
 }

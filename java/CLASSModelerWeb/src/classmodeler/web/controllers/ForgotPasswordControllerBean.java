@@ -13,8 +13,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.service.UserService;
-import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -59,7 +59,7 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
         outcome = JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
         addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("FORGOT_PASSWORD_CONFIRMATION_MESSAGE"), null);
       }
-      catch (InvalidUserAccountException e) {
+      catch (InvalidDiagrammerAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }

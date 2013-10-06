@@ -16,7 +16,7 @@ import javax.faces.model.SelectItem;
 import classmodeler.domain.user.EGender;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.UserService;
-import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -141,7 +141,7 @@ public class SignUPControllerBean extends JSFGenericBean implements JSFFormContr
       email     = null;
       password  = null;
     }
-    catch (InvalidUserAccountException e) {
+    catch (InvalidDiagrammerAccountException e) {
       addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DUPLICATED_MESSAGE"), null);
     }
     catch (SendEmailException e) {

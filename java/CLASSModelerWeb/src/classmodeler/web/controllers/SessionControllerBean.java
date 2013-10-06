@@ -14,10 +14,10 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import classmodeler.domain.user.User;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.service.UserService;
-import classmodeler.service.exception.InvalidUserAccountException;
+import classmodeler.domain.user.User;
+import classmodeler.service.SessionService;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
@@ -36,7 +36,7 @@ public class SessionControllerBean extends JSFGenericBean {
   private User loggedUser;
   
   @EJB
-  private UserService userServiceBean;
+  private SessionService sessionService;
 
   public SessionControllerBean() {
     super();
@@ -94,8 +94,8 @@ public class SessionControllerBean extends JSFGenericBean {
    *          The password of the system.
    * @throws InactivatedUserAccountException 
    */
-  public void login (String email, String password) throws InvalidUserAccountException {
-    loggedUser = userServiceBean.logIn(email, password);
+  public void login (String email, String password) throws InvalidDiagrammerAccountException {
+    loggedUser = sessionService.logIn(email, password);
   }
   
   /**
@@ -105,6 +105,9 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the index page.
    */
   public String logout () {
+    // Remove the user specific information.
+    sessionService.logOut(loggedUser);
+    
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
     if (session != null) {
       session.invalidate();

@@ -27,13 +27,13 @@ import javax.persistence.TemporalType;
 import classmodeler.domain.user.Diagrammer;
 
 /**
- * Bean that represents a diagram shared between two users.
+ * Bean that encapsulates the information of a shared diagram.
  * 
  * @author Gabriel Leonardo Diaz, 17.03.2013.
  */
 @Entity
-@Table(name="shared")
-public class Shared implements Serializable {
+@Table(name="shared_item")
+public class SharedItem implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
@@ -43,21 +43,21 @@ public class Shared implements Serializable {
    */
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  @Column(name="shared_key", unique=true, nullable=false)
+  @Column(name="shared_item_key", unique=true, nullable=false)
   private int key;
   
   /**
    * The date in which the diagram was shared.
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="shared_date", nullable=false)
+  @Column(name="shared_item_date", nullable=false)
   private Date date;
   
   /**
    * The privileged given to the user who receives the diagram.
    */
   @Enumerated(EnumType.STRING)
-  @Column(name="shared_privilege", nullable=false)
+  @Column(name="shared_item_privilege", nullable=false)
   private EDiagramPrivilege privilege;
   
   /**
@@ -65,26 +65,18 @@ public class Shared implements Serializable {
    * to the shared diagram.
    */
   @ManyToOne
-  @JoinColumn(name="shared_diagram_key", nullable=false)
+  @JoinColumn(name="shared_item_diagram_key", nullable=false)
   private Diagram diagram;
   
   /**
    * UNI-Directional many-to-one association to User. This is the reference of
-   * the owner of the diagram.
+   * the diagrammer that the diagram was shared to.
    */
   @ManyToOne
-  @JoinColumn(name="shared_from_diagrammer", nullable=false)
-  private Diagrammer fromDiagrammer;
-  
-  /**
-   * UNI-Directional many-to-one association to User. This is the reference to
-   * the user who receives the diagram.
-   */
-  @ManyToOne
-  @JoinColumn(name="shared_to_diagrammer", nullable=false)
-  private Diagrammer toDiagrammer;
+  @JoinColumn(name="shared_item_diagrammer_key", nullable=false)
+  private Diagrammer diagrammer;
 
-  public Shared() {
+  public SharedItem() {
     super();
   }
   
@@ -120,20 +112,12 @@ public class Shared implements Serializable {
     this.diagram = diagram;
   }
   
-  public Diagrammer getFromDiagrammer() {
-    return fromDiagrammer;
+  public Diagrammer getDiagrammer() {
+    return diagrammer;
   }
   
-  public void setFromDiagrammer(Diagrammer fromDiagrammer) {
-    this.fromDiagrammer = fromDiagrammer;
-  }
-  
-  public Diagrammer getToDiagrammer() {
-    return toDiagrammer;
-  }
-  
-  public void setToDiagrammer(Diagrammer toDiagrammer) {
-    this.toDiagrammer = toDiagrammer;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
   }
 
   @Override
@@ -154,7 +138,7 @@ public class Shared implements Serializable {
       return false;
     }
       
-    Shared other = (Shared) obj;
+    SharedItem other = (SharedItem) obj;
     if (key != other.key) {
       return false;
     }

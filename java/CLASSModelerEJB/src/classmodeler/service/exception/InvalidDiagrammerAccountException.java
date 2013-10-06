@@ -13,25 +13,25 @@ package classmodeler.service.exception;
  * 
  * @author Gabriel Leonardo Diaz, 20.05.2013.
  */
-public class InvalidUserAccountException extends ServiceException {
+public class InvalidDiagrammerAccountException extends ServiceException {
 
   private static final long serialVersionUID = 1L;
   
   private EInvalidAccountErrorType type;
   
-  public InvalidUserAccountException () {
+  public InvalidDiagrammerAccountException () {
     super();
   }
   
-  public InvalidUserAccountException (String message) {
+  public InvalidDiagrammerAccountException (String message) {
     super(message);
   }
   
-  public InvalidUserAccountException (String message, Throwable cause) {
+  public InvalidDiagrammerAccountException (String message, Throwable cause) {
     super (message, cause);
   }
   
-  public InvalidUserAccountException (String message, EInvalidAccountErrorType type) {
+  public InvalidDiagrammerAccountException (String message, EInvalidAccountErrorType type) {
     super (message);
     this.type = type;
   }
@@ -54,7 +54,6 @@ public class InvalidUserAccountException extends ServiceException {
     NON_EXISTING_ACCOUNT,  // Used to validate the user account through the email
     NON_ACTIVATED_ACCOUNT, // Used in the login
     DUPLICATED_ACCOUNT,    // Used in signing up process
-    
     DEACTIVATED_ACCOUNT,   // Used in account activation process.
     ACTIVATED_ACCOUNT      // Used in account activation process.
   }

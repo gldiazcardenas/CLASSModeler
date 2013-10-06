@@ -13,8 +13,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.user.Guest;
-import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFFormControllerBean;
 import classmodeler.web.util.JSFGenericBean;
@@ -102,7 +102,7 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
           outcome = designerController.initEditDiagram();
         }
       }
-      catch (InvalidUserAccountException e) {
+      catch (InvalidDiagrammerAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
           addWarningMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }

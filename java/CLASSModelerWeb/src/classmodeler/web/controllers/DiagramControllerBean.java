@@ -261,25 +261,20 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     try {
       switch (mode) {
       case CREATE:
-      case EDIT:
       case COPY:
         diagram.setName(name);
         diagram.setDescription(description);
-        diagram.setModifiedBy(loggedUser);
+        diagram.setCreatedBy(loggedUser);
+        diagramService.insertDiagram(diagram);
+        dashBoardController.addDiagram(diagram);
+        break;
         
-        if (mode == EDiagramControllerMode.EDIT) {
-          diagramService.updateDiagram(diagram);
-        }
-        else {
-          // Create mode set an empty XMI representation, In Copy Mode keep the XMI of the project.
-          if (mode == EDiagramControllerMode.CREATE) {
-            diagram.setXMI("");
-          }
-          
-          diagram.setCreatedBy(loggedUser);
-          diagramService.insertDiagram(diagram);
-          dashBoardController.addDiagram(diagram);
-        }
+      case EDIT:
+      
+        diagram.setName(name);
+        diagram.setDescription(description);
+        diagram.setModifiedBy(loggedUser);
+        diagramService.updateDiagram(diagram);
         
         break;
       case DELETE:
@@ -288,7 +283,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         break;
       
       case SHARE:
-        diagramService.shareDiagram(diagram, loggedUser, selectedUsers);
+        diagramService.shareDiagram(diagram, selectedUsers, privilege);
         break;
         
       default:

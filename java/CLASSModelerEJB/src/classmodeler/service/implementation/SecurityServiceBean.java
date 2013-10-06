@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,53 +19,48 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import classmodeler.domain.security.ESecurityCodeType;
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.domain.verification.EVerificationType;
-import classmodeler.domain.verification.Verification;
-import classmodeler.service.EmailService;
-import classmodeler.service.VerificationService;
+import classmodeler.service.SecurityService;
 import classmodeler.service.util.CollectionUtils;
 
 /**
- * Session bean implementation of verification service.
+ * Session bean implementation for {@link SecurityService}.
  *
  * @author Gabriel Leonardo Diaz, 18.05.2013.
  */
-@Stateless
-public class VerificationServiceBean implements VerificationService {
+public @Stateless class SecurityServiceBean implements SecurityService {
 
   @PersistenceContext(unitName="CLASSModelerPU")
   private EntityManager em;
   
-  @EJB
-  private EmailService emailService;
-  
   @Override
-  public Verification insertVerification(EVerificationType type, Diagrammer user) {
-    Verification verification = new Verification();
-    verification.setDiagrammer(user);
-    verification.setType(type);
-    verification.setExpirationDate(generateExpirationDate());
-    verification.setCode(generateHashCodeMD5(user.getEmail()));
-    verification.setValid(true);
-    em.persist(verification);
-    return verification;
+  public SecurityCode insertSecurityCode(ESecurityCodeType type, Diagrammer diagrammer) {
+    SecurityCode securityCode = new SecurityCode();
+    securityCode.setDiagrammer(diagrammer);
+    securityCode.setType(type);
+    securityCode.setExpirationDate(generateExpirationDate());
+    securityCode.setCode(generateHashCodeMD5(diagrammer.getEmail()));
+    securityCode.setValid(true);
+    em.persist(securityCode);
+    return securityCode;
   }
   
   @Override
-  public Verification getVerificationCode(Diagrammer diagrammer, String code, EVerificationType type) {
-    TypedQuery<Verification> query = em.createQuery("SELECT v FROM Verification v WHERE v.diagrammer = :diagrammer AND v.type = :verificationType AND v.code = :code", Verification.class);
+  public SecurityCode getSecurityCode(Diagrammer diagrammer, String code, ESecurityCodeType type) {
+    TypedQuery<SecurityCode> query = em.createQuery("SELECT sc FROM SecurityCode sc WHERE sc.diagrammer = :diagrammer AND sc.type = :codeType AND sc.code = :code", SecurityCode.class);
     query.setParameter("diagrammer", diagrammer);
     query.setParameter("code", code);
-    query.setParameter("verificationType", type);
+    query.setParameter("codeType", type);
     
-    List<Verification> list = query.getResultList();
+    List<SecurityCode> list = query.getResultList();
     
-    if (CollectionUtils.isEmptyCollection(list)) {
-      return null;
+    if (!CollectionUtils.isEmptyCollection(list)) {
+      return list.get(0);
     }
     
-    return list.get(0);
+    return null;
   }
 
   @Override

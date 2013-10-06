@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.verification;
+package classmodeler.domain.security;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,41 +27,41 @@ import javax.persistence.TemporalType;
 import classmodeler.domain.user.Diagrammer;
 
 /**
- * The persistent class for the email_verification database table.
+ * The persistent class for the {@code security_code} database table.
  * 
  * @author Gabriel Leonardo Diaz, 11.04.2013.
  */
 @Entity
-@Table(name = "verification")
-public class Verification implements Serializable {
+@Table(name = "security_code")
+public class SecurityCode implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
   /**
-   * The identifier of the email verification. This is an auto-incremental value.
+   * The identifier of the security code. This is an auto-incremental value.
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "verification_key", unique = true, nullable = false)
+  @Column(name = "security_code_key", unique = true, nullable = false)
   private int key;
   
   /**
-   * The hash code used to confirm the user account.
+   * The security code hash representation.
    */
-  @Column(name = "verification_code", nullable = false, length = 255)
+  @Column(name = "security_code_hash", nullable = false, length = 255)
   private String code;
   
   /**
-   * The type of verification.
+   * The security code type.
    */
-  @Enumerated(EnumType.STRING)
-  @Column (name="verification_type", nullable = false, length = 20)
-  private EVerificationType type;
+  @Enumerated(EnumType.ORDINAL)
+  @Column (name="security_code_type", nullable = false, length = 1)
+  private ESecurityCodeType type;
   
   /**
-   * Whether the verification code is valid or not.
+   * Whether the security code is valid or not.
    */
-  @Column (name="verification_valid", nullable = false)
+  @Column (name="security_code_valid", nullable = false)
   private boolean valid;
   
   /**
@@ -69,7 +69,7 @@ public class Verification implements Serializable {
    * has to generate a new code.
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "verification_expire_date", nullable = false)
+  @Column(name = "security_code_expiration_date", nullable = false)
   private Date expirationDate;
   
   /**
@@ -80,7 +80,7 @@ public class Verification implements Serializable {
   @JoinColumn(name = "diagrammer_key", nullable = false)
   private Diagrammer diagrammer;
   
-  public Verification() {
+  public SecurityCode() {
     super();
   }
   
@@ -100,11 +100,11 @@ public class Verification implements Serializable {
     this.code = code;
   }
   
-  public EVerificationType getType() {
+  public ESecurityCodeType getType() {
     return type;
   }
   
-  public void setType(EVerificationType type) {
+  public void setType(ESecurityCodeType type) {
     this.type = type;
   }
   
@@ -150,7 +150,7 @@ public class Verification implements Serializable {
       return false;
     }
       
-    Verification other = (Verification) obj;
+    SecurityCode other = (SecurityCode) obj;
     if (key != other.key) {
       return false;
     }

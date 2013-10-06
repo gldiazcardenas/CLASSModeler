@@ -12,9 +12,9 @@ import java.util.Date;
 
 import javax.ejb.Local;
 
+import classmodeler.domain.security.ESecurityCodeType;
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.domain.verification.EVerificationType;
-import classmodeler.domain.verification.Verification;
 
 /**
  * Session bean that defines basic methods to handle email verifications for the
@@ -23,18 +23,18 @@ import classmodeler.domain.verification.Verification;
  * @author Gabriel Leonardo Diaz, 18.05.2013.
  */
 @Local
-public interface VerificationService {
+public interface SecurityService {
   
   /**
    * Creates a new verification object for the user with the given type.
    * 
    * @param type
    *          The type of the new verification.
-   * @param user
-   *          The user that verification is created for.
+   * @param diagrammer
+   *          The diagrammer that verification is created for.
    * @author Gabriel Leonardo Diaz, 18.05.2013.
    */
-  public Verification insertVerification(EVerificationType type, Diagrammer user);
+  public SecurityCode insertSecurityCode(ESecurityCodeType type, Diagrammer diagrammer);
   
   /**
    * Gets a verification code with the provided information.
@@ -48,7 +48,7 @@ public interface VerificationService {
    * @return An instance of verification or null is nothing is found.
    * @author Gabriel Leonardo Diaz, 25.05.2013.
    */
-  public Verification getVerificationCode (Diagrammer diagrammer, String code, EVerificationType type);
+  public SecurityCode getSecurityCode (Diagrammer diagrammer, String code, ESecurityCodeType type);
   
   /**
    * Creates a hash code using MD5 encrypt algorithm, this uses the email and

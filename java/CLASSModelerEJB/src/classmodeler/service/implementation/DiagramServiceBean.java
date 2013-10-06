@@ -18,7 +18,7 @@ import javax.persistence.PersistenceContext;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.diagram.Shared;
+import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
@@ -39,6 +39,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
       return diagram;
     }
     
+    diagram.setXMI("");
     diagram.setCreatedDate(Calendar.getInstance().getTime());
     diagram.setModifiedDate(diagram.getCreatedDate());
     
@@ -48,12 +49,14 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public void updateDiagram(Diagram diagram) {
+  public Diagram updateDiagram(Diagram diagram) {
     if (diagram == null) {
-      return;
+      return null;
     }
     
-    em.merge(diagram);
+    diagram.setModifiedDate(Calendar.getInstance().getTime());
+    
+    return em.merge(diagram);
   }
   
   @Override
@@ -65,40 +68,33 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public List<Diagram> getAllDiagramsByUser(Diagrammer diagrammer) {
+  public List<Diagram> getDiagramsByDiagrammer (Diagrammer diagrammer) {
     List<Diagram> ownedDiagrams = em.createQuery("SELECT d FROM Diagram d WHERE d.createdBy = :owner", Diagram.class)
                                     .setParameter("owner", diagrammer)
                                     .getResultList();
     
-    List<Diagram> sharedDiagrams = em.createQuery("SELECT s.diagram FROM Shared s WHERE s.toDiagrammer = :sharedTo", Diagram.class)
-                                     .setParameter("sharedTo", diagrammer)
+    List<Diagram> sharedDiagrams = em.createQuery("SELECT si.diagram FROM SharedItem si WHERE si.diagrammer = :diagrammer", Diagram.class)
+                                     .setParameter("diagrammer", diagrammer)
                                      .getResultList();
     
     return CollectionUtils.union(ownedDiagrams, sharedDiagrams);
   }
   
   @Override
-  public List<Shared> getSharingsByDiagram(Diagram diagram) {
-    List<Shared> sharings = new ArrayList<Shared>();
+  public List<SharedItem> getSharedItemsByDiagram(Diagram diagram) {
+    List<SharedItem> items = new ArrayList<SharedItem>();
     
     if (diagram != null) {
-      Shared share = new Shared();
-      share.setFromDiagrammer(diagram.getCreatedBy());
-      share.setToDiagrammer(diagram.getModifiedBy());
-      share.setPrivilege(EDiagramPrivilege.OWNER);
-      share.setDate(diagram.getCreatedDate());
-      share.setKey(Integer.MAX_VALUE);
-      share.setDiagram(diagram);
-      
-      sharings.add(share);
-      sharings.addAll(em.createQuery("SELECT s FROM Shared s WHERE s.diagram = :diagram", Shared.class).setParameter("diagram", diagram).getResultList());
+      items.addAll(em.createQuery("SELECT si FROM SharedItem si WHERE si.diagram = :diagram", SharedItem.class)
+                     .setParameter("diagram", diagram)
+                     .getResultList());
     }
     
-    return sharings;
+    return items;
   }
   
   @Override
-  public void shareDiagram(Diagram diagram, Diagrammer fromUser, List<Diagrammer> toUsers) {
+  public void shareDiagram(Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege) {
     // TODO Auto-generated method stub
   }
   

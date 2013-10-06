@@ -12,13 +12,11 @@ import java.util.List;
 import javax.ejb.Local;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.user.Guest;
-import classmodeler.domain.user.User;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.service.beans.InsertDiagrammerResult;
-import classmodeler.service.exception.ExpiredVerificationCodeException;
-import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.service.exception.InvalidVerificationCodeException;
+import classmodeler.service.bean.InsertDiagrammerResult;
+import classmodeler.service.exception.ExpiredSecurityCodeException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidSecurityCodeException;
 import classmodeler.service.exception.SendEmailException;
 
 /**
@@ -42,35 +40,19 @@ public interface UserService {
   public boolean existsUser (String email);
   
   /**
-   * Logs in the user represented by the given credentials in the system. This
-   * also allows to log in as a invited user ({@link Guest}), in that case the
-   * nickname should be equal to {@link Guest#GUEST_EMAIL} and the password
-   * equal to {@link Guest#GUEST_PASSWORD}.
-   * 
-   * @param email
-   *          The user email.
-   * @param password
-   *          The use password.
-   * @throws InvalidUserAccountException
-   *           When the user is found but the account has not been activated.
-   * @return A user bean or null if no one user is found.
-   */
-  public User logIn (String email, String password) throws InvalidUserAccountException;
-  
-  /**
    * Sends the link to reset the password of the user account represented by the
    * given email.
    * 
    * @param email
    *          The user email.
-   * @throws InvalidUserAccountException
+   * @throws InvalidDiagrammerAccountException
    *           When the user account for the given email is invalid. Doesn't
    *           exist or is deactivated.
    * @throws SendEmailException
    *           When the system is not able to send an email to the user address.
    * @author Gabriel Leonardo Diaz, 21.05.2013.
    */
-  public void requestResetPassword (String email) throws InvalidUserAccountException, SendEmailException;
+  public void requestResetPassword (String email) throws InvalidDiagrammerAccountException, SendEmailException;
   
   /**
    * Validates the given email and hash code used to reset the user account
@@ -81,21 +63,21 @@ public interface UserService {
    * @param code
    *          The hash code sent to the email address.
    * @return A boolean indicating whether the hash code is valid or not.
-   * @throws InvalidUserAccountException
+   * @throws InvalidDiagrammerAccountException
    *           When the user account doesn't exist or it's deactivated.
-   * @throws InvalidVerificationCodeException
+   * @throws InvalidSecurityCodeException
    *           When the system doesn't found a verification code that matches
    *           with the given one.
-   * @throws ExpiredVerificationCodeException
+   * @throws ExpiredSecurityCodeException
    *           When the verification code has expired, in this case the system
    *           generates a new one and sends it to the user email address.
    * @throws SendEmailException
    *           When the system is not able to re-send the verification code.
    * @author Gabriel Leonardo Diaz, 24.05.2013.
    */
-  public boolean isValidToResetPassword (String email, String code) throws InvalidUserAccountException,
-                                                                           InvalidVerificationCodeException,
-                                                                           ExpiredVerificationCodeException,
+  public boolean isValidToResetPassword (String email, String code) throws InvalidDiagrammerAccountException,
+                                                                           InvalidSecurityCodeException,
+                                                                           ExpiredSecurityCodeException,
                                                                            SendEmailException;
   
   /**
@@ -107,13 +89,13 @@ public interface UserService {
    * @param verificationCode
    *          The code generated to activate the account.
    * @return The user after setting the account status.
-   * @throws InvalidUserAccountException
+   * @throws InvalidDiagrammerAccountException
    *           When the user account for the given email doesn't exist, was
    *           already ACTIVATED or was DEACTIVATED by the user.
-   * @throws InvalidVerificationCodeException
+   * @throws InvalidSecurityCodeException
    *           When the system doesn't found a verification code that matches
    *           with the given one.
-   * @throws ExpiredVerificationCodeException
+   * @throws ExpiredSecurityCodeException
    *           When the verification code has expired, in this case the system
    *           generates a new one and sends it to the user email address.
    * @throws SendEmailException
@@ -121,9 +103,9 @@ public interface UserService {
    *           current has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public Diagrammer activateDiagrammerAccount (String email, String verificationCode) throws InvalidUserAccountException,
-                                                                                             InvalidVerificationCodeException,
-                                                                                             ExpiredVerificationCodeException,
+  public Diagrammer activateDiagrammerAccount (String email, String verificationCode) throws InvalidDiagrammerAccountException,
+                                                                                             InvalidSecurityCodeException,
+                                                                                             ExpiredSecurityCodeException,
                                                                                              SendEmailException;
   
   /**
@@ -134,11 +116,11 @@ public interface UserService {
    * @param newPassword
    *          The new password for the user account.
    * @return The user updated.
-   * @throws InvalidUserAccountException
+   * @throws InvalidDiagrammerAccountException
    *           When the user email doesn't exist or it is deactivated.
    * @author Gabriel Leonardo Diaz, 25.05.2013.
    */
-  public Diagrammer resetPassword (String email, String newPassword) throws InvalidUserAccountException;
+  public Diagrammer resetPassword (String email, String newPassword) throws InvalidDiagrammerAccountException;
   
   /**
    * Inserts the given diagrammer into the database. This method also creates the diagrammer
@@ -147,14 +129,14 @@ public interface UserService {
    * @param diagrammer
    *          The new diagrammer to save.
    * @return The bean with the information after inserting in the database.
-   * @throws InvalidUserAccountException
+   * @throws InvalidDiagrammerAccountException
    *           When the user that is being inserted has an already existing
    *           email in database.
    * @throws SendEmailException
    *           When the system is not able to send the activation email.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public InsertDiagrammerResult insertDiagrammer (Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException;
+  public InsertDiagrammerResult insertDiagrammer (Diagrammer diagrammer) throws InvalidDiagrammerAccountException, SendEmailException;
   
   /**
    * Updates the fields of the given diagrammer into the database.

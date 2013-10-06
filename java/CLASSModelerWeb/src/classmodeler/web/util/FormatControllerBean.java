@@ -72,11 +72,11 @@ public class FormatControllerBean extends JSFGenericBean {
     case EDIT:
       return "/resources/images/edit.png";
       
-    case SHARE:
+    case OWNER:
       return "/resources/images/user.png";
     
     default:
-      return "/resources/images/favorite.png";
+      return "";
     }
   }
   
@@ -100,11 +100,11 @@ public class FormatControllerBean extends JSFGenericBean {
     case EDIT:
       return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_EDIT");
       
-    case SHARE:
+    case OWNER:
       return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_SHARE");
-    
+      
     default:
-      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_OWNER");
+      return "";
     }
   }
   

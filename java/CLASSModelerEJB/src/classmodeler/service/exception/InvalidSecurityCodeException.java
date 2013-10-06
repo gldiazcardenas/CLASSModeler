@@ -8,27 +8,25 @@
 
 package classmodeler.service.exception;
 
-import javax.ejb.ApplicationException;
 
 /**
- * Thrown when the verification code has expired.
+ * Thrown when the verification code is invalid for the user.
  * 
- * @author Gabriel Leonardo Diaz, 25.05.2013.
+ * @author Gabriel Leonardo Diaz, 23.05.2013.
  */
-@ApplicationException (rollback = false)
-public class ExpiredVerificationCodeException extends ServiceException {
+public class InvalidSecurityCodeException extends ServiceException {
 
   private static final long serialVersionUID = 1L;
   
-  public ExpiredVerificationCodeException () {
+  public InvalidSecurityCodeException () {
     super();
   }
   
-  public ExpiredVerificationCodeException (String message) {
+  public InvalidSecurityCodeException (String message) {
     super(message);
   }
   
-  public ExpiredVerificationCodeException (String message, Throwable cause) {
+  public InvalidSecurityCodeException (String message, Throwable cause) {
     super (message, cause);
   }
 

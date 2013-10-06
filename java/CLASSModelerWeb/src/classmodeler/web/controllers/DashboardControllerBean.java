@@ -18,7 +18,7 @@ import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.diagram.Shared;
+import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
@@ -37,9 +37,9 @@ public class DashboardControllerBean extends JSFGenericBean {
   private static final long serialVersionUID = 1L;
   
   private Diagram diagram;
-  private Shared shared;
+  private SharedItem shared;
   
-  private List<Shared> sharings;
+  private List<SharedItem> sharings;
   private List<Diagram> diagrams;
   
   @ManagedProperty("#{sessionController.loggedRegisteredUser}")
@@ -63,7 +63,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    */
   public List<Diagram> getDiagrams () {
     if (diagrams == null) {
-      diagrams = diagramService.getAllDiagramsByUser(loggedUser); 
+      diagrams = diagramService.getDiagramsByDiagrammer(loggedUser); 
     }
     return diagrams;
   }
@@ -74,9 +74,9 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return A list of shared objects.
    * @author Gabriel Leonardo Diaz, 26.07.2013.
    */
-  public List<Shared> getSharings () {
+  public List<SharedItem> getSharings () {
     if (sharings == null) {
-      sharings = new ArrayList<Shared>();
+      sharings = new ArrayList<SharedItem>();
     }
     return sharings;
   }
@@ -90,18 +90,18 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.shared = null;
     
     if (diagram != null) {
-      sharings = diagramService.getSharingsByDiagram(diagram);
+      sharings = diagramService.getSharedItemsByDiagram(diagram);
     }
     else {
-      sharings = new ArrayList<Shared>();
+      sharings = new ArrayList<SharedItem>();
     }
   }
   
-  public Shared getShared() {
+  public SharedItem getShared() {
     return shared;
   }
   
-  public void setShared(Shared shared) {
+  public void setShared(SharedItem shared) {
     this.shared = shared;
   }
   
@@ -125,7 +125,7 @@ public class DashboardControllerBean extends JSFGenericBean {
     }
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (Shared sharing : sharings) {
+      for (SharedItem sharing : sharings) {
         if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.EDIT)) {
           return true;
         }
@@ -147,7 +147,7 @@ public class DashboardControllerBean extends JSFGenericBean {
     }
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (Shared sharing : sharings) {
+      for (SharedItem sharing : sharings) {
         if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.READ)) {
           return true;
         }
@@ -190,7 +190,7 @@ public class DashboardControllerBean extends JSFGenericBean {
       return false;
     }
     
-    return shared.getPrivilege() != EDiagramPrivilege.OWNER && loggedUser.equals(shared.getDiagram().getCreatedBy());
+    return loggedUser.equals(shared.getDiagram().getCreatedBy());
   }
   
   /**

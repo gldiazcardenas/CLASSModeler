@@ -17,7 +17,7 @@
         <p:menuitem value="#{msgs.USER_SECTION_CHANGE_PASSWORD_LABEL}" icon="ui-icon-key" onclick="dlgChangePassword.show()" disabled="#{!sessionController.registeredUser}" />
         <p:menuitem value="#{msgs.USER_SECTION_USER_PROFILE_LABEL}" icon="ui-icon-contact" update=":profileForm" oncomplete="dlgProfile.show()" disabled="#{!sessionController.registeredUser}" />
         <p:menuitem value="#{msgs.USER_SECTION_DEACTIVATE_ACCOUNT_LABEL}" icon="ui-icon-cancel" disabled="#{!sessionController.registeredUser}" />
-        <p:menuitem ajax="false" value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-home" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
+        <p:menuitem ajax="false" value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-bookmark" disabled="#{!sessionController.registeredUser}" action="#{sessionController.goToDashboard()}" />
         <p:menuitem ajax="false" value="#{msgs.USER_SECTION_LOG_OUT_LABEL}" icon="ui-icon-eject" action="#{sessionController.logout()}" />
     </p:menuButton>
     

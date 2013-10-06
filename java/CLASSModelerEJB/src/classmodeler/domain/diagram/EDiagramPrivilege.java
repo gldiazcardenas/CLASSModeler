@@ -16,24 +16,20 @@ package classmodeler.domain.diagram;
  */
 public enum EDiagramPrivilege {
   /**
-   * The user can only open in read only mode.
+   * The diagrammer can only open in read only mode.
    */
   READ (1),
   
   /**
-   * The user can read the diagram and also make changes on it.
+   * The diagrammer can read the diagram and also make changes on it.
    */
   EDIT (2),
   
   /**
-   * The user is able to re-share the diagram with other users.
+   * The diagrammer owner of the diagram, this privilege cannot be granted to
+   * other diagrammers.
    */
-  SHARE (3),
-  
-  /**
-   * The user 'owner' of the diagram. This privilege cannot be given to another user, just used to determine the user owner.
-   */
-  OWNER (4);
+  OWNER (3);
   
   /**
    * This field allows to know the order of the privileges, starting with the

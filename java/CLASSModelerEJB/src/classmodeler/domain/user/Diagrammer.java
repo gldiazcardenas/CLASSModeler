@@ -42,21 +42,7 @@ public class Diagrammer implements User {
   private int key;
   
   /**
-   * The status account of this user.
-   */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "diagrammer_account_status", nullable = false, length = 15)
-  private EDiagrammerAccountStatus accountStatus;
-  
-  /**
-   * The date in which was created this user.
-   */
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "diagrammer_created_date", nullable = false)
-  private Date createdDate;
-  
-  /**
-   * The email of the person owner of the user account, this is necessary to
+   * The email of the person owner of the diagrammer account, this is necessary to
    * contact with the person when he/she forget the password or any other
    * advice.
    */
@@ -64,17 +50,10 @@ public class Diagrammer implements User {
   private String email;
   
   /**
-   * The first name of the person owner of the user account.
+   * The first name of the person owner of the diagrammer account.
    */
   @Column(name = "diagrammer_first_name", nullable = false, length = 50)
   private String firstName;
-  
-  /**
-   * The gender of the person owner of the user account.
-   */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "diagrammer_gender", nullable = false, length = 10)
-  private EGender gender;
   
   /**
    * The last name of the person owner of the user account.
@@ -83,16 +62,37 @@ public class Diagrammer implements User {
   private String lastName;
   
   /**
-   * The password of the user, necessary to log in the system.
+   * The password of the diagrammer, necessary to be logged in the system.
    */
   @Column(name = "diagrammer_password", nullable = false, length = 20)
   private String password;
   
   /**
+   * The gender of the person owner of the diagrammer account.
+   */
+  @Enumerated(EnumType.ORDINAL)
+  @Column(name = "diagrammer_gender", nullable = false, length = 1)
+  private EGender gender;
+  
+  /**
    * The photo of the person owner of the user account.
    */
-  @Column(name = "diagrammer_avatar", length = 255)
+  @Column(name = "diagrammer_avatar_path", length = 255)
   private String avatar;
+  
+  /**
+   * The status account of this diagrammer.
+   */
+  @Enumerated(EnumType.ORDINAL)
+  @Column(name = "diagrammer_account_status", nullable = false, length = 1)
+  private EDiagrammerAccountStatus accountStatus;
+  
+  /**
+   * The date in which was created this diagrammer.
+   */
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "diagrammer_registration_date", nullable = false)
+  private Date registrationDate;
   
   public Diagrammer() {
     super();
@@ -114,12 +114,12 @@ public class Diagrammer implements User {
     this.accountStatus = accountStatus;
   }
   
-  public Date getCreatedDate() {
-    return this.createdDate;
+  public Date getRegistrationDate() {
+    return this.registrationDate;
   }
   
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
+  public void setRegistrationDate(Date registrationDate) {
+    this.registrationDate = registrationDate;
   }
   
   public String getEmail() {

@@ -6,12 +6,12 @@
  * 
  ****************************************************/
 
-package classmodeler.service.beans;
+package classmodeler.service.bean;
 
 import java.io.Serializable;
 
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.domain.verification.Verification;
 
 /**
  * Java bean used as result of calling the service
@@ -26,13 +26,13 @@ public class InsertDiagrammerResult implements Serializable {
   private static final long serialVersionUID = 1L;
   
   private Diagrammer diagrammer;
-  private Verification verification;
+  private SecurityCode verification;
   
   public InsertDiagrammerResult() {
     super();
   }
   
-  public InsertDiagrammerResult (Diagrammer diagrammer, Verification verification) {
+  public InsertDiagrammerResult (Diagrammer diagrammer, SecurityCode verification) {
     this ();
     this.diagrammer   = diagrammer;
     this.verification = verification;
@@ -46,11 +46,11 @@ public class InsertDiagrammerResult implements Serializable {
     this.diagrammer = diagrammer;
   }
   
-  public Verification getVerification() {
+  public SecurityCode getVerification() {
     return verification;
   }
   
-  public void setVerification(Verification verification) {
+  public void setVerification(SecurityCode verification) {
     this.verification = verification;
   }
 

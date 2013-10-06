@@ -24,7 +24,16 @@
 
 <ui:define name="center">
     <div id="diagramsSection">
-        <h:form id="diagramButtonsForm" style="margin-bottom: 5px;">
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td width="5%"><h:graphicImage name="note.png" library="images" width="40" height="40" /></td>
+                    <td width="95%"><h2 style="margin: 3px;"><h:outputText value="#{msgs.DASHBOARD_PANEL_TITLE}" /></h2><p:separator style="margin: 0;"/></td>
+                </tr>
+            </table>
+        </div>
+        
+        <h:form id="diagramButtonsForm" style="margin-bottom: 5px; margin-top: 10px;">
             <p:commandButton icon="ui-icon-document" value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
             <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedShareDiagram}" />
             <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedEditDiagram}" />
@@ -105,8 +114,8 @@
                     <h:graphicImage url="#{formatController.getDiagramPrivilegeImage(shared.privilege)}" title="#{formatController.getDiagramPrivilegeName(shared.privilege)}" />
                 </p:column>
                 
-                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.toDiagrammer.name}">
-                    <h:outputText value="#{formatController.getFormattedUserName(shared.toDiagrammer)}" />
+                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.diagrammer.name}">
+                    <h:outputText value="#{formatController.getFormattedUserName(shared.diagrammer)}" />
                 </p:column>
             </p:dataTable>
         </h:form>

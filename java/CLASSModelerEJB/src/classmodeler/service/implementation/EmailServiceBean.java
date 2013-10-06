@@ -15,12 +15,17 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
-import classmodeler.domain.verification.Verification;
 import classmodeler.service.EmailService;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.GenericUtils;
 
+/**
+ * Implementation for the service {@link EmailService}.
+ *
+ * @author Gabriel Leonardo Diaz, 03.10.2013.
+ */
 public @Stateless class EmailServiceBean implements EmailService {
   
   @Override
@@ -48,7 +53,7 @@ public @Stateless class EmailServiceBean implements EmailService {
   }
   
   @Override
-  public void sendAccountActivationEmail(Diagrammer user, Verification verification) throws SendEmailException {
+  public void sendAccountActivationEmail(Diagrammer user, SecurityCode verification) throws SendEmailException {
     try {
       // Constructs the HTML message
       String link           = getEmailVerificationURL("/pages/portal/activateAccount.xhtml?", user.getEmail(), verification.getCode());
@@ -74,7 +79,7 @@ public @Stateless class EmailServiceBean implements EmailService {
   }
   
   @Override
-  public void sendResetPasswordEmail(Diagrammer user, Verification verification) throws SendEmailException {
+  public void sendResetPasswordEmail(Diagrammer user, SecurityCode verification) throws SendEmailException {
     try {
       // Constructs the HTML message
       String link           = getEmailVerificationURL("/pages/portal/resetPassword.xhtml?", user.getEmail(), verification.getCode());

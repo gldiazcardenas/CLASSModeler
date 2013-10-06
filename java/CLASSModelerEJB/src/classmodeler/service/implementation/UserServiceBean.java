@@ -19,20 +19,18 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.domain.security.ESecurityCodeType;
+import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
-import classmodeler.domain.user.Guest;
-import classmodeler.domain.user.User;
-import classmodeler.domain.verification.EVerificationType;
-import classmodeler.domain.verification.Verification;
 import classmodeler.service.EmailService;
 import classmodeler.service.UserService;
-import classmodeler.service.VerificationService;
-import classmodeler.service.beans.InsertDiagrammerResult;
-import classmodeler.service.exception.ExpiredVerificationCodeException;
-import classmodeler.service.exception.InvalidUserAccountException;
-import classmodeler.service.exception.InvalidUserAccountException.EInvalidAccountErrorType;
-import classmodeler.service.exception.InvalidVerificationCodeException;
+import classmodeler.service.SecurityService;
+import classmodeler.service.bean.InsertDiagrammerResult;
+import classmodeler.service.exception.ExpiredSecurityCodeException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.InvalidSecurityCodeException;
 import classmodeler.service.exception.SendEmailException;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
@@ -48,7 +46,7 @@ public @Stateless class UserServiceBean implements UserService {
   private EntityManager em;
   
   @EJB
-  private VerificationService verificationService;
+  private SecurityService securityService;
   
   @EJB
   private EmailService emailService;
@@ -57,142 +55,123 @@ public @Stateless class UserServiceBean implements UserService {
   public boolean existsUser(String email) {
     return getDiagrammerByEmail(email) != null;
   }
-  
-  @Override
-  public User logIn(String email, String password) throws InvalidUserAccountException {
-    if (Guest.GUEST_EMAIL.equals(email) && Guest.GUEST_PASSWORD.equals(password)) {
-      return new Guest();
-    }
-    
-    Diagrammer user = getDiagrammerByEmail(email);
-    
-    if (user == null || !user.getPassword().equals(password)) {
-      throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
-    }
-    
-    if (user.getAccountStatus() != EDiagrammerAccountStatus.ACTIVATED) {
-      throw new InvalidUserAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
-    }
-    
-    return user;
-  }
 
   @Override
-  public Diagrammer activateDiagrammerAccount(String email, String verificationCode) throws InvalidUserAccountException,
-                                                                                            InvalidVerificationCodeException,
-                                                                                            ExpiredVerificationCodeException,
+  public Diagrammer activateDiagrammerAccount(String email, String verificationCode) throws InvalidDiagrammerAccountException,
+                                                                                            InvalidSecurityCodeException,
+                                                                                            ExpiredSecurityCodeException,
                                                                                             SendEmailException {
-    Diagrammer user = getDiagrammerByEmail(email);
+    Diagrammer diagrammer = getDiagrammerByEmail(email);
     
-    if (user == null) {
-      throw new InvalidUserAccountException("The user doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    if (diagrammer == null) {
+      throw new InvalidDiagrammerAccountException("The user doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) {
-      throw new InvalidUserAccountException("The user account is already activated.", EInvalidAccountErrorType.ACTIVATED_ACCOUNT);
+    if (diagrammer.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) {
+      throw new InvalidDiagrammerAccountException("The user account is already activated.", EInvalidAccountErrorType.ACTIVATED_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+    if (diagrammer.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
+      throw new InvalidDiagrammerAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
-    Verification verification = verificationService.getVerificationCode(user, verificationCode, EVerificationType.ACTIVATE_ACCOUNT);
+    SecurityCode securityCode = securityService.getSecurityCode(diagrammer, verificationCode, ESecurityCodeType.ACTIVATE_ACCOUNT);
     
-    if (verification == null) {
-      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
+    if (securityCode == null) {
+      throw new InvalidSecurityCodeException("The verification code was not found for the user.");
     }
     
     // The code won't be valid any more.
-    verification.setValid(false);
-    em.merge(verification);
+    securityCode.setValid(false);
+    em.merge(securityCode);
     
-    if (verification.getExpirationDate().before(Calendar.getInstance().getTime())) {
+    if (securityCode.getExpirationDate().before(Calendar.getInstance().getTime())) {
       // The verification code has expired, the system should generate a new one.
-      verification = verificationService.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, user);
+      securityCode = securityService.insertSecurityCode(ESecurityCodeType.ACTIVATE_ACCOUNT, diagrammer);
       
       // Sends the email with the new activation code.
-      emailService.sendAccountActivationEmail(user, verification);
+      emailService.sendAccountActivationEmail(diagrammer, securityCode);
       
       // This doesn't trigger a RollBack operation.
-      throw new ExpiredVerificationCodeException("The activation code has expired.");
+      throw new ExpiredSecurityCodeException("The activation code has expired.");
     }
     
     // Activates the user account.
-    user.setAccountStatus(EDiagrammerAccountStatus.ACTIVATED);
-    em.merge(user);
+    diagrammer.setAccountStatus(EDiagrammerAccountStatus.ACTIVATED);
+    em.merge(diagrammer);
     
-    return user;
+    return diagrammer;
   }
   
   @Override
-  public boolean isValidToResetPassword(String email, String code) throws InvalidUserAccountException,
-                                                                          InvalidVerificationCodeException,
-                                                                          ExpiredVerificationCodeException,
+  public boolean isValidToResetPassword(String email, String code) throws InvalidDiagrammerAccountException,
+                                                                          InvalidSecurityCodeException,
+                                                                          ExpiredSecurityCodeException,
                                                                           SendEmailException {
-    Diagrammer user = getDiagrammerByEmail(email);
+    Diagrammer diagrammer = getDiagrammerByEmail(email);
     
-    if (user == null) {
-      throw new InvalidUserAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    if (diagrammer == null) {
+      throw new InvalidDiagrammerAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The use account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+    if (diagrammer.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
+      throw new InvalidDiagrammerAccountException("The use account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
     // Gets the verification code.
-    Verification verification = verificationService.getVerificationCode(user, code, EVerificationType.PASSWORD_RESET);
+    SecurityCode securityCode = securityService.getSecurityCode(diagrammer, code, ESecurityCodeType.PASSWORD_RESET);
     
-    if (verification == null) {
-      throw new InvalidVerificationCodeException("The verification code was not found for the user.");
+    if (securityCode == null) {
+      throw new InvalidSecurityCodeException("The verification code was not found for the user.");
     }
     
     // Verifies if the code has expired or was already used.
-    if (verification.isValid() && verification.getExpirationDate().before(Calendar.getInstance().getTime())) {
+    if (securityCode.isValid() && securityCode.getExpirationDate().before(Calendar.getInstance().getTime())) {
       // Invalidates the current code.
-      verification.setValid(false);
-      em.merge(verification);
+      securityCode.setValid(false);
+      em.merge(securityCode);
       
       // Generates a new code.
-      verification = verificationService.insertVerification(EVerificationType.PASSWORD_RESET, user);
+      securityCode = securityService.insertSecurityCode(ESecurityCodeType.PASSWORD_RESET, diagrammer);
       
       // Sends the email.
-      emailService.sendResetPasswordEmail(user, verification);
+      emailService.sendResetPasswordEmail(diagrammer, securityCode);
       
-      throw new ExpiredVerificationCodeException("The verification code has expired.");
+      throw new ExpiredSecurityCodeException("The verification code has expired.");
     }
     
-    return verification.isValid();
+    return securityCode.isValid();
   }
   
   @Override
-  public void requestResetPassword (String email) throws InvalidUserAccountException, SendEmailException {
+  public void requestResetPassword (String email) throws InvalidDiagrammerAccountException, SendEmailException {
     Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
-      throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+      throw new InvalidDiagrammerAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
     if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The user account is deactivated", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+      throw new InvalidDiagrammerAccountException("The user account is deactivated", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
     // Creates the verification code.
-    Verification verification = verificationService.insertVerification(EVerificationType.PASSWORD_RESET, user);
+    SecurityCode securityCode = securityService.insertSecurityCode(ESecurityCodeType.PASSWORD_RESET, user);
     
     // Sends the link to reset the password.
-    emailService.sendResetPasswordEmail(user, verification);
+    emailService.sendResetPasswordEmail(user, securityCode);
   }
   
   @Override
-  public Diagrammer resetPassword(String email, String newPassword) throws InvalidUserAccountException {
+  public Diagrammer resetPassword(String email, String newPassword) throws InvalidDiagrammerAccountException {
     Diagrammer user = getDiagrammerByEmail(email);
     
     if (user == null) {
-      throw new InvalidUserAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+      throw new InvalidDiagrammerAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
     if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidUserAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
+      throw new InvalidDiagrammerAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
     user.setPassword(newPassword);
@@ -202,23 +181,31 @@ public @Stateless class UserServiceBean implements UserService {
   }
 
   @Override
-  public InsertDiagrammerResult insertDiagrammer(Diagrammer diagrammer) throws InvalidUserAccountException, SendEmailException {
+  public InsertDiagrammerResult insertDiagrammer(Diagrammer diagrammer) throws InvalidDiagrammerAccountException, SendEmailException {
     if (existsUser(diagrammer.getEmail())) {
-      throw new InvalidUserAccountException("The user email already exists.", EInvalidAccountErrorType.DUPLICATED_ACCOUNT);
+      throw new InvalidDiagrammerAccountException("The email already exists.", EInvalidAccountErrorType.DUPLICATED_ACCOUNT);
+    }
+    
+    if (!GenericUtils.isValidEmail(diagrammer.getEmail())) {
+      throw new InvalidDiagrammerAccountException("The email is not valid.");
+    }
+    
+    if (!GenericUtils.isValidPassword(diagrammer.getPassword())) {
+      throw new InvalidDiagrammerAccountException("The password is not valid.");
     }
     
     // Inserts the user
     diagrammer.setAccountStatus(EDiagrammerAccountStatus.INACTIVATED);
-    diagrammer.setCreatedDate(Calendar.getInstance().getTime());
+    diagrammer.setRegistrationDate(Calendar.getInstance().getTime());
     em.persist(diagrammer);
     
     // Inserts the verification
-    Verification verification = verificationService.insertVerification(EVerificationType.ACTIVATE_ACCOUNT, diagrammer);
+    SecurityCode securityCode = securityService.insertSecurityCode(ESecurityCodeType.ACTIVATE_ACCOUNT, diagrammer);
     
     // Sends the activation email
-    emailService.sendAccountActivationEmail(diagrammer, verification);
+    emailService.sendAccountActivationEmail(diagrammer, securityCode);
     
-    return new InsertDiagrammerResult(diagrammer, verification);
+    return new InsertDiagrammerResult(diagrammer, securityCode);
   }
 
   @Override
@@ -245,34 +232,34 @@ public @Stateless class UserServiceBean implements UserService {
   
   @Override
   public Diagrammer getDiagrammerByEmail(String email) {
-    Diagrammer user = null;
+    Diagrammer diagrammer = null;
     if (!GenericUtils.isEmptyString(email)) {
       TypedQuery<Diagrammer> query = em.createQuery("SELECT d FROM Diagrammer d WHERE LOWER(d.email) = :diagrammerEmail", Diagrammer.class);
       query.setParameter("diagrammerEmail", email.toLowerCase());
       
-      List<Diagrammer> userList = query.getResultList();
+      List<Diagrammer> diagrammerList = query.getResultList();
       
-      if (!CollectionUtils.isEmptyCollection(userList)) {
-        user = userList.get(0);
+      if (!CollectionUtils.isEmptyCollection(diagrammerList)) {
+        diagrammer = diagrammerList.get(0);
       }
     }
     
-    return user;
+    return diagrammer;
   }
   
   @Override
   @SuppressWarnings("unchecked")
   public List<Diagrammer> getDiagrammersAllowedToShareDiagram(Diagram diagram) {
-    List<Diagrammer> users = new ArrayList<Diagrammer>();
+    List<Diagrammer> diagrammers = new ArrayList<Diagrammer>();
     
     if (diagram != null) {
-      users = em.createNativeQuery("SELECT * FROM diagrammer WHERE diagrammer_key <> ?ownerKey AND diagrammer_key NOT IN (SELECT shared_to_diagrammer FROM shared WHERE shared_diagram_key = ?diagramKey)", Diagrammer.class)
+      diagrammers = em.createNativeQuery("SELECT * FROM diagrammer WHERE diagrammer_key <> ?ownerKey AND diagrammer_key NOT IN (SELECT shared_to_diagrammer FROM shared WHERE shared_diagram_key = ?diagramKey)", Diagrammer.class)
                 .setParameter("ownerKey", Integer.valueOf(diagram.getCreatedBy().getKey()))
                 .setParameter("diagramKey", Integer.valueOf(diagram.getKey()))
                 .getResultList();
     }
     
-    return users;
+    return diagrammers;
   }
 
 }
