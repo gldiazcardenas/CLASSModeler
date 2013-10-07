@@ -28,7 +28,7 @@ import classmodeler.service.implementation.UserServiceBean;
 public class UserServiceTest extends ServiceTest {
   
   private Diagrammer diagrammerBasic;
-  private SecurityCode verificationBasic;
+  private SecurityCode securityCodeBasic;
   private UserService userService;
   
   @Override
@@ -45,8 +45,8 @@ public class UserServiceTest extends ServiceTest {
     
     try {
       InsertDiagrammerResult result = userService.insertDiagrammer(diagrammerBasic);
-      diagrammerBasic = result.getDiagrammer();
-      verificationBasic = result.getVerification();
+      diagrammerBasic               = result.getDiagrammer();
+      securityCodeBasic             = result.getSecurityCode();
     }
     catch (InvalidDiagrammerAccountException e) {
       // Do nothing
@@ -140,7 +140,7 @@ public class UserServiceTest extends ServiceTest {
                                                       ExpiredSecurityCodeException,
                                                       SendEmailException {
     
-    Diagrammer activatetAccount = userService.activateDiagrammerAccount(diagrammerBasic.getEmail(), verificationBasic.getCode());
+    Diagrammer activatetAccount = userService.activateDiagrammerAccount(diagrammerBasic.getEmail(), securityCodeBasic.getCode());
     
     assert (activatetAccount != null) : "Error: The diagrammer edited was null";
     assert (activatetAccount.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) : "Error: The account was not activated";
@@ -163,7 +163,7 @@ public class UserServiceTest extends ServiceTest {
                                                                       ExpiredSecurityCodeException,
                                                                       SendEmailException {
     
-    userService.activateDiagrammerAccount("nonexistingaccount@none.com", verificationBasic.getCode());
+    userService.activateDiagrammerAccount("nonexistingaccount@none.com", securityCodeBasic.getCode());
   }
   
   /**

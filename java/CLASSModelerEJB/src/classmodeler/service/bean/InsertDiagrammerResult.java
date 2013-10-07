@@ -26,16 +26,16 @@ public class InsertDiagrammerResult implements Serializable {
   private static final long serialVersionUID = 1L;
   
   private Diagrammer diagrammer;
-  private SecurityCode verification;
+  private SecurityCode securityCode;
   
   public InsertDiagrammerResult() {
     super();
   }
   
-  public InsertDiagrammerResult (Diagrammer diagrammer, SecurityCode verification) {
+  public InsertDiagrammerResult (Diagrammer diagrammer, SecurityCode securityCode) {
     this ();
     this.diagrammer   = diagrammer;
-    this.verification = verification;
+    this.securityCode = securityCode;
   }
   
   public Diagrammer getDiagrammer() {
@@ -46,12 +46,12 @@ public class InsertDiagrammerResult implements Serializable {
     this.diagrammer = diagrammer;
   }
   
-  public SecurityCode getVerification() {
-    return verification;
+  public SecurityCode getSecurityCode() {
+    return securityCode;
   }
   
-  public void setVerification(SecurityCode verification) {
-    this.verification = verification;
+  public void setSecurityCode(SecurityCode securityCode) {
+    this.securityCode = securityCode;
   }
 
 }

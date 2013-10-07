@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,7 +21,11 @@ import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.service.DiagramService;
+import classmodeler.service.UserService;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.CollectionUtils;
 
 /**
@@ -33,14 +38,31 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   @PersistenceContext(unitName="CLASSModelerPU")
   private EntityManager em;
   
+  @EJB
+  private UserService userService;
+  
   @Override
-  public Diagram insertDiagram(Diagram diagram) {
+  public Diagram insertDiagram(Diagram diagram) throws InvalidDiagrammerAccountException {
     if (diagram == null) {
-      return diagram;
+      return null;
     }
     
-    diagram.setXMI("");
+    if (diagram.getCreatedBy() == null) {
+      throw new InvalidDiagrammerAccountException("The owner is invalid.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    Diagrammer owner = userService.getDiagrammerByEmail(diagram.getCreatedBy().getEmail());
+    if (owner == null) {
+      throw new InvalidDiagrammerAccountException("The owner does not exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    if (owner.getAccountStatus() != EDiagrammerAccountStatus.ACTIVATED) {
+      throw new InvalidDiagrammerAccountException("The owner account has not been activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
+    }
+    
+    diagram.setXMI(""); // TODO put a valid XMI representation
     diagram.setCreatedDate(Calendar.getInstance().getTime());
+    diagram.setModifiedBy(diagram.getCreatedBy());
     diagram.setModifiedDate(diagram.getCreatedDate());
     
     em.persist(diagram);
@@ -54,6 +76,8 @@ public @Stateless class DiagramServiceBean implements DiagramService {
       return null;
     }
     
+    // TODO validate the diagrammer account the modify the diagram has privileges.
+    
     diagram.setModifiedDate(Calendar.getInstance().getTime());
     
     return em.merge(diagram);
@@ -61,6 +85,9 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @Override
   public void deleteDiagram(int diagramKey) {
+    
+    // TODO validate the diagrammer account the modify the diagram has privileges.
+    
     Diagram diagram = em.find(Diagram.class, Integer.valueOf(diagramKey));
     if (diagram != null) {
       em.remove(diagram);

@@ -54,8 +54,8 @@ public class SecurityServiceTest extends ServiceTest {
     
     try {
       InsertDiagrammerResult result = userService.insertDiagrammer(diagrammerBasic);
-      diagrammerBasic = result.getDiagrammer();
-      securityCodeBasic = result.getVerification();
+      diagrammerBasic               = result.getDiagrammer();
+      securityCodeBasic             = result.getSecurityCode();
     }
     catch (InvalidDiagrammerAccountException e) {
       // Do nothing

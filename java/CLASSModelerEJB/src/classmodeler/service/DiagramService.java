@@ -16,6 +16,8 @@ import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.UnprivilegedException;
 
 /**
  * Service that handles all basic operations (CRUD) over Diagrams.
@@ -32,8 +34,11 @@ public interface DiagramService {
    *          The new diagram to be saved.
    * @return The insert project.
    * @author Gabriel Leonardo Diaz, 28.05.2013.
+   * @throws InvalidDiagrammerAccountException
+   *           when the diagrammer owner of the diagram has not activate its
+   *           account.
    */
-  public Diagram insertDiagram (Diagram diagram);
+  public Diagram insertDiagram (Diagram diagram) throws InvalidDiagrammerAccountException;
   
   /**
    * Updates the information of the diagram in database. The diagram can be
@@ -44,8 +49,11 @@ public interface DiagramService {
    *          The diagram to update.
    * @return The diagram after performing the update.
    * @author Gabriel Leonardo Diaz, 28.05.2013.
+   * @throws UnprivilegedException
+   *           When the diagrammer who is modifying the diagram does not have
+   *           privileges for that.
    */
-  public Diagram updateDiagram (Diagram diagram);
+  public Diagram updateDiagram (Diagram diagram) throws UnprivilegedException;
   
   /**
    * Deletes from database the diagram represented by the given key.
@@ -53,8 +61,10 @@ public interface DiagramService {
    * @param diagramKey
    *          The key of the diagram to delete.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
+   * @throws UnprivilegedException
+   *           When the diagrammer does not have privileges for the operation.
    */
-  public void deleteDiagram (int diagramKey);
+  public void deleteDiagram (int diagramKey) throws UnprivilegedException;
   
   /**
    * Gets the list of diagram that the diagrammer can see, it means the diagrams owned

@@ -86,7 +86,7 @@ public interface UserService {
    * 
    * @param email
    *          The email of diagrammer to activate its account.
-   * @param verificationCode
+   * @param securityCode
    *          The code generated to activate the account.
    * @return The user after setting the account status.
    * @throws InvalidDiagrammerAccountException
@@ -103,10 +103,10 @@ public interface UserService {
    *           current has expired.
    * @author Gabriel Leonardo Diaz, 14.03.2013
    */
-  public Diagrammer activateDiagrammerAccount (String email, String verificationCode) throws InvalidDiagrammerAccountException,
-                                                                                             InvalidSecurityCodeException,
-                                                                                             ExpiredSecurityCodeException,
-                                                                                             SendEmailException;
+  public Diagrammer activateDiagrammerAccount (String email, String securityCode) throws InvalidDiagrammerAccountException,
+                                                                                         InvalidSecurityCodeException,
+                                                                                         ExpiredSecurityCodeException,
+                                                                                         SendEmailException;
   
   /**
    * Resets the user password with a new one.
