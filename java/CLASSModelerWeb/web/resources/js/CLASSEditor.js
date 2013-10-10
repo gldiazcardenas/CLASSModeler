@@ -10,6 +10,8 @@
 
 /**
  * JavaScript Class for the editor, this inherits from mxEditor.
+ * 
+ * @author Gabriel Leonardo Diaz, 07.10.2013.
  */
 CLASSEditor = function (urlInit, urlImage, urlPoll, urlNotify) {
   this.urlInit   = urlInit;
@@ -27,7 +29,7 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.init = function (initialXML, graphContainer, paletteContainer, outlineContainer) {
+CLASSEditor.prototype.init = function (graphContainer, paletteContainer, outlineContainer) {
   // Gets the containers
   this.graphContainer   = graphContainer;
   this.paletteContainer = paletteContainer;
@@ -55,7 +57,7 @@ CLASSEditor.prototype.init = function (initialXML, graphContainer, paletteContai
   this.undoManager = this.createUndoRedoManager();
   
   // Creates the Key Action Handler
-  this.createKeyManager();
+  this.keyHandler = this.createKeyManager();
 };
 
 /**
@@ -122,7 +124,7 @@ CLASSEditor.prototype.createKeyManager = function () {
   var keyHandler = new mxKeyHandler(graph);
   
   // Binds keystrokes to actions
-  var setActionKeyHandler = mxUtils.bind(this, function (keyCode, control, actionNameCode, shift, parameter) {
+  var setActionKeyHandler = mxUtils.bind(this, function (keyCode, actionNameCode, control, shift, parameter) {
     var action = this.actionHandler.get(actionNameCode);
     
     if (action != null) {
@@ -155,18 +157,19 @@ CLASSEditor.prototype.createKeyManager = function () {
   });
   
   // Binding the functions with the actions in CLASSActionHandler
-  setActionKeyHandler(CLASSKeyCode.LEFT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.LEFT_KEY);
-  setActionKeyHandler(CLASSKeyCode.UP_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.UP_KEY);
-  setActionKeyHandler(CLASSKeyCode.RIGHT_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.RIGHT_KEY);
-  setActionKeyHandler(CLASSKeyCode.DOWN_KEY, false, CLASSActionName.MOVE_CELLS, false, CLASSKeyCode.DOWN_KEY);
-  setActionKeyHandler(CLASSKeyCode.A_KEY, true, CLASSActionName.SELECT_ALL);
-  setActionKeyHandler(CLASSKeyCode.DELETE_KEY, false, CLASSActionName.DELETE);
-  setActionKeyHandler(CLASSKeyCode.Z_KEY, true, CLASSActionName.UNDO);
-  setActionKeyHandler(CLASSKeyCode.Y_KEY, true, CLASSActionName.REDO);
-  setActionKeyHandler(CLASSKeyCode.C_KEY, true, CLASSActionName.COPY);
-  setActionKeyHandler(CLASSKeyCode.X_KEY, true, CLASSActionName.CUT);
-  setActionKeyHandler(CLASSKeyCode.V_KEY, true, CLASSActionName.PASTE);
+  setActionKeyHandler(CLASSKeyCode.LEFT_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.LEFT_KEY);
+  setActionKeyHandler(CLASSKeyCode.UP_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.UP_KEY);
+  setActionKeyHandler(CLASSKeyCode.RIGHT_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.RIGHT_KEY);
+  setActionKeyHandler(CLASSKeyCode.DOWN_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.DOWN_KEY);
+  setActionKeyHandler(CLASSKeyCode.A_KEY, CLASSActionName.SELECT_ALL, true, false, null);
+  setActionKeyHandler(CLASSKeyCode.DELETE_KEY, CLASSActionName.DELETE, false, false, null);
+  setActionKeyHandler(CLASSKeyCode.Z_KEY, CLASSActionName.UNDO, true, false, null);
+  setActionKeyHandler(CLASSKeyCode.Y_KEY, CLASSActionName.REDO, true, false, null);
+  setActionKeyHandler(CLASSKeyCode.C_KEY, CLASSActionName.COPY, true, false, null);
+  setActionKeyHandler(CLASSKeyCode.X_KEY, CLASSActionName.CUT, true, false, null);
+  setActionKeyHandler(CLASSKeyCode.V_KEY, CLASSActionName.PASTE, true, false, null);
   
+  return keyHandler;
 };
 
 /**
@@ -175,15 +178,6 @@ CLASSEditor.prototype.createKeyManager = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.06.2013.
  */
-CLASSEditor.prototype.executeAction = function (actionNameCode, parameter) {
-  var action = this.actionHandler.get(actionNameCode);
-  
-  if (action != null && action.enabled) {
-    if (parameter != null) {
-      action.funct(parameter);
-    }
-    else {
-      action.funct();
-    }
-  }
+CLASSEditor.prototype.executeAction = function (actionName, parameters) {
+  this.actionHandler.executeAction (actionName, parameters);
 };

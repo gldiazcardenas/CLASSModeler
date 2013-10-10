@@ -83,41 +83,79 @@ CLASSActionHandler.prototype.init = function () {
 /**
  * Creates a new action and adds it to the map.
  * 
- * @param key
- *          The key of the action, this is an identifier in the map.
+ * @param actionName
+ *          The name of the action, this is an identifier in the map.
  * @param enabled
  *          A flag to indicate the initial state of the action.
  * @param callbackFunction
  *          The function to invoke when the action is executed.
  */
-CLASSActionHandler.prototype.addAction = function (key, enabled, callbackFunction) {
-  return this.put(key, new CLASSAction('Action', callbackFunction, enabled));
+CLASSActionHandler.prototype.addAction = function (actionName, enabled, callbackFunction) {
+  return this.put(actionName, new CLASSAction(actionName, callbackFunction, enabled));
 };
 
 /**
  * Puts the given action in the map with the respective key.
  * 
- * @param key
- *          The key used as identifier in the map.
+ * @param actionName
+ *          The name used as identifier in the map.
  * @param action
  *          The action to put into the map.
  * @returns The same action received.
  */
-CLASSActionHandler.prototype.put = function (key, action) {
-  this.actions[key] = action;
+CLASSActionHandler.prototype.put = function (actionName, action) {
+  this.actions[actionName] = action;
   return action;
 };
 
 /**
  * Gets the action represented by the given key.
  * 
- * @param key
- *          The key to look for the action in the map.
+ * @param actionName
+ *          The name to look for the action in the map.
  * @returns The respective action, null if there is not any action in the map
- *          with the given key.
+ *          with the given name.
  */
-CLASSActionHandler.prototype.get = function (key) {
-  return this.actions[key];
+CLASSActionHandler.prototype.get = function (actionName) {
+  return this.actions[actionName];
+};
+
+/**
+ * Executes the action identified by the code name.
+ * 
+ * @param actionNameCode
+ *          The name of the action.
+ * @param parameters
+ *          The parameters for the action
+ * @author Gabriel Leonardo Diaz, 08.10.2013.
+ */
+CLASSActionHandler.prototype.executeAction = function (actionName, parameters) {
+  var action = this.get(actionNameCode);
+  if (action != null) {
+    action.funct(parameters);
+  }
+};
+
+/**
+ * Constructs a new action for the given parameters.
+ */
+CLASSAction = function (name, funct) {
+  mxEventSource.call(this);
+  
+  this.name     = name;
+  this.funct    = funct;
+  this.enabled  = true;
+};
+
+// CLASSAction inherits from mxEventSource
+mxUtils.extend(CLASSAction, mxEventSource);
+
+CLASSAction.prototype.setEnabled = function (enabled) {
+  this.enabled = enabled;
+};
+
+CLASSAction.prototype.isEnabled = function () {
+  return this.enabled;
 };
 
 /**

@@ -13,7 +13,7 @@
  * 
  * @author Gabriel Leonardo Diaz, 01.05.2013.
  */
-UMLPackage = function () { };
+UMLPackage = function () {};
 UMLPackage.prototype = new mxCylinder();
 UMLPackage.prototype.constructor = UMLPackage;
 UMLPackage.prototype.tabPosition = 'left';

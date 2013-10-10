@@ -9,7 +9,7 @@
 <ui:param name="title" value="#{msgs.DESIGNER_PAGE_BASE_TITLE}"/>
 
 <!-- Installs the method JavaScript invoked after page is loaded -->
-<ui:param name="executeOnload" value="#{designerController.executeOnLoad}" />
+<ui:param name="executeOnload" value="main();" />
 
 <ui:define name="stylesheet">
     <h:outputStylesheet name="layoutDesigner.css" library="css"/>
@@ -25,13 +25,13 @@
     </script>
     
     <h:outputScript library="js" name="mxClient.js" />
+    <h:outputScript library="js" name="CLASSModeler.js" />
     <h:outputScript library="js" name="CLASSEditor.js" />
     <h:outputScript library="js" name="CLASSGraph.js" />
     <h:outputScript library="js" name="CLASSPalette.js" />
     <h:outputScript library="js" name="CLASSActionHandler.js" />
     <h:outputScript library="js" name="CLASSAction.js" />
     <h:outputScript library="js" name="CLASSShape.js" />
-    <h:outputScript library="js" name="CLASSModeler.js" />
 </ui:define>
 
 <ui:define name="header">

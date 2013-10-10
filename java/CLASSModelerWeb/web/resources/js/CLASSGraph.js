@@ -14,9 +14,6 @@
 CLASSGraph = function (container, model, renderHint, stylesheet) {
   // Call super
   mxGraph.call(this, container, model, renderHint, stylesheet);
-  
-  // Stylesheet
-  this.loadStylesheet();
 };
 
 // Graph inherits from mxGraph
@@ -37,16 +34,13 @@ CLASSGraph.prototype.init = function (container) {
   this.allowAutoPanning = true;
   this.connectionHandler.setCreateTarget(true);
   
+  //Stylesheet
+  this.configureStylesheet();
+  
   // Install the lasso feature
   var rubberband = new mxRubberband(this);
   this.getRubberband = function() {
     return rubberband;
-  };
-  
-  // Install a key handler
-  var keyHandler = new mxKeyHandler(this);
-  this.getKeyHandler = function() {
-    return keyHandler;
   };
   
   // Disables the default popUpMenu, this avoids the default navigator's popUp is showed up.
@@ -67,12 +61,27 @@ CLASSGraph.prototype.init = function (container) {
 };
 
 /**
- * Loads the XML that contains the basic styles for graph elements.
+ * Configure the styles for vertexes and edges.
  */
-CLASSGraph.prototype.loadStylesheet = function () {
-  var node = mxUtils.load('/CLASSModeler/resources/config/CLASSGraphStyles.xml').getDocumentElement();
-  var dec = new mxCodec(node.ownerDocument);
-  dec.decode(node, this.getStylesheet());
+CLASSGraph.prototype.configureStylesheet = function () {
+  var style = new Object();
+  style[mxConstants.STYLE_SHAPE]              = mxConstants.SHAPE_SWIMLANE;
+  style[mxConstants.STYLE_PERIMETER]          = mxPerimeter.RectanglePerimeter;
+  style[mxConstants.STYLE_ALIGN]              = mxConstants.ALIGN_CENTER;
+  style[mxConstants.STYLE_VERTICAL_ALIGN]     = mxConstants.ALIGN_TOP;
+  style[mxConstants.STYLE_GRADIENTCOLOR]      = '#41B9F5';
+  style[mxConstants.STYLE_FILLCOLOR]          = '#8CCDF5';
+  style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+  style[mxConstants.STYLE_STROKECOLOR]        = '#1B78C8';
+  style[mxConstants.STYLE_FONTCOLOR]          = '#000000';
+  style[mxConstants.STYLE_STROKEWIDTH]        = '2';
+  style[mxConstants.STYLE_STARTSIZE]          = '28';
+  style[mxConstants.STYLE_VERTICAL_ALIGN]     = 'middle';
+  style[mxConstants.STYLE_FONTSIZE]           = '12';
+  style[mxConstants.STYLE_FONTSTYLE]          = 1;
+  style[mxConstants.STYLE_SHADOW]             = 1;
+  
+  this.stylesheet.putCellStyle('Class', style);
 };
 
 /**
@@ -91,6 +100,8 @@ CLASSGraph.prototype.createPopupMenu = function (menu, cell, evt) {
   };
   
   menu.addItem('MyItem', null, callbackFunction, null, 'ui-icon-gear', true);
+  
+  // TODO generar el menu contextual
 };
 
 /**

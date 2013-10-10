@@ -13,8 +13,7 @@
  */
 CLASSPalette = function (editor) {
   this.editor = editor;
-  
-  this.graph = new CLASSGraph(document.createElement('div'), null, null, this.editor.graph.getStylesheet());
+  this.graph  = new CLASSGraph(document.createElement('div'), null, null, this.editor.graph.getStylesheet());
   this.graph.foldingEnabled = false;
   this.graph.autoScroll = false;
   this.graph.setTooltips(false);
@@ -70,101 +69,168 @@ CLASSPalette.prototype.componentTitleSize = 9;
 CLASSPalette.prototype.init = function (container) {
   this.container = container;
   
- // Enumeration
-  var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Enumeration&gt;&gt;</i><br/><b>Enumeration</b></p><hr/>' +
-                                      '<p style="margin:0px;margin-left:4px;">+ field: Type</p>',
-                                      new mxGeometry(0, 0, 160, 70),
-                                      'align=left;overflow=fill;html=1');
-  enumerationElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([enumerationElement], 160, 70, 'Enumeration'));
+  var clazz = new Class('MyNewClass');
   
-  // Class
-  var classElement = new mxCell('<p style="margin: 4px 0px 0px 0px; text-align:center;"><b>Class</b></p><hr/>' +
-                                '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
-                                '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
-                                new mxGeometry(0, 0, 160, 80),
-                                'align=left;overflow=fill;html=1');
-  classElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 160, 80, 'Class'));
+  var attribute = new Attribute ('attributeOne');
+  attribute.visibility = VisibilityKind.PRIVATE;
+  attribute.type = 'int';
   
-  // Interface
-  var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p><hr/>' +
-                                    '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
-                                    '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
-                                    new mxGeometry(0, 0, 160, 85),
-                                    'align=left;overflow=fill;html=1');
-  interfaceElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 85, 'Interface'));
+  var clazzCell = new mxCell (clazz, new mxGeometry(0, 0, 160, 70), 'Class');
+  clazzCell.setVertex(true);
   
-  // Package
-  var packageElement = new mxCell('Package',
-                                  new mxGeometry(0, 0, 100, 70),
-                                  'shape=UMLPackage;spacingTop=10;');
-  packageElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 100, 70, 'Package'));
+  var attributeCell = new mxCell (attribute, new mxGeometry(0, 0, 0, 30));
+  attributeCell.setVertex(true);
+  attributeCell.setConnectable(false);
+  
+  clazzCell.insert(attributeCell);
+  
+  var image = document.createElement('img');
+  image.setAttribute('src', '../../resources/images/warning.png');
+  image.style.cursor = 'pointer';
+  image.title = 'Arrastre imagen para añadir elemento';
+  
+  this.container.appendChild(image);
+  
+  var dropFunction = function (graph, evt, cell) {
+    graph.stopEditing(false);
+    
+    var pt     = graph.getPointForEvent(evt);
+    var parent = graph.getDefaultParent();
+    var model  = graph.getModel();
+    
+    var newClass = model.cloneCell(clazzCell);
+    
+    model.beginUpdate();
+    try {
+      newClass.geometry.x = pt.x;
+      newClass.geometry.y = pt.y;
+      
+      graph.addCell(newClass, parent);
+    }
+    finally {
+      model.endUpdate();
+    }
+    
+    graph.setSelectionCell(newClass);
+  };
+  
+  var dragImage  = image.cloneNode(true);
+  var dragSource = mxUtils.makeDraggable(image, this.editor.graph, dropFunction, dragImage);
+  dragSource.highlightDropTargets = true;
+  dragSource.getDropTarget = function (graph, x, y) {
+    if (graph.isSwimlane(clazzCell)) {
+      return null;
+    }
+    else {
+      var cell = graph.getCellAt(x, y);
+      
+      if (graph.isSwimlane(cell)) {
+        return cell;
+      }
+      else {
+        var parent = graph.getModel().getParent(cell);
+        
+        if (graph.isSwimlane(parent)) {
+          return parent;
+        }
+      }
+    }
+  };
   
   
-  // Note
-  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 60, 70),'shape=UMLNote');
-  noteElement.vertex = true;
-  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 60, 70, 'Note'));
-  
-  // Association
-  var associationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=none;edgeStyle=orthogonalEdgeStyle;');
-  associationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  associationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  associationElement.edge = true;
-  
-  var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=bottom');
-  sourceLabel.geometry.relative = true;
-  sourceLabel.setConnectable(false);
-  sourceLabel.vertex = true;
-  associationElement.insert(sourceLabel);
-
-  var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom');
-  targetLabel.geometry.relative = true;
-  targetLabel.setConnectable(false);
-  targetLabel.vertex = true;
-  associationElement.insert(targetLabel);
-  this.container.appendChild(this.createEdgeTemplateFromCells([associationElement], 140, 0, 'Association', true));
-  
-  // Aggregation
-  var aggregationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=0;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
-  aggregationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  aggregationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  aggregationElement.geometry.relative = true;
-  aggregationElement.geometry.x = -1;
-  aggregationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([aggregationElement], 140, 0, 'Aggregation'));
-  
-  // Composition
-  var compositionElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=1;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
-  compositionElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  compositionElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  compositionElement.edge = true;
-  
-  this.container.appendChild(this.createEdgeTemplateFromCells([compositionElement], 140, 0, 'Composition'));
-  
-  // Generalization
-  var generalizationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=0');
-  generalizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  generalizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  generalizationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([generalizationElement], 140, 0, 'Generalization'));
-  
- // Realization
-  var realizationElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=1');
-  realizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  realizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  realizationElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([realizationElement], 140, 0, 'Realization'));
-  
-  // Note Link
-  var noteLinkElement = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=none;startArrow=none;edgeStyle=orthogonalEdgeStyle;dashed=1');
-  noteLinkElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-  noteLinkElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
-  noteLinkElement.edge = true;
-  this.container.appendChild(this.createEdgeTemplateFromCells([noteLinkElement], 140, 0, 'Note Link'));
+// // Enumeration
+//  var enumerationElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Enumeration&gt;&gt;</i><br/><b>Enumeration</b></p><hr/>' +
+//                                      '<p style="margin:0px;margin-left:4px;">+ field: Type</p>',
+//                                      new mxGeometry(0, 0, 160, 70),
+//                                      'align=left;overflow=fill;html=1');
+//  enumerationElement.vertex = true;
+//  this.container.appendChild(this.createVertexTemplateFromCells([enumerationElement], 160, 70, 'Enumeration'));
+//  
+//  // Class
+//  var classElement = new mxCell('<p style="margin: 4px 0px 0px 0px; text-align:center;"><b>Class</b></p><hr/>' +
+//                                '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
+//                                '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
+//                                new mxGeometry(0, 0, 160, 80),
+//                                'align=left;overflow=fill;html=1');
+//  classElement.vertex = true;
+//  this.container.appendChild(this.createVertexTemplateFromCells([classElement], 160, 80, 'Class'));
+//  
+//  // Interface
+//  var interfaceElement = new mxCell('<p style="margin:0px;margin-top:4px;text-align:center;"><i>&lt;&lt;Interface&gt;&gt;</i><br/><b>Interface</b></p><hr/>' +
+//                                    '<p style="margin:0px 0px 0px 4px;">+ field: Type</p><hr/>' +
+//                                    '<p style="margin:0px 0px 0px 4px;">+ method(): Type</p>',
+//                                    new mxGeometry(0, 0, 160, 85),
+//                                    'align=left;overflow=fill;html=1');
+//  interfaceElement.vertex = true;
+//  this.container.appendChild(this.createVertexTemplateFromCells([interfaceElement], 160, 85, 'Interface'));
+//  
+//  // Package
+//  var packageElement = new mxCell('Package', new mxGeometry(0, 0, 100, 70), 'shape=UMLPackage;spacingTop=10;');
+//  packageElement.vertex = true;
+//  this.container.appendChild(this.createVertexTemplateFromCells([packageElement], 100, 70, 'Package'));
+//  
+//  
+//  // Note
+//  var noteElement = new mxCell('Note', new mxGeometry(0, 0, 60, 70),'shape=UMLNote');
+//  noteElement.vertex = true;
+//  this.container.appendChild(this.createVertexTemplateFromCells([noteElement], 60, 70, 'Note'));
+//  
+//  // Association
+//  var associationElement = new mxCell('association', new mxGeometry(0, 0, 0, 0), 'endArrow=none;edgeStyle=orthogonalEdgeStyle;');
+//  associationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  associationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  associationElement.edge = true;
+//  
+//  var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=bottom');
+//  sourceLabel.geometry.relative = true;
+//  sourceLabel.setConnectable(false);
+//  sourceLabel.vertex = true;
+//  associationElement.insert(sourceLabel);
+//
+//  var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom');
+//  targetLabel.geometry.relative = true;
+//  targetLabel.setConnectable(false);
+//  targetLabel.vertex = true;
+//  associationElement.insert(targetLabel);
+//  this.container.appendChild(this.createEdgeTemplateFromCells([associationElement], 140, 0, 'Association', true));
+//  
+//  // Aggregation
+//  var aggregationElement = new mxCell('aggregation', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=0;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
+//  aggregationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  aggregationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  aggregationElement.geometry.relative = true;
+//  aggregationElement.geometry.x = -1;
+//  aggregationElement.edge = true;
+//  this.container.appendChild(this.createEdgeTemplateFromCells([aggregationElement], 140, 0, 'Aggregation'));
+//  
+//  // Composition
+//  var compositionElement = new mxCell('composition', new mxGeometry(0, 0, 0, 0), 'endArrow=diamondThin;endSize=16;endFill=1;startArrow=open;startSize=12;edgeStyle=orthogonalEdgeStyle;');
+//  compositionElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  compositionElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  compositionElement.edge = true;
+//  
+//  this.container.appendChild(this.createEdgeTemplateFromCells([compositionElement], 140, 0, 'Composition'));
+//  
+//  // Generalization
+//  var generalizationElement = new mxCell('generalization', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=0');
+//  generalizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  generalizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  generalizationElement.edge = true;
+//  this.container.appendChild(this.createEdgeTemplateFromCells([generalizationElement], 140, 0, 'Generalization'));
+//  
+// // Realization
+//  var realizationElement = new mxCell('realization', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=0;endSize=16;startArrow=none;dashed=1');
+//  realizationElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  realizationElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  realizationElement.edge = true;
+//  this.container.appendChild(this.createEdgeTemplateFromCells([realizationElement], 140, 0, 'Realization'));
+//  
+//  // Note Link
+//  var noteLinkElement = new mxCell('note', new mxGeometry(0, 0, 0, 0), 'endArrow=none;startArrow=none;edgeStyle=orthogonalEdgeStyle;dashed=1');
+//  noteLinkElement.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+//  noteLinkElement.geometry.setTerminalPoint(new mxPoint(140, 0), false);
+//  noteLinkElement.edge = true;
+//  this.container.appendChild(this.createEdgeTemplateFromCells([noteLinkElement], 140, 0, 'Note Link'));
 };
 
 /**
@@ -285,7 +351,7 @@ CLASSPalette.prototype.createItem = function(cells, title, vertex) {
 /**
  * Creates a thumbnail for the given cells.
  */
-CLASSPalette.prototype.createThumb = function(cells, width, height, tdImage, tdText, title) {
+CLASSPalette.prototype.createThumb = function(cell, width, height, tdImage, tdText, title) {
   // Workaround for off-screen text rendering in IE
   var old = mxText.prototype.getTableSize;
   
@@ -304,7 +370,7 @@ CLASSPalette.prototype.createThumb = function(cells, width, height, tdImage, tdT
   
   this.graph.view.rendering = false;
   this.graph.view.setScale(1);
-  this.graph.addCells(cells);
+  this.graph.addCell(cell);
   
   var bounds = this.graph.getGraphBounds();
   var corr = (this.shiftThumbs) ? this.thumbBorder + 1 : this.thumbBorder;

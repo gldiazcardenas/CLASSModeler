@@ -16,18 +16,15 @@ var EDITOR;
 /**
  * Main Function, this starts the mxGraph client side application.
  * 
- * @param initialXML
- *          The initial components painted in the graph represented as an
- *          XML.
  * @author Gabriel Leonardo Diaz, 01.05.2013.
  */
-function main (initialXML) {
+function main () {
   if (!mxClient.isBrowserSupported()) {
     mxUtils.error('Browser is not supported for mxGraph!', 200, false);
     return;
   }
   
-  var urlInit          = null;//"/CLASSModeler/Designer?init";
+  var urlInit          = "/CLASSModeler/Designer?init";
   var urlImage         = "/CLASSModeler/Designer?image";
   var urlPool          = "/CLASSModeler/Designer?poll";
   var urlNotify        = "/CLASSModeler/Designer?notify";
@@ -37,5 +34,5 @@ function main (initialXML) {
   var outlineContainer = document.getElementById("outline");
   
   EDITOR = new CLASSEditor(urlInit, urlImage, urlPool, urlNotify);
-  EDITOR.init(initialXML, graphContainer, paletteContainer, outlineContainer);
+  EDITOR.init(graphContainer, paletteContainer, outlineContainer);
 }
