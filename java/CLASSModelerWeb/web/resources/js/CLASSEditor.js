@@ -29,68 +29,73 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.init = function (graphContainer, paletteContainer, outlineContainer) {
+CLASSEditor.prototype.init = function (graphContainer, outlineContainer, toolboxContainer) {
   this.layoutSwimlanes = true;
   
-  // Creates the Graph
-  this.setGraphContainer(graphContainer);
+  // 1. Graph
+  this.configureGraph(graphContainer);
   
-  // Creates the outline (zoom panel)
-  this.outline = new mxOutline(this.graph);
-  this.outline.init(outlineContainer);
-  this.outline.updateOnPan = true;
+  // 2. Outline
+  this.configureOutline(outlineContainer);
   
-  // Creates the Palette component.
-  this.palette = new CLASSPalette(this);
-  this.palette.init(paletteContainer);
+  // 3. Toolbox
+  this.configureToolbox(toolboxContainer);
   
-  // Creates the Actions Handler
-  this.actionHandler = new CLASSActionHandler(this);
-  this.actionHandler.init();
+  // 4. Actions
+  this.configureActions();
   
-  // Creates the UnDo-ReDo Handler
+  // 5. Undo Manager
   this.configureUndoManager();
   
-  // Creates the Key Action Handler
+  // 6. Key Manager
   this.configureKeyManager();
-  
-  
 };
 
 /**
- * Override default layout cell to include child swimlanes.
+ * Configures the graph component by setting special behaviors.
+ * 
+ * @param container
+ *          The container HTML element for the graph.
+ * @author Gabriel Leonardo Diaz, 17.10.2013.
  */
-mxLayoutManager.prototype.layoutCells = function(cells) {
-  if (cells.length > 0)
-  {
-    // Invokes the layouts while removing duplicates
-    var model = this.getGraph().getModel();
-    
-    model.beginUpdate();
-    try 
-    {
-      var last = null;
-      
-      for (var i = 0; i < cells.length; i++)
-      {
-        if (cells[i] != model.getRoot() && cells[i] != last)
-        {
-          last = cells[i];
-          this.executeLayout(this.getLayout(last), last);
-          
-          if (last.children != null) {
-            this.layoutCells(last.children);
-          }
-        }
-      }
-      
-      this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
-    }
-    finally
-    {
-      model.endUpdate();
-    }
-  }
+CLASSEditor.prototype.configureGraph = function (container) {
+  this.setGraphContainer(container);
+  this.graph.dropEnabled = true;
+};
+
+/**
+ * Configures the outline component for the editor.
+ * 
+ * @param container
+ *          The HTML container for the outline.
+ * @author Gabriel Leonardo Diaz, 17.10.2013.
+ */
+CLASSEditor.prototype.configureOutline = function (container) {
+  this.outline = new mxOutline(this.graph);
+  this.outline.init(container);
+  this.outline.updateOnPan = true;
+};
+
+/**
+ * Configures the toolbox component for the editor.
+ * 
+ * @param container
+ *          The HTML container for the toolbox.
+ * @author Gabriel Leonardo Diaz, 17.10.2013.
+ */
+CLASSEditor.prototype.configureToolbox = function (container) {
+  this.toolbox = new CLASSToolbox(this);
+  this.toolbox.init(container);
+};
+
+/**
+ * Configures the actions for the editor.
+ * 
+ * @author Gabriel Leonardo Diaz, 17.10.2013.
+ */
+CLASSEditor.prototype.configureActions = function () {
+  this.actionHandler = new CLASSActionHandler(this);
+  this.actionHandler.init();
 };
 
 /**

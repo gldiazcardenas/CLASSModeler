@@ -13,6 +13,11 @@
  */
 var EDITOR;
 
+mxEditor.prototype.urlInit   = "/CLASSModeler/Designer?init";
+mxEditor.prototype.urlImage  = "/CLASSModeler/Designer?image";
+mxEditor.prototype.urlPoll   = "/CLASSModeler/Designer?poll";
+mxEditor.prototype.urlNotify = "/CLASSModeler/Designer?notify";
+
 /**
  * Main Function, this starts the mxGraph client side application.
  * 
@@ -24,15 +29,17 @@ function main () {
     return;
   }
   
-  var urlInit          = "/CLASSModeler/Designer?init";
-  var urlImage         = "/CLASSModeler/Designer?image";
-  var urlPool          = "/CLASSModeler/Designer?poll";
-  var urlNotify        = "/CLASSModeler/Designer?notify";
+  var urlInit   = "/CLASSModeler/Designer?init";
+  var urlImage  = "/CLASSModeler/Designer?image";
+  var urlPoll   = "/CLASSModeler/Designer?poll";
+  var urlNotify = "/CLASSModeler/Designer?notify";
   
   var graphContainer   = document.getElementById("graph");
-  var paletteContainer = document.getElementById("toolbox");
+  var toolboxContainer = document.getElementById("toolbox");
   var outlineContainer = document.getElementById("outline");
   
-  EDITOR = new CLASSEditor(urlInit, urlImage, urlPool, urlNotify);
-  EDITOR.init(graphContainer, paletteContainer, outlineContainer);
+  EDITOR = new CLASSEditor(urlInit, urlImage, urlPoll, urlNotify);
+  EDITOR.init(graphContainer, outlineContainer, toolboxContainer);
 }
+
+
