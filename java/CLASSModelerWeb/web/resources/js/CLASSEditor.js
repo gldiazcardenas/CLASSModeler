@@ -30,47 +30,82 @@ mxUtils.extend(CLASSEditor, mxEditor);
  * Initializer method for the CLASSEditor.
  */
 CLASSEditor.prototype.init = function (graphContainer, paletteContainer, outlineContainer) {
-  // Gets the containers
-  this.graphContainer   = graphContainer;
-  this.paletteContainer = paletteContainer;
-  this.outlineContainer = outlineContainer;
+  this.layoutSwimlanes = true;
   
   // Creates the Graph
-  this.graph = new CLASSGraph();
-  this.graph.init(this.graphContainer);
-  this.graph.refresh();
+  this.setGraphContainer(graphContainer);
   
   // Creates the outline (zoom panel)
   this.outline = new mxOutline(this.graph);
-  this.outline.init(this.outlineContainer);
+  this.outline.init(outlineContainer);
   this.outline.updateOnPan = true;
   
   // Creates the Palette component.
   this.palette = new CLASSPalette(this);
-  this.palette.init(this.paletteContainer);
+  this.palette.init(paletteContainer);
   
   // Creates the Actions Handler
   this.actionHandler = new CLASSActionHandler(this);
   this.actionHandler.init();
   
   // Creates the UnDo-ReDo Handler
-  this.undoManager = this.createUndoRedoManager();
+  this.configureUndoManager();
   
   // Creates the Key Action Handler
-  this.keyHandler = this.createKeyManager();
+  this.configureKeyManager();
+  
+  
 };
 
 /**
- * Creates the UNDO-REDO handler mechanism and installs it into the graph
- * editor.
+ * Override default layout cell to include child swimlanes.
  */
-CLASSEditor.prototype.createUndoRedoManager = function () {
-  var undoRedoManager = new mxUndoManager();
-  var graph           = this.graph;
+mxLayoutManager.prototype.layoutCells = function(cells) {
+  if (cells.length > 0)
+  {
+    // Invokes the layouts while removing duplicates
+    var model = this.getGraph().getModel();
+    
+    model.beginUpdate();
+    try 
+    {
+      var last = null;
+      
+      for (var i = 0; i < cells.length; i++)
+      {
+        if (cells[i] != model.getRoot() && cells[i] != last)
+        {
+          last = cells[i];
+          this.executeLayout(this.getLayout(last), last);
+          
+          if (last.children != null) {
+            this.layoutCells(last.children);
+          }
+        }
+      }
+      
+      this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+    }
+    finally
+    {
+      model.endUpdate();
+    }
+  }
+};
+
+/**
+ * Configures the UNDO-REDO handler mechanism and installs it into the graph
+ * editor.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.10.2013.
+ */
+CLASSEditor.prototype.configureUndoManager = function () {
+  var undoMgr = this.undoManager;
+  var graph   = this.graph;
   
   // Installs the command history
   var undoListener = function(sender, evt) {
-    undoRedoManager.undoableEditHappened(evt.getProperty('edit'));
+    undoMgr.undoableEditHappened(evt.getProperty('edit'));
   };
   
   graph.getModel().addListener(mxEvent.UNDO, undoListener);
@@ -89,26 +124,24 @@ CLASSEditor.prototype.createUndoRedoManager = function () {
     graph.setSelectionCells(cells);
   };
   
-  undoRedoManager.addListener(mxEvent.UNDO, undoHandler);
-  undoRedoManager.addListener(mxEvent.REDO, undoHandler);
+  undoMgr.addListener(mxEvent.UNDO, undoHandler);
+  undoMgr.addListener(mxEvent.REDO, undoHandler);
   
   // Update actions handler
   var undoAction    = this.actionHandler.get(CLASSActionName.UNDO);
   var redoAction    = this.actionHandler.get(CLASSActionName.REDO);
   var updateActions = function() {
-    undoAction.setEnabled(undoRedoManager.canUndo());
-    redoAction.setEnabled(undoRedoManager.canRedo());
+    undoAction.setEnabled(undoMgr.canUndo());
+    redoAction.setEnabled(undoMgr.canRedo());
   };
 
-  undoRedoManager.addListener(mxEvent.ADD, updateActions);
-  undoRedoManager.addListener(mxEvent.CLEAR, updateActions);
-  undoRedoManager.addListener(mxEvent.UNDO, updateActions);
-  undoRedoManager.addListener(mxEvent.REDO, updateActions);
+  undoMgr.addListener(mxEvent.ADD, updateActions);
+  undoMgr.addListener(mxEvent.CLEAR, updateActions);
+  undoMgr.addListener(mxEvent.UNDO, updateActions);
+  undoMgr.addListener(mxEvent.REDO, updateActions);
 
   // Updates the button states once
   updateActions();
-  
-  return undoRedoManager;
 };
 
 /**
@@ -117,11 +150,9 @@ CLASSEditor.prototype.createUndoRedoManager = function () {
  * 
  * @author Gabriel Leonardo Diaz, 16.06.2013.
  */
-CLASSEditor.prototype.createKeyManager = function () {
-  var graph = this.graph;
-  
+CLASSEditor.prototype.configureKeyManager = function () {
   // Instance the key handler object.
-  var keyHandler = new mxKeyHandler(graph);
+  var keyHandler = this.keyHandler.handler;
   
   // Binds keystrokes to actions
   var setActionKeyHandler = mxUtils.bind(this, function (keyCode, actionNameCode, control, shift, parameter) {
@@ -180,4 +211,22 @@ CLASSEditor.prototype.createKeyManager = function () {
  */
 CLASSEditor.prototype.executeAction = function (actionName, parameters) {
   this.actionHandler.executeAction (actionName, parameters);
+};
+
+/**
+ * Configures the layout for swimlanes.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.10.2013.
+ */
+CLASSEditor.prototype.createSwimlaneLayout = function () {
+  var layout          = new mxStackLayout(this.graph, false);
+  layout.fill         = true;
+  layout.resizeParent = true;
+  
+  // Overrides the function to always return true
+  layout.isVertexMovable = function(cell) {
+    return true;
+  };
+  
+  return layout;
 };

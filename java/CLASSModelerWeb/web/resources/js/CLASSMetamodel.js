@@ -6,7 +6,7 @@
  * @returns A class object.
  * @author Gabriel Leonardo Diaz, 09.10.2013.
  */
-function Class (name) {
+Class = function (name) {
   this.name       = name;
   this.attributes = new Array();
   this.operations = new Array();
@@ -15,25 +15,40 @@ Class.prototype.name       = null;
 Class.prototype.isAbstract = false;
 
 /**
- * Client side object for modeling a UML attribute element.
- * @param name The name of the attribute.
+ * Client side object for modeling a UML property element.
+ * 
+ * @param name
+ *          The name of the attribute.
  * @returns An attribute object.
  * @author Gabriel Leonardo Diaz, 09.10.2013.
  */
-function Attribute (name) {
+Property = function (name) {
   this.name = name;
 };
-Attribute.prototype.name        = null;
-Attribute.prototype.isStatic    = false;
-Attribute.prototype.type        = null;
+Property.prototype.name        = null;
+Property.prototype.isStatic    = false;
+Property.prototype.type        = null;
 
-function Operation (name) {
+/**
+ * Client side object for modeling a UML operation element.
+ * 
+ * @param name
+ *          The name of the operation.
+ * @returns An operation object.
+ * @author Gabriel Leonardo Diaz, 16.10.2013.
+ */
+Operation = function (name) {
   this.name = name;
-}
+};
 Operation.prototype.name        = null;
 Operation.prototype.isStatic    = false;
 Operation.prototype.returnType  = null;
 
+/**
+ * Constants that represent the visibility kinds in the UML metamodel.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.10.2013.
+ */
 var VisibilityKind = {
   PUBLIC    : '+',
   PROTECTED : '#',

@@ -54052,8 +54052,7 @@ mxGraph.prototype.isSwimlane = function (cell)
 
 			if (style != null && !this.model.isEdge(cell))
 			{
-				return style[mxConstants.STYLE_SHAPE] ==
-					mxConstants.SHAPE_SWIMLANE;
+				return style[mxConstants.STYLE_SHAPE] == mxConstants.SHAPE_SWIMLANE;
 			}
 		}
 	}
@@ -58700,8 +58699,7 @@ mxLayoutManager.prototype.layoutCells = function(cells)
 			
 			for (var i = 0; i < cells.length; i++)
 			{
-				if (cells[i] != model.getRoot() &&
-					cells[i] != last)
+				if (cells[i] != model.getRoot() && cells[i] != last)
 				{
 					last = cells[i];
 					this.executeLayout(this.getLayout(last), last);
@@ -71884,8 +71882,7 @@ mxEditor.prototype.createLayoutManager = function (graph)
 			// Executes the swimlane layout if a child of
 			// a swimlane has been changed. The layout is
 			// lazy created in createSwimlaneLayout.
-			if (self.layoutSwimlanes &&
-				graph.isSwimlane(cell))
+			if (self.layoutSwimlanes && graph.isSwimlane(cell))
 			{
 				if (self.swimlaneLayout == null)
 				{
@@ -71898,9 +71895,7 @@ mxEditor.prototype.createLayoutManager = function (graph)
 			// Executes the diagram layout if the modified
 			// cell is a top-level cell. The layout is
 			// lazy created in createDiagramLayout.
-			else if (self.layoutDiagram &&
-				(graph.isValidRoot(cell) ||
-				model.getParent(model.getParent(cell)) == null))
+			else if (self.layoutDiagram && (graph.isValidRoot(cell) || model.getParent(model.getParent(cell)) == null))
 			{
 				if (self.diagramLayout == null)
 				{
