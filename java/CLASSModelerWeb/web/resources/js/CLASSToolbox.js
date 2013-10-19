@@ -12,12 +12,28 @@
  * JavaScript CLASS that defines the designer toolBox.
  */
 CLASSToolbox = function (editor) {
-  this.editor = editor;
-  this.graph  = editor.graph;
+  this.editor    = editor;
+  this.graph     = editor.graph;
+  this.metamodel = new CLASSMetamodel();
   
   // Configures the styles
   this.configureStylesheet();
 };
+
+/**
+ * The instance of CLASSEditor component.
+ */
+CLASSToolbox.prototype.editor = null;
+
+/**
+ * The instance of mxGraph component.
+ */
+CLASSToolbox.prototype.graph = null;
+
+/**
+ * The instance of CLASSMetamodel component.
+ */
+CLASSToolbox.prototype.metamodel = null;
 
 /**
  * Initializer method for the CLASS Modeler toolBox.
@@ -34,43 +50,28 @@ CLASSToolbox.prototype.init = function (container) {
  * @author Gabriel Leonardo Diaz, 16.10.2013.
  */
 CLASSToolbox.prototype.createClassTemplate = function () {
-  var clazz = new Class('Clase');
-  clazz.isAbstract = true;
-  
-  var property1 = new Property ('attributeOne');
-  property1.visibility = VisibilityKind.PRIVATE;
-  property1.type = 'int';
-  
-  var property2 = new Property ('attributeTwo');
-  property2.visibility = VisibilityKind.PRIVATE;
-  property2.type = 'String';
-  
-  var property3 = new Property ('attributeThree');
-  property3.visibility = VisibilityKind.PRIVATE;
-  property3.type = 'float';
-  
-  var propertyCell1 = new mxCell (property1, new mxGeometry(0, 0, 160, 30));
+  var propertyCell1 = new mxCell (this.metamodel.createProperty('property1'), new mxGeometry(0, 0, 160, 30), 'Type');
   propertyCell1.setVertex(true);
   propertyCell1.setConnectable(false);
   
-  var propertyCell2 = new mxCell (property2, new mxGeometry(0, 0, 160, 30));
+  var propertyCell2 = new mxCell (this.metamodel.createProperty('property1'), new mxGeometry(0, 0, 160, 30), 'Type');
   propertyCell2.setVertex(true);
   propertyCell2.setConnectable(false);
   
-  var propertyCell3 = new mxCell (property3, new mxGeometry(0, 0, 160, 30));
-  propertyCell3.setVertex(true);
-  propertyCell3.setConnectable(false);
+  var operationCell1 = new mxCell (this.metamodel.createOperation('operation1'), new mxGeometry(0, 0, 160, 30), 'Type');
+  operationCell1.setVertex(true);
+  operationCell1.setConnectable(false);
   
-  var sectionProperty = new mxCell('Properties', new mxGeometry(0, 0, 160, 60), 'Class');
+  var sectionProperty = new mxCell(this.metamodel.createNamedElement('Properties'), new mxGeometry(0, 0, 160, 60), 'Section');
   sectionProperty.setVertex(true);
   sectionProperty.insert(propertyCell1);
   sectionProperty.insert(propertyCell2);
   
-  var sectionOperation = new mxCell('Operations', new mxGeometry(0, 0, 160, 60), 'Class');
+  var sectionOperation = new mxCell(this.metamodel.createNamedElement('Operations'), new mxGeometry(0, 0, 160, 60), 'Section');
   sectionOperation.setVertex(true);
-  sectionOperation.insert(propertyCell3);
+  sectionOperation.insert(operationCell1);
   
-  var clazzCell = new mxCell (clazz, new mxGeometry(0, 0, 160, 180), 'Class');
+  var clazzCell = new mxCell (this.metamodel.createClass('TestClass'), new mxGeometry(0, 0, 160, 180), 'Classifier');
   clazzCell.setVertex(true);
   clazzCell.insert(sectionProperty);
   clazzCell.insert(sectionOperation);
@@ -158,8 +159,13 @@ CLASSToolbox.prototype.addTemplate = function (template, imageURL, name, tooltip
  * Configure the styles for vertexes and edges.
  */
 CLASSToolbox.prototype.configureStylesheet = function () {
-  // Default vertex
   var style = new Object();
+  style[mxConstants.STYLE_ALIGN]              = mxConstants.ALIGN_LEFT;
+  style[mxConstants.STYLE_VERTICAL_ALIGN]     = mxConstants.ALIGN_MIDDLE;
+  this.graph.getStylesheet().putDefaultVertexStyle(style);
+  
+  // Type
+  style = new Object();
   style[mxConstants.STYLE_SHAPE]              = mxConstants.SHAPE_RECTANGLE;
   style[mxConstants.STYLE_PERIMETER]          = mxPerimeter.RectanglePerimeter;
   style[mxConstants.STYLE_ALIGN]              = mxConstants.ALIGN_LEFT;
@@ -168,27 +174,40 @@ CLASSToolbox.prototype.configureStylesheet = function () {
   style[mxConstants.STYLE_FONTSIZE]           = '11';
   style[mxConstants.STYLE_FONTSTYLE]          = 0;
   style[mxConstants.STYLE_SPACING_LEFT]       = '4';
-  style[mxConstants.STYLE_IMAGE_WIDTH]        = '48';
-  style[mxConstants.STYLE_IMAGE_HEIGHT]       = '48';
-  this.graph.getStylesheet().putDefaultVertexStyle(style);
+  this.graph.getStylesheet().putCellStyle('Type', style);
   
-  // Class
+  // Classifier
   style = new Object();
   style[mxConstants.STYLE_SHAPE]              = mxConstants.SHAPE_SWIMLANE;
   style[mxConstants.STYLE_PERIMETER]          = mxPerimeter.RectanglePerimeter;
   style[mxConstants.STYLE_ALIGN]              = mxConstants.ALIGN_CENTER;
-  style[mxConstants.STYLE_GRADIENTCOLOR]      = '#41B9F5';
-  style[mxConstants.STYLE_FILLCOLOR]          = '#8CCDF5';
-  style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-  style[mxConstants.STYLE_STROKECOLOR]        = '#1B78C8';
-  style[mxConstants.STYLE_FONTCOLOR]          = '#000000';
-  style[mxConstants.STYLE_STROKEWIDTH]        = '2';
-  style[mxConstants.STYLE_STARTSIZE]          = '28';
   style[mxConstants.STYLE_VERTICAL_ALIGN]     = mxConstants.ALIGN_MIDDLE;
+  style[mxConstants.STYLE_GRADIENTCOLOR]      = '#DDDDDD';
+  style[mxConstants.STYLE_FILLCOLOR]          = '#EEEEEE';
+  style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#FFFFFF';
+  style[mxConstants.STYLE_STROKECOLOR]        = '#BBBBBB';
+  style[mxConstants.STYLE_FONTCOLOR]          = '#000000';
+  style[mxConstants.STYLE_STROKEWIDTH]        = '1';
+  style[mxConstants.STYLE_STARTSIZE]          = '28';
   style[mxConstants.STYLE_FONTSIZE]           = '12';
   style[mxConstants.STYLE_FONTSTYLE]          = 1;
   style[mxConstants.STYLE_SHADOW]             = 1;
-  this.graph.getStylesheet().putCellStyle('Class', style);
+  this.graph.getStylesheet().putCellStyle('Classifier', style);
+  
+  // Section
+  style = new Object();
+  style[mxConstants.STYLE_SHAPE]              = mxConstants.SHAPE_SWIMLANE;
+  style[mxConstants.STYLE_PERIMETER]          = mxPerimeter.RectanglePerimeter;
+  style[mxConstants.STYLE_ALIGN]              = mxConstants.ALIGN_RIGHT;
+  style[mxConstants.STYLE_VERTICAL_ALIGN]     = mxConstants.ALIGN_MIDDLE;
+  style[mxConstants.STYLE_STROKECOLOR]        = '#BBBBBB';
+  style[mxConstants.STYLE_FILLCOLOR]          = '#FFFFFF';
+  style[mxConstants.STYLE_STARTSIZE]          = '20';
+  style[mxConstants.STYLE_FONTSIZE]           = '10';
+  style[mxConstants.STYLE_FONTSTYLE]          = 0;
+  style[mxConstants.STYLE_SHADOW]             = 0;
+  style[mxConstants.STYLE_STROKEWIDTH]        = '1';
+  this.graph.getStylesheet().putCellStyle('Section', style);
 };
 
 /**
