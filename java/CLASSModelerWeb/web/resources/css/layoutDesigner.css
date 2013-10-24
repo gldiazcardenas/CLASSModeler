@@ -45,3 +45,21 @@
     width: inherit;
     background: url("#{resource['images:grid.gif']}");
 }
+
+.template {
+    text-align: center;
+    padding: 3px;
+    margin: 4px auto;
+    width: 80px;
+    border: 1px solid #AAA;
+}
+
+.template:hover {
+    border: 1px solid #000000;
+}
+
+.template img {
+    display: block;
+    cursor: pointer;
+    margin: auto;
+}

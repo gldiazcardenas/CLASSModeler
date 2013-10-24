@@ -130,7 +130,7 @@ CLASSActionHandler.prototype.get = function (actionName) {
  * @author Gabriel Leonardo Diaz, 08.10.2013.
  */
 CLASSActionHandler.prototype.executeAction = function (actionName, parameters) {
-  var action = this.get(actionNameCode);
+  var action = this.get(actionName);
   if (action != null) {
     action.funct(parameters);
   }

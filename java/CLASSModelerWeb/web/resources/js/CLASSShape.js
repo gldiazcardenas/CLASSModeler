@@ -13,11 +13,12 @@
  * 
  * @author Gabriel Leonardo Diaz, 01.05.2013.
  */
-UMLPackage = function () {};
-UMLPackage.prototype = new mxCylinder();
-UMLPackage.prototype.constructor = UMLPackage;
-UMLPackage.prototype.tabPosition = 'left';
-UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
+ShapePackage = function () {};
+ShapePackage.prototype = new mxCylinder();
+ShapePackage.prototype.constructor = ShapePackage;
+ShapePackage.prototype.name        = 'ShapePackage';
+ShapePackage.prototype.tabPosition = 'left';
+ShapePackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
   
   var tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
   var tw = w * 0.50;
@@ -69,22 +70,23 @@ UMLPackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
     path.end();
   }
 };
-mxCellRenderer.prototype.defaultShapes['UMLPackage'] = UMLPackage;
+mxCellRenderer.prototype.defaultShapes['ShapePackage'] = ShapePackage;
 
 /**
  * Defines the shape for a common UML comment appended to any element.
  * 
- * @returns {UMLNote} The UMLNote share created.
+ * @returns {ShapeNote} The ShapeNote created.
  * @author Gabriel Leonardo Diaz, 16.06.2013.
  */
-UMLNote = function () { };
-UMLNote.prototype = new mxCylinder();
-UMLNote.prototype.constructor = UMLNote;
-UMLNote.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
+ShapeComment = function () {};
+ShapeComment.prototype = new mxCylinder();
+ShapeComment.prototype.constructor = ShapeComment;
+ShapeComment.prototype.name        = 'ShapeComment';
+ShapeComment.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
   
   var s = w * 0.20;
   if (s > 15) {
-    s = 15; // Not more than 15px.
+    s = 15; // No more than 15px.
   }
   
   this.size = s;
@@ -106,4 +108,4 @@ UMLNote.prototype.redrawPath = function (path, x, y, w, h, isForeground) {
     path.end();
   }
 };
-mxCellRenderer.prototype.defaultShapes['UMLNote'] = UMLNote;
+mxCellRenderer.prototype.defaultShapes['ShapeComment'] = ShapeComment;

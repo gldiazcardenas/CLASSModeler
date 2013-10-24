@@ -60,7 +60,105 @@ CLASSEditor.prototype.init = function (graphContainer, outlineContainer, toolbox
  */
 CLASSEditor.prototype.configureGraph = function (container) {
   this.setGraphContainer(container);
+  this.graph.setCellsDisconnectable(false);
+  this.graph.setCellsCloneable(false);
   this.graph.dropEnabled = true;
+  
+  // Determines if the cell is a class
+  this.graph.isClassCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'class';
+  };
+  
+  // Determines if the cell is an enumeration
+  this.graph.isEnumerationCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'enumeration';
+  };
+  
+  // Determines if the cell is an interface
+  this.graph.isInterfaceCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'interface';
+  };
+  
+  // Determines if the cell is a package
+  this.graph.isPackageCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'package';
+  };
+  
+  // Determines if the cell is a comment
+  this.graph.isCommentCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'comment';
+  };
+  
+  // Determines if the cell is a comment
+  this.graph.isAssociationCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'association';
+  };
+  
+  // Determines if the cell is a property
+  this.graph.isPropertyCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'property';
+  };
+  
+  // Determines if the cell is a operation
+  this.graph.isOperationCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'operation';
+  };
+  
+  // Determines if the cell is a named element
+  this.graph.isNamedElementCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'namedelement';
+  };
+  
+  // Determines if the cell is an enumeration literal
+  this.graph.isEnumerationLiteralCell = function (cell) {
+    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'enumerationliteral';
+  };
+  
+  // Determines if the cell can be resized
+  this.graph.isCellResizable = function (cell) {
+    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell) || this.isPackageCell(cell) || this.isCommentCell(cell);
+  };
+  
+  // Determines if the cell can be moved
+  this.graph.isCellMovable = function (cell) {
+    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell) || this.isPackageCell(cell) || this.isCommentCell(cell) || this.isAssociationCell(cell);
+  };
+  
+  // Determines if the cell can be collapsed
+  this.graph.isCellFoldable = function (cell) {
+    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell);
+  };
+  
+  // Converts the DOM user object to a string representation
+  this.graph.convertValueToString = function (cell) {
+    if (this.isClassCell(cell) || this.isNamedElementCell(cell) || this.isEnumerationLiteralCell(cell) || this.isPackageCell(cell)) {
+      return cell.getAttribute('name');
+    }
+    
+    if (this.isEnumerationCell(cell)) {
+      return '<<enum>>\n' + cell.getAttribute('name');
+    }
+    
+    if (this.isInterfaceCell(cell)) {
+      return '<<interfaz>>\n' + cell.getAttribute('name');
+    }
+    
+    if (this.isCommentCell(cell)) {
+      return cell.getAttribute('body');
+    } 
+    
+    if (this.isPropertyCell(cell)) {
+      return cell.getAttribute('visibility') + ' ' + cell.getAttribute('name') + ' : ' + cell.getAttribute('type');
+    }
+    
+    if (this.isOperationCell(cell)) {
+      // TODO GD include parameters
+      return cell.getAttribute('visibility') + ' ' + cell.getAttribute('name') + '() : ' + cell.getAttribute('returnType');
+    }
+    
+    // Super
+    return mxGraph.prototype.convertValueToString.apply (this, arguments);
+  };
 };
 
 /**
