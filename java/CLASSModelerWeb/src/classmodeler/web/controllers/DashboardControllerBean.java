@@ -23,6 +23,7 @@ import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
 import classmodeler.web.util.JSFGenericBean;
+import classmodeler.web.util.JSFOutcomeUtil;
 
 /**
  * JSF Bean controller for the DashBoard page, this handles all interaction of
@@ -42,8 +43,8 @@ public class DashboardControllerBean extends JSFGenericBean {
   private List<SharedItem> sharings;
   private List<Diagram> diagrams;
   
-  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private Diagrammer loggedUser;
+  @ManagedProperty("#{sessionController.diagrammer}")
+  private Diagrammer diagrammer;
   
   @ManagedProperty("#{designerController}")
   private DesignerControllerBean designerController;
@@ -63,7 +64,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    */
   public List<Diagram> getDiagrams () {
     if (diagrams == null) {
-      diagrams = diagramService.getDiagramsByDiagrammer(loggedUser); 
+      diagrams = diagramService.getDiagramsByDiagrammer(diagrammer); 
     }
     return diagrams;
   }
@@ -105,12 +106,21 @@ public class DashboardControllerBean extends JSFGenericBean {
     this.shared = shared;
   }
   
-  public void setLoggedUser(Diagrammer loggedUser) {
-    this.loggedUser = loggedUser;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
   }
   
   public void setDesignerController(DesignerControllerBean designerController) {
     this.designerController = designerController;
+  }
+  
+  /**
+   * Redirects the user to the Dashboard page.
+   * 
+   * @return The OUTCOME to the Dashboard page
+   */
+  public String goToDashboard () {
+    return JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   
   /**
@@ -120,7 +130,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedShareDiagram () {
-    if (diagram == null || loggedUser == null) {
+    if (diagram == null || diagrammer == null) {
       return false;
     }
     
@@ -142,7 +152,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedEditDiagram () {
-    if (diagram == null || loggedUser == null) {
+    if (diagram == null || diagrammer == null) {
       return false;
     }
     
@@ -174,7 +184,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedDeleteDiagram () {
-    return diagram != null && loggedUser != null;
+    return diagram != null && diagrammer != null;
   }
   
   /**
@@ -186,11 +196,11 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedChangePrivilege () {
-    if (shared == null || loggedUser == null) {
+    if (shared == null || diagrammer == null) {
       return false;
     }
     
-    return loggedUser.equals(shared.getDiagram().getCreatedBy());
+    return diagrammer.equals(shared.getDiagram().getCreatedBy());
   }
   
   /**

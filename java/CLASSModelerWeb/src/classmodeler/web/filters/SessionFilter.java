@@ -64,7 +64,7 @@ public class SessionFilter implements Filter {
       SessionControllerBean sessionController = (SessionControllerBean) session.getAttribute("sessionController");
       DesignerControllerBean designerController = (DesignerControllerBean) session.getAttribute("designerController");
       
-      if (sessionController == null || sessionController.getLoggedUser() == null) {
+      if (sessionController == null || sessionController.getUser() == null) {
         if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
           // Forbidden access, redirect to the index page.
           session.setAttribute("from", req.getRequestURI());

@@ -33,7 +33,7 @@ public class SessionControllerBean extends JSFGenericBean {
   
   private static final long serialVersionUID = 1L;
   
-  private User loggedUser;
+  private User user;
   
   @EJB
   private SessionService sessionService;
@@ -47,19 +47,20 @@ public class SessionControllerBean extends JSFGenericBean {
    * 
    * @return An instance of IUser.
    */
-  public User getLoggedUser() {
-    return loggedUser;
+  public User getUser() {
+    return user;
   }
   
   /**
-   * Gets the logged registered user.
+   * Gets the logged diagrammer.
    * 
-   * @return An instance of User.
+   * @return An instance of Diagrammer.
    */
-  public Diagrammer getLoggedRegisteredUser () {
-    if (loggedUser instanceof Diagrammer) {
-      return (Diagrammer) loggedUser;
+  public Diagrammer getDiagrammer () {
+    if (user instanceof Diagrammer) {
+      return (Diagrammer) user;
     }
+    
     return null;
   }
   
@@ -70,19 +71,19 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The name of the user logged.
    */
   public String getUserName () {
-    if (loggedUser == null) {
+    if (user == null) {
       return null;
     }
     
-    if (!loggedUser.isRegisteredUser()) {
-      return GenericUtils.getLocalizedMessage(loggedUser.getName());
+    if (!user.isRegisteredUser()) {
+      return GenericUtils.getLocalizedMessage(user.getName());
     }
     
-    return loggedUser.getName();
+    return user.getName();
   }
   
   public boolean isRegisteredUser () {
-    return loggedUser != null && loggedUser.isRegisteredUser();
+    return user != null && user.isRegisteredUser();
   }
   
   /**
@@ -95,7 +96,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * @throws InactivatedUserAccountException 
    */
   public void login (String email, String password) throws InvalidDiagrammerAccountException {
-    loggedUser = sessionService.logIn(email, password);
+    user = sessionService.logIn(email, password);
   }
   
   /**
@@ -106,22 +107,13 @@ public class SessionControllerBean extends JSFGenericBean {
    */
   public String logout () {
     // Remove the user specific information.
-    sessionService.logOut(loggedUser);
+    sessionService.logOut(user);
     
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
     if (session != null) {
       session.invalidate();
     }
     return JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
-  }
-  
-  /**
-   * Redirects the user to the Dashboard page.
-   * 
-   * @return The OUTCOME to the Dashboard page
-   */
-  public String goToDashboard () {
-    return JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   
 }

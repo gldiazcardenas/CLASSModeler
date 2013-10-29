@@ -2,7 +2,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
-                
+
 <p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="600">
     <h:form id="shareForm">
         <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic, bold" />
@@ -68,18 +68,6 @@
         }
       }
     </script>
-</p:dialog>
-
-<p:dialog id="changePrivDialog" header="" widgetVar="dlgChangePriv" closable="true" closeOnEscape="true" modal="true" width="400">
-    <h:form id="changePrivForm">
-        
-    </h:form>
-</p:dialog>
-
-<p:dialog id="deletePrivDialog" header="" widgetVar="dlgDeletePriv" closable="true" closeOnEscape="true" modal="true" width="400">
-    <h:form id="deletePrivForm">
-        
-    </h:form>
 </p:dialog>
 
 </ui:composition>

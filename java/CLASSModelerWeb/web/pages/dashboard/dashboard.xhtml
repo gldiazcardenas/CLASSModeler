@@ -12,7 +12,7 @@
 
 <ui:define name="user">
     <h:form id="userForm" style="float: right; margin: 40px 7px 0 0;">
-        <ui:include src="/pages/dashboard/userSection.xhtml"/>
+        <ui:include src="/pages/dashboard/user.xhtml"/>
     </h:form>
 </ui:define>
 
@@ -115,10 +115,14 @@
     </div>
     </div>
     
+    <ui:include src="/pages/dashboard/editProfile.xhtml"/>
+    <ui:include src="/pages/dashboard/changePassword.xhtml"/>
+    <ui:include src="/pages/dashboard/createEditDiagram.xhtml"/>
+    <ui:include src="/pages/dashboard/deleteDiagram.xhtml"/>
+    <ui:include src="/pages/dashboard/shareDiagram.xhtml"/>
+    <ui:include src="/pages/dashboard/changePrivilege.xhtml"/>
+    <ui:include src="/pages/dashboard/deletePrivilege.xhtml"/>
     
-    <ui:include src="/pages/dashboard/user.xhtml"/>
-    <ui:include src="/pages/dashboard/diagram.xhtml"/>
-    <ui:include src="/pages/dashboard/share.xhtml"/>
 </ui:define>
 
 </ui:composition>

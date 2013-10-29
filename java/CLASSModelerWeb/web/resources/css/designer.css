@@ -5,25 +5,21 @@
     background: none;
 }
 
-#header {
-    background-image: url("#{resource['images:background.jpg']}");
-}
-
-#content {
+#center {
     min-height: 520px;
 }
 
-#content-layout {
+#center-layout {
     margin: 2px;
     min-height: inherit;
 }
 
-#content-layout .pe-layout-pane-content {
+#center-layout .pe-layout-pane-content {
     padding: 0px;
     overflow: hidden;
 }
 
-#sidebarRight .ui-tree {
+#right .ui-tree {
     width: 100%;
     border: none;
 }
@@ -34,10 +30,6 @@
 
 #outline, #toolbox {
     height: inherit;
-}
-
-#properties table thead {
-    display: none;
 }
 
 .editorComponent {

@@ -35,8 +35,8 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
   private String newPassword;
   private String newConfirmation;
   
-  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private Diagrammer loggedUser;
+  @ManagedProperty("#{sessionController.diagrammer}")
+  private Diagrammer diagrammer;
   
   @EJB
   private UserService userService;
@@ -69,17 +69,17 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
     this.newPassword = newPassword;
   }
   
-  public void setLoggedUser(Diagrammer loggedUser) {
-    this.loggedUser = loggedUser;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
   }
 
   @Override
   public boolean isAllValid() {
-    if (loggedUser == null) {
+    if (diagrammer == null) {
       return false;
     }
     
-    if (!GenericUtils.equals(oldPassword, loggedUser.getPassword())) {
+    if (!GenericUtils.equals(oldPassword, diagrammer.getPassword())) {
       return false;
     }
     
@@ -96,8 +96,8 @@ public class ChangePasswordControllerBean extends JSFGenericBean implements JSFF
       return;
     }
     
-    loggedUser.setPassword(newPassword);
-    userService.updateDiagrammer(loggedUser);
+    diagrammer.setPassword(newPassword);
+    userService.updateDiagrammer(diagrammer);
     
     addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }

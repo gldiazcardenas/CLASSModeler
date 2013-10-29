@@ -1,54 +1,61 @@
-<ui:composition xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pe="http://primefaces.org/ui/extensions"
-                template="/templates/common.xhtml">
-
-<!-- Sets up the title of the page -->
-<ui:param name="title" value="#{msgs.DESIGNER_PAGE_BASE_TITLE}"/>
-
-<!-- Installs the method JavaScript invoked after page is loaded -->
-<ui:param name="executeOnload" value="main();" />
-
-<ui:define name="stylesheet">
-    <h:outputStylesheet name="layoutDesigner.css" library="css"/>
-    <h:outputStylesheet name="common.css" library="css"/>
-</ui:define>
-
-<ui:define name="script">
+<!DOCTYPE html>
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+      
+<h:head>
+    <meta charset="ISO-8859-1"/>
+    <title><h:outputText value="#{msgs.DESIGNER_PAGE_BASE_TITLE}" /></title>
+    
+    <!-- Scripts -->
     <h:outputScript library="js" name="mxClient.js" />
     <h:outputScript library="js" name="CLASSModeler.js" />
     <h:outputScript library="js" name="CLASSEditor.js" />
     <h:outputScript library="js" name="CLASSToolbox.js" />
     <h:outputScript library="js" name="CLASSActionHandler.js" />
     <h:outputScript library="js" name="CLASSMetamodel.js" />
-</ui:define>
-
-<ui:define name="header">
-    <div id="header">
-        <ui:include src="/pages/designer/menu.xhtml"/>
-        <ui:include src="/pages/designer/toolbar.xhtml"/>
-    </div>
-</ui:define>
-
-<ui:define name="content">
-    <!-- Layout distribution -->
-    <pe:layout id="content-layout" fullPage="false"  collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
-        <pe:layoutPane id="sidebarLeft" position="west" resizable="true" collapsible="true" minSize="150" maxSize="300">
-            <ui:include src="/pages/designer/sidebarLeft.xhtml" />
-        </pe:layoutPane>
-        
-        <pe:layoutPane id="workspace" position="center">
-            <ui:include src="/pages/designer/workspace.xhtml" />
-        </pe:layoutPane>
-        
-        <pe:layoutPane id="sidebarRight" position="east" resizable="true" collapsible="true" minSize="200" maxSize="300">
-            <ui:include src="/pages/designer/sidebarRight.xhtml" />
-        </pe:layoutPane>
-    </pe:layout>
     
-    <ui:include src="/pages/dashboard/user.xhtml"/>
-</ui:define>
+    <!-- Icon -->
+    <link rel="icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
+    
+    <!-- Style-sheets -->
+    <h:outputStylesheet name="designer.css" library="css"/>
+    <h:outputStylesheet name="base.css" library="css"/>
+    <h:outputStylesheet name="common.css" library="css"/>
+</h:head>
 
-</ui:composition>
+<h:body onload="CLASSModeler.init()">
+    <p:growl id="generalMessage" for="generalMessage" sticky="true" />
+    
+    <div id="menu"><ui:include src="/pages/designer/menu.xhtml"/></div>
+    
+    <div id="toolbar"><ui:include src="/pages/designer/toolbar.xhtml"/></div>
+    
+    <div id="center">
+        <pe:layout id="center-layout" fullPage="false"  collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
+            <pe:layoutPane id="left" position="west" resizable="true" collapsible="true" minSize="150" maxSize="300">
+                <ui:include src="/pages/designer/left.xhtml" />
+            </pe:layoutPane>
+            
+            <pe:layoutPane id="workspace" position="center">
+                <ui:include src="/pages/designer/workspace.xhtml" />
+            </pe:layoutPane>
+            
+            <pe:layoutPane id="right" position="east" resizable="true" collapsible="true" minSize="200" maxSize="300">
+                <ui:include src="/pages/designer/right.xhtml" />
+            </pe:layoutPane>
+        </pe:layout>
+    </div>
+    
+    <div id="footer">
+        <ui:include src="/templates/sections/footer.xhtml" />
+    </div>
+    
+    <ui:include src="/pages/dashboard/editProfile.xhtml"/>
+    <ui:include src="/pages/dashboard/changePassword.xhtml"/>
+</h:body>
+
+</html>

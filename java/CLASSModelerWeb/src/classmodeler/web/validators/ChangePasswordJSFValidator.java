@@ -49,7 +49,7 @@ public class ChangePasswordJSFValidator implements Validator {
   public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
     if (component.getId().equals("oldPassword")) {
       String oldPassword = (String) value;
-      if (!sessionController.getLoggedRegisteredUser().getPassword().equals(oldPassword)) {
+      if (!sessionController.getDiagrammer().getPassword().equals(oldPassword)) {
         FacesMessage message = new FacesMessage(GenericUtils.getLocalizedMessage("CHANGE_PASSWORD_INVALID_OLD_MESSAGE"));
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
         context.addMessage("changePasswordMessage", message);

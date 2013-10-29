@@ -40,12 +40,12 @@ import classmodeler.web.util.JSFGenericBean;
  */
 @ManagedBean (name="userProfileController")
 @ViewScoped
-public class UserProfileControllerBean extends JSFGenericBean implements JSFFormControllerBean {
+public class DiagrammerProfileControllerBean extends JSFGenericBean implements JSFFormControllerBean {
 
   private static final long serialVersionUID = 1L;
   
-  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private Diagrammer loggedUser;
+  @ManagedProperty("#{sessionController.diagrammer}")
+  private Diagrammer diagrammer;
   
   @EJB
   private UserService userService;
@@ -55,18 +55,18 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
   private EGender gender;
   private String avatar;
   
-  public UserProfileControllerBean() {
+  public DiagrammerProfileControllerBean() {
     super();
   }
   
-  public void setLoggedUser(Diagrammer loggedUser) {
-    this.loggedUser = loggedUser;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
     
-    if (loggedUser != null) {
-      firstName = loggedUser.getFirstName();
-      lastName  = loggedUser.getLastName();
-      gender    = loggedUser.getGender();
-      avatar    = loggedUser.getAvatar();
+    if (diagrammer != null) {
+      firstName = diagrammer.getFirstName();
+      lastName  = diagrammer.getLastName();
+      gender    = diagrammer.getGender();
+      avatar    = diagrammer.getAvatar();
     }
   }
   
@@ -119,7 +119,7 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
 
   @Override
   public boolean isAllValid() {
-    if (loggedUser == null) {
+    if (diagrammer == null) {
       return false;
     }
     
@@ -192,12 +192,12 @@ public class UserProfileControllerBean extends JSFGenericBean implements JSFForm
       return;
     }
     
-    loggedUser.setFirstName(firstName);
-    loggedUser.setLastName(lastName);
-    loggedUser.setGender(gender);
-    loggedUser.setAvatar(avatar);
+    diagrammer.setFirstName(firstName);
+    diagrammer.setLastName(lastName);
+    diagrammer.setGender(gender);
+    diagrammer.setAvatar(avatar);
     
-    userService.updateDiagrammer(loggedUser);
+    userService.updateDiagrammer(diagrammer);
     
     addInformationMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("SAVED_SUCCESSFULLY_MESSAGE"), null);
   }

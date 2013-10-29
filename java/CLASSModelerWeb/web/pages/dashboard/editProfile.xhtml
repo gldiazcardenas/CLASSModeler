@@ -1,0 +1,69 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<p:dialog id="profileDialog" widgetVar="dlgProfile" width="600" header="#{msgs.USER_PROFILE_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true" rendered="#{sessionController.registeredUser}">
+    <h:form id="profileForm" enctype="multipart/form-data">
+        <table style="width: 100%;">
+            <tr>
+                <td width="100" align="center" style="border-right: 1px solid #CCCCCC; padding-right: 5px;">
+                    <p:graphicImage id="avatar" url="#{userProfileController.avatar}" width="128" height="128" style="display: block; margin-bottom: 5px;" />
+                    <p:commandButton value="#{msgs.USER_PROFILE_DEFAULT_AVATAR_LABEL}" actionListener="#{userProfileController.setDefaultAvatar()}" update=":profileForm:avatar" icon="ui-icon-image" />
+                </td>
+                <td>
+                    <h:panelGrid columns="1" width="100%">
+                        <p:inputText id="firstName" value="#{userProfileController.firstName}" style="width: 99%;" />
+                        <p:watermark for="firstName" value="#{msgs.SIGN_UP_FORM_FIRST_NAME_FIELD}" />
+                        
+                        <p:inputText id="lastName" value="#{userProfileController.lastName}" style="width: 99%;" />
+                        <p:watermark for="lastName" value="#{msgs.SIGN_UP_FORM_LAST_NAME_FIELD}" />
+                        
+                        <p:selectOneRadio id="gender" value="#{userProfileController.gender}" converter="genderConverter" required="true">
+                            <f:selectItems value="#{userProfileController.gendersForSelectOneRadio}" />
+                        </p:selectOneRadio>
+                        
+                        <p:fileUpload auto="true"
+                                      mode="advanced"
+                                      update=":profileForm:avatar, :profileForm:profileMessage" 
+                                      fileUploadListener="#{userProfileController.handleFileUpload}"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                      sizeLimit="1050000"
+                                      invalidSizeMessage="#{msgs.INVALID_FILE_SIZE_MESSAGE}"
+                                      invalidFileMessage="#{msgs.INVALID_FILE_TYPE_MESSAGE}"
+                                      label="#{msgs.USER_PROFILE_CHANGE_AVATAR_LABEL}" />
+                        
+                        <p:messages id="profileMessage" for="userProfileMessage" />
+                        
+                        <p:separator />
+                        
+                        <h:panelGrid columns="3">
+                            <p:commandButton value="#{msgs.SAVE_LABEL}" actionListener="#{userProfileController.processAJAX()}"
+                                             update=":profileForm, :generalMessage, :userForm"
+                                             onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
+                                             oncomplete="responseProfile(xhr, status, args)" />
+                            
+                            <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgProfile.hide()" />
+                            
+                            <p:ajaxStatus style="width: 16px; height: 16px;">
+                                <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                                <f:facet name="complete"><h:outputText value="" /></f:facet>
+                            </p:ajaxStatus>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </td>
+            </tr>
+        </table>
+    </h:form>
+    
+    <!-- Callback function that hides the dialog -->
+    <script type="text/javascript">
+      function responseProfile(xhr, status, args) {
+        if (!args.validationFailed) {
+          dlgProfile.hide();
+        }
+      }
+    </script>
+</p:dialog>
+    
+</ui:composition>

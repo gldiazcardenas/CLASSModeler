@@ -52,8 +52,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
   
-  @ManagedProperty("#{sessionController.loggedRegisteredUser}")
-  private Diagrammer loggedUser;
+  @ManagedProperty("#{sessionController.diagrammer}")
+  private Diagrammer diagrammer;
   
   @ManagedProperty("#{formatController}")
   private FormatControllerBean formatController;
@@ -96,8 +96,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.dashBoardController = dashBoardController;
   }
   
-  public void setLoggedUser(Diagrammer loggedUser) {
-    this.loggedUser = loggedUser;
+  public void setDiagrammer(Diagrammer diagrammer) {
+    this.diagrammer = diagrammer;
   }
   
   public void setFormatController(FormatControllerBean formatController) {
@@ -157,7 +157,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public String getDeleteDiagramMessage () {
     StringBuilder sb = new StringBuilder();
     
-    if (mode == EDiagramControllerMode.DELETE && diagram != null && loggedUser != null) {
+    if (mode == EDiagramControllerMode.DELETE && diagram != null && diagrammer != null) {
       sb.append(GenericUtils.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
     }
     
@@ -249,7 +249,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   @Override
   public boolean isAllValid() {
-    return diagram != null && loggedUser != null && !GenericUtils.isEmptyString(name);
+    return diagram != null && diagrammer != null && !GenericUtils.isEmptyString(name);
   }
 
   @Override
@@ -264,7 +264,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       case COPY:
         diagram.setName(name);
         diagram.setDescription(description);
-        diagram.setCreatedBy(loggedUser);
+        diagram.setCreatedBy(diagrammer);
         diagramService.insertDiagram(diagram);
         dashBoardController.addDiagram(diagram);
         break;
@@ -273,7 +273,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       
         diagram.setName(name);
         diagram.setDescription(description);
-        diagram.setModifiedBy(loggedUser);
+        diagram.setModifiedBy(diagrammer);
         diagramService.updateDiagram(diagram);
         
         break;
