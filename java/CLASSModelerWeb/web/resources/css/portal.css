@@ -1,0 +1,97 @@
+@CHARSET "ISO-8859-1";
+
+#links {
+    height: 25px;
+    text-align: right;
+}
+
+.link-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 2px 5px 0px 0px;
+}
+
+.link-icon span {
+    width: inherit;
+    height: inherit;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#home-link {
+    background-image: url("#{resource['images:home_miniature.png']}");
+}
+
+#home-link:hover {
+    background-image: url("#{resource['images:home_miniature_gray.png']}");
+}
+
+#ufps-link {
+    background-image: url("#{resource['images:ufps_miniature.png']}");
+}
+
+#ufps-link:hover {
+    background-image: url("#{resource['images:ufps_miniature_gray.png']}");
+}
+
+#ingsistemas-link {
+    background-image: url("#{resource['images:ingsistemas_miniature.png']}");
+}
+
+#ingsistemas-link:hover {
+    background-image: url("#{resource['images:ingsistemas_miniature_gray.png']}");
+}
+
+#center {
+    width: 100%;
+    display: inline-block;
+}
+
+#center-content {
+    padding: 3% 5%;
+    min-height: 400px;
+}
+
+#center-content > div {
+    min-height: inherit;
+}
+
+#signUpSection {
+    float: left;
+    width: 50%;
+}
+
+#tryDemoSection {
+    float: left;
+    width: 50%;
+    text-align: center;
+    background-image: url("#{resource['images:diagrams.png']}");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#tryDemoCommand {
+    width: 150px;
+    height: 30px;
+    margin-top: 40%;
+    
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    border: 0px;
+    background-color: #E1061A;
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    
+    -webkit-box-shadow: 4px 3px 10px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    4px 3px 10px rgba(50, 50, 50, 0.75);
+    box-shadow:         4px 3px 10px rgba(50, 50, 50, 0.75);
+}
+
+#tryDemoCommand:hover {
+    color: #DDDDDD;
+}

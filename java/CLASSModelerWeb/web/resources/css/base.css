@@ -1,0 +1,114 @@
+@CHARSET "ISO-8859-1";
+
+body {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 0;
+    margin: 0;
+    padding: 10px 0px 0px 0px;
+    background-image: url("#{resource['images:background.jpg']}");
+}
+
+.ui-widget {
+    font-size: 1em;
+}
+
+.ui-datepicker-trigger {
+    margin-left: 2px;
+}
+
+.ui-separator {
+    border-top: 0px !important;
+}
+
+.block {
+    display: block;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.justify {
+    text-align: justify;
+}
+
+a:link , a:active, a:visited, a:hover {
+    color: inherit;
+}
+
+a:hover {
+    color: #CC0000;
+}
+
+#content {
+    width: 900px;
+    margin: 0px auto 0px auto;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    -webkit-box-shadow: 4px 0px 3px #CCCCCC, -4px 0px 3px #CCCCCC;
+    -moz-box-shadow:    4px 0px 3px #CCCCCC, -4px 0px 3px #CCCCCC;
+    box-shadow:         4px 0px 3px #CCCCCC, -4px 0px 3px #CCCCCC;
+}
+
+#header {
+    height: 110px;
+    border-bottom: 3px solid #CC0000;
+    background: rgb(237,237,237); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 17%, rgba(255,255,255,1) 66%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(237,237,237,1)), color-stop(17%,rgba(246,246,246,1)), color-stop(66%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(237,237,237,1) 0%,rgba(246,246,246,1) 17%,rgba(255,255,255,1) 66%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EDEDED', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
+}
+
+#header-left {
+    width: 60%;
+    float: left;
+    height: 100%;
+}
+
+#header-left h4 {
+    font-style: italic;
+}
+
+#header-right {
+    width: 40%;
+    float: left;
+    height: 100%;
+}
+
+#slogan {
+    width: 66%;
+    float: left;
+}
+
+#slogan a, #slogan a:hover {
+    text-decoration: none;
+    color: #000000;
+}
+
+#ufps-logo {
+    float: left;
+    margin: 20px 9px;
+}
+
+#ingsistemas-logo {
+    margin: 14px 9px;
+}
+
+#footer {
+    color: #FFFFFF;
+    text-align: center;
+    padding: 15px 0px;
+    border-top: 3px solid #CC0000;
+    background-color: #151618;
+}

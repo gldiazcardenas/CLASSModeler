@@ -2,100 +2,93 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" 
-                template="/templates/portal.xhtml">
+                template="/templates/base.xhtml">
                 
 <ui:param name="title" value="#{msgs.DASHBOARD_PAGE_BASE_TITLE}"/>
 
 <ui:define name="stylesheet">
-     <h:outputStylesheet name="layoutDashboard.css" library="css"/>
-     <h:outputStylesheet name="layoutPortal.css" library="css"/>
+     <h:outputStylesheet name="dashboard.css" library="css"/>
 </ui:define>
 
-<ui:define name="userSection">
+<ui:define name="user">
     <h:form id="userForm" style="float: right; margin: 40px 7px 0 0;">
         <ui:include src="/pages/dashboard/userSection.xhtml"/>
     </h:form>
 </ui:define>
 
-<ui:define name="links">
-    <!-- Removing the links -->
-    <h:outputText value="" />
-</ui:define>
-
 <ui:define name="center">
-    <div id="diagramsSection">
-        <div>
+    <div id="center-content">
+        <div id="diagramsSection">
             <table style="width: 100%">
                 <tr>
                     <td width="5%"><h:graphicImage name="note.png" library="images" width="40" height="40" /></td>
                     <td width="95%"><h2 style="margin: 3px;"><h:outputText value="#{msgs.DASHBOARD_PANEL_TITLE}" /></h2><p:separator style="margin: 0;"/></td>
                 </tr>
             </table>
+            
+            <h:form id="diagramButtonsForm" style="margin-bottom: 5px; margin-top: 10px;">
+                <p:commandButton icon="ui-icon-document" value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedShareDiagram}" />
+                <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedEditDiagram}" />
+                <p:commandButton icon="ui-icon-copy" title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedCopyDiagram}"  />
+                <p:commandButton icon="ui-icon-trash" title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.allowedDeleteDiagram}" />
+            </h:form>
+            
+            <h:form id="diagramsForm">
+                <p:contextMenu for="diagramsTable">
+                    <p:menuitem icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" />
+                    <p:menuitem icon="ui-icon-pencil" value="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                    <p:menuitem icon="ui-icon-copy" value="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
+                    <p:menuitem icon="ui-icon-trash" value="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" />
+                </p:contextMenu>
+                
+                <p:dataTable id="diagramsTable"
+                             value="#{dashBoardController.diagrams}"
+                             var="diagram"
+                             emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
+                             resizableColumns="true"
+                             rowKey="#{diagram.key}"
+                             selectionMode="single"
+                             selection="#{dashBoardController.diagram}"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10, 20, 30"
+                             rows="20">
+                             
+                    <p:ajax event="rowSelect" update=":sharingsForm :diagramButtonsForm, :sharingButtonsForm" />
+                    <p:ajax event="rowUnselect" update=":sharingsForm, :diagramButtonsForm, :sharingButtonsForm" />
+                    <p:ajax event="contextMenu" update=":sharingsForm, :diagramButtonsForm, :sharingButtonsForm" />
+                    
+                    <p:column headerText="#{msgs.COLUMN_DIAGRAM_NAME_LABEL}" sortBy="#{diagram.name}">
+                        <h:commandLink action="#{designerController.initEditDiagram()}" value="#{diagram.name}" title="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}">
+                            <f:setPropertyActionListener target="#{designerController.diagram}" value="#{diagram}" />
+                        </h:commandLink>
+                    </p:column>
+                    
+                    <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL}" sortBy="#{diagram.modifiedBy.name}">
+                        <h:outputText id="modifier" value="#{formatController.getFormattedUserName(diagram.modifiedBy)}" />
+                        <p:tooltip for="modifier">
+                            <p:graphicImage url="#{formatController.getUserAvatar(diagram.modifiedBy)}" width="80" height="80" />
+                        </p:tooltip>
+                    </p:column>
+                    
+                    <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIED_DATE_LABEL}" sortBy="#{diagram.modifiedDate}">
+                        <h:outputText value="#{formatController.getFormattedDate(diagram.modifiedDate)}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
         </div>
         
-        <h:form id="diagramButtonsForm" style="margin-bottom: 5px; margin-top: 10px;">
-            <p:commandButton icon="ui-icon-document" value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
-            <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedShareDiagram}" />
-            <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedEditDiagram}" />
-            <p:commandButton icon="ui-icon-copy" title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedCopyDiagram}"  />
-            <p:commandButton icon="ui-icon-trash" title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.allowedDeleteDiagram}" />
-        </h:form>
-        
-        <h:form id="diagramsForm">
-            <p:contextMenu for="diagramsTable">
-                <p:menuitem icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" />
-                <p:menuitem icon="ui-icon-pencil" value="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
-                <p:menuitem icon="ui-icon-copy" value="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
-                <p:menuitem icon="ui-icon-trash" value="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" />
-            </p:contextMenu>
+        <div id="shareSection">
+            <h:form id="sharingButtonsForm" style="margin-bottom: 5px;">
+                <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_CHANGE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedChangePrivilege}" style="margin-right: 3px;" />
+                <p:commandButton icon="ui-icon-closethick" title="#{msgs.BUTTON_REMOVE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedDeletePrivilege}" />
+            </h:form>
             
-            <p:dataTable id="diagramsTable"
-                         value="#{dashBoardController.diagrams}"
-                         var="diagram"
-                         emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
-                         resizableColumns="true"
-                         rowKey="#{diagram.key}"
-                         selectionMode="single"
-                         selection="#{dashBoardController.diagram}"
-                         paginator="true"
-                         paginatorPosition="bottom"
-                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="10, 20, 30"
-                         rows="20">
-                         
-                <p:ajax event="rowSelect" update=":sharingsForm :diagramButtonsForm, :sharingButtonsForm" />
-                <p:ajax event="rowUnselect" update=":sharingsForm, :diagramButtonsForm, :sharingButtonsForm" />
-                <p:ajax event="contextMenu" update=":sharingsForm, :diagramButtonsForm, :sharingButtonsForm" />
-                
-                <p:column headerText="#{msgs.COLUMN_DIAGRAM_NAME_LABEL}" sortBy="#{diagram.name}">
-                    <h:commandLink action="#{designerController.initEditDiagram()}" value="#{diagram.name}" title="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}">
-                        <f:setPropertyActionListener target="#{designerController.diagram}" value="#{diagram}" />
-                    </h:commandLink>
-                </p:column>
-                
-                <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL}" sortBy="#{diagram.modifiedBy.name}">
-                    <h:outputText id="modifier" value="#{formatController.getFormattedUserName(diagram.modifiedBy)}" />
-                    <p:tooltip for="modifier">
-                        <p:graphicImage url="#{formatController.getUserAvatar(diagram.modifiedBy)}" width="80" height="80" />
-                    </p:tooltip>
-                </p:column>
-                
-                <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIED_DATE_LABEL}" sortBy="#{diagram.modifiedDate}">
-                    <h:outputText value="#{formatController.getFormattedDate(diagram.modifiedDate)}" />
-                </p:column>
-            </p:dataTable>
-        </h:form>
-    </div>
-    
-    <div id="shareSection">
-        <h:form id="sharingButtonsForm" style="margin-bottom: 5px;">
-            <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_CHANGE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedChangePrivilege}" style="margin-right: 3px;" />
-            <p:commandButton icon="ui-icon-closethick" title="#{msgs.BUTTON_REMOVE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedDeletePrivilege}" />
-        </h:form>
-        
-        <h:form id="sharingsForm">
-            <p:dataTable id="sharingsTable"
-                         value="#{dashBoardController.sharings}"
+            <h:form id="sharingsForm">
+                <p:dataTable id="sharingsTable"
+                             value="#{dashBoardController.sharings}"
                          var="shared"
                          rowKey="#{shared.key}"
                          selectionMode="single"
@@ -120,6 +113,8 @@
             </p:dataTable>
         </h:form>
     </div>
+    </div>
+    
     
     <ui:include src="/pages/dashboard/user.xhtml"/>
     <ui:include src="/pages/dashboard/diagram.xhtml"/>

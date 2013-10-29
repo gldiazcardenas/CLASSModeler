@@ -9,38 +9,45 @@
  ******************************************************************************/
 
 /**
- * The reference to the editor component.
- */
-var EDITOR;
-
-/**
- * Main Function, this starts the mxGraph client side application.
+ * Singleton class that encapsulates the client side application for
+ * CLASSModeler software.
  * 
- * @author Gabriel Leonardo Diaz, 01.05.2013.
+ * @author Gabriel Leonardo Diaz, 26.10.2013.
  */
-function main () {
-  if (!mxClient.isBrowserSupported()) {
-    mxUtils.error('Browser is not supported for mxGraph!', 200, false);
-    return;
-  }
+var CLASSModeler = (function () {
   
-  var urlInit   = null;//"/CLASSModeler/Designer?init";
-  var urlImage  = "/CLASSModeler/Designer?image";
-  var urlPoll   = "/CLASSModeler/Designer?poll";
-  var urlNotify = "/CLASSModeler/Designer?notify";
+  var editor  = null;
+  var outline = null;
+  var toolbox = null;
   
-  var graphContainer   = document.getElementById("graph");
-  var toolboxContainer = document.getElementById("toolbox");
-  var outlineContainer = document.getElementById("outline");
+  return {
+    init : function () {
+      if (!mxClient.isBrowserSupported()) {
+        mxUtils.error('Browser is not supported for mxGraph!', 200, false);
+        return;
+      }
+      
+      editor = new CLASSEditor("/CLASSModeler/Designer?init", "/CLASSModeler/Designer?image", "/CLASSModeler/Designer?poll", "/CLASSModeler/Designer?notify");
+      editor.init(document.getElementById("graph"));
+      
+      outline = new mxOutline(editor.graph);
+      outline.init(document.getElementById("outline"));
+      outline.updateOnPan = true;
+      
+      toolbox = new CLASSToolbox(editor.graph);
+      toolbox.init(document.getElementById("toolbox"));
+    },
+    
+    execute : function (actionName) {
+      
+    },
+    
+    showXML : function () {
+      var encoder = new mxCodec();
+      var node = encoder.encode(editor.graph.getModel());
+      mxUtils.popup(mxUtils.getPrettyXml(node), true);
+    }
+  };
   
-  EDITOR = new CLASSEditor(urlInit, urlImage, urlPoll, urlNotify);
-  EDITOR.init(graphContainer, outlineContainer, toolboxContainer);
-}
-
-function viewXML () {
-  var encoder = new mxCodec();
-  var node = encoder.encode(EDITOR.graph.getModel());
-  mxUtils.popup(mxUtils.getPrettyXml(node), false);
-}
-
+})();
 

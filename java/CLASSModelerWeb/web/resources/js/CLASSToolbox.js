@@ -11,9 +11,8 @@
 /**
  * JavaScript CLASS that defines the designer toolBox.
  */
-CLASSToolbox = function (editor) {
-  this.editor    = editor;
-  this.graph     = editor.graph;
+CLASSToolbox = function (graph) {
+  this.graph     = graph;
   this.metamodel = new CLASSMetamodel();
   
   // Configures the styles
@@ -21,19 +20,14 @@ CLASSToolbox = function (editor) {
 };
 
 /**
- * The instance of CLASSEditor component.
- */
-CLASSToolbox.prototype.editor = null;
-
-/**
  * The instance of mxGraph component.
  */
-CLASSToolbox.prototype.graph = null;
+CLASSToolbox.prototype.graph;
 
 /**
  * The instance of CLASSMetamodel component.
  */
-CLASSToolbox.prototype.metamodel = null;
+CLASSToolbox.prototype.metamodel;
 
 /**
  * The default height of an element.
@@ -52,22 +46,22 @@ CLASSToolbox.prototype.init = function (container) {
   this.container = container;
   
   // Package
-  this.addTemplate(this.createPackageTemplate(), '../../resources/images/package_template.png', 'Paquete', 'Arrastrar para agregar un paquete');
+  this.addTemplate(this.createPackageTemplate(), '../../resources/images/uml_package.png', 'Paquete', 'Arrastrar para agregar un paquete');
   
   // Class
-  this.addTemplate(this.createClassTemplate(), '../../resources/images/class_template.png', 'Clase', 'Arrastrar para agregar una clase');
+  this.addTemplate(this.createClassTemplate(), '../../resources/images/uml_class.png', 'Clase', 'Arrastrar para agregar una clase');
   
   // Interface
-  this.addTemplate(this.createInterfaceTemplate(), '../../resources/images/interface_template.png', 'Interfaz', 'Arrastrar para agregar una interfaz');
+  this.addTemplate(this.createInterfaceTemplate(), '../../resources/images/uml_interface.png', 'Interfaz', 'Arrastrar para agregar una interfaz');
   
   // Enumeration
-  this.addTemplate(this.createEnumerationTemplate(), '../../resources/images/enumeration_template.png', 'Enumeracion', 'Arrastra para agregar una enumeracion');
+  this.addTemplate(this.createEnumerationTemplate(), '../../resources/images/uml_enumeration.png', 'Enumeracion', 'Arrastra para agregar una enumeracion');
   
   // Comment
-  this.addTemplate(this.createCommentTemplate(), '../../resources/images/comment_template.png', 'Comentario', 'Arrastra para agregar un comentario');
+  this.addTemplate(this.createCommentTemplate(), '../../resources/images/uml_comment.png', 'Comentario', 'Arrastra para agregar un comentario');
   
   // Composition
-  this.addTemplate(this.createCompositionTemplate(), '../../resources/images/composition_template.png', 'Composicion', 'Arrastra para agregar una composicion');
+  this.addTemplate(this.createCompositionTemplate(), '../../resources/images/uml_composition.png', 'Composicion', 'Arrastra para agregar una composicion');
 };
 
 /**
@@ -326,35 +320,114 @@ CLASSToolbox.prototype.configureStylesheet = function () {
   this.graph.getStylesheet().putCellStyle('Composition', style);
 };
 
-/**
- * Override default layout cell to include child nested swimlanes.
+/*******************************************************************************
  * 
- * @author Gabriel Leonardo Diaz, 17.10.2013.
+ * Universidad Francisco de Paula Santander UFPS 
+ * Cúcuta, Colombia 
+ * (c) 2013 by UFPS. All rights reserved.
+ * 
+ * @author: Gabriel Leonardo Diaz, 01.05.2013.
+ * 
+ ******************************************************************************/
+
+/**
+ * Defines the shape for UML package element.
+ * 
+ * @author Gabriel Leonardo Diaz, 01.05.2013.
  */
-mxLayoutManager.prototype.layoutCells = function(cells) {
-  if (cells.length > 0) {
-    // Invokes the layouts while removing duplicates
-    var model = this.getGraph().getModel();
-    model.beginUpdate();
+ShapePackage = function () {};
+ShapePackage.prototype = new mxCylinder();
+ShapePackage.prototype.constructor = ShapePackage;
+ShapePackage.prototype.name        = 'ShapePackage';
+ShapePackage.prototype.tabPosition = 'left';
+ShapePackage.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
+  
+  var tp = mxUtils.getValue(this.style, 'tabPosition', this.tabPosition);
+  var tw = w * 0.50;
+  var th = h * 0.20;
+  
+  if (th > 20) {
+    th = 20; // Not more than 20px.
+  }
+  
+  if (tw > 80) {
+    tw = 80; // Not more than 80px.
+  }
+  
+  var dx = Math.min(w, tw);
+  var dy = Math.min(h, th);
+
+  if (isForeground) {
+    if (tp == 'left') {
+      path.moveTo(0, dy);
+      path.lineTo(dx, dy);
+    }
+    // Right is default
+    else {
+      path.moveTo(w - dx, dy);
+      path.lineTo(w, dy);
+    }
     
-    try {
-      var last = null;
-      
-      for (var i = 0; i < cells.length; i++) {
-        if (cells[i] != model.getRoot() && cells[i] != last) {
-          last = cells[i];
-          this.executeLayout(this.getLayout(last), last);
-          
-          if (last.children != null) {
-            this.layoutCells(last.children);
-          }
-        }
-      }
-      
-      this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+    path.end();
+  }
+  else {
+    if (tp == 'left') {
+      path.moveTo(0, 0);
+      path.lineTo(dx, 0);
+      path.lineTo(dx, dy);
+      path.lineTo(w, dy);
     }
-    finally {
-      model.endUpdate();
+    // Right is default
+    else {
+      path.moveTo(0, dy);
+      path.lineTo(w - dx, dy);
+      path.lineTo(w - dx, 0);
+      path.lineTo(w, 0);
     }
+    
+    path.lineTo(w, h);
+    path.lineTo(0, h);
+    path.lineTo(0, dy);
+    path.close();
+    path.end();
   }
 };
+mxCellRenderer.prototype.defaultShapes['ShapePackage'] = ShapePackage;
+
+/**
+ * Defines the shape for a common UML comment appended to any element.
+ * 
+ * @returns {ShapeNote} The ShapeNote created.
+ * @author Gabriel Leonardo Diaz, 16.06.2013.
+ */
+ShapeComment = function () {};
+ShapeComment.prototype = new mxCylinder();
+ShapeComment.prototype.constructor = ShapeComment;
+ShapeComment.prototype.name        = 'ShapeComment';
+ShapeComment.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
+  
+  var s = w * 0.20;
+  if (s > 15) {
+    s = 15; // No more than 15px.
+  }
+  
+  this.size = s;
+  
+  if (isForeground) {
+    path.moveTo(w - s, 0);
+    path.lineTo(w - s, s);
+    path.lineTo(w, s);
+    path.end();
+  }
+  else {
+    path.moveTo(0, 0);
+    path.lineTo(w - s, 0);
+    path.lineTo(w, s);
+    path.lineTo(w, h);
+    path.lineTo(0, h);
+    path.lineTo(0, 0);
+    path.close();
+    path.end();
+  }
+};
+mxCellRenderer.prototype.defaultShapes['ShapeComment'] = ShapeComment;

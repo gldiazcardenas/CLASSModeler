@@ -29,26 +29,17 @@ mxUtils.extend(CLASSEditor, mxEditor);
 /**
  * Initializer method for the CLASSEditor.
  */
-CLASSEditor.prototype.init = function (graphContainer, outlineContainer, toolboxContainer) {
+CLASSEditor.prototype.init = function (graphContainer) {
   this.layoutSwimlanes = true;
   
   // 1. Graph
   this.configureGraph(graphContainer);
   
-  // 2. Outline
-  this.configureOutline(outlineContainer);
-  
-  // 3. Toolbox
-  this.configureToolbox(toolboxContainer);
-  
-  // 4. Actions
-  this.configureActions();
-  
-  // 5. Undo Manager
+  // 2. Undo Manager
   this.configureUndoManager();
   
-  // 6. Key Manager
-  this.configureKeyManager();
+  // 3. Actions
+  this.configureActions();
 };
 
 /**
@@ -64,126 +55,7 @@ CLASSEditor.prototype.configureGraph = function (container) {
   this.graph.setCellsCloneable(false);
   this.graph.dropEnabled = true;
   
-  // Determines if the cell is a class
-  this.graph.isClassCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'class';
-  };
-  
-  // Determines if the cell is an enumeration
-  this.graph.isEnumerationCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'enumeration';
-  };
-  
-  // Determines if the cell is an interface
-  this.graph.isInterfaceCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'interface';
-  };
-  
-  // Determines if the cell is a package
-  this.graph.isPackageCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'package';
-  };
-  
-  // Determines if the cell is a comment
-  this.graph.isCommentCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'comment';
-  };
-  
-  // Determines if the cell is a comment
-  this.graph.isAssociationCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'association';
-  };
-  
-  // Determines if the cell is a property
-  this.graph.isPropertyCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'property';
-  };
-  
-  // Determines if the cell is a operation
-  this.graph.isOperationCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'operation';
-  };
-  
-  // Determines if the cell is a named element
-  this.graph.isNamedElementCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'namedelement';
-  };
-  
-  // Determines if the cell is an enumeration literal
-  this.graph.isEnumerationLiteralCell = function (cell) {
-    return cell != null && cell.value != null && cell.value.nodeName.toLowerCase() == 'enumerationliteral';
-  };
-  
-  // Determines if the cell can be resized
-  this.graph.isCellResizable = function (cell) {
-    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell) || this.isPackageCell(cell) || this.isCommentCell(cell);
-  };
-  
-  // Determines if the cell can be moved
-  this.graph.isCellMovable = function (cell) {
-    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell) || this.isPackageCell(cell) || this.isCommentCell(cell) || this.isAssociationCell(cell);
-  };
-  
-  // Determines if the cell can be collapsed
-  this.graph.isCellFoldable = function (cell) {
-    return this.isClassCell(cell) || this.isEnumerationCell(cell) || this.isInterfaceCell(cell);
-  };
-  
-  // Converts the DOM user object to a string representation
-  this.graph.convertValueToString = function (cell) {
-    if (this.isClassCell(cell) || this.isNamedElementCell(cell) || this.isEnumerationLiteralCell(cell) || this.isPackageCell(cell)) {
-      return cell.getAttribute('name');
-    }
-    
-    if (this.isEnumerationCell(cell)) {
-      return '<<enum>>\n' + cell.getAttribute('name');
-    }
-    
-    if (this.isInterfaceCell(cell)) {
-      return '<<interfaz>>\n' + cell.getAttribute('name');
-    }
-    
-    if (this.isCommentCell(cell)) {
-      return cell.getAttribute('body');
-    } 
-    
-    if (this.isPropertyCell(cell)) {
-      return cell.getAttribute('visibility') + ' ' + cell.getAttribute('name') + ' : ' + cell.getAttribute('type');
-    }
-    
-    if (this.isOperationCell(cell)) {
-      // TODO GD include parameters
-      return cell.getAttribute('visibility') + ' ' + cell.getAttribute('name') + '() : ' + cell.getAttribute('returnType');
-    }
-    
-    // Super
-    return mxGraph.prototype.convertValueToString.apply (this, arguments);
-  };
-};
-
-/**
- * Configures the outline component for the editor.
- * 
- * @param container
- *          The HTML container for the outline.
- * @author Gabriel Leonardo Diaz, 17.10.2013.
- */
-CLASSEditor.prototype.configureOutline = function (container) {
-  this.outline = new mxOutline(this.graph);
-  this.outline.init(container);
-  this.outline.updateOnPan = true;
-};
-
-/**
- * Configures the toolbox component for the editor.
- * 
- * @param container
- *          The HTML container for the toolbox.
- * @author Gabriel Leonardo Diaz, 17.10.2013.
- */
-CLASSEditor.prototype.configureToolbox = function (container) {
-  this.toolbox = new CLASSToolbox(this);
-  this.toolbox.init(container);
+  // TODO override functions for labels  and foldable
 };
 
 /**
@@ -192,8 +64,16 @@ CLASSEditor.prototype.configureToolbox = function (container) {
  * @author Gabriel Leonardo Diaz, 17.10.2013.
  */
 CLASSEditor.prototype.configureActions = function () {
-  this.actionHandler = new CLASSActionHandler(this);
-  this.actionHandler.init();
+  // TODO
+};
+
+/**
+ * Configures the template components for the editor.
+ * 
+ * @author Gabriel Leonardo Diaz, 26.10.2013.
+ */
+CLASSEditor.prototype.configureTemplates = function () {
+  // TODO
 };
 
 /**
@@ -216,7 +96,7 @@ CLASSEditor.prototype.configureUndoManager = function () {
 
   // Keeps the selection in sync with the history
   var undoHandler = function(sender, evt) {
-    var cand = graph.getSelectionCellsForChanges(evt.getProperty('edit').changes);
+    var cand  = graph.getSelectionCellsForChanges(evt.getProperty('edit').changes);
     var cells = [];
     
     for (var i = 0; i < cand.length; i++) {
@@ -224,96 +104,12 @@ CLASSEditor.prototype.configureUndoManager = function () {
         cells.push(cand[i]);
       }
     }
+    
     graph.setSelectionCells(cells);
   };
   
   undoMgr.addListener(mxEvent.UNDO, undoHandler);
   undoMgr.addListener(mxEvent.REDO, undoHandler);
-  
-  // Update actions handler
-  var undoAction    = this.actionHandler.get(CLASSActionName.UNDO);
-  var redoAction    = this.actionHandler.get(CLASSActionName.REDO);
-  var updateActions = function() {
-    undoAction.setEnabled(undoMgr.canUndo());
-    redoAction.setEnabled(undoMgr.canRedo());
-  };
-
-  undoMgr.addListener(mxEvent.ADD, updateActions);
-  undoMgr.addListener(mxEvent.CLEAR, updateActions);
-  undoMgr.addListener(mxEvent.UNDO, updateActions);
-  undoMgr.addListener(mxEvent.REDO, updateActions);
-
-  // Updates the button states once
-  updateActions();
-};
-
-/**
- * Function that initializes the key handler for the graph component,
- * this allows to process the key events made by the user.
- * 
- * @author Gabriel Leonardo Diaz, 16.06.2013.
- */
-CLASSEditor.prototype.configureKeyManager = function () {
-  // Instance the key handler object.
-  var keyHandler = this.keyHandler.handler;
-  
-  // Binds keystrokes to actions
-  var setActionKeyHandler = mxUtils.bind(this, function (keyCode, actionNameCode, control, shift, parameter) {
-    var action = this.actionHandler.get(actionNameCode);
-    
-    if (action != null) {
-      var f = function() {
-        if (action.enabled) {
-          if (parameter != null) {
-            action.funct(parameter);
-          }
-          else {
-            action.funct();
-          }
-        }
-      };
-      
-      if (control) {
-        if (shift) {
-          keyHandler.bindControlShiftKey(keyCode, f);
-        }
-        else {
-          keyHandler.bindControlKey(keyCode, f);
-        }
-      }
-      else if (shift) {
-        keyHandler.bindShiftKey(keyCode, f);
-      }
-      else {
-        keyHandler.bindKey(keyCode, f);
-      }
-    }
-  });
-  
-  // Binding the functions with the actions in CLASSActionHandler
-  setActionKeyHandler(CLASSKeyCode.LEFT_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.LEFT_KEY);
-  setActionKeyHandler(CLASSKeyCode.UP_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.UP_KEY);
-  setActionKeyHandler(CLASSKeyCode.RIGHT_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.RIGHT_KEY);
-  setActionKeyHandler(CLASSKeyCode.DOWN_KEY, CLASSActionName.MOVE_CELLS, false, false, CLASSKeyCode.DOWN_KEY);
-  setActionKeyHandler(CLASSKeyCode.A_KEY, CLASSActionName.SELECT_ALL, true, false, null);
-  setActionKeyHandler(CLASSKeyCode.DELETE_KEY, CLASSActionName.DELETE, false, false, null);
-  setActionKeyHandler(CLASSKeyCode.Z_KEY, CLASSActionName.UNDO, true, false, null);
-  setActionKeyHandler(CLASSKeyCode.Y_KEY, CLASSActionName.REDO, true, false, null);
-  setActionKeyHandler(CLASSKeyCode.C_KEY, CLASSActionName.COPY, true, false, null);
-  setActionKeyHandler(CLASSKeyCode.X_KEY, CLASSActionName.CUT, true, false, null);
-  setActionKeyHandler(CLASSKeyCode.V_KEY, CLASSActionName.PASTE, true, false, null);
-  
-  return keyHandler;
-};
-
-/**
- * Executes the action represented by the given action name code. This allows to
- * use the action externally to this object.
- * 
- * @author Gabriel Leonardo Diaz, 26.06.2013.
- */
-CLASSEditor.prototype.executeAction = function (actionName, parameters) {
-  this.actionHandler.executeAction (actionName, parameters);
 };
 
 /**
@@ -332,4 +128,37 @@ CLASSEditor.prototype.createSwimlaneLayout = function () {
   };
   
   return layout;
+};
+
+/**
+ * Override default layout cell to include child nested swimlanes.
+ * 
+ * @author Gabriel Leonardo Diaz, 17.10.2013.
+ */
+mxLayoutManager.prototype.layoutCells = function(cells) {
+  if (cells.length > 0) {
+    var model = this.getGraph().getModel();
+    model.beginUpdate();
+    
+    try {
+      var last = null;
+      
+      for (var i = 0; i < cells.length; i++) {
+        if (cells[i] != model.getRoot() && cells[i] != last) {
+          last = cells[i];
+          this.executeLayout(this.getLayout(last), last);
+          
+          // GD, 25.10.2013. Applying layout to also child swimlane nodes.
+          if (last.children != null) {
+            this.layoutCells(last.children);
+          }
+        }
+      }
+      
+      this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+    }
+    finally {
+      model.endUpdate();
+    }
+  }
 };

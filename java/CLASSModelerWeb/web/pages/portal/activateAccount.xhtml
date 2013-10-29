@@ -6,16 +6,12 @@
                 
 <ui:param name="title" value="#{msgs.PORTAL_PAGE_BASE_TITLE}"/>
 
-<ui:define name="userSection">
-  <ui:include src="/pages/portal/logIn.xhtml" />
-</ui:define>
-
 <ui:define name="center">
     <f:metadata>
         <f:event listener="#{activateAccountController.process()}" type="preRenderView"/>
     </f:metadata>
     
-    <div class="portal-content">
+    <div id="center-content">
         <h:form id="resetPassForm" style="width: 500px; margin: auto; margin-top: 20px;">
             <h1><h:outputText value="#{msgs.ACCOUNT_ACTIVATION_FORM_TITLE}" /></h1>
             

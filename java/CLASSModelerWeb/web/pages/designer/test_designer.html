@@ -10,7 +10,6 @@
     
     <script type="text/javascript" src="../../resources/js/mxClient.js"></script>
     <script type="text/javascript" src="../../resources/js/CLASSMetamodel.js"></script>
-    <script type="text/javascript" src="../../resources/js/CLASSShape.js"></script>
     <script type="text/javascript" src="../../resources/js/CLASSModeler.js"></script>
     <script type="text/javascript" src="../../resources/js/CLASSActionHandler.js"></script>
     <script type="text/javascript" src="../../resources/js/CLASSEditor.js"></script>
@@ -49,12 +48,12 @@
         }
     </style>
 </head>
-<body onload="main()">
+<body onload="CLASSModeler.init()">
     <div id="left">
         <div id="toolbox"></div>
         <div id="outline"></div>
     </div>
     <div id="graph"></div>
-    <button onclick="viewXML()">View XML</button>
+    <button onclick="CLASSModeler.showXML()">View XML</button>
 </body>
 </html>

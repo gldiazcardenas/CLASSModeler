@@ -2,56 +2,22 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui" 
-                template="/templates/common.xhtml">
-                
-<ui:define name="stylesheet"><h:outputStylesheet name="layoutPortal.css" library="css"/></ui:define>
+                template="/templates/base.xhtml">
 
-<ui:define name="content">
-    <div id="content-body">
-        <div id="header">
-            <div style="float: left; width: 60%;">
-                <div style="float:left; width: 20%; text-align: center; margin-top: 20px;">
-                    <h:graphicImage value="/resources/images/logo.png" style="margin-rigth: 5px;"/>
-                </div>
-                
-                <div style="float:left; width: 60%;">
-                    <h1><h:link value="#{msgs.APPLICATION_NAME}" outcome="/index.xhtml" style="text-decoration: none;" /></h1>
-                    <h4><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" styleClass="italic" /></h4>
-                </div>
-                
-                <div style="float:left; width: 20%; text-align: center; margin-top: 15px;">
-                    <h:graphicImage value="/resources/images/ingsistemas_logo.png" style="margin-rigth: 5px;"/>
-                </div>
-            </div>
-            
-            <div style="float: right; width: 40%;">
-                <ui:insert name="userSection"/>
-            </div>
-        </div>
-        
-        <ui:insert name="links">
-            <div id="links">
-                <a href="/CLASSModeler/index.xhtml" title="#{msgs.HOME_LABEL}"
-                   onmouseover="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature_gray.png';"
-                   onmouseout="document.getElementById('home-img').src='/CLASSModeler/resources/images/home_miniature.png';">
-                   <img id="home-img" src="/CLASSModeler/resources/images/home_miniature.png" /></a>
-                
-                <a href="http://ufps.edu.co" title="#{msgs.GOTO_UFPS_LABEL}" target="_blank" 
-                   onmouseover="document.getElementById('ufps-link').src='/CLASSModeler/resources/images/ufps_miniature_gray.png';"
-                   onmouseout="document.getElementById('ufps-link').src='/CLASSModeler/resources/images/ufps_miniature.png';">
-                   <img id="ufps-link" src="/CLASSModeler/resources/images/ufps_miniature.png" /></a>
-                   
-                <a href="http://ingsistemas.ufps.edu.co" title="#{msgs.GOTO_INGSISTEMAS_LABEL}" target="_blank"
-                   onmouseover="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature_gray.png';"
-                   onmouseout="document.getElementById('ing-link').src='/CLASSModeler/resources/images/ingsistemas_miniature.png';">
-                   <img id="ing-link" src="/CLASSModeler/resources/images/ingsistemas_miniature.png" /></a>
-            </div>
-        </ui:insert>
-        
-        <div id="center">
-            <ui:insert name="center" />
-        </div>
+<ui:define name="stylesheet">
+    <h:outputStylesheet name="portal.css" library="css" />
+</ui:define>
+
+<ui:define name="links">
+    <div id="links">
+        <h:link outcome="/index.xhtml" title="#{msgs.HOME_LABEL}" styleClass="link-icon"><span id="home-link" /></h:link>
+        <h:outputLink value="http://ufps.edu.co" title="#{msgs.GOTO_UFPS_LABEL}" target="_blank" styleClass="link-icon"><span id="ufps-link" /></h:outputLink>
+        <h:outputLink value="http://ingsistemas.ufps.edu.co" title="#{msgs.GOTO_INGSISTEMAS_LABEL}" target="_blank" styleClass="link-icon"><span id="ingsistemas-link" /></h:outputLink>
     </div>
+</ui:define>
+
+<ui:define name="user">
+    <ui:include src="/pages/portal/logIn.xhtml" />
 </ui:define>
 
 </ui:composition>

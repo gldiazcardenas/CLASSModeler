@@ -1,0 +1,29 @@
+@CHARSET "ISO-8859-1";
+
+#center {
+    padding: 1%;
+    width: 98%;
+    display: inline-block;
+}
+
+#center-content {
+    min-height: 490px;
+}
+
+#diagramsSection {
+    float: left;
+    border-right: 1px solid #CCCCCC;
+    width: 70%;
+    padding-right: 1%;
+    min-height: inherit;
+}
+
+#shareSection {
+    float: right;
+    width: 28%;
+    min-height: inherit;
+}
+
+#diagramButtonsForm button, #sharingButtonsForm button {
+    margin-right: 3px;
+}
