@@ -16,9 +16,9 @@
  */
 var CLASSModeler = (function () {
   
-  var editor  = null;
-  var outline = null;
-  var toolbox = null;
+  var editor   = null;
+  var outline  = null;
+  var toolbox  = null;
   
   return {
     init : function () {
@@ -39,14 +39,14 @@ var CLASSModeler = (function () {
     },
     
     execute : function (actionName) {
-      
+      editor.execute(actionName);
     },
     
     showXML : function () {
       var encoder = new mxCodec();
       var node = encoder.encode(editor.graph.getModel());
       mxUtils.popup(mxUtils.getPrettyXml(node), true);
-    }
+    },
   };
   
 })();
