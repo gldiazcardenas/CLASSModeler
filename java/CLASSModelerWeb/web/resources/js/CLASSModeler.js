@@ -27,25 +27,18 @@ var CLASSModeler = (function () {
         return;
       }
       
-      editor = new CLASSEditor("/CLASSModeler/Designer?init", "/CLASSModeler/Designer?image", "/CLASSModeler/Designer?poll", "/CLASSModeler/Designer?notify");
-      editor.init(document.getElementById("graph"));
+      editor = new CLASSEditor(mxUtils.load(mxBasePath + '/config/editor.xml').getDocumentElement());
+      
+      toolbox = new CLASSToolbox(editor);
+      toolbox.init(document.getElementById("toolbox"));
       
       outline = new mxOutline(editor.graph);
       outline.init(document.getElementById("outline"));
       outline.updateOnPan = true;
-      
-      toolbox = new CLASSToolbox(editor.graph);
-      toolbox.init(document.getElementById("toolbox"));
     },
     
     execute : function (actionName) {
       editor.execute(actionName);
-    },
-    
-    showXML : function () {
-      var encoder = new mxCodec();
-      var node = encoder.encode(editor.graph.getModel());
-      mxUtils.popup(mxUtils.getPrettyXml(node), true);
     },
   };
   

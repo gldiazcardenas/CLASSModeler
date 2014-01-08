@@ -16,15 +16,15 @@
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_EDIT_LABEL}" icon="ui-icon-pencil">
-                <p:menuitem value="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" onclick="EDITOR.executeAction(CLASSActionName.UNDO)" />
-                <p:menuitem value="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" onclick="EDITOR.executeAction(CLASSActionName.REDO)" />
+                <p:menuitem value="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" onclick="CLASSModeler.execute('undo')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" onclick="CLASSModeler.execute('redo')" />
                 <p:separator />
-                <p:menuitem value="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="EDITOR.executeAction(CLASSActionName.CUT)" />
-                <p:menuitem value="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="EDITOR.executeAction(CLASSActionName.COPY)" />
-                <p:menuitem value="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" onclick="EDITOR.executeAction(CLASSActionName.PASTE)" />
+                <p:menuitem value="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="CLASSModeler.execute('cut')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="CLASSModeler.execute('copy')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" onclick="CLASSModeler.execute('paste')" />
                 <p:separator />
-                <p:menuitem value="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" onclick="EDITOR.executeAction(CLASSActionName.DELETE)" />
-                <p:menuitem value="#{msgs.MENU_ITEM_SELECT_ALL_LABEL}" icon="ui-icon-arrowthick-2-ne-sw" onclick="EDITOR.executeAction(CLASSActionName.SELECT_ALL)" />
+                <p:menuitem value="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" onclick="CLASSModeler.execute('delete')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SELECT_ALL_LABEL}" icon="ui-icon-arrowthick-2-ne-sw" onclick="CLASSModeler.execute('selectAll')" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_VIEW_LABEL}" icon="ui-icon-pin-s">

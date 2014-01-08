@@ -1,0 +1,213 @@
+<mxEditor><!-- urlImage="/Designer?image" urlInit="/Designer?init" urlPoll="/Designer?poll" urlNotify="/Designer?notify" -->
+    <ui>
+        <!-- <resource basename="resources/messages"/> -->
+        <add as="graph" element="graph"/>
+        <add as="toolbar" element="toolbox"/>
+    </ui>
+    
+    <!-- Templates -->
+    <Array as="templates">
+        <add as="class">
+            <Class name="MyClass">
+                <mxCell vertex="1" style="classifier">
+                    <mxGeometry as="geometry" width="130" height="60" />
+                </mxCell>
+            </Class>
+        </add>
+        
+        <add as="interface">
+            <Interface name="MyInterface">
+                <mxCell vertex="1" style="classifier">
+                    <mxGeometry as="geometry" width="130" height="60" />
+                </mxCell>
+            </Interface>
+        </add>
+        
+        <add as="enumeration">
+            <Enumeration name="MyEnumeration">
+                <mxCell vertex="1" style="classifier">
+                    <mxGeometry as="geometry" width="130" height="60" />
+                </mxCell>
+            </Enumeration>
+        </add>
+        
+        <add as="property">
+            <Property name="myProperty">
+                <mxCell vertex="1" style="feature">
+                    <mxGeometry as="geometry" width="130" height="20" />
+                </mxCell>
+            </Property>
+        </add>
+        
+        <add as="operation">
+            <Operation name="myOperation">
+                <mxCell vertex="1" style="feature">
+                    <mxGeometry as="geometry" width="130" height="20" />
+                </mxCell>
+            </Operation>
+        </add>
+            
+        <add as="package">
+            <Package name="MyPackage">
+                <mxCell vertex="1" style="package">
+                    <mxGeometry as="geometry" width="130" height="80" />
+                </mxCell>
+            </Package>
+        </add>
+        
+        <add as="comment">
+            <Comment body="My New Comment">
+                <mxCell vertex="1" style="comment">
+                    <mxGeometry as="geometry" width="80" height="90" />
+                </mxCell>
+            </Comment>
+        </add>
+        
+        <add as="association">
+            <Association>
+                <mxCell edge="1" style="association">
+                    <mxGeometry as="geometry" relative="1" width="0" height="0" />
+                </mxCell>
+            </Association>
+        </add>
+        
+        <add as="composition">
+            <Composition>
+                <mxCell edge="1" style="composition">
+                    <mxGeometry as="geometry" relative="1" width="0" height="0">
+                        <mxPoint as="sourcePoint" x="0" y="0" />
+                        <mxPoint as="targetPoint" x="130" y="0" />
+                    </mxGeometry>
+                </mxCell>
+            </Composition>
+        </add>
+    </Array>
+    
+    <!-- Actions -->
+    <Array as="actions">
+        <add as="selectAll">
+          <![CDATA[
+            function (editor) {
+                editor.graph.selectAll();
+            }
+          ]]>
+        </add>
+        
+        <add as="undo">
+          <![CDATA[
+            function (editor) {
+                editor.undoManager.undo();
+            }
+          ]]>
+        </add>
+        
+        <add as="redo">
+          <![CDATA[
+            function (editor) {
+                editor.undoManager.redo();
+            }
+          ]]>
+        </add>
+        
+        <add as="copy">
+          <![CDATA[
+            function (editor) {
+                mxClipboard.copy(editor.graph);
+            }
+          ]]>
+        </add>
+        
+        <add as="cut">
+          <![CDATA[
+            function (editor) {
+                mxClipboard.cut(editor.graph);
+            }
+          ]]>
+        </add>
+        
+        <add as="paste">
+          <![CDATA[
+            function (editor) {
+                mxClipboard.paste(editor.graph);
+            }
+          ]]>
+        </add>
+    </Array>
+    
+    <!-- Graph -->
+    <mxGraph as="graph" dropEnabled="1">
+        <mxStylesheet as="stylesheet">
+            <add as="defaultVertex">
+                <add as="align" value="left"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="fontSize" value="11"/>
+            </add>
+            
+            <add as="classifier">
+                <add as="shape" value="swimlane"/>
+                <add as="perimeter" value="RectanglePerimeter"/>
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="gradientColor" value="#DDDDDD"/>
+                <add as="fillColor" value="#EEEEEE"/>
+                <add as="swimlaneFillColor" value="#FFFFFF"/>
+                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="strokeWidth" value="1"/>
+                <add as="startSize" value="40"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="fontStyle" value="1"/>
+                <add as="shadow" value="1"/>
+            </add>
+            
+            <add as="feature">
+                <add as="shape" value="rectangle"/>
+                <add as="perimeter" value="RectanglePerimeter"/>
+                <add as="align" value="left"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="fontStyle" value="0"/>
+                <add as="spacingLeft" value="2"/>
+            </add>
+            
+            <add as="package">
+                <add as="shape" value="package"/>
+                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="fillColor" value="#FFFFFF"/>
+                <add as="align" value="center"/>
+                <add as="shadow" value="1"/>
+            </add>
+            
+            <add as="comment">
+                <add as="shape" value="comment"/>
+                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="fillColor" value="#FFFFFF"/>
+                <add as="align" value="center"/>
+                <add as="shadow" value="1"/>
+            </add>
+            
+            <add as="association">
+            </add>
+            
+            <add as="composition">
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="startArrow" value="diamondThin"/>
+                <add as="startSize" value="14"/>
+                <add as="endArrow" value="open"/>
+                <add as="endSize" value="10"/>
+            </add>
+            
+        </mxStylesheet>
+    </mxGraph>
+    
+    <!-- Key Handler -->
+    <mxDefaultKeyHandler as="keyHandler">
+        <add as="46" action="delete"/>
+        <add as="65" control="1" action="selectAll"/>
+        <add as="90" control="1" action="undo"/>
+        <add as="89" control="1" action="redo"/>
+        <add as="88" control="1" action="cut"/>
+        <add as="67" control="1" action="copy"/>
+        <add as="86" control="1" action="paste"/>
+    </mxDefaultKeyHandler>
+    
+</mxEditor>

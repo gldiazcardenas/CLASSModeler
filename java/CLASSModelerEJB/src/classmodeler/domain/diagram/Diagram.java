@@ -192,5 +192,9 @@ public class Diagram implements Serializable {
     
     return true;
   }
+  
+  public boolean isOwner (Diagrammer diagrammer) {
+    return this.createdBy.equals(diagrammer);
+  }
 
 }

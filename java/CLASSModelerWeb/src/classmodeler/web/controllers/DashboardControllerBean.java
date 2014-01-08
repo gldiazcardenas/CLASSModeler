@@ -126,23 +126,16 @@ public class DashboardControllerBean extends JSFGenericBean {
   /**
    * Determines if the logged user is able to share the selected diagram.
    * 
-   * @return True if the user is owner of has SHARE privilege over the diagram.
+   * @return True if the user is owner the diagram.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedShareDiagram () {
-    if (diagram == null || diagrammer == null) {
+  public boolean isAllowedToShareDiagram () {
+    if (this.diagram == null || this.diagrammer == null) {
       return false;
     }
     
-    if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (SharedItem sharing : sharings) {
-        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.EDIT)) {
-          return true;
-        }
-      }
-    }
-    
-    return false;
+    // This is the owner of the diagram
+    return this.diagram.isOwner(diagrammer);
   }
   
   /**
@@ -154,6 +147,11 @@ public class DashboardControllerBean extends JSFGenericBean {
   public boolean isAllowedEditDiagram () {
     if (diagram == null || diagrammer == null) {
       return false;
+    }
+    
+    // The owner is able to edit always
+    if (this.diagram.isOwner(diagrammer)) {
+      return true;
     }
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {

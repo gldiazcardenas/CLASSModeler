@@ -13,7 +13,9 @@
         </div>
         
         <div id="tryDemoSection">
-            <p:commandButton id="tryDemoCommand" value="#{msgs.TRY_DEMO_BUTTON_LABEL}" action="#{logInController.processGuest()}"/>
+            <h:form prependId="false">
+                <p:commandButton id="tryDemoCommand" value="#{msgs.TRY_DEMO_BUTTON_LABEL}" action="#{logInController.processGuest()}"/>
+            </h:form>
         </div>
     </div>
 </ui:define>

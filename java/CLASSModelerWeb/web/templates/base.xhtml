@@ -23,26 +23,28 @@
     <p:growl id="generalMessage" for="generalMessage" sticky="true" />
     
     <div id="content">
-        <div id="header">
-            <div id="header-left">
-                <h:graphicImage id="ufps-logo" name="ufps_logo.png" library="images" />
-                
-                <div id="slogan">
-                    <h:link outcome="/index.xhtml">
-                        <h1><h:outputText value="#{msgs.APPLICATION_NAME}" /></h1>
-                        <h4><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" /></h4>
-                    </h:link>
+        <div id="content-body">
+            <div id="header">
+                <div id="header-left">
+                    <h:graphicImage id="ufps-logo" name="ufps_logo.png" library="images" />
+                    
+                    <div id="slogan">
+                        <h:link outcome="/index.xhtml">
+                            <h1><h:outputText value="#{msgs.APPLICATION_NAME}" /></h1>
+                            <h4><h:outputText value="#{msgs.PORTAL_PAGE_HEADER_MESSAGE}" /></h4>
+                        </h:link>
+                    </div>
+                    
+                    <h:graphicImage id="ingsistemas-logo" name="ingsistemas_logo.png" library="images" />
                 </div>
                 
-                <h:graphicImage id="ingsistemas-logo" name="ingsistemas_logo.png" library="images" />
+                <div id="header-right"><ui:insert name="user"/></div>
             </div>
             
-            <div id="header-right"><ui:insert name="user"/></div>
+            <ui:insert name="links"/>
+            
+            <div id="center"><ui:insert name="center" /></div>
         </div>
-        
-        <ui:insert name="links"/>
-        
-        <div id="center"><ui:insert name="center" /></div>
     </div>
     
     <div id="footer">

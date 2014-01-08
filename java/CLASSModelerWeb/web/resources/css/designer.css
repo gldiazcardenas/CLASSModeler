@@ -1,5 +1,9 @@
 @CHARSET "ISO-8859-1";
 
+#content {
+    padding: 2px !important;
+}
+
 #toolbar {
     border:none;
     background: none;
@@ -15,7 +19,7 @@
 }
 
 #center-layout .pe-layout-pane-content {
-    padding: 0px;
+    padding: 0;
     overflow: hidden;
 }
 
@@ -26,32 +30,43 @@
 
 #toolbox {
     overflow: auto;
+    padding: 3px;
 }
 
 #outline, #toolbox {
     height: inherit;
 }
 
-.editorComponent {
+#graph {
     height: inherit;
     width: inherit;
     background: url("#{resource['images:grid.gif']}");
 }
 
-.template {
-    text-align: center;
-    padding: 3px;
-    margin: 4px auto;
-    width: 80px;
-    border: 1px solid #AAA;
-}
-
-.template:hover {
-    border: 1px solid #000000;
-}
-
-.template img {
-    display: block;
+.toolbox_item {
     cursor: pointer;
-    margin: auto;
+    margin-right: 3px;
+    border: 1px solid #FFFFFF;
 }
+
+.toolbox_item:hover {
+    border: 1px solid #CCCCCC;
+}
+
+.selected {
+    background-color: #CCCCCC;
+}
+
+.horizontal_item {
+    margin-bottom: 3px;
+}
+
+.horizontal_item img {
+    vertical-align: middle;
+}
+
+.horizontal_item span {
+    vertical-align: middle;
+}
+
+

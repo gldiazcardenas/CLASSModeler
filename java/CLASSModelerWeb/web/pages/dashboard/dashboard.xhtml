@@ -28,7 +28,7 @@
             
             <h:form id="diagramButtonsForm" style="margin-bottom: 5px; margin-top: 10px;">
                 <p:commandButton icon="ui-icon-document" value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
-                <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedShareDiagram}" />
+                <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedToShareDiagram}" />
                 <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedEditDiagram}" />
                 <p:commandButton icon="ui-icon-copy" title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedCopyDiagram}"  />
                 <p:commandButton icon="ui-icon-trash" title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.allowedDeleteDiagram}" />
