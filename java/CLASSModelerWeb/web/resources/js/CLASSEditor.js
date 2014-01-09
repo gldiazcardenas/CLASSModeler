@@ -90,23 +90,79 @@ CLASSEditor.prototype.getSecondLabel = function (node) {
  * @author Gabriel Leonardo Diaz, 08.01.2014.
  */
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
-  if (cell != null) {
-    menu.addItem('Cell Item', 'editors/images/image.gif', function() {
-      mxUtils.alert('MenuItem1');
-    });
-  }
-  else {
-    menu.addItem('No-Cell Item', 'editors/images/image.gif', function() {
-      mxUtils.alert('MenuItem2');
-    });
-  }
   
-  menu.addItem("Propiedades", "/CLASSModeler/resources/images/accept.png", this.getSecondLabel);
+  var addSubMenu = menu.addItem("Agregar");
+  
+  menu.addItem("Paquete", mxClient.imageBasePath + "/uml_package.png", function () {
+    // TODO GD
+  }, addSubMenu);
+  
+  menu.addItem("Clase", mxClient.imageBasePath + "/uml_class.png", function () {
+    // TODO GD
+  }, addSubMenu);
+  
+  menu.addItem("Interfaz", mxClient.imageBasePath + "/uml_interface.png", function () {
+    // TODO GD
+  }, addSubMenu);
+  
+  menu.addItem("Enumeracion", mxClient.imageBasePath + "/uml_enumeration.png", function () {
+    // TODO GD
+  }, addSubMenu);
+  
+  menu.addItem("Comentario", mxClient.imageBasePath + "/uml_comment.png", function () {
+    // TODO GD
+  }, addSubMenu);
   
   menu.addSeparator();
   
-  menu.addItem('MenuItem3', '../src/images/warning.gif', function() {
-    mxUtils.alert('MenuItem3: '+ this.graph.getSelectionCount() + ' selected');
+  menu.addItem("Copiar", null, function () {
+    // TODO GD
+  });
+  
+  menu.addItem("Cortar", null, function () {
+    // TODO GD
+  });
+  
+  menu.addItem("Pegar", null, function () {
+    // TODO GD
+  });
+  
+  menu.addSeparator();
+  
+  menu.addItem("Eliminar", null, function () {
+    // TODO GD
+  });
+  
+  menu.addItem("Seleccionar Todo", null, function () {
+    // TODO GD
+  });
+  
+  menu.addSeparator();
+  
+  menu.addItem("Atributos", null, function () {
+    // TODO GD
+  });
+  
+  menu.addItem("Operaciones", null, function () {
+    // TODO GD
+  });
+  
+  menu.addSeparator();
+  
+  var toolSubMenu = menu.addItem("Herramientas");
+  
+  menu.addItem("Generar Codigo", null, function () {
+    // TODO GD
+  }, toolSubMenu);
+  
+  menu.addItem("Generar Imagen", null, function () {
+    // TODO GD
+  }, toolSubMenu);
+  
+  menu.addSeparator();
+  
+  menu.addItem("Propiedades", null, function () {
+    // TODO GD
   });
 };
 

@@ -45,11 +45,6 @@ public class DesignerControllerBean extends JSFGenericBean {
     return diagram;
   }
   
-  public void setDiagram(Diagram diagram) {
-    // FIXME NO deberia existir
-    this.diagram = diagram;
-  }
-  
   public TreeNode getTree() {
     return tree;
   }
@@ -58,11 +53,12 @@ public class DesignerControllerBean extends JSFGenericBean {
    * Initializes this controller to edit the given diagram, this loads the XMI
    * of the diagram and configures the components.
    * 
-   * @param diagramToEdit
+   * @param aDiagram
    *          The diagram to edit.
    * @author Gabriel Leonardo Diaz, 23.06.2013.
    */
-  public String initEditDiagram () {
+  public String designDiagram (Diagram aDiagram) {
+    diagram = aDiagram;
     if (diagram == null) {
       diagram = new Diagram();
       diagram.setName(GenericUtils.getLocalizedMessage("NEW_DIAGRAM_NAME"));
