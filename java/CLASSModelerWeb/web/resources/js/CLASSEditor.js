@@ -90,7 +90,6 @@ CLASSEditor.prototype.getSecondLabel = function (node) {
  * @author Gabriel Leonardo Diaz, 08.01.2014.
  */
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
-  
   var addSubMenu = menu.addItem("Agregar");
   
   menu.addItem("Paquete", mxClient.imageBasePath + "/uml_package.png", function () {
