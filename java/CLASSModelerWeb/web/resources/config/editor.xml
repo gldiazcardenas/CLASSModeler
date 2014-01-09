@@ -135,7 +135,7 @@
     </Array>
     
     <!-- Graph -->
-    <mxGraph as="graph" dropEnabled="1">
+    <mxGraph as="graph" dropEnabled="1" panning="1">
         <mxStylesheet as="stylesheet">
             <add as="defaultVertex">
                 <add as="align" value="left"/>
@@ -153,7 +153,7 @@
                 <add as="swimlaneFillColor" value="#FFFFFF"/>
                 <add as="strokeColor" value="#BBBBBB"/>
                 <add as="strokeWidth" value="1"/>
-                <add as="startSize" value="40"/>
+                <add as="startSize" value="25"/>
                 <add as="fontColor" value="#000000"/>
                 <add as="fontStyle" value="1"/>
                 <add as="shadow" value="1"/>

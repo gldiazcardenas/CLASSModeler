@@ -24,49 +24,20 @@ mxUtils.extend(CLASSEditor, mxEditor);
  * @author Gabriel Leonardo Diaz, 01.12.2013.
  */
 CLASSEditor.prototype.onInit = function () {
-  var self = this;
+  var selfEditor = this;
+  var selftGraph = this.graph;
   
-  this.graph.convertValueToString = function (cell) {
-    return self.convertNodeToString(cell.value);
+  // 1. CELLS RENDERING
+  selftGraph.convertValueToString = function (cell) {
+    return selfEditor.convertNodeToString(cell.value);
   };
   
-  this.graph.getSecondLabel = function (cell) {
-    return self.getSecondLabel(cell.value);
-  };
+  // 2. SECOND LABEL
+  // TODO
   
-  var myGraph = this.graph;
-  var createShape = myGraph.cellRenderer.createShape;
-  myGraph.cellRenderer.createShape = function(state) {
-    createShape.apply(this, arguments);
-    
-    if (!state.cell.geometry.relative) {
-      var secondLabel = myGraph.getSecondLabel(state.cell);
-      
-      if (secondLabel != null && state.shape != null && state.secondLabel == null) {
-        state.secondLabel = new mxText(secondLabel, new mxRectangle(), mxConstants.ALIGN_LEFT, mxConstants.ALIGN_BOTTOM);
-        
-        // Styles the label
-        state.secondLabel.color = 'black';
-        state.secondLabel.family = 'Verdana';
-        state.secondLabel.size = 8;
-        state.secondLabel.fontStyle = mxConstants.FONT_ITALIC;
-        state.secondLabel.dialect = state.shape.dialect;
-        state.secondLabel.init(state.view.getDrawPane());
-      }
-    }
-  };
-  
-  var redraw = myGraph.cellRenderer.redraw;
-  myGraph.cellRenderer.redraw = function(state) {
-    redraw.apply(this, arguments);
-    
-    if (state.shape != null && state.secondLabel != null) {
-      var scale = myGraph.getView().getScale();
-      state.secondLabel.value = myGraph.getSecondLabel(state.cell);
-      state.secondLabel.scale = scale;
-      state.secondLabel.bounds = new mxRectangle(state.x + state.width - 65 * scale, state.y + 12 * scale, 0, 0);
-      state.secondLabel.redraw();
-    }
+  // 3. POPUP MENU
+  selftGraph.panningHandler.factoryMethod = function (menu, cell, evt) {
+    return selfEditor.createPopupMenu(menu, cell, evt);
   };
 };
 
@@ -111,6 +82,35 @@ CLASSEditor.prototype.getSecondLabel = function (node) {
 };
 
 /**
+ * Creates the pop-up menu for the given selected cell.
+ * 
+ * @param menu
+ * @param cell
+ * @param evt
+ * @author Gabriel Leonardo Diaz, 08.01.2014.
+ */
+CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
+  if (cell != null) {
+    menu.addItem('Cell Item', 'editors/images/image.gif', function() {
+      mxUtils.alert('MenuItem1');
+    });
+  }
+  else {
+    menu.addItem('No-Cell Item', 'editors/images/image.gif', function() {
+      mxUtils.alert('MenuItem2');
+    });
+  }
+  
+  menu.addItem("Propiedades", "/CLASSModeler/resources/images/accept.png", this.getSecondLabel);
+  
+  menu.addSeparator();
+  
+  menu.addItem('MenuItem3', '../src/images/warning.gif', function() {
+    mxUtils.alert('MenuItem3: '+ this.graph.getSelectionCount() + ' selected');
+  });
+};
+
+/**
  * 
  * @param node
  * @returns {Boolean}
@@ -145,6 +145,44 @@ CLASSEditor.prototype.isEnumeration = function (node) {
 CLASSEditor.prototype.isInterface = function (node) {
   return node.nodeName.toLowerCase() == "interface";
 };
+
+//selftGraph.getSecondLabel = function (cell) {
+//  return selfEditor.getSecondLabel(cell.value);
+//};
+//
+//var createShape = selftGraph.cellRenderer.createShape;
+//selftGraph.cellRenderer.createShape = function(state) {
+//  createShape.apply(this, arguments);
+//  
+//  if (!state.cell.geometry.relative) {
+//    var secondLabel = selftGraph.getSecondLabel(state.cell);
+//    
+//    if (secondLabel != null && state.shape != null && state.secondLabel == null) {
+//      state.secondLabel = new mxText(secondLabel, new mxRectangle(), mxConstants.ALIGN_LEFT, mxConstants.ALIGN_BOTTOM);
+//      
+//      // Styles the label
+//      state.secondLabel.color = 'black';
+//      state.secondLabel.family = 'Verdana';
+//      state.secondLabel.size = 8;
+//      state.secondLabel.fontStyle = mxConstants.FONT_ITALIC;
+//      state.secondLabel.dialect = state.shape.dialect;
+//      state.secondLabel.init(state.view.getDrawPane());
+//    }
+//  }
+//};
+//
+//var redraw = selftGraph.cellRenderer.redraw;
+//selftGraph.cellRenderer.redraw = function (state) {
+//  redraw.apply(this, arguments);
+//  
+//  if (state.shape != null && state.secondLabel != null) {
+//    var scale = selftGraph.getView().getScale();
+//    state.secondLabel.value = selftGraph.getSecondLabel(state.cell);
+//    state.secondLabel.scale = scale;
+//    state.secondLabel.bounds = new mxRectangle(state.x + state.width - 65 * scale, state.y + 12 * scale, 0, 0);
+//    state.secondLabel.redraw();
+//  }
+//};
 
 
 
