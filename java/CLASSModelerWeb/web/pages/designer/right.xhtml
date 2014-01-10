@@ -6,15 +6,12 @@
                 
     <pe:layoutPane position="center" minSize="100">
         <f:facet name="header"><h:outputText value="#{msgs.DIAGRAM_BROWSER_PANEL_LABEL}" /></f:facet>
-        <p:tree id="tree" value="#{designerController.tree}" var="node">
-            <p:treeNode>
-                <h:outputText value="#{node}" />
-            </p:treeNode>
-        </p:tree>
+        
     </pe:layoutPane>
     
     <pe:layoutPane position="south" minSize="100" size="250" maxSize="350">
         <f:facet name="header"><h:outputText value="#{msgs.CONFIGURATIONS_PANEL_LABEL}" /></f:facet>
+        
     </pe:layoutPane>
     
 </ui:composition>

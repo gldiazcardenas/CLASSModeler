@@ -151,7 +151,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, deleteC, null, null, cell != null);
+  menu.addItem("Eliminar", null, deleteC, null, null, true);
   menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
   
   menu.addSeparator();
@@ -172,6 +172,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
 
 /**
  * Check if the given node is allowed to show attributes.
+ * 
  * @param node
  * @returns
  */
