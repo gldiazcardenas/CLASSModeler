@@ -39,6 +39,11 @@ CLASSEditor.prototype.onInit = function () {
   selftGraph.panningHandler.factoryMethod = function (menu, cell, evt) {
     return selfEditor.createPopupMenu(menu, cell, evt);
   };
+  
+  // 4. ACTIONS
+  selfEditor.addAction ('zoom25', function (editor) {
+    
+  });
 };
 
 /**
@@ -151,7 +156,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, deleteC, null, null, cell != null);
+  menu.addItem("Eliminar", null, deleteC, null, null, true);
   menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
   
   menu.addSeparator();
@@ -172,15 +177,15 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
 
 /**
  * Check if the given node is allowed to show attributes.
+ * 
  * @param node
  * @returns
  */
-CLASSEditor.prototype.isClassifier = function (node) {
-  return this.isClass(node) || this.isEnumeration(node) || this.isInterface(node);
-};
-
-CLASSEditor.prototype.canShowOperations = function (node) {
-  
+CLASSEditor.prototype.isClassifier = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.isClass(cell.value) || this.isEnumeration(cell.value) || this.isInterface(cell.value);
 };
 
 /**
@@ -246,4 +251,86 @@ CLASSEditor.prototype.isComment = function (node) {
     return false;
   }
   return node.nodeName.toLowerCase() == "comment";
+};
+
+/**
+ * Adds custom actions to the editor instance.
+ * 
+ * @author Gabriel Leonardo Diaz, 12.01.2014.
+ */
+CLASSEditor.prototype.addCustomActions = function () {
+  this.addAction('zoom25', function (editor) {
+    editor.graph.zoomTo(25/100);
+  });
+  
+  this.addAction('zoom50', function (editor) {
+    editor.graph.zoomTo(50/100);
+  });
+  
+  this.addAction('zoom75', function (editor) {
+    editor.graph.zoomTo(75/100);
+  });
+  
+  this.addAction('zoom100', function (editor) {
+    editor.graph.zoomTo(100/100);
+  });
+  
+  this.addAction('zoom150', function (editor) {
+    editor.graph.zoomTo(150/100);
+  });
+  
+  this.addAction('zoom200', function (editor) {
+    editor.graph.zoomTo(200/100);
+  });
+  
+  this.addAction('zoom400', function (editor) {
+    editor.graph.zoomTo(400/100);
+  });
+  
+  this.addAction('moveLeft', function (editor) {
+    editor.moveCells(37);
+  });
+  
+  this.addAction('moveUp', function (editor) {
+    editor.moveCells(38);
+  });
+  
+  this.addAction('moveRight', function (editor) {
+    editor.moveCells(39);
+  });
+  
+  this.addAction('moveDown', function (editor) {
+    editor.moveCells(40);
+  });
+};
+
+/**
+ * Allows to move the selected cells in the direction of the key pressed (LEFT,
+ * RIGHT, UP, DOWN).
+ * 
+ * @param keyCode
+ *          The JavaScript code of the key pressed.
+ * @author Gabriel Leonardo Diaz, 12.01.2014.
+ */
+CLASSEditor.prototype.moveCells = function (keyCode) {
+  if (!this.graph.isSelectionEmpty()) {
+    var dx = 0;
+    var dy = 0;
+    
+    if (keyCode == 37) {
+      dx = -10;
+    }
+    else if (keyCode == 38) {
+      dy = -10;
+    }
+    else if (keyCode == 39) {
+      dx = 10;
+    }
+    else if (keyCode == 40) {
+      dy = 10;
+    }
+    
+    this.graph.moveCells(this.graph.getSelectionCells(), dx, dy);
+    this.graph.scrollCellToVisible(this.graph.getSelectionCell());
+  }
 };

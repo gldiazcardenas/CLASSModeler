@@ -29,19 +29,19 @@
             
             <p:submenu label="#{msgs.MENU_VIEW_LABEL}" icon="ui-icon-pin-s">
                 <p:submenu label="#{msgs.MENU_SUB_ZOOM_LABEL}" icon="ui-icon-search">
-                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_IN)" />
-                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_OUT)" />
+                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="CLASSModeler.execute('zoomIn')" />
+                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="CLASSModeler.execute('zoomOut')" />
                     <p:separator/>
-                    <p:menuitem value="25%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 25)" />
-                    <p:menuitem value="50%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 50)" />
-                    <p:menuitem value="75%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 75)" />
-                    <p:menuitem value="100%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 100)" />
-                    <p:menuitem value="150%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 150)" />
-                    <p:menuitem value="200%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 200)" />
-                    <p:menuitem value="400%" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_CUSTOM, 400)" />
+                    <p:menuitem value="25%" onclick="CLASSModeler.execute('zoom25')" />
+                    <p:menuitem value="50%" onclick="CLASSModeler.execute('zoom50')" />
+                    <p:menuitem value="75%" onclick="CLASSModeler.execute('zoom75')" />
+                    <p:menuitem value="100%" onclick="CLASSModeler.execute('zoom100')" />
+                    <p:menuitem value="150%" onclick="CLASSModeler.execute('zoom150')" />
+                    <p:menuitem value="200%" onclick="CLASSModeler.execute('zoom200')" />
+                    <p:menuitem value="400%" onclick="CLASSModeler.execute('zoom400')" />
                 </p:submenu>
                 <p:separator />
-                <p:menuitem value="#{msgs.MENU_ITEM_REFRESH_LABEL}" icon="ui-icon-refresh" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_RESTORE)" />
+                <p:menuitem value="#{msgs.MENU_ITEM_REFRESH_LABEL}" icon="ui-icon-refresh" onclick="CLASSModeler.execute('zoom100')" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_TOOLS_LABEL}" icon="ui-icon-wrench">

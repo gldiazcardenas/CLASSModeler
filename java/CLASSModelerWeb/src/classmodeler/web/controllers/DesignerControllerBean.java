@@ -11,9 +11,6 @@ package classmodeler.web.controllers;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
@@ -31,11 +28,7 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
-  // Data
   private Diagram diagram;
-  
-  // Components
-  private TreeNode tree;
   
   public DesignerControllerBean() {
     super();
@@ -43,10 +36,6 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   public Diagram getDiagram () {
     return diagram;
-  }
-  
-  public TreeNode getTree() {
-    return tree;
   }
   
   /**
@@ -63,12 +52,6 @@ public class DesignerControllerBean extends JSFGenericBean {
       diagram = new Diagram();
       diagram.setName(GenericUtils.getLocalizedMessage("NEW_DIAGRAM_NAME"));
     }
-    
-    // Re-creates the tree
-    tree = new DefaultTreeNode();
-    DefaultTreeNode root = new DefaultTreeNode(diagram.getName(), tree);
-    root.setParent(root);
-    
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   
