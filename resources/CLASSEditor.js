@@ -309,3 +309,41 @@ mxLayoutManager.prototype.layoutCells = function(cells) {
     }
   }
 };
+
+/*selftGraph.getSecondLabel = function (cell) {
+  return selfEditor.getSecondLabel(cell.value);
+};
+
+var createShape = selftGraph.cellRenderer.createShape;
+selftGraph.cellRenderer.createShape = function(state) {
+  createShape.apply(this, arguments);
+  
+  if (!state.cell.geometry.relative) {
+    var secondLabel = selftGraph.getSecondLabel(state.cell);
+    
+    if (secondLabel != null && state.shape != null && state.secondLabel == null) {
+      state.secondLabel = new mxText(secondLabel, new mxRectangle(), mxConstants.ALIGN_LEFT, mxConstants.ALIGN_BOTTOM);
+      
+      // Styles the label
+      state.secondLabel.color = 'black';
+      state.secondLabel.family = 'Verdana';
+      state.secondLabel.size = 8;
+      state.secondLabel.fontStyle = mxConstants.FONT_ITALIC;
+      state.secondLabel.dialect = state.shape.dialect;
+      state.secondLabel.init(state.view.getDrawPane());
+    }
+  }
+};
+
+var redraw = selftGraph.cellRenderer.redraw;
+selftGraph.cellRenderer.redraw = function (state) {
+  redraw.apply(this, arguments);
+  
+  if (state.shape != null && state.secondLabel != null) {
+    var scale = selftGraph.getView().getScale();
+    state.secondLabel.value = selftGraph.getSecondLabel(state.cell);
+    state.secondLabel.scale = scale;
+    state.secondLabel.bounds = new mxRectangle(state.x + state.width - 65 * scale, state.y + 12 * scale, 0, 0);
+    state.secondLabel.redraw();
+  }
+};*/

@@ -50,11 +50,11 @@ CLASSEditor.prototype.onInit = function () {
  * @author Gabriel Leonardo Diaz, 03.12.2013.
  */
 CLASSEditor.prototype.convertNodeToString = function (node) {
-  if (this.isClass(node) || this.isEnumeration(node) || this.isInterface(node)) {
+  if (this.isClass(node) || this.isEnumeration(node) || this.isInterface(node) || this.isPackage(node)) {
     return node.getAttribute("name");
   }
   
-  if (this.isPackage(node)) {
+  if (this.isComment(node)) {
     return node.getAttribute("body");
   }
   
@@ -90,154 +90,160 @@ CLASSEditor.prototype.getSecondLabel = function (node) {
  * @author Gabriel Leonardo Diaz, 08.01.2014.
  */
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
-  var addSubMenu = menu.addItem("Agregar");
+  var self = this;
   
-  menu.addItem("Paquete", mxClient.imageBasePath + "/uml_package.png", function () {
-    // TODO GD
-  }, addSubMenu);
+  var undo = function () {
+    self.execute('undo');
+  };
   
-  menu.addItem("Clase", mxClient.imageBasePath + "/uml_class.png", function () {
-    // TODO GD
-  }, addSubMenu);
+  var redo = function () {
+    self.execute('redo');
+  };
   
-  menu.addItem("Interfaz", mxClient.imageBasePath + "/uml_interface.png", function () {
-    // TODO GD
-  }, addSubMenu);
+  var copy = function () {
+    self.execute('copy');
+  };
   
-  menu.addItem("Enumeracion", mxClient.imageBasePath + "/uml_enumeration.png", function () {
-    // TODO GD
-  }, addSubMenu);
+  var cut = function () {
+    self.execute('cut');
+  };
   
-  menu.addItem("Comentario", mxClient.imageBasePath + "/uml_comment.png", function () {
+  var paste = function () {
+    self.execute('paste');
+  };
+  
+  var deleteC = function () {
+    self.execute('delete');
+  };
+  
+  var selectAll = function () {
+    self.execute('selectAll');
+  };
+  
+  var generateCode = function () {
     // TODO GD
-  }, addSubMenu);
+  };
+  
+  var generateImage = function () {
+    // TODO GD
+  };
+  
+  var showAttributes = function () {
+    // TODO GD
+  };
+  
+  var showOperations = function () {
+    // TODO GD
+  };
+  
+  var showProperties = function () {
+    // TODO GD
+  };
+  
+  menu.addItem("Deshacer", null, undo, null, null, true);
+  menu.addItem("Rehacer", null, redo, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Copiar", null, function () {
-    // TODO GD
-  });
-  
-  menu.addItem("Cortar", null, function () {
-    // TODO GD
-  });
-  
-  menu.addItem("Pegar", null, function () {
-    // TODO GD
-  });
+  menu.addItem("Copiar", null, copy, null, null, true);
+  menu.addItem("Cortar", null, cut, null, null, true);
+  menu.addItem("Pegar", null, paste, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, function () {
-    // TODO GD
-  });
-  
-  menu.addItem("Seleccionar Todo", null, function () {
-    // TODO GD
-  });
+  menu.addItem("Eliminar", null, deleteC, null, null, cell != null);
+  menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Atributos", null, function () {
-    // TODO GD
-  });
-  
-  menu.addItem("Operaciones", null, function () {
-    // TODO GD
-  });
+  var subMenu = menu.addItem("Herramientas");
+  menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
+  menu.addItem("Generar Imagen", null, generateImage, subMenu, null, true);
   
   menu.addSeparator();
   
-  var toolSubMenu = menu.addItem("Herramientas");
-  
-  menu.addItem("Generar Codigo", null, function () {
-    // TODO GD
-  }, toolSubMenu);
-  
-  menu.addItem("Generar Imagen", null, function () {
-    // TODO GD
-  }, toolSubMenu);
+  menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifier(cell));
+  menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifier(cell));
   
   menu.addSeparator();
   
-  menu.addItem("Propiedades", null, function () {
-    // TODO GD
-  });
+  menu.addItem("Propiedades", null, showProperties, null, null, true);
 };
 
 /**
+ * Check if the given node is allowed to show attributes.
+ * @param node
+ * @returns
+ */
+CLASSEditor.prototype.isClassifier = function (node) {
+  return this.isClass(node) || this.isEnumeration(node) || this.isInterface(node);
+};
+
+CLASSEditor.prototype.canShowOperations = function (node) {
+  
+};
+
+/**
+ * Checks if the given node is a class element.
  * 
  * @param node
  * @returns {Boolean}
  */
 CLASSEditor.prototype.isClass = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
   return node.nodeName.toLowerCase() == "class";
 };
 
 /**
+ * Checks if the given node is a package element.
  * 
  * @param node
  * @returns {Boolean}
  */
 CLASSEditor.prototype.isPackage = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
   return node.nodeName.toLowerCase() == "package";
 };
 
 /**
+ * Checks if the given node is an enumeration element.
  * 
  * @param node
  * @returns {Boolean}
  */
 CLASSEditor.prototype.isEnumeration = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
   return node.nodeName.toLowerCase() == "enumeration";
 };
 
 /**
+ * Checks if the given node is an interface element.
  * 
  * @param node
  * @returns {Boolean}
  */
 CLASSEditor.prototype.isInterface = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
   return node.nodeName.toLowerCase() == "interface";
 };
 
-//selftGraph.getSecondLabel = function (cell) {
-//  return selfEditor.getSecondLabel(cell.value);
-//};
-//
-//var createShape = selftGraph.cellRenderer.createShape;
-//selftGraph.cellRenderer.createShape = function(state) {
-//  createShape.apply(this, arguments);
-//  
-//  if (!state.cell.geometry.relative) {
-//    var secondLabel = selftGraph.getSecondLabel(state.cell);
-//    
-//    if (secondLabel != null && state.shape != null && state.secondLabel == null) {
-//      state.secondLabel = new mxText(secondLabel, new mxRectangle(), mxConstants.ALIGN_LEFT, mxConstants.ALIGN_BOTTOM);
-//      
-//      // Styles the label
-//      state.secondLabel.color = 'black';
-//      state.secondLabel.family = 'Verdana';
-//      state.secondLabel.size = 8;
-//      state.secondLabel.fontStyle = mxConstants.FONT_ITALIC;
-//      state.secondLabel.dialect = state.shape.dialect;
-//      state.secondLabel.init(state.view.getDrawPane());
-//    }
-//  }
-//};
-//
-//var redraw = selftGraph.cellRenderer.redraw;
-//selftGraph.cellRenderer.redraw = function (state) {
-//  redraw.apply(this, arguments);
-//  
-//  if (state.shape != null && state.secondLabel != null) {
-//    var scale = selftGraph.getView().getScale();
-//    state.secondLabel.value = selftGraph.getSecondLabel(state.cell);
-//    state.secondLabel.scale = scale;
-//    state.secondLabel.bounds = new mxRectangle(state.x + state.width - 65 * scale, state.y + 12 * scale, 0, 0);
-//    state.secondLabel.redraw();
-//  }
-//};
-
-
-
+/**
+ * Checks if the given node is a comment element.
+ * 
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSEditor.prototype.isComment = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "comment";
+};
