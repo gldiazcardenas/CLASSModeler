@@ -11,16 +11,16 @@
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_OPEN_DIAGRAM_LABEL}" icon="ui-icon-folder-open" />
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="EDITOR.executeAction(CLASSActionName.CUT)" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="EDITOR.executeAction(CLASSActionName.COPY)" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" onclick="EDITOR.executeAction(CLASSActionName.PASTE)" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" onclick="EDITOR.executeAction(CLASSActionName.DELETE)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="CLASSModeler.executen('cut')" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="CLASSModeler.execute('copy')" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_PASTE_LABEL}" icon="ui-icon-clipboard" onclick="CLASSModeler.execute('paste')" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_DELETE_LABEL}" icon="ui-icon-trash" onclick="CLASSModeler.execute('delete')" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" onclick="EDITOR.executeAction(CLASSActionName.UNDO)" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" onclick="EDITOR.executeAction(CLASSActionName.REDO)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_UNDO_LABEL}" icon="ui-icon-arrowreturnthick-1-w" onclick="CLASSModeler.execute('undo')" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_REDO_LABEL}" icon="ui-icon-arrowreturnthick-1-e" onclick="CLASSModeler.execute('redo')" />
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_IN)" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="EDITOR.executeAction(CLASSActionName.ZOOM_OUT)" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="CLASSModeler.execute('zoomIn')" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="CLASSModeler.execute('zoomOut')" />
             </p:toolbarGroup>
         </p:toolbar>
     </h:form>

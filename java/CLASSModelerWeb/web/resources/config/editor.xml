@@ -83,57 +83,6 @@
         </add>
     </Array>
     
-    <!-- Actions -->
-    <Array as="actions">
-        <add as="selectAll">
-          <![CDATA[
-            function (editor) {
-                editor.graph.selectAll();
-            }
-          ]]>
-        </add>
-        
-        <add as="undo">
-          <![CDATA[
-            function (editor) {
-                editor.undoManager.undo();
-            }
-          ]]>
-        </add>
-        
-        <add as="redo">
-          <![CDATA[
-            function (editor) {
-                editor.undoManager.redo();
-            }
-          ]]>
-        </add>
-        
-        <add as="copy">
-          <![CDATA[
-            function (editor) {
-                mxClipboard.copy(editor.graph);
-            }
-          ]]>
-        </add>
-        
-        <add as="cut">
-          <![CDATA[
-            function (editor) {
-                mxClipboard.cut(editor.graph);
-            }
-          ]]>
-        </add>
-        
-        <add as="paste">
-          <![CDATA[
-            function (editor) {
-                mxClipboard.paste(editor.graph);
-            }
-          ]]>
-        </add>
-    </Array>
-    
     <!-- Graph -->
     <mxGraph as="graph" dropEnabled="1" panning="1">
         <mxStylesheet as="stylesheet">
@@ -185,9 +134,6 @@
                 <add as="shadow" value="1"/>
             </add>
             
-            <add as="association">
-            </add>
-            
             <add as="composition">
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
                 <add as="startArrow" value="diamondThin"/>
@@ -201,6 +147,10 @@
     
     <!-- Key Handler -->
     <mxDefaultKeyHandler as="keyHandler">
+        <add as="37" action="moveLeft"/>
+        <add as="38" action="moveUp"/>
+        <add as="39" action="moveRight"/>
+        <add as="40" action="moveDown"/>
         <add as="46" action="delete"/>
         <add as="65" control="1" action="selectAll"/>
         <add as="90" control="1" action="undo"/>
