@@ -133,18 +133,6 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     // TODO GD
   };
   
-  var showAttributes = function () {
-    // TODO GD
-  };
-  
-  var showOperations = function () {
-    // TODO GD
-  };
-  
-  var showProperties = function () {
-    // TODO GD
-  };
-  
   menu.addItem("Deshacer", null, undo, null, null, true);
   menu.addItem("Rehacer", null, redo, null, null, true);
   
@@ -164,15 +152,6 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
   menu.addItem("Generar Imagen", null, generateImage, subMenu, null, true);
-  
-  menu.addSeparator();
-  
-  menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifier(cell));
-  menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifier(cell));
-  
-  menu.addSeparator();
-  
-  menu.addItem("Propiedades", null, showProperties, null, null, true);
 };
 
 /**
@@ -254,11 +233,14 @@ CLASSEditor.prototype.isComment = function (node) {
 };
 
 /**
- * Adds custom actions to the editor instance.
+ * Overrides the addActions() function in mxEditor in order to add some custom
+ * actions to the array.
  * 
  * @author Gabriel Leonardo Diaz, 12.01.2014.
  */
-CLASSEditor.prototype.addCustomActions = function () {
+CLASSEditor.prototype.addActions = function () {
+  mxEditor.prototype.addActions.call(this);
+  
   this.addAction('zoom25', function (editor) {
     editor.graph.zoomTo(25/100);
   });
