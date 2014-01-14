@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="resources/js/mxClient.js" kind="src" path="web"/>
+	<classpathentry excluding="resources/|resources/js/jquery.combo.js|resources/js/jquery.combobox.js|resources/js/jquery.datagrid.js|resources/js/jquery.linkbutton.js|resources/js/jquery.pagination.js|resources/js/jquery.panel.js|resources/js/jquery.parser.js|resources/js/jquery.propertygrid.js|resources/js/jquery.resizable.js|resources/js/jquery.tooltip.js|resources/js/jquery.validatebox.js|resources/js/mxClient.js" kind="src" path="web"/>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.WebProject">
 		<attributes>
