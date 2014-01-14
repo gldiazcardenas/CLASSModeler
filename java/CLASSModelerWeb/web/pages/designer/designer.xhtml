@@ -19,6 +19,17 @@
     </script>
     
     <h:outputScript library="js" name="mxClient.js" />
+    <h:outputScript library="js" name="jquery.parser.js" />
+    <h:outputScript library="js" name="jquery.panel.js" />
+    <h:outputScript library="js" name="jquery.resizable.js" />
+    <h:outputScript library="js" name="jquery.linkbutton.js" />
+    <h:outputScript library="js" name="jquery.pagination.js" />
+    <h:outputScript library="js" name="jquery.tooltip.js" />
+    <h:outputScript library="js" name="jquery.validatebox.js" />
+    <h:outputScript library="js" name="jquery.combo.js" />
+    <h:outputScript library="js" name="jquery.combobox.js" />
+    <h:outputScript library="js" name="jquery.datagrid.js" />
+    <h:outputScript library="js" name="jquery.propertygrid.js" />
     <h:outputScript library="js" name="CLASSModeler.js" />
     <h:outputScript library="js" name="CLASSEditor.js" />
     <h:outputScript library="js" name="CLASSShape.js" />
@@ -32,6 +43,7 @@
     <h:outputStylesheet name="designer.css" library="css"/>
     <h:outputStylesheet name="base.css" library="css"/>
     <h:outputStylesheet name="common.css" library="css"/>
+    <h:outputStylesheet name="easyui.css" library="css"/>
 </h:head>
 
 <h:body onload="CLASSModeler.init()">
@@ -44,7 +56,7 @@
         
         <div id="center">
             <pe:layout id="center-layout" fullPage="false" collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
-                <pe:layoutPane id="left" position="west" resizable="true" collapsible="true" minSize="120" maxSize="140">
+                <pe:layoutPane id="left" position="west" resizable="false" collapsible="true" size="130">
                     <ui:include src="/pages/designer/left.xhtml" />
                 </pe:layoutPane>
                 
@@ -52,7 +64,7 @@
                     <ui:include src="/pages/designer/workspace.xhtml" />
                 </pe:layoutPane>
                 
-                <pe:layoutPane id="right" position="east" resizable="true" collapsible="true" minSize="150" maxSize="300">
+                <pe:layoutPane id="right" position="east" resizable="false" collapsible="true" size="220">
                     <ui:include src="/pages/designer/right.xhtml" />
                 </pe:layoutPane>
             </pe:layout>

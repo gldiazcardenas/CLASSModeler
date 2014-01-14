@@ -16,9 +16,9 @@
  */
 var CLASSModeler = (function () {
   
-  var editor   = null;
-  var outline  = null;
-  var toolbox  = null;
+  var editor        = null;
+  var outline       = null;
+  var toolbox       = null;
   
   return {
     init : function () {
@@ -35,6 +35,61 @@ var CLASSModeler = (function () {
       outline = new mxOutline(editor.graph);
       outline.init(document.getElementById("outline"));
       outline.updateOnPan = true;
+      
+      $('#propertyTable').propertygrid({ 
+          data: [
+                 {"name":"Nombre", "value":"", "group":"General", "editor":"text"},
+                 {"name":"Visibilidad", "value":"", "group":"General", "editor": {
+                     "type":"combobox", 
+                     "options": {
+                         "valueField":"id",
+                         "textField":"text",
+                         "data":[ {"id":"Public", "text":"Public"},
+                                  {"id":"Protected", "text":"Protected"},
+                                  {"id":"Package", "text":"Package"},
+                                  {"id":"Private", "text":"Private"}
+                                ]
+                     }
+                   }
+                 },
+                 {"name":"Abstracto", "value": "", "group":"Avanzado", "editor": {
+                     "type":"checkbox",
+                     "options": {
+                       "on":true,
+                       "off":false
+                     }
+                   }
+                 },
+                 {"name":"Es Raiz", "value": "", "group":"Avanzado", "editor": {
+                     "type":"checkbox",
+                     "options": {
+                       "on":true,
+                       "off":false
+                     }
+                   }
+                 },
+                 {"name":"Es Hoja", "value": "", "group":"Avanzado", "editor": {
+                     "type":"checkbox",
+                     "options": {
+                       "on":true,
+                       "off":false
+                     }
+                   }
+                 },
+                 {"name":"Es Especificacion", "value": "", "group":"Avanzado", "editor": {
+                     "type":"checkbox",
+                     "options": {
+                       "on":true,
+                       "off":false
+                     }
+                   }
+                 }
+                ],
+          showGroup: true,
+          showHeader: false,
+          autoSizeColumn: true,
+          scrollbarSize: 0
+      });
     },
     
     execute : function (actionName) {
@@ -43,4 +98,12 @@ var CLASSModeler = (function () {
   };
   
 })();
+
+// GD, 13.01.2014 Workaround for IE.
+if (!document.getElementsByClassName) {
+  document.getElementsByClassName = function(className) {
+      return this.querySelectorAll("." + className);
+  };
+  Element.prototype.getElementsByClassName = document.getElementsByClassName;
+}
 
