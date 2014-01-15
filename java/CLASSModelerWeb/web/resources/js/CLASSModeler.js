@@ -19,6 +19,7 @@ var CLASSModeler = (function () {
   var editor        = null;
   var outline       = null;
   var toolbox       = null;
+  var propGrid      = null;
   
   return {
     init : function () {
@@ -36,60 +37,8 @@ var CLASSModeler = (function () {
       outline.init(document.getElementById("outline"));
       outline.updateOnPan = true;
       
-      $('#propertyTable').propertygrid({ 
-          data: [
-                 {"name":"Nombre", "value":"", "group":"General", "editor":"text"},
-                 {"name":"Visibilidad", "value":"", "group":"General", "editor": {
-                     "type":"combobox", 
-                     "options": {
-                         "valueField":"id",
-                         "textField":"text",
-                         "data":[ {"id":"Public", "text":"Public"},
-                                  {"id":"Protected", "text":"Protected"},
-                                  {"id":"Package", "text":"Package"},
-                                  {"id":"Private", "text":"Private"}
-                                ]
-                     }
-                   }
-                 },
-                 {"name":"Abstracto", "value": "", "group":"Avanzado", "editor": {
-                     "type":"checkbox",
-                     "options": {
-                       "on":true,
-                       "off":false
-                     }
-                   }
-                 },
-                 {"name":"Es Raiz", "value": "", "group":"Avanzado", "editor": {
-                     "type":"checkbox",
-                     "options": {
-                       "on":true,
-                       "off":false
-                     }
-                   }
-                 },
-                 {"name":"Es Hoja", "value": "", "group":"Avanzado", "editor": {
-                     "type":"checkbox",
-                     "options": {
-                       "on":true,
-                       "off":false
-                     }
-                   }
-                 },
-                 {"name":"Es Especificacion", "value": "", "group":"Avanzado", "editor": {
-                     "type":"checkbox",
-                     "options": {
-                       "on":true,
-                       "off":false
-                     }
-                   }
-                 }
-                ],
-          showGroup: true,
-          showHeader: false,
-          autoSizeColumn: true,
-          scrollbarSize: 0
-      });
+      propGrid = new CLASSPropertyGrid(editor);
+      propGrid.init();
     },
     
     execute : function (actionName) {

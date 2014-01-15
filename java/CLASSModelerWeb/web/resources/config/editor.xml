@@ -8,7 +8,7 @@
     <!-- Templates -->
     <Array as="templates">
         <add as="class">
-            <Class name="MyClass">
+            <Class name="MyClass" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="130" height="60" />
                 </mxCell>

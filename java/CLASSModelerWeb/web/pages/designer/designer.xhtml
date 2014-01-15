@@ -34,6 +34,7 @@
     <h:outputScript library="js" name="CLASSEditor.js" />
     <h:outputScript library="js" name="CLASSShape.js" />
     <h:outputScript library="js" name="CLASSToolbox.js" />
+    <h:outputScript library="js" name="CLASSPropertyGrid.js" />
     
     <!-- Icon -->
     <link rel="icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
@@ -64,7 +65,7 @@
                     <ui:include src="/pages/designer/workspace.xhtml" />
                 </pe:layoutPane>
                 
-                <pe:layoutPane id="right" position="east" resizable="false" collapsible="true" size="220">
+                <pe:layoutPane id="right" position="east" resizable="false" collapsible="true" size="230">
                     <ui:include src="/pages/designer/right.xhtml" />
                 </pe:layoutPane>
             </pe:layout>
@@ -77,7 +78,7 @@
     
     <ui:include src="/pages/dashboard/editProfile.xhtml"/>
     <ui:include src="/pages/dashboard/changePassword.xhtml"/>
-    <ui:include src="/pages/designer/editElement.xhtml"/>
+    <ui:include src="/pages/designer/classifier.xhtml"/>
     <ui:include src="/pages/designer/generateCode.xhtml"/>
     <ui:include src="/pages/designer/importXMI.xhtml"/>
     <ui:include src="/pages/designer/exportXMI.xhtml"/>

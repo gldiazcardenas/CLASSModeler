@@ -12,8 +12,8 @@
  * JavaScript CLASS that defines the designer toolBox.
  */
 CLASSToolbox = function (editor) {
-  this.editor    = editor;
-  this.graph     = editor.graph;
+  this.editor = editor;
+  this.graph  = editor.graph;
 };
 
 /**

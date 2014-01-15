@@ -25,10 +25,10 @@ mxUtils.extend(CLASSEditor, mxEditor);
  */
 CLASSEditor.prototype.onInit = function () {
   var selfEditor = this;
-  var selftGraph = this.graph;
+  var selfGraph  = this.graph;
   
   // 1. CELLS RENDERING
-  selftGraph.convertValueToString = function (cell) {
+  selfGraph.convertValueToString = function (cell) {
     return selfEditor.convertNodeToString(cell.value);
   };
   
@@ -36,14 +36,9 @@ CLASSEditor.prototype.onInit = function () {
   // TODO
   
   // 3. POPUP MENU
-  selftGraph.panningHandler.factoryMethod = function (menu, cell, evt) {
+  selfGraph.panningHandler.factoryMethod = function (menu, cell, evt) {
     return selfEditor.createPopupMenu(menu, cell, evt);
   };
-  
-  // 4. ACTIONS
-  selfEditor.addAction ('zoom25', function (editor) {
-    
-  });
 };
 
 /**
@@ -126,11 +121,11 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   };
   
   var generateCode = function () {
-    // TODO GD
+    self.execute('generateCode');
   };
   
   var generateImage = function () {
-    // TODO GD
+    self.execute('generateImage');
   };
   
   menu.addItem("Deshacer", null, undo, null, null, true);
@@ -284,6 +279,14 @@ CLASSEditor.prototype.addActions = function () {
   this.addAction('moveDown', function (editor) {
     editor.moveCells(40);
   });
+  
+  this.addAction('generateCode', function (editor) {
+    editor.generateCode();
+  });
+  
+  this.addAction('generateImage', function (editor) {
+    editor.generateImage();
+  });
 };
 
 /**
@@ -316,3 +319,22 @@ CLASSEditor.prototype.moveCells = function (keyCode) {
     this.graph.scrollCellToVisible(this.graph.getSelectionCell());
   }
 };
+
+/**
+ * Opens the code generation dialog.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.01.2014.
+ */
+CLASSEditor.prototype.generateCode = function () {
+  // TODO GD
+};
+
+/**
+ * Generates a plain image of the current diagram.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.01.2014.
+ */
+CLASSEditor.prototype.generateImage = function () {
+  // TODO GD
+};
+
