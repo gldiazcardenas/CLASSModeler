@@ -120,6 +120,14 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     self.execute('selectAll');
   };
   
+  var showAttributes = function () {
+    self.execute('showAttributes');
+  };
+  
+  var showOperations = function () {
+    self.execute('showOperations');
+  };
+  
   var generateCode = function () {
     self.execute('generateCode');
   };
@@ -141,6 +149,11 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addItem("Eliminar", null, deleteC, null, null, true);
   menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
+  
+  menu.addSeparator();
+  
+  menu.addItem("Atributos", null, showAttributes, null, null, this.isClassifier(cell));
+  menu.addItem("Operaciones", null, showOperations, null, null, this.isClassifier(cell));
   
   menu.addSeparator();
   
@@ -280,6 +293,14 @@ CLASSEditor.prototype.addActions = function () {
     editor.moveCells(40);
   });
   
+  this.addAction('showAttributes', function (editor) {
+    editor.showAttributes(editor.graph.getSelectionCell());
+  });
+  
+  this.addAction('showOperations', function (editor) {
+    editor.showOperations(editor.graph.getSelectionCell());
+  });
+  
   this.addAction('generateCode', function (editor) {
     editor.generateCode();
   });
@@ -326,7 +347,7 @@ CLASSEditor.prototype.moveCells = function (keyCode) {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSEditor.prototype.generateCode = function () {
-  // TODO GD
+  dlgGenerateCode.show();
 };
 
 /**
@@ -338,3 +359,24 @@ CLASSEditor.prototype.generateImage = function () {
   // TODO GD
 };
 
+/**
+ * Shows the attributes of one classifier.
+ * 
+ * @param cell
+ *          The cell containing the classifier XML representation.
+ * @author Gabriel Leonardo Diaz, 16.01.2014.
+ */
+CLASSEditor.prototype.showAttributes = function (cell) {
+  dlgAttributes.show();
+};
+
+/**
+ * Shows the operations of one classifier.
+ * 
+ * @param cell
+ *          The cell containing the classifier XML representation.
+ * @author Gabriel Leonardo Diaz, 16.01.2014.
+ */
+CLASSEditor.prototype.showOperations = function (cell) {
+  dlgOperations.show();
+};

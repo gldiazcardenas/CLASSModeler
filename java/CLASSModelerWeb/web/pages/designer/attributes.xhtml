@@ -1,0 +1,19 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+                
+<p:dialog id="attributesDialog" widgetVar="dlgAttributes" width="600" header="Atributos" modal="true" closable="true" closeOnEscape="true">
+    <h:form id="attributesForm">
+        
+        
+        <p:separator />
+        
+        <h:panelGrid columns="3">
+            <p:commandButton id="btSaveAttributes" value="#{msgs.SAVE_LABEL}" />
+            <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgAttributes.hide()" />
+        </h:panelGrid>
+    </h:form>
+</p:dialog>
+
+</ui:composition>

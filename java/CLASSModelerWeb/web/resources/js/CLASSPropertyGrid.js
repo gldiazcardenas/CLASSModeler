@@ -48,13 +48,13 @@ CLASSPropertyGrid.prototype.init = function () {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSPropertyGrid.prototype.selectionChanged = function (sender, evt) {
-  var cells = this.graph.selectionModel.cells;
+  var cells = this.graph.getSelectionCells();
   
-  if (cells == null || cells.length != 1) {
-    this.clearGrid();
+  if (cells.length == 1) {
+    this.configureGrid(cells[0]);
   }
   else {
-    this.configureGrid(cells[0]);
+    this.clearGrid();
   }
 };
 
