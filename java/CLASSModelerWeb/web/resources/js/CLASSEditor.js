@@ -112,7 +112,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     self.execute('paste');
   };
   
-  var deleteC = function () {
+  var deleteAll = function () {
     self.execute('delete');
   };
   
@@ -147,7 +147,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, deleteC, null, null, true);
+  menu.addItem("Eliminar", null, deleteAll, null, null, true);
   menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
   
   menu.addSeparator();
@@ -367,7 +367,9 @@ CLASSEditor.prototype.generateImage = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showAttributes = function (cell) {
-  dlgAttributes.show();
+  var attributesDialog = new CLASSAttributesDialog(this.graph);
+  attributesDialog.init(cell);
+  attributesDialog.show();
 };
 
 /**
@@ -378,5 +380,5 @@ CLASSEditor.prototype.showAttributes = function (cell) {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showOperations = function (cell) {
-  dlgOperations.show();
+  // TODO GD
 };

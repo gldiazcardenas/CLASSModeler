@@ -64,6 +64,7 @@ CLASSPropertyGrid.prototype.selectionChanged = function (sender, evt) {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSPropertyGrid.prototype.clearGrid = function () {
+  // TODO GD disable table by using styles.
   this.configureGrid(null);
 };
 
@@ -102,15 +103,17 @@ CLASSPropertyGrid.prototype.configureGrid = function (cell) {
   this.element         = null;
   
   if (cell != null && cell.value != null) {
-    this.element = cell.value;
+    this.element    = cell.value;
     
-    nameValue = this.element.getAttribute("name");
+    // Values
+    nameValue       = this.element.getAttribute("name");
     visibilityValue = this.element.getAttribute("visibility");
-    abstractValue = this.element.getAttribute("isAbstract");
-    rootValue = this.element.getAttribute("isRoot");
-    leafValue = this.element.getAttribute("isLeaf");
-    specValue = this.element.getAttribute("isSpec");
+    abstractValue   = this.element.getAttribute("isAbstract");
+    rootValue       = this.element.getAttribute("isRoot");
+    leafValue       = this.element.getAttribute("isLeaf");
+    specValue       = this.element.getAttribute("isSpec");
     
+    // Editors
     textEditor = "text";
     booleanEditor = {"type":"checkbox", "options":{"on":true, "off":false}};
     visibilityEditor = {"type":"combobox", "options": {
@@ -121,6 +124,8 @@ CLASSPropertyGrid.prototype.configureGrid = function (cell) {
               {"id":"package","text":"package"},
               {"id":"private","text":"private"}]
     }};
+    
+    attributesEditor = "button";
   }
   
   var jSonData = [// GENERAL

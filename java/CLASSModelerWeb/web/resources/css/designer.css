@@ -69,4 +69,20 @@
     vertical-align: middle;
 }
 
+.icon-add {
+    background: url("#{resource['images:add_16x16.png']}") no-repeat center center;
+}
+
+.icon-edit {
+    background: url("#{resource['images:edit_16x16.png']}") no-repeat center center;
+}
+
+.icon-remove {
+    background: url("#{resource['images:delete_16x16.png']}") no-repeat center center;
+}
+
+.icon-save {
+    background: url("#{resource['images:save_16x16.png']}") no-repeat center center;
+}
+
 

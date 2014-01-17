@@ -3,13 +3,36 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-<p:dialog id="attributesDialog" widgetVar="dlgAttributes" width="600" header="Atributos" modal="true" closable="true" closeOnEscape="true">
+<p:dialog id="attributesDialog" widgetVar="dlgAttributes" width="500" header="Atributos" modal="true" closable="true" closeOnEscape="true">
     <h:form id="attributesForm">
+        <table style="margin-bottom: 5px;">
+            <tr>
+                <td>Nombre:</td>
+                <td><input id="name" class="easyui-validatebox" /></td>
+            </tr>
+            <tr>
+                <td>Tipo:</td>
+                <td><input id="name" class="easyui-validatebox" /></td>
+            </tr>
+            <tr>
+                <td>Visibilidad:</td>
+                <td><input id="name" class="easyui-validatebox" /></td>
+            </tr>
+            <tr>
+                <td>Valor inicial:</td>
+                <td><input id="name" class="easyui-validatebox" /></td>
+            </tr>
+            <tr>
+                <td>Multiplicidad</td>
+                <td><input id="name" class="easyui-validatebox" /></td>
+            </tr>
+        </table>
         
+        <table id="attributesTable" />
         
         <p:separator />
         
-        <h:panelGrid columns="3">
+        <h:panelGrid columns="2">
             <p:commandButton id="btSaveAttributes" value="#{msgs.SAVE_LABEL}" />
             <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgAttributes.hide()" />
         </h:panelGrid>
