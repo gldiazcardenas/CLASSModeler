@@ -19,74 +19,63 @@ CLASSEditor = function (config) {
 mxUtils.extend(CLASSEditor, mxEditor);
 
 /**
- * Function called on initializing the mxEditor component.
+ * Overrides createGraph() in mxEditor. Allows to create a custom instance of
+ * the Graph component.
  * 
- * @author Gabriel Leonardo Diaz, 01.12.2013.
+ * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSEditor.prototype.onInit = function () {
-  var selfEditor = this;
-  var selfGraph  = this.graph;
+CLASSEditor.prototype.createGraph = function () {
+  var graph = new CLASSGraph(null, null, this.graphRenderHint);
   
-  // 1. CELLS RENDERING
-  selfGraph.convertValueToString = function (cell) {
-    return selfEditor.convertNodeToString(cell.value);
-  };
-  
-  // 2. SECOND LABEL
-  // TODO
-  
-  // 3. POPUP MENU
-  selfGraph.panningHandler.factoryMethod = function (menu, cell, evt) {
-    return selfEditor.createPopupMenu(menu, cell, evt);
-  };
-};
+  // Enables rubberband, tooltips, panning
+  graph.setTooltips(true);
+  graph.setPanning(true);
 
-/**
- * Provides a suitable name for the XML node template.
- * 
- * @param node
- *          The XML node of the template.
- * @returns The String representation of the node.
- * @author Gabriel Leonardo Diaz, 03.12.2013.
- */
-CLASSEditor.prototype.convertNodeToString = function (node) {
-  if (this.isClass(node) || this.isEnumeration(node) || this.isInterface(node) || this.isPackage(node)) {
-    return node.getAttribute("name");
-  }
+  // Overrides the dblclick method on the graph to
+  // invoke the dblClickAction for a cell and reset
+  // the selection tool in the toolbar
+  this.installDblClickHandler(graph);
   
-  if (this.isComment(node)) {
-    return node.getAttribute("body");
-  }
-  
-  return "";
-};
+  // Installs the command history
+  this.installUndoHandler(graph);
 
-/**
- * Provides a suitable second label for the XML node template.
- * 
- * @param node
- *          The XML node of the template
- * @returns A string representing the second label.
- * @author Gabriel Leonardo Diaz, 04.12.2013.
- */
-CLASSEditor.prototype.getSecondLabel = function (node) {
-  if (this.isEnumeration(node)) {
-    return "<<Enumeration>>";
-  }
+  // Installs the handlers for the root event
+  this.installDrillHandler(graph);
   
-  if (this.isInterface(node)) {
-    return "<<Interface>>";
-  }
+  // Installs the handler for validation
+  this.installChangeHandler(graph);
+
+  // Installs the handler for calling the
+  // insert function and consume the
+  // event if an insert function is defined
+  this.installInsertHandler(graph);
+
+  // Redirects the function for creating the popupmenu items
+  graph.panningHandler.factoryMethod = mxUtils.bind(this, function(menu, cell, evt) {
+    return this.createPopupMenu(menu, cell, evt);
+  });
+
+  // Redirects the function for creating new connections in the diagram
+  graph.connectionHandler.factoryMethod = mxUtils.bind(this, function(source, target) {
+    return this.createEdge(source, target);
+  });
   
-  return null;
+  // Maintains swimlanes and installs autolayout
+  this.createSwimlaneManager(graph);
+  this.createLayoutManager(graph);
+  
+  return graph;
 };
 
 /**
  * Creates the pop-up menu for the given selected cell.
  * 
  * @param menu
+ *          The menu to append items.
  * @param cell
+ *          The cell selected.
  * @param evt
+ *          The mouse event.
  * @author Gabriel Leonardo Diaz, 08.01.2014.
  */
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
@@ -152,8 +141,8 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
-  menu.addItem("Atributos", null, showAttributes, null, null, this.isClassifier(cell));
-  menu.addItem("Operaciones", null, showOperations, null, null, this.isClassifier(cell));
+  menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifierCell(cell));
+  menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifierCell(cell));
   
   menu.addSeparator();
   
@@ -163,81 +152,13 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
 };
 
 /**
- * Check if the given node is allowed to show attributes.
- * 
- * @param node
- * @returns
+ * Determines if the user object (node) of the cell is a classifier UML.
  */
-CLASSEditor.prototype.isClassifier = function (cell) {
+CLASSEditor.prototype.isClassifierCell = function (cell) {
   if (cell == null) {
     return false;
   }
-  return this.isClass(cell.value) || this.isEnumeration(cell.value) || this.isInterface(cell.value);
-};
-
-/**
- * Checks if the given node is a class element.
- * 
- * @param node
- * @returns {Boolean}
- */
-CLASSEditor.prototype.isClass = function (node) {
-  if (node == null || node.nodeName == null) {
-    return false;
-  }
-  return node.nodeName.toLowerCase() == "class";
-};
-
-/**
- * Checks if the given node is a package element.
- * 
- * @param node
- * @returns {Boolean}
- */
-CLASSEditor.prototype.isPackage = function (node) {
-  if (node == null || node.nodeName == null) {
-    return false;
-  }
-  return node.nodeName.toLowerCase() == "package";
-};
-
-/**
- * Checks if the given node is an enumeration element.
- * 
- * @param node
- * @returns {Boolean}
- */
-CLASSEditor.prototype.isEnumeration = function (node) {
-  if (node == null || node.nodeName == null) {
-    return false;
-  }
-  return node.nodeName.toLowerCase() == "enumeration";
-};
-
-/**
- * Checks if the given node is an interface element.
- * 
- * @param node
- * @returns {Boolean}
- */
-CLASSEditor.prototype.isInterface = function (node) {
-  if (node == null || node.nodeName == null) {
-    return false;
-  }
-  return node.nodeName.toLowerCase() == "interface";
-};
-
-/**
- * Checks if the given node is a comment element.
- * 
- * @param node
- * @returns {Boolean}
- */
-CLASSEditor.prototype.isComment = function (node) {
-  if (node == null || node.nodeName == null) {
-    return false;
-  }
-  return node.nodeName.toLowerCase() == "comment";
+  return this.graph.isClassifier(cell.value);
 };
 
 /**
@@ -247,6 +168,7 @@ CLASSEditor.prototype.isComment = function (node) {
  * @author Gabriel Leonardo Diaz, 12.01.2014.
  */
 CLASSEditor.prototype.addActions = function () {
+  // super.addActions();
   mxEditor.prototype.addActions.call(this);
   
   this.addAction('zoom25', function (editor) {

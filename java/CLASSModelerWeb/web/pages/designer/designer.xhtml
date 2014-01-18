@@ -32,9 +32,10 @@
     <h:outputScript library="js" name="jquery.propertygrid.js" />
     <h:outputScript library="js" name="CLASSModeler.js" />
     <h:outputScript library="js" name="CLASSEditor.js" />
+    <h:outputScript library="js" name="CLASSGraph.js" />
     <h:outputScript library="js" name="CLASSShape.js" />
     <h:outputScript library="js" name="CLASSToolbox.js" />
-    <h:outputScript library="js" name="CLASSPropertyGrid.js" />
+    <h:outputScript library="js" name="CLASSProperties.js" />
     <h:outputScript library="js" name="CLASSAttributes.js" />
     
     <!-- Icon -->
@@ -58,7 +59,7 @@
         
         <div id="center">
             <pe:layout id="center-layout" fullPage="false" collapseTitle="#{msgs.COLLAPSE_TOOLTIP}" resizeTitle="#{msgs.RESIZE_TOOLTIP}" expandTitle="#{msgs.OPEN_TOOLTIP}">
-                <pe:layoutPane id="left" position="west" collapsible="true" size="130">
+                <pe:layoutPane id="left" position="west" resizable="false" collapsible="true" size="130">
                     <ui:include src="/pages/designer/left.xhtml" />
                 </pe:layoutPane>
                 
@@ -66,7 +67,7 @@
                     <ui:include src="/pages/designer/workspace.xhtml" />
                 </pe:layoutPane>
                 
-                <pe:layoutPane id="right" position="east" collapsible="true" size="230">
+                <pe:layoutPane id="right" position="east" resizable="false" collapsible="true" size="230">
                     <ui:include src="/pages/designer/right.xhtml" />
                 </pe:layoutPane>
             </pe:layout>

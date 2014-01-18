@@ -84,6 +84,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, componentDrop) {
       newCell.geometry.x = point.x;
       newCell.geometry.y = point.y;
       graph.addCell(newCell, parent);
+      graph.cellSizeUpdated(newCell, false);
     }
     finally {
       model.endUpdate();

@@ -106,6 +106,8 @@
                 <add as="fontColor" value="#000000"/>
                 <add as="fontStyle" value="1"/>
                 <add as="shadow" value="1"/>
+                <add as="spacingLeft" value="20"/>
+                <add as="spacingRight" value="20"/>
             </add>
             
             <add as="feature">
@@ -124,6 +126,10 @@
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
                 <add as="shadow" value="1"/>
+                <add as="spacingLeft" value="20"/>
+                <add as="spacingRight" value="20"/>
+                <add as="spacingTop" value="30"/>
+                <add as="spacingBottom" value="20"/>
             </add>
             
             <add as="comment">
@@ -132,6 +138,10 @@
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
                 <add as="shadow" value="1"/>
+                <add as="spacingLeft" value="20"/>
+                <add as="spacingRight" value="20"/>
+                <add as="spacingTop" value="20"/>
+                <add as="spacingBottom" value="20"/>
             </add>
             
             <add as="composition">

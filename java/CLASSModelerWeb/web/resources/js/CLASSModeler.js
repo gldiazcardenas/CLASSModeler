@@ -19,7 +19,7 @@ var CLASSModeler = (function () {
   var editor        = null;
   var outline       = null;
   var toolbox       = null;
-  var propGrid      = null;
+  var properties    = null;
   
   return {
     init : function () {
@@ -37,8 +37,8 @@ var CLASSModeler = (function () {
       outline.init(document.getElementById("outline"));
       outline.updateOnPan = true;
       
-      propGrid = new CLASSPropertyGrid(editor);
-      propGrid.init();
+      properties = new CLASSProperties(editor);
+      properties.init();
     },
     
     execute : function (actionName) {
