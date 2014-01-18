@@ -85,4 +85,12 @@
     background: url("#{resource['images:save_16x16.png']}") no-repeat center center;
 }
 
+.icon-up {
+    background: url("#{resource['images:up_16x16.png']}") no-repeat center center;
+}
+
+.icon-down {
+    background: url("#{resource['images:down_16x16.png']}") no-repeat center center;
+}
+
 

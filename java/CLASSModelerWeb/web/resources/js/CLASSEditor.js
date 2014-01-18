@@ -367,9 +367,9 @@ CLASSEditor.prototype.generateImage = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showAttributes = function (cell) {
-  var attributesDialog = new CLASSAttributesDialog(this.graph);
-  attributesDialog.init(cell);
-  attributesDialog.show();
+  var dialog = new CLASSAttributes(this.graph);
+  dialog.init(cell);
+  dialog.show();
 };
 
 /**

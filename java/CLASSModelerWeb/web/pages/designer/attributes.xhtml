@@ -4,29 +4,42 @@
                 xmlns:p="http://primefaces.org/ui">
                 
 <p:dialog id="attributesDialog" widgetVar="dlgAttributes" width="500" header="Atributos" modal="true" closable="true" closeOnEscape="true">
-    <h:form id="attributesForm">
-        <table style="margin-bottom: 5px;">
+    <h:form id="attributesForm" prependId="false">
+        <table style="width:100%;">
             <tr>
-                <td>Nombre:</td>
-                <td><input id="name" class="easyui-validatebox" /></td>
+                <td width="20%"><h:outputText value="#{msgs.ATTRIBUTES_FORM_NAME_FIELD}" /></td>
+                <td><input id="attrName" class="easyui-validatebox" style="width:100%" /></td>
             </tr>
             <tr>
-                <td>Tipo:</td>
-                <td><input id="name" class="easyui-validatebox" /></td>
+                <td></td>
+                <td>
+                    <label><input type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_STATIC_FIELD}" /></label>
+                    <label><input type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_LEAF_FIELD}" /></label>
+                </td>
             </tr>
             <tr>
-                <td>Visibilidad:</td>
-                <td><input id="name" class="easyui-validatebox" /></td>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_TYPE_FIELD}" /></td>
+                <td><input id="attrType" /></td>
             </tr>
             <tr>
-                <td>Valor inicial:</td>
-                <td><input id="name" class="easyui-validatebox" /></td>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
+                <td><input id="attrVisibility" /></td>
             </tr>
             <tr>
-                <td>Multiplicidad</td>
-                <td><input id="name" class="easyui-validatebox" /></td>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_MULTIPLICITY_FIELD}" /></td>
+                <td><input id="attrMultiplicity" /></td>
+            </tr>
+            <tr>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_STEREOTYPE_FIELD}" /></td>
+                <td><input id="attrStereotype" /></td>
+            </tr>
+            <tr>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_INITIAL_VALUE_FIELD}" /></td>
+                <td><input id="attrInitValue" class="easyui-validatebox" style="width:100%" /></td>
             </tr>
         </table>
+        
+        <p:separator />
         
         <table id="attributesTable" />
         

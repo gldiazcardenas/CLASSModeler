@@ -119,6 +119,7 @@ CLASSPropertyGrid.prototype.configureGrid = function (cell) {
     visibilityEditor = {"type":"combobox", "options": {
       "valueField":"id",
       "textField":"text",
+      "panelHeight":"90",
       "data":[{"id":"public","text":"public"},
               {"id":"protected","text":"protected"},
               {"id":"package","text":"package"},
