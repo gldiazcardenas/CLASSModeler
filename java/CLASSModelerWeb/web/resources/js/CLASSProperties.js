@@ -196,31 +196,31 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
   if (changes.value) {
     switch (rowIndex) {
     case 0: // Name
-      this.graph.cellEditAttribute(this.cell, 'name', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'name', changes.value, true);
       break;
       
     case 1: // Visibility
-      this.graph.cellEditAttribute(this.cell, 'visibility', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'visibility', changes.value, true);
       break;
       
     case 2: // Stereotype
-      this.graph.cellEditAttribute(this.cell, 'stereotype', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'stereotype', changes.value, true);
       break;
     
     case 5: // Abstract
-      this.graph.cellEditAttribute(this.cell, 'isAbstract', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'isAbstract', changes.value, true);
       break;
       
     case 6: // Root
-      this.graph.cellEditAttribute(this.cell, 'isRoot', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'isRoot', changes.value, true);
       break;
       
     case 7: // Leaf
-      this.graph.cellEditAttribute(this.cell, 'isLeaf', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'isLeaf', changes.value, true);
       break;
       
     case 8: // Specification
-      this.graph.cellEditAttribute(this.cell, 'isSpec', changes.value, true);
+      this.graph.cellEditProperty(this.cell, 'isSpec', changes.value, true);
       break;
     }
   }

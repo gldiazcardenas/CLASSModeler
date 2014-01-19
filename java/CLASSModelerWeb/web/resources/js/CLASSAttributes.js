@@ -51,7 +51,7 @@ CLASSAttributes.prototype.attributeCell;
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSAttributes.prototype.init = function (cell) {
-  this.cell = cell;
+  this.classifierCell = cell;
   this.configureVisibilityCombo();
   this.configureTypeCombo();
   this.configureMultiplicityCombo();
@@ -64,21 +64,35 @@ CLASSAttributes.prototype.init = function (cell) {
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
 CLASSAttributes.prototype.configureTypeCombo = function () {
+  var jSonData   = [];
+  
+  // Fixed types
+  jSonData.push({id:"boolean", text:"boolean"});
+  jSonData.push({id:"byte",    text:"byte"});
+  jSonData.push({id:"char",    text:"char"});
+  jSonData.push({id:"double",  text:"double"});
+  jSonData.push({id:"float",   text:"float"});
+  jSonData.push({id:"int",     text:"int"});
+  jSonData.push({id:"long",    text:"long"});
+  jSonData.push({id:"short",   text:"short"});
+  jSonData.push({id:"String",  text:"String"});
+  
+  var cell;
+  
+  // Dynamic types
+  for (var key in this.graph.model.cells) {
+    cell = this.graph.model.getCell(key);
+    
+    if (this.graph.isClassifier(cell.value)) {
+      jSonData.push({id:cell.value.getAttribute("name"), text: cell.value.getAttribute("name")});
+    }
+  }
+  
   $("#attrType").combobox({
       valueField:"id",
       textField:"text",
       panelHeight: 200,
-      data: [
-          {id:"boolean", text:"boolean"},
-          {id:"byte",    text:"byte"},
-          {id:"char",    text:"char"},
-          {id:"double",  text:"double"},
-          {id:"float",   text:"float"},
-          {id:"int",     text:"int"},
-          {id:"long",    text:"long"},
-          {id:"short",   text:"short"},
-          {id:"String",  text:"String"}
-      ]
+      data: jSonData
   });
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
@@ -142,17 +156,34 @@ CLASSAttributes.prototype.configureMultiplicityCombo = function () {
 CLASSAttributes.prototype.configureAttributesTable = function () {
   var self = this;
   
+  var jSonData = [];
+  
+  var cell;
+  var node;
+  
+  for (var i = 0; this.classifierCell.children && i < this.classifierCell.children.length; i++) {
+    cell = this.classifierCell.children[i];
+    node = cell.value;
+    
+    if (this.graph.isProperty(node)) {
+      var visibility = node.getAttribute("visibility");
+      var name = node.getAttribute("name");
+      var type = node.getAttribute("type");
+      var initialValue = node.getAttribute("initialValue");
+      
+      jSonData.push({f1: this.graph.getVisibilityChar(visibility) + " " + name, f2:type, f3:initialValue});
+    }
+  }
+  
   $('#attributesTable').datagrid({
       toolbar: [
-          { iconCls: 'icon-add', handler: function() { self.addAttribute(); }},
+          { iconCls: 'icon-add', handler: function() { self.newAttribute(); }},
           { iconCls: 'icon-remove', handler: function() { self.deleteAttribute(); }},
           '-',
           { iconCls: 'icon-save', handler: function() { self.saveAttribute(); }}
       ],
       
-      data: [
-          {f1:'', f2:'', f3:''}
-      ],
+      data: jSonData,
       
       columns:[[
           {field:'name',title:'Nombre',width:150},
@@ -167,7 +198,7 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
  * 
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSAttributes.prototype.addAttribute = function () {
+CLASSAttributes.prototype.newAttribute = function () {
   // TODO GD
 };
 
@@ -194,10 +225,16 @@ CLASSAttributes.prototype.saveAttribute = function () {
   
   // CREATE
   else {
-    var newAttribute = docXML.createElement("Property");
-    newAttribute.setAttribute("name", "");
-    newAttribute.setAttribute("type", "");
-    newAttribute.setAttribute("visibility", "");
+    var template = this.editor.getTemplate("property");
+    var newCell = this.graph.model.cloneCell(template);
+    newCell.setVertex(true);
+    
+    var attribute = newCell.value;
+    attribute.setAttribute("name", "myAttribute");
+    attribute.setAttribute("type", "int");
+    attribute.setAttribute("visibility", "private");
+    
+    this.graph.addClassifierAttribute (this.classifierCell, newCell);
   }
 };
 
