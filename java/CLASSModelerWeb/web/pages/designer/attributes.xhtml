@@ -14,7 +14,7 @@
                 <td></td>
                 <td>
                     <label><input type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_STATIC_FIELD}" /></label>
-                    <label><input type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_LEAF_FIELD}" /></label>
+                    <label><input type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_FINAL_FIELD}" /></label>
                 </td>
             </tr>
             <tr>
@@ -46,8 +46,7 @@
         <p:separator />
         
         <h:panelGrid columns="2">
-            <p:commandButton id="btSaveAttributes" value="#{msgs.SAVE_LABEL}" />
-            <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgAttributes.hide()" />
+            <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgAttributes.hide()" />
         </h:panelGrid>
     </h:form>
 </p:dialog>

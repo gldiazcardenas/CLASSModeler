@@ -10,7 +10,7 @@
         <add as="class">
             <Class name="MyClass" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="130" height="60" />
+                    <mxGeometry as="geometry" width="0" height="50" />
                 </mxCell>
             </Class>
         </add>
@@ -18,7 +18,7 @@
         <add as="interface">
             <Interface name="MyInterface">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="130" height="60" />
+                    <mxGeometry as="geometry" width="0" height="50" />
                 </mxCell>
             </Interface>
         </add>
@@ -26,15 +26,15 @@
         <add as="enumeration">
             <Enumeration name="MyEnumeration">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="130" height="60" />
+                    <mxGeometry as="geometry" width="0" height="50" />
                 </mxCell>
             </Enumeration>
         </add>
         
         <add as="property">
-            <Property name="myProperty">
+            <Property name="myProperty" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
                 <mxCell vertex="1" style="feature">
-                    <mxGeometry as="geometry" width="130" height="20" />
+                    <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Property>
         </add>
@@ -42,7 +42,7 @@
         <add as="operation">
             <Operation name="myOperation">
                 <mxCell vertex="1" style="feature">
-                    <mxGeometry as="geometry" width="130" height="20" />
+                    <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Operation>
         </add>
@@ -50,7 +50,7 @@
         <add as="package">
             <Package name="MyPackage">
                 <mxCell vertex="1" style="package">
-                    <mxGeometry as="geometry" width="130" height="80" />
+                    <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
             </Package>
         </add>
@@ -58,7 +58,7 @@
         <add as="comment">
             <Comment body="My New Comment">
                 <mxCell vertex="1" style="comment">
-                    <mxGeometry as="geometry" width="80" height="90" />
+                    <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
             </Comment>
         </add>
@@ -76,7 +76,7 @@
                 <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" width="0" height="0">
                         <mxPoint as="sourcePoint" x="0" y="0" />
-                        <mxPoint as="targetPoint" x="130" y="0" />
+                        <mxPoint as="targetPoint" x="0" y="0" />
                     </mxGeometry>
                 </mxCell>
             </Composition>

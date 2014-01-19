@@ -44,7 +44,7 @@ CLASSToolbox.prototype.init = function (container) {
   this.container = container;
   
   // Configure drag object
-  var draggableItems = document.getElementsByClassName("draggable");
+  var draggableItems = document.getElementsByClassName(this.draggableItemStyle);
   for (var i = 0; i < draggableItems.length; i++) {
     this.configureDnD(draggableItems[i], this.editor.getTemplate(draggableItems[i].id));
   }

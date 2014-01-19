@@ -64,9 +64,56 @@ CLASSEditor.prototype.createGraph = function () {
   
   // Maintains swimlanes and installs autolayout
   this.createSwimlaneManager(graph);
-  this.createLayoutManager(graph);
+  var layoutManager = this.createLayoutManager(graph);
+  
+  // Override method to layout internal elements of a classifier
+  layoutManager.layoutCells = function (cells) {
+    if (cells.length > 0) {
+      var model = this.getGraph().getModel();
+      model.beginUpdate();
+      
+      try {
+        var last = null;
+        
+        for (var i = 0; i < cells.length; i++) {
+          if (cells[i] != model.getRoot() && cells[i] != last) {
+            last = cells[i];
+            this.executeLayout(this.getLayout(last), last);
+            
+            // GD, 25.10.2013. Applying layout to also child swimlane nodes
+            if (last.children != null) {
+              this.layoutCells(last.children);
+            }
+          }
+        }
+        
+        this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+      }
+      finally {
+        model.endUpdate();
+      }
+    }
+  };
   
   return graph;
+};
+
+/**
+ * Overrides createSwimlaneLayout() in mxEditor. Configures the layout for UML
+ * classifiers (classes, interfaces and enumerations).
+ * 
+ * @author Gabriel Leonardo Diaz, 16.10.2013.
+ */
+CLASSEditor.prototype.createSwimlaneLayout = function () {
+  var layout             = new mxStackLayout(this.graph, false);
+  
+  layout.fill            = true;
+  layout.resizeParent    = true;
+  layout.isVertexMovable = function (cell) {
+    return true;
+  };
+  
+  return layout;
 };
 
 /**
