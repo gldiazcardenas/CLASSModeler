@@ -30,6 +30,7 @@ CLASSEditor.prototype.createGraph = function () {
   // Enables rubberband, tooltips, panning
   graph.setTooltips(true);
   graph.setPanning(true);
+  graph.setDropEnabled(true);
 
   // Overrides the dblclick method on the graph to
   // invoke the dblClickAction for a cell and reset
@@ -51,6 +52,7 @@ CLASSEditor.prototype.createGraph = function () {
   this.installInsertHandler(graph);
 
   // Redirects the function for creating the popupmenu items
+  graph.panningHandler.autoExpand = true;
   graph.panningHandler.factoryMethod = mxUtils.bind(this, function(menu, cell, evt) {
     return this.createPopupMenu(menu, cell, evt);
   });
@@ -125,6 +127,10 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     self.execute('generateImage');
   };
   
+  var viewXML = function () {
+    self.execute('viewXML');
+  };
+  
   menu.addItem("Deshacer", null, undo, null, null, true);
   menu.addItem("Rehacer", null, redo, null, null, true);
   
@@ -149,6 +155,9 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
   menu.addItem("Generar Imagen", null, generateImage, subMenu, null, true);
+  
+  menu.addSeparator();
+  menu.addItem("Ver XML", null, viewXML, null, null, true);
 };
 
 /**
@@ -230,6 +239,12 @@ CLASSEditor.prototype.addActions = function () {
   this.addAction('generateImage', function (editor) {
     editor.generateImage();
   });
+  
+  this.addAction('viewXML', function (editor) {
+    var encoder = new mxCodec();
+    var node = encoder.encode(editor.graph.getModel());
+    mxUtils.popup(mxUtils.getPrettyXml(node), true);
+  });
 };
 
 /**
@@ -289,7 +304,7 @@ CLASSEditor.prototype.generateImage = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showAttributes = function (cell) {
-  var dialog = new CLASSAttributes(this.graph);
+  var dialog = new CLASSAttributes(this);
   dialog.init(cell);
   dialog.show();
 };
@@ -304,3 +319,5 @@ CLASSEditor.prototype.showAttributes = function (cell) {
 CLASSEditor.prototype.showOperations = function (cell) {
   // TODO GD
 };
+
+

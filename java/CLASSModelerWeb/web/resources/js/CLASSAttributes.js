@@ -11,13 +11,19 @@
  * 
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
-CLASSAttributes = function (graph) {
-  this.graph  = graph;
+CLASSAttributes = function (editor) {
+  this.editor = editor;
+  this.graph  = editor.graph;
   this.dialog = dlgAttributes; // Defined by a PrimeFaces dialog.
 };
 
 /**
- * Instance of the graph being edited.
+ * Instance of the editor component.
+ */
+CLASSAttributes.prototype.editor;
+
+/**
+ * Instance of the graph component.
  */
 CLASSAttributes.prototype.graph;
 
@@ -27,9 +33,14 @@ CLASSAttributes.prototype.graph;
 CLASSAttributes.prototype.dialog;
 
 /**
- * Instance of the cell being edited.
+ * Instance of the classifier edited.
  */
-CLASSAttributes.prototype.cell;
+CLASSAttributes.prototype.classifierCell;
+
+/**
+ * Instance of the attribute edited.
+ */
+CLASSAttributes.prototype.attributeCell;
 
 /**
  * Initializes the dialog with the attributes of the given cell containing a
@@ -109,12 +120,12 @@ CLASSAttributes.prototype.configureMultiplicityCombo = function () {
       textField:"text",
       panelHeight: 130,
       data: [
-          {id:"many",       text:"*"},
-          {id:"zero",       text:"0"},
-          {id:"zeroOrMany", text:"0...*"},
-          {id:"zeroOrOne",  text:"0...1"},
-          {id:"one",        text:"1"},
-          {id:"oneOrMany",  text:"1...*"}
+          {id:"*",       text:"*"},
+          {id:"0",       text:"0"},
+          {id:"0...*",   text:"0...*"},
+          {id:"0...1",   text:"0...1"},
+          {id:"1",       text:"1"},
+          {id:"1...*",   text:"1...*"}
       ]
   });
   
@@ -129,15 +140,14 @@ CLASSAttributes.prototype.configureMultiplicityCombo = function () {
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
 CLASSAttributes.prototype.configureAttributesTable = function () {
+  var self = this;
+  
   $('#attributesTable').datagrid({
       toolbar: [
-          { iconCls: 'icon-add', handler: function() { alert('add'); }},
-          { iconCls: 'icon-remove', handler: function() { alert('remove'); }},
+          { iconCls: 'icon-add', handler: function() { self.addAttribute(); }},
+          { iconCls: 'icon-remove', handler: function() { self.deleteAttribute(); }},
           '-',
-          { iconCls: 'icon-save', handler: function() { alert('save'); }},
-          '-',
-          { iconCls: 'icon-up', handler: function() { alert('up'); }},
-          { iconCls: 'icon-down', handler: function() { alert('down'); }}
+          { iconCls: 'icon-save', handler: function() { self.saveAttribute(); }}
       ],
       
       data: [
@@ -150,6 +160,45 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
           {field:'value',title:'Valor Inicial',width:150}
       ]]
   });
+};
+
+/**
+ * Adds a new attribute to the edited classifier.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.01.2014.
+ */
+CLASSAttributes.prototype.addAttribute = function () {
+  // TODO GD
+};
+
+/**
+ * Deletes the selected attribute over the table.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.01.2014.
+ */
+CLASSAttributes.prototype.deleteAttribute = function () {
+  // TODO GD
+};
+
+/**
+ * Saves the changes over the edited attribute.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.01.2014.
+ */
+CLASSAttributes.prototype.saveAttribute = function () {
+  // EDIT
+  if (this.attributeCell) {
+    
+    
+  }
+  
+  // CREATE
+  else {
+    var newAttribute = docXML.createElement("Property");
+    newAttribute.setAttribute("name", "");
+    newAttribute.setAttribute("type", "");
+    newAttribute.setAttribute("visibility", "");
+  }
 };
 
 /**

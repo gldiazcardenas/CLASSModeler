@@ -54,9 +54,14 @@ CLASSGraph.prototype.cellLabelChanged = function (cell, newValue, autoSize) {
  * Edits the cell user object attribute by assigning the new value.
  * 
  * @param cell
+ *          The cell whose node is going to be edited.
  * @param attrName
+ *          The name of the node attribute to edit.
  * @param attrValue
+ *          The new value of the attribute.
  * @param autoSize
+ *          A flag indicating the size of the cell needs to be adjusted after
+ *          editing.
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSGraph.prototype.cellEditAttribute = function (cell, attrName, attrValue, autoSize) {
@@ -69,8 +74,10 @@ CLASSGraph.prototype.cellEditAttribute = function (cell, attrName, attrValue, au
     var clone = node.cloneNode(true);
     clone.setAttribute(attrName, attrValue);
     
+    // Set the user object of the cell
     this.model.setValue(cell, clone);
     
+    // Adjust the cell size
     if (autoSize) {
       this.cellSizeUpdated(cell, false);
     }

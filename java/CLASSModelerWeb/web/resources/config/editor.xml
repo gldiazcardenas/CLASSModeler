@@ -84,7 +84,7 @@
     </Array>
     
     <!-- Graph -->
-    <mxGraph as="graph" dropEnabled="1" panning="1">
+    <mxGraph as="graph">
         <mxStylesheet as="stylesheet">
             <add as="defaultVertex">
                 <add as="align" value="left"/>

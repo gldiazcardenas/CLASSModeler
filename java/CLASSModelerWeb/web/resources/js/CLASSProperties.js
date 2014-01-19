@@ -91,7 +91,6 @@ CLASSProperties.prototype.configureGrid = function (cell) {
   var heightValue      = null;
   var xValue           = null;
   var yValue           = null;
-  var commentValue     = null;
   
   var textEditor       = null;
   var booleanEditor    = null;
@@ -100,7 +99,6 @@ CLASSProperties.prototype.configureGrid = function (cell) {
   var stereotypeEditor = null;
   var attributesEditor = null;
   var operationsEditor = null;
-  var commentEditor    = null;
   
   if (this.isCellEditable(cell)) {
     this.cell = cell;
@@ -128,6 +126,15 @@ CLASSProperties.prototype.configureGrid = function (cell) {
           {"id":"private","text":"private"}
       ]
     }};
+    
+    stereotypeEditor = {"type":"combobox", "options": {
+      "valueField":"id",
+      "textField":"text",
+      "panelHeight":"90"
+    }};
+    
+    attributesEditor     = "button";
+    operationsEditor = "button";
   }
   else {
     this.cell = null;
@@ -151,10 +158,7 @@ CLASSProperties.prototype.configureGrid = function (cell) {
       {"name":"Ancho", "value":widthValue, "group":"Geometria", "editor":spinnerEditor},
       {"name":"Alto", "value":heightValue, "group":"Geometria", "editor":spinnerEditor},
       {"name":"X", "value":xValue, "group":"Geometria", "editor":spinnerEditor},
-      {"name":"Y", "value":yValue, "group":"Geometria", "editor":spinnerEditor},
-      
-      // COMMENT
-      {"name":"Comentario", "value":commentValue, "group":"Detalles", "editor":commentEditor}
+      {"name":"Y", "value":yValue, "group":"Geometria", "editor":spinnerEditor}
   ];
   
   $('#propertyTable').propertygrid({
@@ -189,17 +193,66 @@ CLASSProperties.prototype.isCellEditable = function (cell) {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes) {
-  switch (rowIndex) {
-  case 0: // Name
-    this.graph.cellEditAttribute(this.cell, 'name', changes.value, true);
-    break;
+  if (changes.value) {
+    switch (rowIndex) {
+    case 0: // Name
+      this.graph.cellEditAttribute(this.cell, 'name', changes.value, true);
+      break;
+      
+    case 1: // Visibility
+      this.graph.cellEditAttribute(this.cell, 'visibility', changes.value, true);
+      break;
+      
+    case 2: // Stereotype
+      this.graph.cellEditAttribute(this.cell, 'stereotype', changes.value, true);
+      break;
     
-  case 1: // Visibility
-    this.graph.cellEditAttribute(this.cell, 'visibility', changes.value, true);
-    break;
-    
-  case 2: // Stereotype
-    break;
+    case 5: // Abstract
+      this.graph.cellEditAttribute(this.cell, 'isAbstract', changes.value, true);
+      break;
+      
+    case 6: // Root
+      this.graph.cellEditAttribute(this.cell, 'isRoot', changes.value, true);
+      break;
+      
+    case 7: // Leaf
+      this.graph.cellEditAttribute(this.cell, 'isLeaf', changes.value, true);
+      break;
+      
+    case 8: // Specification
+      this.graph.cellEditAttribute(this.cell, 'isSpec', changes.value, true);
+      break;
+    }
   }
 };
+
+/**
+ * Defining a button editor for the property sheet.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.01.2014.
+ */
+$.extend($.fn.datagrid.defaults.editors, {
+  button: {
+      init: function (container, options) {
+        var input = $('<a href="#" class="easyui-linkbutton">Text Button</a>').appendTo(container);
+        return input;
+      },
+      
+      destroy: function (target) {
+        $(target).remove();
+      },
+      
+      getValue: function (target) {
+        return $(target).val();
+      },
+      
+      setValue: function (target, value) {
+        $(target).val(value);
+      },
+      
+      resize: function (target, width) {
+        $(target)._outerWidth(width);
+      }
+  }
+});
 
