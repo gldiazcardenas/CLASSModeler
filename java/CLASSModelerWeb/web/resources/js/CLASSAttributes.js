@@ -177,7 +177,7 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
   
   $('#attributesTable').datagrid({
       toolbar: [
-          { iconCls: 'icon-add', handler: function() { self.addAttribute(); }},
+          { iconCls: 'icon-add', handler: function() { self.newAttribute(); }},
           { iconCls: 'icon-remove', handler: function() { self.deleteAttribute(); }},
           '-',
           { iconCls: 'icon-save', handler: function() { self.saveAttribute(); }}
@@ -198,7 +198,7 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
  * 
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSAttributes.prototype.addAttribute = function () {
+CLASSAttributes.prototype.newAttribute = function () {
   // TODO GD
 };
 

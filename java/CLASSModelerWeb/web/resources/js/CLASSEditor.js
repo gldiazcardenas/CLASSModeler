@@ -63,6 +63,7 @@ CLASSEditor.prototype.createGraph = function () {
   });
   
   // Maintains swimlanes and installs autolayout
+  this.layoutSwimlanes = true;
   this.createSwimlaneManager(graph);
   var layoutManager = this.createLayoutManager(graph);
   
@@ -183,13 +184,13 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
-  menu.addItem("Copiar", null, copy, null, null, true);
-  menu.addItem("Cortar", null, cut, null, null, true);
+  menu.addItem("Copiar", null, copy, null, null, this.isClassifierCell(cell));
+  menu.addItem("Cortar", null, cut, null, null, this.isClassifierCell(cell));
   menu.addItem("Pegar", null, paste, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, deleteAll, null, null, true);
+  menu.addItem("Eliminar", null, deleteAll, null, null, cell != null);
   menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
   
   menu.addSeparator();

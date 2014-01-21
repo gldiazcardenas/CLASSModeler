@@ -96,8 +96,24 @@ CLASSGraph.prototype.getVisibilityChar = function (visibility) {
  */
 CLASSGraph.prototype.cellLabelChanged = function (cell, newValue, autoSize) {
   if (this.isNamedElement(cell.value)) {
-    this.cellEditProperty(cell, 'name', newValue, true);
+    this.cellEditProperty(cell, "name", newValue, true);
   }
+};
+
+/**
+ * Overrides getEditingValue() in mxGraph. Allows to get the value for inline
+ * edition of the cell.
+ * 
+ * @param cell
+ * @param evt
+ * @author Gabriel Leonardo Diaz, 20.01.2014.
+ */
+CLASSGraph.prototype.getEditingValue = function (cell, evt) {
+  if (this.isNamedElement(cell.value)) {
+    return cell.value.getAttribute("name");
+  }
+  
+  return mxGraph.prototype.getEditingValue.call(this, arguments);
 };
 
 /**
@@ -149,7 +165,7 @@ CLASSGraph.prototype.isCellResizable = function (cell) {
   if (cell == null || cell.value == null) {
     return false;
   }
-  return !this.isProperty(cell.value);
+  return !this.isFeature(cell.value);
 };
 
 /**
@@ -163,7 +179,7 @@ CLASSGraph.prototype.isCellMovable = function (cell) {
   if (cell == null || cell.value == null) {
     return false;
   }
-  return !this.isProperty(cell.value);
+  return !this.isFeature(cell.value);
 };
 
 /**
@@ -206,7 +222,16 @@ CLASSGraph.prototype.isClassifier = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isNamedElement = function (node) {
-  return this.isClassifier(node) || this.isPackage(node);
+  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node);
+};
+
+/**
+ * Checks if the given node is a UML feature.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isFeature = function (node) {
+  return this.isProperty(node) || this.isOperation(node);
 };
 
 /**
@@ -220,6 +245,18 @@ CLASSGraph.prototype.isProperty = function (node) {
     return false;
   }
   return node.nodeName.toLowerCase() == "property";
+};
+
+/**
+ * Checks if the given node is an operation element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isOperation = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "operation";
 };
 
 /**
