@@ -192,7 +192,7 @@ CLASSGraph.prototype.isCellMovable = function (cell) {
  *          The cell containing the new attribute.
  * @author Gabriel Leonardo Diaz, 19.01.2014.
  */
-CLASSGraph.prototype.addClassifierAttribute = function (classifierCell, attributeCell) {
+CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
   this.model.beginUpdate();
   
   try {

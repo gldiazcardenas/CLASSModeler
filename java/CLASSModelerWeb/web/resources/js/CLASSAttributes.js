@@ -234,7 +234,7 @@ CLASSAttributes.prototype.saveAttribute = function () {
     attribute.setAttribute("type", "int");
     attribute.setAttribute("visibility", "private");
     
-    this.graph.addClassifierAttribute (this.classifierCell, newCell);
+    this.graph.addAttribute (this.classifierCell, newCell);
   }
 };
 
