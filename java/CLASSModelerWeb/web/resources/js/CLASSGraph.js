@@ -165,7 +165,7 @@ CLASSGraph.prototype.isCellResizable = function (cell) {
   if (cell == null || cell.value == null) {
     return false;
   }
-  return !this.isFeature(cell.value);
+  return !this.isFeature(cell.value) && !this.isSection(cell.value);
 };
 
 /**
@@ -179,7 +179,19 @@ CLASSGraph.prototype.isCellMovable = function (cell) {
   if (cell == null || cell.value == null) {
     return false;
   }
-  return !this.isFeature(cell.value);
+  return !this.isFeature(cell.value) && !this.isSection(cell.value);
+};
+
+/**
+ * Overrides isCellSelectable() in mxGraph. Determines if the given cell can be selected.
+ * @param cell
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isCellSelectable = function (cell) {
+  if (cell == null || cell.value == null) {
+    return false;
+  }
+  return !this.isSection(cell.value);
 };
 
 /**
@@ -190,13 +202,36 @@ CLASSGraph.prototype.isCellMovable = function (cell) {
  *          The cell containing the classifier.
  * @param attributeCell
  *          The cell containing the new attribute.
+ * @param sectionTemplate
+ *          The section template, used when the classifier does not have an
+ *          attributes section.
  * @author Gabriel Leonardo Diaz, 19.01.2014.
  */
-CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
+CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sectionTemplate) {
+  if (!this.isClassifier(classifierCell.value)) {
+    return;
+  }
+  
   this.model.beginUpdate();
   
   try {
-    this.addCell(attributeCell, classifierCell);
+    var attrSection = null;
+    
+    if (classifierCell.children && classifierCell.children.length > 0) {
+      var child = classifierCell.children[0];
+      if (child.getAttribute("isAttribute") == "true") {
+        attrSection = child;
+      }
+    }
+    
+    if (attrSection == null) {
+      attrSection = this.model.cloneCell(sectionTemplate);
+      attrSection.setAttribute("isAttribute", "true");
+      
+      this.addCell(attrSection, classifierCell, 0);
+    }
+    
+    this.addCell(attributeCell, attrSection);
     this.cellSizeUpdated(attributeCell, false);
   }
   finally {
@@ -322,4 +357,16 @@ CLASSGraph.prototype.isComment = function (node) {
     return false;
   }
   return node.nodeName.toLowerCase() == "comment";
+};
+
+/**
+ * Checks if the given node is a section of a classifier.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isSection = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "section";
 };

@@ -10,7 +10,7 @@
         <add as="class">
             <Class name="MyClass" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="50" />
+                    <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
             </Class>
         </add>
@@ -18,7 +18,7 @@
         <add as="interface">
             <Interface name="MyInterface">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="50" />
+                    <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
             </Interface>
         </add>
@@ -26,9 +26,17 @@
         <add as="enumeration">
             <Enumeration name="MyEnumeration">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="50" />
+                    <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
             </Enumeration>
+        </add>
+        
+        <add as="section">
+            <Section isAttribute="true">
+                <mxCell vertex="1" style="section">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </Section>
         </add>
         
         <add as="property">
@@ -61,25 +69,6 @@
                     <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
             </Comment>
-        </add>
-        
-        <add as="association">
-            <Association>
-                <mxCell edge="1" style="association">
-                    <mxGeometry as="geometry" relative="1" width="0" height="0" />
-                </mxCell>
-            </Association>
-        </add>
-        
-        <add as="composition">
-            <Composition>
-                <mxCell edge="1" style="composition">
-                    <mxGeometry as="geometry" relative="1" width="0" height="0">
-                        <mxPoint as="sourcePoint" x="0" y="0" />
-                        <mxPoint as="targetPoint" x="0" y="0" />
-                    </mxGeometry>
-                </mxCell>
-            </Composition>
         </add>
     </Array>
     
@@ -150,6 +139,20 @@
                 <add as="startSize" value="14"/>
                 <add as="endArrow" value="open"/>
                 <add as="endSize" value="10"/>
+            </add>
+            
+            <add as="section">
+                <add as="shape" value="swimlane"/>
+                <add as="perimeter" value="RectanglePerimeter"/>
+                <add as="align" value="right"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="strokeWidth" value="1"/>
+                <add as="fillColor" value="#FFFFFF"/>
+                <add as="startSize" value="0"/>
+                <add as="fontStyle" value="0"/>
+                <add as="shadow" value="0"/>
+                <add as="foldable" value="0"/>
             </add>
             
         </mxStylesheet>

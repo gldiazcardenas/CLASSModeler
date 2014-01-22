@@ -69,35 +69,71 @@ CLASSToolbox.prototype.init = function (container) {
  *          The tooltip of the template
  * @author Gabriel Leonardo Diaz, 17.10.2013.
  */
-CLASSToolbox.prototype.configureDnD = function (draggableItem, componentDrop) {
+CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
+  var editor = this.editor;
+  
   // Drop handler
   var doDrop = function (graph, evt, overCell) {
     graph.stopEditing(false);
     
-    var point   = graph.getPointForEvent(evt);
-    var parent  = graph.getDefaultParent();
-    var model   = graph.getModel();
-    var newCell = model.cloneCell(componentDrop);
-    
+    var model = graph.getModel();
     model.beginUpdate();
+    
     try {
+      var point   = graph.getPointForEvent(evt);
+      var parent  = graph.getDefaultParent();
+      
+      var newCell = model.cloneCell(element);
+      
       newCell.geometry.x = point.x;
       newCell.geometry.y = point.y;
+      
+      // CLASS sections
+      if (graph.isClass(newCell.value)) {
+        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        attrSection.setAttribute("isAttribute", "true");
+        attrSection.setVertex(true);
+        
+        var operSection = model.cloneCell(editor.getTemplate("section"));
+        operSection.setAttribute("isAttribute", "false");
+        operSection.setVertex(true);
+        
+        newCell.insert(attrSection);
+        newCell.insert(operSection);
+      }
+      
+      // INTERFACE sections
+      else if (graph.isInterface(newCell.value)) {
+        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        attrSection.setAttribute("isAttribute", "false");
+        attrSection.setVertex(true);
+        
+        newCell.insert(attrSection);
+      }
+      
+      // ENUMERATION sections
+      else if (graph.isEnumeration(newCell.value)) {
+        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        attrSection.setAttribute("isAttribute", "true");
+        attrSection.setVertex(true);
+        
+        newCell.insert(attrSection);
+      }
+      
       graph.addCell(newCell, parent);
       graph.cellSizeUpdated(newCell, false);
+      graph.setSelectionCell(newCell);
     }
     finally {
       model.endUpdate();
     }
-    
-    graph.setSelectionCell(newCell);
   };
   
   // Drag handler
   var dragSource = mxUtils.makeDraggable(draggableItem, this.graph, doDrop, draggableItem.cloneNode(true));
   dragSource.highlightDropTargets = true;
   dragSource.getDropTarget = function (graph, x, y) {
-    if (graph.isSwimlane(componentDrop)) {
+    if (graph.isSwimlane(element)) {
       return null;
     }
     

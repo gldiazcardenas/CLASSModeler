@@ -225,16 +225,13 @@ CLASSAttributes.prototype.saveAttribute = function () {
   
   // CREATE
   else {
-    var template = this.editor.getTemplate("property");
-    var newCell = this.graph.model.cloneCell(template);
-    newCell.setVertex(true);
+    var newAttribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
+    newAttribute.setVertex(true);
+    newAttribute.setAttribute("name", "myAttribute");
+    newAttribute.setAttribute("type", "int");
+    newAttribute.setAttribute("visibility", "private");
     
-    var attribute = newCell.value;
-    attribute.setAttribute("name", "myAttribute");
-    attribute.setAttribute("type", "int");
-    attribute.setAttribute("visibility", "private");
-    
-    this.graph.addAttribute (this.classifierCell, newCell);
+    this.graph.addAttribute (this.classifierCell, newAttribute, this.editor.getTemplate("section"));
   }
 };
 
