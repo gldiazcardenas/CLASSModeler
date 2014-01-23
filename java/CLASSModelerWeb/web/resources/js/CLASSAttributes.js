@@ -54,7 +54,7 @@ CLASSAttributes.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.configureVisibilityCombo();
   this.configureTypeCombo();
-  this.configureMultiplicityCombo();
+ // this.configureMultiplicityCombo();
   this.configureAttributesTable();
 };
 
@@ -158,38 +158,49 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
   
   var jSonData = [];
   
-  var cell;
-  var node;
+  var attribute;
+  var attributes = this.graph.getAttributes(this.classifierCell);
   
-  for (var i = 0; this.classifierCell.children && i < this.classifierCell.children.length; i++) {
-    cell = this.classifierCell.children[i];
-    node = cell.value;
-    
-    if (this.graph.isProperty(node)) {
-      var visibility = node.getAttribute("visibility");
-      var name = node.getAttribute("name");
-      var type = node.getAttribute("type");
-      var initialValue = node.getAttribute("initialValue");
+  if (attributes) {
+    for (var i = 0; i < attributes.length; i++) {
+      attribute = attributes[i];
+      var visibility   = this.graph.getVisibilityChar(attribute.getAttribute("visibility"));
+      var nameValue    = attribute.getAttribute("name");
+      var typeValue    = attribute.getAttribute("type");
+      var initialValue = attribute.getAttribute("initialValue");
       
-      jSonData.push({f1: this.graph.getVisibilityChar(visibility) + " " + name, f2:type, f3:initialValue});
+      jSonData.push({name: visibility + " " + nameValue, type: typeValue, value: initialValue});
     }
   }
   
-  $('#attributesTable').datagrid({
-      toolbar: [
-          { iconCls: 'icon-add', handler: function() { self.newAttribute(); }},
-          { iconCls: 'icon-remove', handler: function() { self.deleteAttribute(); }},
-          '-',
-          { iconCls: 'icon-save', handler: function() { self.saveAttribute(); }}
-      ],
-      
+  $("#attributesTable").datagrid({
+      toolbar: "#tbToolbar",
       data: jSonData,
-      
       columns:[[
-          {field:'name',title:'Nombre',width:150},
-          {field:'type',title:'Tipo',width:150},
-          {field:'value',title:'Valor Inicial',width:150}
+          {field:"name",title:"Nombre",width:150},
+          {field:"type",title:"Tipo",width:150},
+          {field:"value",title:"Valor Inicial",width:150}
       ]]
+  });
+  
+  
+  
+  $("#newAttributeBtn").linkbutton({
+      handler: function () {
+        self.newAttribute();
+      }
+  });
+  
+  $("#delAttributeBtn").linkbutton({
+      handler: function () {
+        self.deleteAttribute();
+      }
+  });
+  
+  $(function() {
+      $("#saveAttributeBtn").bind("click", function(){
+          self.saveAttribute();
+      });
   });
 };
 
@@ -217,6 +228,14 @@ CLASSAttributes.prototype.deleteAttribute = function () {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSAttributes.prototype.saveAttribute = function () {
+  var nameValue       = null;
+  var typeValue       = null;
+  var visibilityValue = null;
+  var visibilityChar  = null;
+  var initialValue    = null;
+  var staticValue     = null;
+  var finalValue      = null;
+  
   // EDIT
   if (this.attributeCell) {
     
@@ -226,12 +245,25 @@ CLASSAttributes.prototype.saveAttribute = function () {
   // CREATE
   else {
     var newAttribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
+    
     newAttribute.setVertex(true);
-    newAttribute.setAttribute("name", "myAttribute");
-    newAttribute.setAttribute("type", "int");
-    newAttribute.setAttribute("visibility", "private");
+    newAttribute.setAttribute("name", nameValue);
+    newAttribute.setAttribute("type", typeValue);
+    newAttribute.setAttribute("visibility", visibilityValue);
+    newAttribute.setAttribute("initialValue", initialValue);
+    newAttribute.setAttribute("isStatic", staticValue);
+    newAttribute.setAttribute("isFinal", finalValue);
     
     this.graph.addAttribute (this.classifierCell, newAttribute, this.editor.getTemplate("section"));
+    
+    // Update the table
+    $("#attributesTable").datagrid("insertRow", {
+        row: {
+            name: visibilityChar + " " + nameValue,
+            type: typeValue,
+            value: initialValue
+        }
+    });
   }
 };
 

@@ -84,6 +84,31 @@ CLASSGraph.prototype.getVisibilityChar = function (visibility) {
 };
 
 /**
+ * Gets the attributes of one classifier.
+ * 
+ * @param classifier
+ *          The cell containing a classifier element.
+ * @author Gabriel Leonardo Diaz, 22.01.2014.
+ * @returns The attributes cells.
+ */
+CLASSGraph.prototype.getAttributes = function (classifier) {
+  if (classifier == null || !this.isClassifier(classifier.value) || classifier.children == null || classifier.children.length == 0) {
+    return null;
+  }
+  
+  var section;
+  
+  for (var i = 0; i < classifier.children.length; i++) {
+    section = classifier.getChildAt(i);
+    if (section.getAttribute("isAttribute") == "true") {
+      return section.children;
+    }
+  }
+  
+  return null;
+};
+
+/**
  * Overrides cellLabelChanged() in mxGraph. Allows to apply the new value (name)
  * of the node element.
  * 
