@@ -176,6 +176,16 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
   $("#attributesTable").datagrid({
       toolbar: "#tbToolbar",
       data: jSonData,
+      singleSelect: true,
+      
+      onSelect: function (rowIndex, rowData) {
+        self.selectionChanged(rowIndex, true);
+      },
+      
+      onUnSelect: function (rowIndex, rowData) {
+        self.selectionChanged(rowIndex, false);
+      },
+      
       columns:[[
           {field:"name",title:"Nombre",width:150},
           {field:"type",title:"Tipo",width:150},
@@ -183,25 +193,38 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
       ]]
   });
   
-  
-  
-  $("#newAttributeBtn").linkbutton({
-      handler: function () {
-        self.newAttribute();
-      }
-  });
-  
-  $("#delAttributeBtn").linkbutton({
-      handler: function () {
-        self.deleteAttribute();
-      }
+  $(function() {
+      $("#newAttributeBtn").bind("click", function() {
+          self.newAttribute();
+      });
   });
   
   $(function() {
-      $("#saveAttributeBtn").bind("click", function(){
+      $("#delAttributeBtn").bind("click", function() {
+          self.deleteAttribute();
+      });
+  });
+  
+  $(function() {
+      $("#saveAttributeBtn").bind("click", function() {
           self.saveAttribute();
       });
   });
+};
+
+/**
+ * Processes the selection changed event.
+ * 
+ * @param rowIndex
+ *          The row selected or unselected.
+ * @param selected
+ *          A flag indicating the event type (selection or unselection).
+ * @author Gabriel Leonardo Diaz, 24.01.2014.
+ */
+CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
+  if (rowIndex) {
+    
+  }
 };
 
 /**
@@ -219,6 +242,9 @@ CLASSAttributes.prototype.newAttribute = function () {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSAttributes.prototype.deleteAttribute = function () {
+  if (this.attributeCell) {
+    
+  }
   // TODO GD
 };
 
@@ -228,42 +254,42 @@ CLASSAttributes.prototype.deleteAttribute = function () {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSAttributes.prototype.saveAttribute = function () {
-  var nameValue       = null;
-  var typeValue       = null;
-  var visibilityValue = null;
-  var visibilityChar  = null;
-  var initialValue    = null;
-  var staticValue     = null;
-  var finalValue      = null;
+  var nameValue       = $("#attrName").val();
+  var typeValue       = $("#attrType").combobox("getValue");
+  var visibilityValue = $("#attrVisibility").combobox("getValue");
+  var initialValue    = $("#attrInitValue").val();
+  var staticValue     = $("#staticCheck").is(":checked");
+  var finalValue      = $("#finalCheck").is(":checked");
+  var visibilityChar  = this.graph.getVisibilityChar(visibilityValue);
   
-  // EDIT
+  // Prepare attribute
+  var attribute;
   if (this.attributeCell) {
-    
-    
+    attribute = this.attributeCell.cloneCell(true);
+  }
+  else {
+    attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
   }
   
-  // CREATE
+  // Set values
+  attribute.setVertex(true);
+  attribute.setAttribute("name", nameValue);
+  attribute.setAttribute("type", typeValue);
+  attribute.setAttribute("visibility", visibilityValue);
+  attribute.setAttribute("initialValue", initialValue);
+  attribute.setAttribute("isStatic", staticValue);
+  attribute.setAttribute("isFinal", finalValue);
+  
+  // Apply changes
+  if (this.attributeCell) {
+    this.graph.editAttribute(this.attributeCell, attribute);
+    $("#attributesTable").datagrid("updateRow", {row: { name: visibilityChar + " " + nameValue, type: typeValue, value: initialValue }});
+    $("#attributesTable").datagrid("reload");
+  }
   else {
-    var newAttribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
-    
-    newAttribute.setVertex(true);
-    newAttribute.setAttribute("name", nameValue);
-    newAttribute.setAttribute("type", typeValue);
-    newAttribute.setAttribute("visibility", visibilityValue);
-    newAttribute.setAttribute("initialValue", initialValue);
-    newAttribute.setAttribute("isStatic", staticValue);
-    newAttribute.setAttribute("isFinal", finalValue);
-    
-    this.graph.addAttribute (this.classifierCell, newAttribute, this.editor.getTemplate("section"));
-    
-    // Update the table
-    $("#attributesTable").datagrid("insertRow", {
-        row: {
-            name: visibilityChar + " " + nameValue,
-            type: typeValue,
-            value: initialValue
-        }
-    });
+    this.graph.addAttribute (this.classifierCell, attribute, this.editor.getTemplate("section"));
+    $("#attributesTable").datagrid("insertRow", {row: { name: visibilityChar + " " + nameValue, type: typeValue, value: initialValue }});
+    $("#attributesTable").datagrid("reload");
   }
 };
 
@@ -273,5 +299,12 @@ CLASSAttributes.prototype.saveAttribute = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSAttributes.prototype.show = function () {
+  $("#attrName").val();
+  $("#attrType").combobox("getValue");
+  $("#attrVisibility").combobox("getValue");
+  $("#attrInitValue").val();
+  $("#staticCheck").is(":checked");
+  $("#finalCheck").is(":checked");
+  
   this.dialog.show();
 };

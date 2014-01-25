@@ -264,6 +264,17 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sec
   }
 };
 
+/**
+ * Processes the edition of the given attribute cell.
+ * 
+ * @param attributeCell
+ * @param attributeChanged
+ * @author Gabriel Leonardo Diaz, 24.01.2014.
+ */
+CLASSGraph.prototype.editAttribute = function (attributeCell, attributeChanged) {
+  // TODO GD
+};
+
 // SECOND LABEL TODO
 
 /**
