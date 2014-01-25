@@ -8,7 +8,7 @@
     <!-- Templates -->
     <Array as="templates">
         <add as="class">
-            <Class name="MyClass" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
+            <Class name="Clase" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -16,7 +16,7 @@
         </add>
         
         <add as="interface">
-            <Interface name="MyInterface">
+            <Interface name="Interfaz">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -24,7 +24,7 @@
         </add>
         
         <add as="enumeration">
-            <Enumeration name="MyEnumeration">
+            <Enumeration name="Enumeracion">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -40,7 +40,7 @@
         </add>
         
         <add as="property">
-            <Property name="myProperty" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
+            <Property name="property" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
                 <mxCell vertex="1" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -48,7 +48,7 @@
         </add>
         
         <add as="operation">
-            <Operation name="myOperation">
+            <Operation name="operation">
                 <mxCell vertex="1" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -56,7 +56,7 @@
         </add>
             
         <add as="package">
-            <Package name="MyPackage">
+            <Package name="Paquete">
                 <mxCell vertex="1" style="package">
                     <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
@@ -64,7 +64,7 @@
         </add>
         
         <add as="comment">
-            <Comment body="My New Comment">
+            <Comment body="Comentario">
                 <mxCell vertex="1" style="comment">
                     <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>

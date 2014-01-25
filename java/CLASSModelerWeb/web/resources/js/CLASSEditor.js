@@ -19,6 +19,11 @@ CLASSEditor = function (config) {
 mxUtils.extend(CLASSEditor, mxEditor);
 
 /**
+ * Instance of the dialog used to edit attributes.
+ */
+CLASSEditor.prototype.attrDialog;
+
+/**
  * Overrides createGraph() in mxEditor. Allows to create a custom instance of
  * the Graph component.
  * 
@@ -351,9 +356,11 @@ CLASSEditor.prototype.generateImage = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showAttributes = function (cell) {
-  var dialog = new CLASSAttributes(this);
-  dialog.init(cell);
-  dialog.show();
+  if (!this.attrDialog) {
+    this.attrDialog = new CLASSAttributes(this);
+  }
+  this.attrDialog.init(cell);
+  this.attrDialog.show();
 };
 
 /**

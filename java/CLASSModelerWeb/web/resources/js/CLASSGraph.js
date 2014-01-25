@@ -46,12 +46,15 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
  */
 CLASSGraph.prototype.getPropertyLabel = function (property) {
   var visibility = property.getAttribute("visibility");
-  var visibilityChar = this.getVisibilityChar(visibility);
   var name = property.getAttribute("name");
   var type = property.getAttribute("type");
   var initialValue = property.getAttribute("initialValue");
   
-  var label = visibilityChar + " " + name + ": " + type;
+  var label = this.getVisibilityChar(visibility) + " " + name;
+  
+  if (type && type.length > 0) {
+    label += ": " + type;
+  }
   
   if (initialValue && initialValue.length > 0) {
     label += " " + initialValue;
@@ -80,7 +83,11 @@ CLASSGraph.prototype.getVisibilityChar = function (visibility) {
     return "#";
   }
   
-  return "~";
+  if (visibility == "package") {
+    return "~";
+  }
+  
+  return "";
 };
 
 /**
@@ -93,7 +100,7 @@ CLASSGraph.prototype.getVisibilityChar = function (visibility) {
  */
 CLASSGraph.prototype.getAttributes = function (classifier) {
   if (classifier == null || !this.isClassifier(classifier.value) || classifier.children == null || classifier.children.length == 0) {
-    return null;
+    return [];
   }
   
   var section;
@@ -105,7 +112,7 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
     }
   }
   
-  return null;
+  return [];
 };
 
 /**
@@ -265,14 +272,24 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sec
 };
 
 /**
- * Processes the edition of the given attribute cell.
+ * Replaces the user object of the given cell node.
  * 
- * @param attributeCell
- * @param attributeChanged
+ * @param nodeCell
+ *          The cell to replace its user object.
+ * @param newNode
+ *          The new user object of the cell, must be a clone of the original
+ *          one.
  * @author Gabriel Leonardo Diaz, 24.01.2014.
  */
-CLASSGraph.prototype.editAttribute = function (attributeCell, attributeChanged) {
-  // TODO GD
+CLASSGraph.prototype.replaceNode = function (nodeCell, newNode) {
+  this.model.beginUpdate();
+  
+  try {
+    this.model.setValue(nodeCell, newNode);
+  }
+  finally {
+    this.model.endUpdate();
+  }
 };
 
 // SECOND LABEL TODO
