@@ -173,7 +173,7 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
   var self = this;
   
   $("#attributesTable").datagrid({
-      toolbar: "#tbToolbar",
+      toolbar: "#attrTbToolbar",
       singleSelect: true,
       
       onSelect: function (rowIndex, rowData) {
@@ -277,9 +277,9 @@ CLASSAttributes.prototype.newAttribute = function () {
  */
 CLASSAttributes.prototype.deleteAttribute = function () {
   if (this.attributeCell) {
-    
+    this.graph.removeCells([this.attributeCell]);
+    $("#attributesTable").datagrid("deleteRow", this.attributeIndex);
   }
-  // TODO GD
 };
 
 /**
@@ -294,21 +294,22 @@ CLASSAttributes.prototype.saveAttribute = function () {
   var initialValue    = $("#attrInitValue").val();
   var staticValue     = $("#staticCheck").is(":checked");
   var finalValue      = $("#finalCheck").is(":checked");
-  var visibilityChar  = this.graph.getVisibilityChar(visibilityValue);
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid Name
     return;
   }
   
-  if (!this.graph.isEnumeration(this.classifierCell.value) && (typeValue == null || typeValue.length == 0)) {
-    // Invalid Type
-    return;
-  }
-  
-  if (!this.graph.isEnumeration(this.classifierCell.value) && (visibilityValue == null || visibilityValue.length == 0)) {
-    // Invalid Visibility
-    return;
+  if (!this.graph.isEnumeration(this.classifierCell.value)) {
+    if (typeValue == null || typeValue.length == 0) {
+      // Invalid Type
+      return;
+    }
+    
+    if (visibilityValue == null || visibilityValue.length == 0) {
+      // Invalid Visibility
+      return;
+    }
   }
   
   // Prepare attribute
@@ -317,29 +318,42 @@ CLASSAttributes.prototype.saveAttribute = function () {
     attribute = this.attributeCell.clone(true);
   }
   else {
-    attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
-    attribute.setVertex(true);
+    if (typeValue && typeValue.length > 0) {
+      attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
+    }
+    else {
+      attribute = this.graph.model.cloneCell(this.editor.getTemplate("literal"));
+    }
   }
   
   // Set values
   attribute.setAttribute("name", nameValue);
-  attribute.setAttribute("type", typeValue);
-  attribute.setAttribute("visibility", visibilityValue);
-  attribute.setAttribute("initialValue", initialValue);
-  attribute.setAttribute("isStatic", staticValue);
-  attribute.setAttribute("isFinal", finalValue);
+  
+  if (this.graph.isProperty(attribute.cell)) {
+    attribute.setAttribute("type", typeValue);
+    attribute.setAttribute("visibility", visibilityValue);
+    attribute.setAttribute("initialValue", initialValue);
+    attribute.setAttribute("isStatic", staticValue);
+    attribute.setAttribute("isFinal", finalValue);
+  }
+  
+  var attrName = attribute.getAttribute("name");
+  var attrVis  = attribute.getAttribute("visibility");
+  var attrType = attribute.getAttribute("type");
+  var attrVal  = attribute.getAttribute("initialValue");
+  var visChar  = this.graph.getVisibilityChar(attrVis);
   
   // Apply changes
   if (this.attributeCell) {
     this.graph.replaceNode(this.attributeCell, attribute.value);
-    $("#attributesTable").datagrid("updateRow", {index: this.attributeIndex, row: { name: visibilityChar + " " + nameValue, type: typeValue, value: initialValue }});
+    $("#attributesTable").datagrid("updateRow", {index: this.attributeIndex, row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
     $("#attributesTable").datagrid("reload");
   }
   else {
     this.graph.addAttribute (this.classifierCell, attribute, this.editor.getTemplate("section"));
     this.attributeCell = attribute;
     this.attributeIndex = $("#attributesTable").datagrid("getRows").length;
-    $("#attributesTable").datagrid("insertRow", {row: { name: visibilityChar + " " + nameValue, type: typeValue, value: initialValue }});
+    $("#attributesTable").datagrid("insertRow", {row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
     $("#attributesTable").datagrid("reload");
   }
 };

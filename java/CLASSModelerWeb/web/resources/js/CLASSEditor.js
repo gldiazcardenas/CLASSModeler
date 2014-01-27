@@ -24,6 +24,11 @@ mxUtils.extend(CLASSEditor, mxEditor);
 CLASSEditor.prototype.attrDialog;
 
 /**
+ * Instance of the dialog used to edit operations.
+ */
+CLASSEditor.prototype.operDialog;
+
+/**
  * Overrides createGraph() in mxEditor. Allows to create a custom instance of
  * the Graph component.
  * 
@@ -371,7 +376,11 @@ CLASSEditor.prototype.showAttributes = function (cell) {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showOperations = function (cell) {
-  // TODO GD
+  if (!this.operDialog) {
+    this.operDialog = new CLASSOperations(this);
+  }
+  this.operDialog.init(cell);
+  this.operDialog.show();
 };
 
 

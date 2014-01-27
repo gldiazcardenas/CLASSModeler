@@ -8,7 +8,7 @@
     <!-- Templates -->
     <Array as="templates">
         <add as="class">
-            <Class name="Clase" visibility="public" isAbstract="false" isRoot="false" isLeaf="false" isSpec="false">
+            <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -16,7 +16,7 @@
         </add>
         
         <add as="interface">
-            <Interface name="Interfaz">
+            <Interface name="Interfaz" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -24,7 +24,7 @@
         </add>
         
         <add as="enumeration">
-            <Enumeration name="Enumeracion">
+            <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -53,6 +53,14 @@
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Operation>
+        </add>
+        
+        <add as="literal">
+            <EnumerationLiteral name="LITERAL">
+                <mxCell vertex="1" style="feature">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </EnumerationLiteral>
         </add>
             
         <add as="package">

@@ -77,6 +77,7 @@ CLASSProperties.prototype.clearGrid = function () {
  */
 CLASSProperties.prototype.configureGrid = function (cell) {
   var self             = this;
+  var selfEditor       = this.editor;
   
   var nameValue        = null;
   var visibilityValue  = null;
@@ -101,40 +102,50 @@ CLASSProperties.prototype.configureGrid = function (cell) {
   var operationsEditor = null;
   
   if (this.isCellEditable(cell)) {
-    this.cell = cell;
-    var node  =  this.cell.value;
+    this.cell       = cell;
+    var node        = cell.value;
     
     // Values
     nameValue       = node.getAttribute("name");
     visibilityValue = node.getAttribute("visibility");
     abstractValue   = node.getAttribute("isAbstract");
-    rootValue       = node.getAttribute("isRoot");
-    leafValue       = node.getAttribute("isLeaf");
+    rootValue       = node.getAttribute("isStatic");
+    leafValue       = node.getAttribute("isFinal");
     specValue       = node.getAttribute("isSpec");
     
     // Editors
     textEditor = "text";
-    booleanEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
-    visibilityEditor = {"type":"combobox", "options": {
-      "valueField":"id",
-      "textField":"text",
-      "panelHeight":"90",
-      "data":[
-          {"id":"public","text":"public"},
-          {"id":"protected","text":"protected"},
-          {"id":"package","text":"package"},
-          {"id":"private","text":"private"}
-      ]
-    }};
     
-    stereotypeEditor = {"type":"combobox", "options": {
-      "valueField":"id",
-      "textField":"text",
-      "panelHeight":"90"
-    }};
-    
-    attributesEditor     = "button";
-    operationsEditor = "button";
+    if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
+      booleanEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+      visibilityEditor = {"type":"combobox", "options": {
+        "valueField":"id",
+        "textField":"text",
+        "panelHeight":"90",
+        "data":[
+            {"id":"public","text":"public"},
+            {"id":"protected","text":"protected"},
+            {"id":"package","text":"package"},
+            {"id":"private","text":"private"}
+        ]
+      }};
+      
+      stereotypeEditor = {"type":"combobox", "options": {
+        "valueField":"id",
+        "textField":"text",
+        "panelHeight":"90"
+      }};
+      
+      if (this.graph.isClassifier(node)) {
+        attributesEditor = {"type": "button", "options": {"onclick": function () {
+          selfEditor.showAttributes(cell);
+        }}};
+        
+        operationsEditor = {"type":"button", "options": {"onclick": function () {
+          selfEditor.showOperations(cell);
+        }}};
+      }
+    }
   }
   else {
     this.cell = null;
@@ -150,8 +161,8 @@ CLASSProperties.prototype.configureGrid = function (cell) {
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":booleanEditor},
-      {"name":"Es Raiz", "value":rootValue, "group":"Avanzado", "editor":booleanEditor},
-      {"name":"Es Hoja", "value":leafValue, "group":"Avanzado", "editor":booleanEditor},
+      {"name":"Es Estatico", "value":rootValue, "group":"Avanzado", "editor":booleanEditor},
+      {"name":"Es Final", "value":leafValue, "group":"Avanzado", "editor":booleanEditor},
       {"name":"Es Especificacion", "value":specValue, "group":"Avanzado", "editor":booleanEditor},
       
       // GEOMETRY
@@ -211,12 +222,12 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
       this.graph.cellEditProperty(this.cell, 'isAbstract', changes.value, true);
       break;
       
-    case 6: // Root
-      this.graph.cellEditProperty(this.cell, 'isRoot', changes.value, true);
+    case 6: // Static
+      this.graph.cellEditProperty(this.cell, 'isStatic', changes.value, true);
       break;
       
-    case 7: // Leaf
-      this.graph.cellEditProperty(this.cell, 'isLeaf', changes.value, true);
+    case 7: // Final
+      this.graph.cellEditProperty(this.cell, 'isFinal', changes.value, true);
       break;
       
     case 8: // Specification
@@ -234,7 +245,8 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
 $.extend($.fn.datagrid.defaults.editors, {
   button: {
       init: function (container, options) {
-        var input = $('<a href="#" class="easyui-linkbutton">Text Button</a>').appendTo(container);
+        var input = $('<button type="button">Ver...</button>').appendTo(container);
+        input[0].onclick = options.onclick;
         return input;
       },
       

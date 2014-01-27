@@ -116,6 +116,39 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
 };
 
 /**
+ * Gets the literals of the given enumeration.
+ * 
+ * @param enumeration
+ *          The cell containing an enumeration element.
+ * @returns The literals of the enumeration.
+ * @author Gabriel Leonardo Diaz, 25.01.2014.
+ */
+CLASSGraph.prototype.getLiterals = function (enumeration) {
+  if (enumeration == null || !this.isEnumeration(enumeration.value) || enumeration.children == null || enumeration.children.length == 0) {
+    return [];
+  }
+  
+  var section;
+  var child;
+  var literals = [];
+  
+  for (var i = 0; i < enumeration.children.length; i++) {
+    section = enumeration.getChildAt(i);
+    if (section.getAttribute("isAttribute") == "true") {
+      for (var j = 0; j < section.children.length; j++) {
+        child = section.getChildAt(j);
+        if (this.isEnumerationLiteral(child.value)) {
+          literals.push(child);
+        }
+      }
+      break;
+    }
+  }
+  
+  return literals;
+};
+
+/**
  * Overrides cellLabelChanged() in mxGraph. Allows to apply the new value (name)
  * of the node element.
  * 
@@ -310,7 +343,7 @@ CLASSGraph.prototype.isClassifier = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isNamedElement = function (node) {
-  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node);
+  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node) || this.isEnumerationLiteral(node);
 };
 
 /**
@@ -345,6 +378,19 @@ CLASSGraph.prototype.isOperation = function (node) {
     return false;
   }
   return node.nodeName.toLowerCase() == "operation";
+};
+
+/**
+ * Checks if the given node is an enumeration literal.
+ * 
+ * @param node
+ * @return {Boolean}
+ */
+CLASSGraph.prototype.isEnumerationLiteral = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "enumerationliteral";
 };
 
 /**
