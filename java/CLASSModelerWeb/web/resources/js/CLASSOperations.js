@@ -17,6 +17,7 @@ CLASSOperations = function (editor) {
   this.dialog = dlgOperations; // Defined by a PrimeFaces dialog.
   
   this.configureOperationsTable();
+  this.configureParametersTable();
   this.configureReturnTypeComboBox();
   this.configureConcurrencyComboBox();
 };
@@ -57,6 +58,10 @@ CLASSOperations.prototype.operationIndex;
  */
 CLASSOperations.prototype.init = function (cell) {
   this.classifierCell = cell;
+  this.operationCell  = null;
+  this.operationIndex = null;
+  this.clearSelection();
+  this.clearFields();
 };
 
 /**
@@ -106,6 +111,38 @@ CLASSOperations.prototype.configureOperationsTable = function () {
 };
 
 /**
+ * Constructs the table component to handle parameters of the operation being
+ * edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 27.01.2014.
+ */
+CLASSOperations.prototype.configureParametersTable = function () {
+  var self = this;
+  
+  $("#parametersTable").datagrid({
+      toolbar: "#paramsTbToolbar",
+      singleSelect: true,
+      columns:[[
+          {field:"name",       title:"Nombre",         width:100},
+          {field:"type",       title:"Tipo",           width:100},
+          {field:"direction",  title:"Direccion",      width:100}
+      ]]
+  });
+  
+  $(function() {
+      $("#newParameterBtn").bind("click", function() {
+          self.newParameter();
+      });
+  });
+  
+  $(function() {
+      $("#delParameterBtn").bind("click", function() {
+          self.deleteParameter();
+      });
+  });
+};
+
+/**
  * Constructs the combo box component for return type field.
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
@@ -132,7 +169,7 @@ CLASSOperations.prototype.configureReturnTypeComboBox = function () {
     cell = this.graph.model.getCell(key);
     
     if (this.graph.isClassifier(cell.value)) {
-      jSonData.push({id:cell.value.getAttribute("name"), text: cell.value.getAttribute("name")});
+      jSonData.push({id:cell.getAttribute("name"), text: cell.getAttribute("name")});
     }
   }
   
@@ -188,12 +225,33 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
 };
 
 /**
+ * Clears the selection on the operations table.
+ * 
+ * @author Gabriel Leonardo Diaz, 25.01.2014.
+ */
+CLASSOperations.prototype.clearSelection = function () {
+  $("#operationsTable").datagrid("unselectAll");
+  this.operationIndex = null;
+  this.operationCell  = null;
+};
+
+/**
+ * Clears the fields used to edit or create operations.
+ * 
+ * @author Gabriel Leonardo Diaz, 27.01.2014.
+ */
+CLASSOperations.prototype.clearFields = function () {
+  
+};
+
+/**
  * Clears the fields and prepares the dialog to create a new operation.
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
 CLASSOperations.prototype.newOperation = function () {
-  // TODO GD
+  this.clearSelection();
+  this.clearFields();
 };
 
 /**
@@ -214,6 +272,24 @@ CLASSOperations.prototype.deleteOperation = function () {
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
 CLASSOperations.prototype.saveOperation = function () {
+  // TODO GD
+};
+
+/**
+ * Creates a new empty parameter row in the table.
+ * 
+ * @author Gabriel Leonardo Diaz, 27.01.2014.
+ */
+CLASSOperations.prototype.newParameter = function () {
+  // TODO GD
+};
+
+/**
+ * Deletes the selected parameter on the parameters table.
+ * 
+ * @author Gabriel Leonardo Diaz, 27.01.2014.
+ */
+CLASSOperations.prototype.deleteParameter = function () {
   // TODO GD
 };
 

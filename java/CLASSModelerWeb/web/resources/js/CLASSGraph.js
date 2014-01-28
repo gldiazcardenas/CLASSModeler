@@ -319,6 +319,7 @@ CLASSGraph.prototype.replaceNode = function (nodeCell, newNode) {
   
   try {
     this.model.setValue(nodeCell, newNode);
+    this.cellSizeUpdated(nodeCell, false);
   }
   finally {
     this.model.endUpdate();

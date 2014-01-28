@@ -23,7 +23,13 @@
             
             <tr>
                 <td><h:outputText value="#{msgs.OPERATIONS_FORM_PARAMETERS_FIELD}" /></td>
-                <td></td>
+                <td>
+                    <div id="paramsTbToolbar">
+                        <a href="javascript:void(0)" id="newParameterBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add', plain:true" />
+                        <a href="javascript:void(0)" id="delParameterBtn" class="easyui-linkbutton" data-options="iconCls:'icon-remove', plain:true" />
+                    </div>
+                    <table id="parametersTable" />
+                </td>
             </tr>
             
             <tr>
@@ -45,7 +51,7 @@
             <a href="javascript:void(0)" id="saveOperationBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save', plain:true" />
         </div>
         
-        <table id="operationsTable" style="max-height: 300px" />
+        <table id="operationsTable" />
         
         <p:separator />
         

@@ -63,6 +63,7 @@ CLASSAttributes.prototype.attributeIndex;
 CLASSAttributes.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.attributeCell = null;
+  this.attributeIndex = null;
   this.loadTableData();
   this.clearSelection();
   this.clearFields();
@@ -329,7 +330,7 @@ CLASSAttributes.prototype.saveAttribute = function () {
   // Set values
   attribute.setAttribute("name", nameValue);
   
-  if (this.graph.isProperty(attribute.cell)) {
+  if (this.graph.isProperty(attribute.value)) {
     attribute.setAttribute("type", typeValue);
     attribute.setAttribute("visibility", visibilityValue);
     attribute.setAttribute("initialValue", initialValue);
