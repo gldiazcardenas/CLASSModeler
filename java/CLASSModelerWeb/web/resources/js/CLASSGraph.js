@@ -326,6 +326,40 @@ CLASSGraph.prototype.replaceNode = function (nodeCell, newNode) {
   }
 };
 
+/**
+ * Gets the default UML types for classifiers and features.
+ * 
+ * @author Gabriel Leonardo Diaz, 27.01.2014.
+ * @returns A JSon object with the available types.
+ */
+CLASSGraph.prototype.getTypes = function () {
+  var jSonData   = [];
+  
+  // Fixed types
+  jSonData.push({id:"boolean", text:"boolean"});
+  jSonData.push({id:"byte",    text:"byte"});
+  jSonData.push({id:"char",    text:"char"});
+  jSonData.push({id:"double",  text:"double"});
+  jSonData.push({id:"float",   text:"float"});
+  jSonData.push({id:"int",     text:"int"});
+  jSonData.push({id:"long",    text:"long"});
+  jSonData.push({id:"short",   text:"short"});
+  jSonData.push({id:"String",  text:"String"});
+  
+  var cell;
+  
+  // Dynamic types
+  for (var key in this.model.cells) {
+    cell = this.model.getCell(key);
+    
+    if (this.isClassifier(cell.value)) {
+      jSonData.push({id:cell.getAttribute("name"), text: cell.getAttribute("name")});
+    }
+  }
+  
+  return jSonData;
+};
+
 // SECOND LABEL TODO
 
 /**

@@ -48,11 +48,19 @@
         </add>
         
         <add as="operation">
-            <Operation name="operation">
+            <Operation name="operation" isStatic="false" isFinal="false" isAbstract="false" isSync="false" returnType="void" concurrency="secuencial">
                 <mxCell vertex="1" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Operation>
+        </add>
+        
+        <add as="parameter">
+            <Parameter name="parameter" type="int" direction="in">
+                <mxCell vertex="1">
+                    <mxGeometry as="geometry" width="0" height="0" />
+                </mxCell>
+            </Parameter>
         </add>
         
         <add as="literal">

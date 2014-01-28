@@ -245,7 +245,7 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
 $.extend($.fn.datagrid.defaults.editors, {
   button: {
       init: function (container, options) {
-        var input = $('<button type="button">Ver...</button>').appendTo(container);
+        var input = $('<button type="button">...</button>').appendTo(container);
         input[0].onclick = options.onclick;
         return input;
       },

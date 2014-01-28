@@ -75,29 +75,7 @@ CLASSAttributes.prototype.init = function (cell) {
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
 CLASSAttributes.prototype.configureTypeCombo = function () {
-  var jSonData   = [];
-  
-  // Fixed types
-  jSonData.push({id:"boolean", text:"boolean"});
-  jSonData.push({id:"byte",    text:"byte"});
-  jSonData.push({id:"char",    text:"char"});
-  jSonData.push({id:"double",  text:"double"});
-  jSonData.push({id:"float",   text:"float"});
-  jSonData.push({id:"int",     text:"int"});
-  jSonData.push({id:"long",    text:"long"});
-  jSonData.push({id:"short",   text:"short"});
-  jSonData.push({id:"String",  text:"String"});
-  
-  var cell;
-  
-  // Dynamic types
-  for (var key in this.graph.model.cells) {
-    cell = this.graph.model.getCell(key);
-    
-    if (this.graph.isClassifier(cell.value)) {
-      jSonData.push({id:cell.value.getAttribute("name"), text: cell.value.getAttribute("name")});
-    }
-  }
+  var jSonData = this.graph.getTypes();
   
   $("#attrType").combobox({
       valueField:"id",

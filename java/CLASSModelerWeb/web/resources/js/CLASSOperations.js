@@ -117,15 +117,22 @@ CLASSOperations.prototype.configureOperationsTable = function () {
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
 CLASSOperations.prototype.configureParametersTable = function () {
-  var self = this;
+  var self      = this;
+  var jSonTypes = this.graph.getTypes();
+  var jSonDirs  = [];
+  
+  jSonDirs.push({id:"in", text:"in"});
+  jSonDirs.push({id:"inout", text:"inout"});
+  jSonDirs.push({id:"out", text:"out"});
+  jSonDirs.push({id:"return", text:"return"});
   
   $("#parametersTable").datagrid({
       toolbar: "#paramsTbToolbar",
       singleSelect: true,
       columns:[[
-          {field:"name",       title:"Nombre",         width:100},
-          {field:"type",       title:"Tipo",           width:100},
-          {field:"direction",  title:"Direccion",      width:100}
+          {field:"name", title:"Nombre",    width:150, editor:"text"},
+          {field:"type", title:"Tipo",      width:100, editor: {type:"combobox", options: {valueField:"id",  textField:"text", panelHeight: 200, data:jSonTypes}}},
+          {field:"dir",  title:"Direccion", width:100, editor: {type:"combobox", options: {valueField:"id", textField:"text", panelHeight: 90, data:jSonDirs}}}
       ]]
   });
   
@@ -183,8 +190,8 @@ CLASSOperations.prototype.configureReturnTypeComboBox = function () {
   $("#operReturnType").combobox("setValue", "void"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#operReturnType").combobox('panel');
-  comboPanel.panel('panel').css('z-index', '2000');
+  var comboPanel = $("#operReturnType").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -196,7 +203,7 @@ CLASSOperations.prototype.configureConcurrencyComboBox = function () {
   $("#operConcurrency").combobox({
       valueField:"id",
       textField:"text",
-      panelHeight: 80,
+      panelHeight: 70,
       data: [
           {id:"secuencial",    text:"secuencial"},
           {id:"protegido",     text:"protegido"},
@@ -207,8 +214,8 @@ CLASSOperations.prototype.configureConcurrencyComboBox = function () {
   $("#operConcurrency").combobox("setValue", "secuencial"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#operConcurrency").combobox('panel');
-  comboPanel.panel('panel').css('z-index', '2000');
+  var comboPanel = $("#operConcurrency").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -241,7 +248,15 @@ CLASSOperations.prototype.clearSelection = function () {
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
 CLASSOperations.prototype.clearFields = function () {
-  
+  $("#operName").val("");
+  $("#operStaticCheck").attr("checked", false);
+  $("#operFinalCheck").attr("checked", false);
+  $("#operAbstractCheck").attr("checked", false);
+  $("#operSyncCheck").attr("checked", false);
+  $("#parametersTable").datagrid({data:[]});
+  $("#parametersTable").datagrid("reload");
+  $("#operReturnType").combobox("setValue", "void");
+  $("#operConcurrency").combobox("setValue", "secuencial");
 };
 
 /**
@@ -281,7 +296,25 @@ CLASSOperations.prototype.saveOperation = function () {
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
 CLASSOperations.prototype.newParameter = function () {
-  // TODO GD
+  // Add the new row
+  $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "", dir: "" }});
+  
+  // Start editing
+  var editIndex = $('#parametersTable').datagrid("getRows").length - 1;
+  $("#parametersTable").datagrid("selectRow", editIndex);
+  $("#parametersTable").datagrid("beginEdit", editIndex);
+  
+  var editor;
+  var comboPanel;
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  editor = $("#parametersTable").datagrid("getEditor", {index:editIndex, field:"type"});
+  comboPanel = $(editor.target).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+  
+  editor = $("#parametersTable").datagrid("getEditor", {index:editIndex, field:"dir"});
+  comboPanel = $(editor.target).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
