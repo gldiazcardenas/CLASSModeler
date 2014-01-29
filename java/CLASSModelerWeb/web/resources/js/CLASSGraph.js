@@ -12,6 +12,12 @@ CLASSGraph = function (container, model, renderHint, stylesheet) {
 mxUtils.extend(CLASSGraph, mxGraph);
 
 /**
+ * The template defined in CLASSEditor component for creating sections for
+ * attributes and operations.
+ */
+CLASSGraph.prototype.sectionTemplate;
+
+/**
  * Overrides convertNodeToString() in mxGraph.
  * 
  * @param node
@@ -113,6 +119,51 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
   }
   
   return [];
+};
+
+/**
+ * Gets the operations of the given classifier.
+ * 
+ * @param classifier
+ *          The cell containing a classifier element.
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ * @returns
+ */
+CLASSGraph.prototype.getOperations = function (classifier) {
+  if (classifier == null || !this.isClassifier(classifier.value) || classifier.children == null || classifier.children.length == 0) {
+    return [];
+  }
+  
+  for (var i = 0; i < classifier.children.length; i++) {
+    section = classifier.getChildAt(i);
+    if (section.getAttribute("isAttribute") == "false") {
+      return section.children;
+    }
+  }
+  
+  return [];
+};
+
+/**
+ * The operations we want to have the String representation of its parameters.
+ * 
+ * @param operation
+ *          The operation cell.
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ */
+CLASSGraph.prototype.convertParametersToString = function (operation) {
+  var parameterString = "";
+  
+  var cell;
+  var separator = "";
+  
+  for (var i = 0; i < operation.children.length; i++) {
+    cell = operation.getChildAt(i);
+    parameterString += separator + cell.getAttribute("type");
+    separator = ", ";
+  }
+  
+  return parameterString;
 };
 
 /**
@@ -267,12 +318,9 @@ CLASSGraph.prototype.isCellSelectable = function (cell) {
  *          The cell containing the classifier.
  * @param attributeCell
  *          The cell containing the new attribute.
- * @param sectionTemplate
- *          The section template, used when the classifier does not have an
- *          attributes section.
  * @author Gabriel Leonardo Diaz, 19.01.2014.
  */
-CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sectionTemplate) {
+CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
   if (!this.isClassifier(classifierCell.value)) {
     return;
   }
@@ -290,7 +338,7 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sec
     }
     
     if (attrSection == null) {
-      attrSection = this.model.cloneCell(sectionTemplate);
+      attrSection = this.model.cloneCell(this.sectionTemplate);
       attrSection.setAttribute("isAttribute", "true");
       
       this.addCell(attrSection, classifierCell, 0);
@@ -305,21 +353,77 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell, sec
 };
 
 /**
- * Replaces the user object of the given cell node.
+ * Adds the given operation to the classifier element.
  * 
- * @param nodeCell
+ * @param classifierCell
+ * @param operationCell
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ */
+CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
+  if (!this.isClassifier(classifierCell.value)) {
+    return;
+  }
+  
+  this.model.beginUpdate();
+  
+  try {
+    var operSection = null;
+    
+    if (classifierCell.children && classifierCell.children.length > 0) {
+      var child;
+      if (classifierCell.children.length == 1) {
+        child = classifierCell.children[0];
+      }
+      else {
+        child = classifierCell.children[1];
+      }
+      
+      if (child.getAttribute("isAttribute") == "false") {
+        operSection = child;
+      }
+    }
+    
+    if (operSection == null) {
+      operSection = this.model.cloneCell(this.sectionTemplate);
+      operSection.setAttribute("isAttribute", "false");
+      
+      this.addCell(operSection, classifierCell, 1);
+    }
+    
+    this.addCell(operationCell, operSection);  // TODO: verify, The parameters (children) are added as well.
+    this.cellSizeUpdated(operationCell, false);
+  }
+  finally {
+    this.model.endUpdate();
+  }
+};
+
+/**
+ * Edits the given operation cell by replacing the objects. 
+ * @param operationCell
+ * @param newOperationCell
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ */
+CLASSGraph.prototype.editOperation = function (operationCell, newOperationCell) {
+  // TODO GD
+};
+
+/**
+ * Replaces the user object of the given cell attribute.
+ * 
+ * @param attributeValue
  *          The cell to replace its user object.
- * @param newNode
+ * @param attributeValue
  *          The new user object of the cell, must be a clone of the original
  *          one.
  * @author Gabriel Leonardo Diaz, 24.01.2014.
  */
-CLASSGraph.prototype.replaceNode = function (nodeCell, newNode) {
+CLASSGraph.prototype.editAttribute = function (attributeCell, newAttributeCell) {
   this.model.beginUpdate();
   
   try {
-    this.model.setValue(nodeCell, newNode);
-    this.cellSizeUpdated(nodeCell, false);
+    this.model.setValue(attributeCell, newAttributeCell.value);
+    this.cellSizeUpdated(attributeCell, false);
   }
   finally {
     this.model.endUpdate();

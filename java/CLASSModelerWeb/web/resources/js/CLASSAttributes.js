@@ -159,7 +159,11 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
         self.selectionChanged(rowIndex, true);
       },
       
-      onUnSelect: function (rowIndex, rowData) {
+      onUnselectAll: function (rows) {
+        self.selectionChanged(rows[0], false);
+      },
+      
+      onUnselect: function (rowIndex, rowData) {
         self.selectionChanged(rowIndex, false);
       },
       
@@ -258,6 +262,7 @@ CLASSAttributes.prototype.deleteAttribute = function () {
   if (this.attributeCell) {
     this.graph.removeCells([this.attributeCell]);
     $("#attributesTable").datagrid("deleteRow", this.attributeIndex);
+    this.clearSelection();
   }
 };
 
@@ -324,17 +329,16 @@ CLASSAttributes.prototype.saveAttribute = function () {
   
   // Apply changes
   if (this.attributeCell) {
-    this.graph.replaceNode(this.attributeCell, attribute.value);
+    this.graph.editAttribute(this.attributeCell, attribute);
     $("#attributesTable").datagrid("updateRow", {index: this.attributeIndex, row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
-    $("#attributesTable").datagrid("reload");
   }
   else {
-    this.graph.addAttribute (this.classifierCell, attribute, this.editor.getTemplate("section"));
-    this.attributeCell = attribute;
-    this.attributeIndex = $("#attributesTable").datagrid("getRows").length;
+    this.graph.addAttribute (this.classifierCell, attribute);
     $("#attributesTable").datagrid("insertRow", {row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
-    $("#attributesTable").datagrid("reload");
+    $("#attributesTable").datagrid("selectRow", $("#attributesTable").datagrid("getRows").length - 1);
   }
+  
+  $("#attributesTable").datagrid("reload");
 };
 
 /**
@@ -356,8 +360,8 @@ CLASSAttributes.prototype.clearFields = function () {
   }
  
   $("#attrInitValue").val("");
-  $("#staticCheck").attr("checked", false);
-  $("#finalCheck").attr("checked", false);
+  $("#staticCheck").prop("checked", false);
+  $("#finalCheck").prop("checked", false);
 };
 
 /**

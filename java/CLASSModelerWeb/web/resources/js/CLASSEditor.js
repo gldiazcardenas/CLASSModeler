@@ -29,6 +29,15 @@ CLASSEditor.prototype.attrDialog;
 CLASSEditor.prototype.operDialog;
 
 /**
+ * Function called on initializing the editor component.
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ */
+CLASSEditor.prototype.onInit = function () {
+  // Set the section template used to create attributes and operations.
+  this.graph.sectionTemplate = this.getTemplate("section");
+};
+
+/**
  * Overrides createGraph() in mxEditor. Allows to create a custom instance of
  * the Graph component.
  * 
