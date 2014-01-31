@@ -50,7 +50,7 @@ CLASSProperties.prototype.init = function () {
 CLASSProperties.prototype.selectionChanged = function (sender, evt) {
   var cells = this.graph.getSelectionCells();
   
-  if (cells.length == 1) {
+  if (cells.length == 1 && cells[0].isVertex()) {
     this.configureProperties(cells[0]);
   }
   else {

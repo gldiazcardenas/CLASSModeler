@@ -49,6 +49,7 @@ CLASSEditor.prototype.createGraph = function () {
   // Enables rubberband, tooltips, panning
   graph.setTooltips(true);
   graph.setPanning(true);
+  graph.setConnectable(true);
 
   // Overrides the dblclick method on the graph to
   // invoke the dblClickAction for a cell and reset

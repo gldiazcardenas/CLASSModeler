@@ -97,6 +97,15 @@
                 <add as="fontSize" value="11"/>
             </add>
             
+            <add as="defaultEdge">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="true"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+            </add>
+            
             <add as="classifier">
                 <add as="shape" value="swimlane"/>
                 <add as="perimeter" value="RectanglePerimeter"/>
