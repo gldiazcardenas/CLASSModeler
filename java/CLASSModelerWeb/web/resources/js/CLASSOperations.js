@@ -22,6 +22,7 @@ CLASSOperations = function (editor) {
   };
   
   this.configureOperationsTable();
+  this.configureVisibilityCombo();
   this.configureParametersTable();
   this.configureReturnTypeComboBox();
   this.configureConcurrencyComboBox();
@@ -131,7 +132,48 @@ CLASSOperations.prototype.configureOperationsTable = function () {
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
 CLASSOperations.prototype.loadOperationTableData = function () {
-  // TODO GD
+  var jSonData = [];
+  
+  var operations = this.graph.getOperations(this.classifierCell);
+  
+  if (operations) {
+    for (var i = 0; i < operations.length; i++) {
+      var visibility   = operations[i].getAttribute("visibility");
+      var nameValue    = operations[i].getAttribute("name");
+      var retTypeValue = operations[i].getAttribute("returnType");
+      var paramValue   = this.graph.convertParametersToString(operations[i]);
+      
+      jSonData.push({name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: retTypeValue, parameters: paramValue});
+    }
+  }
+  
+  $("#operationsTable").datagrid({ data : jSonData });
+  $("#operationsTable").datagrid("reload");
+};
+
+/**
+ * Populates and sets up the combo box component for visibility edition.
+ * 
+ * @author Gabriel Leonardo Diaz, 17.01.2014.
+ */
+CLASSOperations.prototype.configureVisibilityCombo = function () {
+  $("#operVisibility").combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: [
+          {id:"public",    text:"public"},
+          {id:"protected", text:"protected"},
+          {id:"package",   text:"package"},
+          {id:"private",   text:"private"}
+      ]
+  });
+  
+  $("#operVisibility").combobox("setValue", "public"); // default value
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $("#operVisibility").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -279,17 +321,16 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
     
     var jSonData = [];
     
-    if (this.operationCell.children) {
+    if (this.operationCell.value.childNodes) {
       var param;
-      for (var i = 0; i < this.operationCell.children.length; i++) {
-        param = this.operationCell.getChildAt(i);
+      for (var i = 0; i < this.operationCell.value.childNodes.length; i++) {
+        param = this.operationCell.value.childNodes[i];
         
-        var idValue   = param.id; // The ID of the cell
         var nameValue = param.getAttribute("name");
         var typeValue = param.getAttribute("type");
         var dirValue  = param.getAttribute("direction");
         
-        jSonData.push({id: idValue, name: nameValue, type: typeValue, dir: dirValue});
+        jSonData.push({name: nameValue, type: typeValue, dir: dirValue});
       }
     }
     
@@ -323,6 +364,7 @@ CLASSOperations.prototype.clearFields = function () {
   $("#parametersTable").datagrid({data:[]});
   $("#parametersTable").datagrid("reload");
   $("#operReturnType").combobox("setValue", "void");
+  $("#operVisibility").combobox("setValue", "public");
   $("#operConcurrency").combobox("setValue", "secuencial");
 };
 
@@ -356,6 +398,7 @@ CLASSOperations.prototype.deleteOperation = function () {
  */
 CLASSOperations.prototype.saveOperation = function () {
   var nameValue       = $("#operName").val();
+  var visValue        = $("#operVisibility").combobox("getValue");
   var retTypeValue    = $("#operReturnType").combobox("getValue");
   var concurValue     = $("#operConcurrency").combobox("getValue");
   var staticValue     = $("#operStaticCheck").is(":checked");
@@ -368,6 +411,11 @@ CLASSOperations.prototype.saveOperation = function () {
     return;
   }
   
+  if (visValue == null || visValue.length == 0) {
+    // Invalid VISIBILITY
+    return;
+  }
+  
   if (retTypeValue == null || retTypeValue.length == 0) {
     // Invalid Return Type
     return;
@@ -375,6 +423,11 @@ CLASSOperations.prototype.saveOperation = function () {
   
   if (concurValue == null || concurValue.length == 0) {
     // Invalid Concurrency
+    return;
+  }
+  
+  if (!this.stopEditingParameter()) {
+    // Invalid Parameter
     return;
   }
   
@@ -389,48 +442,45 @@ CLASSOperations.prototype.saveOperation = function () {
   
   // Set values
   operation.setAttribute("name", nameValue);
+  operation.setAttribute("visibility", visValue);
   operation.setAttribute("returnType", retTypeValue);
   operation.setAttribute("concurrency", concurValue);
   operation.setAttribute("isStatic", staticValue);
   operation.setAttribute("isFinal", finalValue);
   operation.setAttribute("isAbstract", abstractValue);
   operation.setAttribute("isSync", syncValue);
-  operation.children = [];
+  operation.value.innerHTML = ""; // Remove all child nodes
   
-  // TODO validate parameters valid before save
-  // Load parameters
   var paramRows = $("#parametersTable").datagrid("getRows");
   if (paramRows) {
     var row;
     var cell;
+    var param;
+    
     for (var i = 0; i < paramRows.length; i++) {
       row = paramRows[i];
+      cell = this.graph.model.cloneCell(this.editor.getTemplate("parameter"));
       
-      if (row.id) {
-        cell = this.graph.getCell(row.id).clone(true);
-      }
-      else {
-        cell = this.graph.model.cloneCell(this.editor.getTemplate("parameter"));
-      }
+      param = cell.value;
+      param.setAttribute("name", row.name);
+      param.setAttribute("type", row.type);
+      param.setAttribute("direction", row.dir);
       
-      cell.setAttribute("name", row.name);
-      cell.setAttribute("type", row.type);
-      cell.setAttribute("dir", row.dir);
-      
-      operation.children.push(cell);
+      operation.value.appendChild(param);
     }
   }
   
   var paramsValue = this.graph.convertParametersToString(operation);
+  var visChar     = this.graph.getVisibilityChar(visValue);
   
   // Apply changes
   if (this.operationCell) {
     this.graph.editOperation(this.operationCell, operation);
-    $("#operationsTable").datagrid("updateRow", {index: this.operationIndex, row: { name: nameValue, type: retTypeValue, parameters:  paramsValue}});
+    $("#operationsTable").datagrid("updateRow", {index: this.operationIndex, row: { name: visChar + " " + nameValue, type: retTypeValue, parameters:  paramsValue}});
   }
   else {
     this.graph.addOperation(this.classifierCell, operation);
-    $("#operationsTable").datagrid("insertRow", {row: { name: nameValue, type: retTypeValue, parameters: paramsValue }});
+    $("#operationsTable").datagrid("insertRow", {row: { name: visChar + " " + nameValue, type: retTypeValue, parameters: paramsValue }});
     $("#operationsTable").datagrid("selectRow", $("#operationsTable").datagrid("getRows").length - 1);
   }
   
@@ -444,7 +494,7 @@ CLASSOperations.prototype.saveOperation = function () {
  */
 CLASSOperations.prototype.newParameter = function () {
   if (this.stopEditingParameter()) {
-    $("#parametersTable").datagrid("insertRow", {row: { id: null, name: "", type: "", dir: "in" }});
+    $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "", dir: "in" }});
     this.startEditingParameter($('#parametersTable').datagrid("getRows").length - 1);
   }
 };

@@ -156,14 +156,19 @@ CLASSGraph.prototype.getOperations = function (classifier) {
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
 CLASSGraph.prototype.convertParametersToString = function (operation) {
-  var parameterString = "";
+  if (operation == null || !this.isOperation(operation.value)) {
+    return "";
+  }
   
-  var cell;
+  var parameterString = "";
   var separator = "";
   
-  for (var i = 0; i < operation.children.length; i++) {
-    cell = operation.getChildAt(i);
-    parameterString += separator + cell.getAttribute("type");
+  var param;
+  var node = operation.value;
+  
+  for (var i = 0; i < node.childNodes.length; i++) {
+    param = node.childNodes[i];
+    parameterString += separator + param.getAttribute("type");
     separator = ", ";
   }
   
@@ -394,7 +399,7 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
       this.addCell(operSection, classifierCell, 1);
     }
     
-    this.addCell(operationCell, operSection);  // TODO: verify, The parameters (children) are added as well.
+    this.addCell(operationCell, operSection);
     this.cellSizeUpdated(operationCell, false);
   }
   finally {
@@ -409,7 +414,15 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
 CLASSGraph.prototype.editOperation = function (operationCell, newOperationCell) {
-  // TODO GD
+  this.model.beginUpdate();
+  
+  try {
+    this.model.setValue(operationCell, newOperationCell.value);
+    this.cellSizeUpdated(operationCell, false);
+  }
+  finally {
+    this.model.endUpdate();
+  }
 };
 
 /**

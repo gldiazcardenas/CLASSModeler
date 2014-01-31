@@ -204,7 +204,6 @@ CLASSAttributes.prototype.loadTableData = function () {
   
   if (attributes) {
     for (var i = 0; i < attributes.length; i++) {
-      attribute = attributes[i];
       var visibility   = attributes[i].getAttribute("visibility");
       var nameValue    = attributes[i].getAttribute("name");
       var typeValue    = attributes[i].getAttribute("type");
