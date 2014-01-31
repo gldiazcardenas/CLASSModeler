@@ -397,6 +397,7 @@ CLASSOperations.prototype.saveOperation = function () {
   operation.setAttribute("isSync", syncValue);
   operation.children = [];
   
+  // TODO validate parameters valid before save
   // Load parameters
   var paramRows = $("#parametersTable").datagrid("getRows");
   if (paramRows) {
@@ -430,7 +431,7 @@ CLASSOperations.prototype.saveOperation = function () {
   else {
     this.graph.addOperation(this.classifierCell, operation);
     $("#operationsTable").datagrid("insertRow", {row: { name: nameValue, type: retTypeValue, parameters: paramsValue }});
-    $("#operationsTable").datagrid("selectRow", $("#attributesTable").datagrid("getRows").length - 1);
+    $("#operationsTable").datagrid("selectRow", $("#operationsTable").datagrid("getRows").length - 1);
   }
   
   $("#operationsTable").datagrid("reload");

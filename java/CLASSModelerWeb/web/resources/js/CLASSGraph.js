@@ -36,6 +36,10 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
     return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + ": " + node.getAttribute("type");
   }
   
+  if (this.isOperation(node)) {
+    return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + "(" + this.convertParametersToString(cell) + ")" + " : " + node.getAttribute("returnType");
+  }
+  
   if (this.isNamedElement(node)) {
     return node.getAttribute("name");
   }
