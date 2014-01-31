@@ -8,7 +8,7 @@
     <!-- Templates -->
     <Array as="templates">
         <add as="class">
-            <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
+            <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -16,7 +16,7 @@
         </add>
         
         <add as="interface">
-            <Interface name="Interfaz" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
+            <Interface name="Interfaz" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="true">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>
@@ -24,7 +24,7 @@
         </add>
         
         <add as="enumeration">
-            <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
+            <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="25" />
                 </mxCell>

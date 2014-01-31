@@ -35,7 +35,7 @@ CLASSProperties.prototype.init = function () {
     self.selectionChanged(sender, evt);
   });
   
-  this.clearGrid();
+  this.clearProperties();
 };
 
 /**
@@ -51,10 +51,10 @@ CLASSProperties.prototype.selectionChanged = function (sender, evt) {
   var cells = this.graph.getSelectionCells();
   
   if (cells.length == 1) {
-    this.configureGrid(cells[0]);
+    this.configureProperties(cells[0]);
   }
   else {
-    this.clearGrid();
+    this.clearProperties();
   }
 };
 
@@ -63,9 +63,8 @@ CLASSProperties.prototype.selectionChanged = function (sender, evt) {
  * 
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.clearGrid = function () {
-  // TODO GD disable table by using styles.
-  this.configureGrid(null);
+CLASSProperties.prototype.clearProperties = function () {
+  this.configureProperties(null);
 };
 
 /**
@@ -75,7 +74,7 @@ CLASSProperties.prototype.clearGrid = function () {
  *          The cell to be edited. If the cell is null the grid is cleared.
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.configureGrid = function (cell) {
+CLASSProperties.prototype.configureProperties = function (cell) {
   var self             = this;
   var selfEditor       = this.editor;
   
@@ -85,16 +84,19 @@ CLASSProperties.prototype.configureGrid = function (cell) {
   var attributesValue  = null;
   var operationsValue  = null;
   var abstractValue    = null;
-  var rootValue        = null;
-  var leafValue        = null;
+  var staticValue      = null;
+  var finalValue       = null;
   var specValue        = null;
   var widthValue       = null;
   var heightValue      = null;
   var xValue           = null;
   var yValue           = null;
   
-  var textEditor       = null;
-  var booleanEditor    = null;
+  var nameEditor       = null;
+  var abstractEditor   = null;
+  var staticEditor     = null;
+  var finalEditor      = null;
+  var specEditor       = null;
   var spinnerEditor    = null;
   var visibilityEditor = null;
   var stereotypeEditor = null;
@@ -109,15 +111,17 @@ CLASSProperties.prototype.configureGrid = function (cell) {
     nameValue       = node.getAttribute("name");
     visibilityValue = node.getAttribute("visibility");
     abstractValue   = node.getAttribute("isAbstract");
-    rootValue       = node.getAttribute("isStatic");
-    leafValue       = node.getAttribute("isFinal");
+    staticValue     = node.getAttribute("isStatic");
+    finalValue      = node.getAttribute("isFinal");
     specValue       = node.getAttribute("isSpec");
     
     // Editors
-    textEditor = "text";
+    nameEditor      = "text";
     
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
-      booleanEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+      staticEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+      finalEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+      
       visibilityEditor = {"type":"combobox", "options": {
         "valueField":"id",
         "textField":"text",
@@ -137,6 +141,9 @@ CLASSProperties.prototype.configureGrid = function (cell) {
       }};
       
       if (this.graph.isClassifier(node)) {
+        abstractEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+        specEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+        
         attributesEditor = {"type": "button", "options": {"onclick": function () {
           selfEditor.showAttributes(cell);
         }}};
@@ -153,17 +160,17 @@ CLASSProperties.prototype.configureGrid = function (cell) {
   
   var jSonData = [
       // GENERAL
-      {"name":"Nombre", "value":nameValue, "group":"General", "editor":textEditor},
+      {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
       {"name":"Estereotipo", "value":stereotypeValue, "group":"General", "editor":stereotypeEditor},
       {"name":"Atributos", "value":attributesValue, "group":"General", "editor":attributesEditor},
       {"name":"Metodos", "value":operationsValue, "group":"General", "editor":operationsEditor},
       
       // ADVANCED
-      {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":booleanEditor},
-      {"name":"Es Estatico", "value":rootValue, "group":"Avanzado", "editor":booleanEditor},
-      {"name":"Es Final", "value":leafValue, "group":"Avanzado", "editor":booleanEditor},
-      {"name":"Es Especificacion", "value":specValue, "group":"Avanzado", "editor":booleanEditor},
+      {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
+      {"name":"Es Estatico", "value":staticValue, "group":"Avanzado", "editor":staticEditor},
+      {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
+      {"name":"Es Especificacion", "value":specValue, "group":"Avanzado", "editor":specEditor},
       
       // GEOMETRY
       {"name":"Ancho", "value":widthValue, "group":"Geometria", "editor":spinnerEditor},
@@ -172,13 +179,20 @@ CLASSProperties.prototype.configureGrid = function (cell) {
       {"name":"Y", "value":yValue, "group":"Geometria", "editor":spinnerEditor}
   ];
   
-  $('#propertyTable').propertygrid({
+  $("#propertyTable").propertygrid({
       data: jSonData,
       showGroup: true,
       showHeader: false,
       scrollbarSize: 0,
       onAfterEdit: function (rowIndex, rowData, changes) {
         self.processChanges(rowIndex, rowData, changes);
+      },
+      rowStyler: function (idx, row) {
+        if (row.editor == null) {
+          return "color: #CCCCCC;";
+        }
+        
+        return "color: #000000;";
       }
   });
 };
@@ -207,31 +221,31 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
   if (changes.value) {
     switch (rowIndex) {
     case 0: // Name
-      this.graph.cellEditProperty(this.cell, 'name', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "name", changes.value, true);
       break;
       
     case 1: // Visibility
-      this.graph.cellEditProperty(this.cell, 'visibility', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "visibility", changes.value, true);
       break;
       
     case 2: // Stereotype
-      this.graph.cellEditProperty(this.cell, 'stereotype', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "stereotype", changes.value, true);
       break;
     
     case 5: // Abstract
-      this.graph.cellEditProperty(this.cell, 'isAbstract', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "isAbstract", changes.value, true);
       break;
       
     case 6: // Static
-      this.graph.cellEditProperty(this.cell, 'isStatic', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "isStatic", changes.value, true);
       break;
       
     case 7: // Final
-      this.graph.cellEditProperty(this.cell, 'isFinal', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "isFinal", changes.value, true);
       break;
       
     case 8: // Specification
-      this.graph.cellEditProperty(this.cell, 'isSpec', changes.value, true);
+      this.graph.cellEditProperty(this.cell, "isSpec", changes.value, true);
       break;
     }
   }
@@ -245,7 +259,7 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
 $.extend($.fn.datagrid.defaults.editors, {
   button: {
       init: function (container, options) {
-        var input = $('<button type="button">...</button>').appendTo(container);
+        var input = $("<button type='button'>...</button>").appendTo(container);
         input[0].onclick = options.onclick;
         return input;
       },
