@@ -279,35 +279,6 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
 };
 
 /**
- * Overrides isCellResizable() in mxGraph. Determines if the given cell can be
- * resized.
- * 
- * @param cell
- *          The cell to evaluate.
- * @returns {Boolean}
- */
-CLASSGraph.prototype.isCellResizable = function (cell) {
-  if (cell == null || cell.value == null) {
-    return false;
-  }
-  return !this.isFeature(cell.value) && !this.isSection(cell.value);
-};
-
-/**
- * Overrides isCellMovable() in mxGraph. Determines if the given cell can be
- * moved.
- * 
- * @param cell
- * @returns {Boolean}
- */
-CLASSGraph.prototype.isCellMovable = function (cell) {
-  if (cell == null || cell.value == null) {
-    return false;
-  }
-  return !this.isFeature(cell.value) && !this.isSection(cell.value);
-};
-
-/**
  * Overrides isCellSelectable() in mxGraph. Determines if the given cell can be selected.
  * @param cell
  * @returns {Boolean}

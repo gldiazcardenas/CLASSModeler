@@ -87,8 +87,8 @@ CLASSAttributes.prototype.configureTypeCombo = function () {
   $("#attrType").combobox("setValue", "int"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#attrType").combobox('panel');
-  comboPanel.panel('panel').css('z-index', '2000');
+  var comboPanel = $("#attrType").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -112,35 +112,8 @@ CLASSAttributes.prototype.configureVisibilityCombo = function () {
   $("#attrVisibility").combobox("setValue", "private"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#attrVisibility").combobox('panel');
-  comboPanel.panel('panel').css('z-index', '2000');
-};
-
-/**
- * Populates and sets up the combo box component for multiplicity edition.
- * 
- * @author Gabriel Leonardo Diaz, 17.01.2014.
- */
-CLASSAttributes.prototype.configureMultiplicityCombo = function () {
-  return;
-  
-  $("#attrMultiplicity").combobox({
-      valueField:"id",
-      textField:"text",
-      panelHeight: 130,
-      data: [
-          {id:"*",       text:"*"},
-          {id:"0",       text:"0"},
-          {id:"0...*",   text:"0...*"},
-          {id:"0...1",   text:"0...1"},
-          {id:"1",       text:"1"},
-          {id:"1...*",   text:"1...*"}
-      ]
-  });
-  
-  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#attrMultiplicity").combobox('panel');
-  comboPanel.panel('panel').css('z-index', '2000');
+  var comboPanel = $("#attrVisibility").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**

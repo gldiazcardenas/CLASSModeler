@@ -32,11 +32,12 @@ var CLASSModeler = (function () {
       mxEvent.disableContextMenu(document.body);
       
       // Vertexes selection color
-      mxConstants.HANDLE_FILLCOLOR = '#FC8D98';
-      mxConstants.HANDLE_STROKECOLOR = '#E1061A';
-      mxConstants.VERTEX_SELECTION_COLOR = '#E1061A';
+      mxConstants.HANDLE_FILLCOLOR = "#FC8D98";
+      mxConstants.HANDLE_STROKECOLOR = "#E1061A";
+      mxConstants.VERTEX_SELECTION_COLOR = "#E1061A";
+      mxConstants.EDGE_SELECTION_COLOR = "#E1061A";
       
-      editor = new CLASSEditor(mxUtils.load(mxBasePath + '/config/editor.xml').getDocumentElement());
+      editor = new CLASSEditor(mxUtils.load(mxBasePath + "/config/editor.xml").getDocumentElement());
       
       toolbox = new CLASSToolbox(editor);
       toolbox.init(document.getElementById("toolbox"));

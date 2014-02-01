@@ -31,46 +31,6 @@
             </Enumeration>
         </add>
         
-        <add as="section">
-            <Section isAttribute="true">
-                <mxCell vertex="1" style="section">
-                    <mxGeometry as="geometry" width="0" height="20" />
-                </mxCell>
-            </Section>
-        </add>
-        
-        <add as="property">
-            <Property name="property" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
-                <mxCell vertex="1" style="feature">
-                    <mxGeometry as="geometry" width="0" height="20" />
-                </mxCell>
-            </Property>
-        </add>
-        
-        <add as="operation">
-            <Operation name="operation" returnType="void" visibility="public" isStatic="false" isFinal="false" isAbstract="false" isSync="false" concurrency="secuencial">
-                <mxCell vertex="1" style="feature">
-                    <mxGeometry as="geometry" width="0" height="20" />
-                </mxCell>
-            </Operation>
-        </add>
-        
-        <add as="parameter">
-            <Parameter name="parameter" type="int" direction="in">
-                <mxCell vertex="1">
-                    <mxGeometry as="geometry" width="0" height="0" />
-                </mxCell>
-            </Parameter>
-        </add>
-        
-        <add as="literal">
-            <EnumerationLiteral name="LITERAL">
-                <mxCell vertex="1" style="feature">
-                    <mxGeometry as="geometry" width="0" height="20" />
-                </mxCell>
-            </EnumerationLiteral>
-        </add>
-            
         <add as="package">
             <Package name="Paquete">
                 <mxCell vertex="1" style="package">
@@ -86,6 +46,55 @@
                 </mxCell>
             </Comment>
         </add>
+        
+        <add as="section">
+            <Section isAttribute="true">
+                <mxCell vertex="1" connectable="0" style="section">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </Section>
+        </add>
+        
+        <add as="property">
+            <Property name="property" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
+                <mxCell vertex="1" connectable="0" style="feature">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </Property>
+        </add>
+        
+        <add as="operation">
+            <Operation name="operation" returnType="void" visibility="public" isStatic="false" isFinal="false" isAbstract="false" isSync="false" concurrency="secuencial">
+                <mxCell vertex="1" connectable="0" style="feature">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </Operation>
+        </add>
+        
+        <add as="parameter">
+            <Parameter name="parameter" type="int" direction="in">
+                <mxCell vertex="1" connectable="0">
+                    <mxGeometry as="geometry" width="0" height="0" />
+                </mxCell>
+            </Parameter>
+        </add>
+        
+        <add as="literal">
+            <EnumerationLiteral name="LITERAL">
+                <mxCell vertex="1" connectable="0" style="feature">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </EnumerationLiteral>
+        </add>
+        
+        <add as="association">
+            <Association name="association">
+                <mxCell vertex="0">
+                    <mxGeometry as="geometry" width="0" height="20" />
+                </mxCell>
+            </Association>
+        </add>
+        
     </Array>
     
     <!-- Graph -->
@@ -100,15 +109,14 @@
             <add as="defaultEdge">
                 <add as="align" value="center"/>
                 <add as="verticalAlign" value="middle"/>
-                <add as="rounded" value="true"/>
-                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="rounded" value="1"/>
                 <add as="strokeColor" value="#000000"/>
                 <add as="fontColor" value="#000000"/>
             </add>
             
             <add as="classifier">
                 <add as="shape" value="swimlane"/>
-                <add as="perimeter" value="RectanglePerimeter"/>
+                <add as="perimeter" value="rectanglePerimeter"/>
                 <add as="align" value="center"/>
                 <add as="verticalAlign" value="middle"/>
                 <add as="gradientColor" value="#DDDDDD"/>
@@ -132,10 +140,13 @@
                 <add as="fontColor" value="#000000"/>
                 <add as="fontStyle" value="0"/>
                 <add as="spacingLeft" value="2"/>
+                <add as="resizable" value="0"/>
+                <add as="movable" value="0"/>
             </add>
             
             <add as="package">
                 <add as="shape" value="package"/>
+                <add as="perimeter" value="rectanglePerimeter"/>
                 <add as="strokeColor" value="#BBBBBB"/>
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
@@ -148,6 +159,7 @@
             
             <add as="comment">
                 <add as="shape" value="comment"/>
+                <add as="perimeter" value="rectanglePerimeter"/>
                 <add as="strokeColor" value="#BBBBBB"/>
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
@@ -178,6 +190,8 @@
                 <add as="fontStyle" value="0"/>
                 <add as="shadow" value="0"/>
                 <add as="foldable" value="0"/>
+                <add as="resizable" value="0"/>
+                <add as="movable" value="0"/>
             </add>
             
         </mxStylesheet>

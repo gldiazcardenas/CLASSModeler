@@ -35,6 +35,9 @@ CLASSEditor.prototype.operDialog;
 CLASSEditor.prototype.onInit = function () {
   // Set the section template used to create attributes and operations.
   this.graph.sectionTemplate = this.getTemplate("section");
+  
+  // Association is the default edge
+  this.defaultEdge = this.getTemplate("association");
 };
 
 /**
@@ -134,6 +137,18 @@ CLASSEditor.prototype.createSwimlaneLayout = function () {
   };
   
   return layout;
+};
+
+/**
+ * Overrides createEdge() in mxEditor. Creates the edge cell from source to
+ * target.
+ * 
+ * @param source
+ * @param target
+ * @author Gabriel Leonardo Diaz, 01.02.2014.
+ */
+CLASSEditor.prototype.createEdge = function (source, target) {
+  mxEditor.prototype.createEdge.call(this, arguments);
 };
 
 /**
