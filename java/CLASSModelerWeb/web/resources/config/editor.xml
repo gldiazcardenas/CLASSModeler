@@ -10,7 +10,7 @@
         <add as="class">
             <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="25" />
+                    <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Class>
         </add>
@@ -18,7 +18,7 @@
         <add as="interface">
             <Interface name="Interfaz" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="true">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="25" />
+                    <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Interface>
         </add>
@@ -26,7 +26,7 @@
         <add as="enumeration">
             <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
                 <mxCell vertex="1" style="classifier">
-                    <mxGeometry as="geometry" width="0" height="25" />
+                    <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
             </Enumeration>
         </add>
@@ -73,8 +73,8 @@
         
         <add as="parameter">
             <Parameter name="parameter" type="int" direction="in">
-                <mxCell vertex="1" connectable="0">
-                    <mxGeometry as="geometry" width="0" height="0" />
+                <mxCell vertex="1">
+                    <mxGeometry as="geometry" relative="1" />
                 </mxCell>
             </Parameter>
         </add>
@@ -172,12 +172,10 @@
                 <add as="gradientColor" value="#DDDDDD"/>
                 <add as="fillColor" value="#EEEEEE"/>
                 <add as="swimlaneFillColor" value="#FFFFFF"/>
-                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="strokeColor" value="#AAAAAA"/>
                 <add as="strokeWidth" value="1"/>
-                <add as="startSize" value="25"/>
                 <add as="fontColor" value="#000000"/>
                 <add as="fontStyle" value="1"/>
-                <add as="shadow" value="1"/>
                 <add as="spacingLeft" value="20"/>
                 <add as="spacingRight" value="20"/>
             </add>
@@ -197,10 +195,9 @@
             <add as="package">
                 <add as="shape" value="package"/>
                 <add as="perimeter" value="rectanglePerimeter"/>
-                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="strokeColor" value="#AAAAAA"/>
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
-                <add as="shadow" value="1"/>
                 <add as="spacingLeft" value="20"/>
                 <add as="spacingRight" value="20"/>
                 <add as="spacingTop" value="30"/>
@@ -213,7 +210,6 @@
                 <add as="strokeColor" value="#BBBBBB"/>
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="align" value="center"/>
-                <add as="shadow" value="1"/>
                 <add as="spacingLeft" value="20"/>
                 <add as="spacingRight" value="20"/>
                 <add as="spacingTop" value="20"/>
@@ -225,7 +221,7 @@
                 <add as="perimeter" value="RectanglePerimeter"/>
                 <add as="align" value="right"/>
                 <add as="verticalAlign" value="middle"/>
-                <add as="strokeColor" value="#BBBBBB"/>
+                <add as="strokeColor" value="#AAAAAA"/>
                 <add as="strokeWidth" value="1"/>
                 <add as="fillColor" value="#FFFFFF"/>
                 <add as="startSize" value="0"/>

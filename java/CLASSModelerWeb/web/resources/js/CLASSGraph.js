@@ -279,6 +279,83 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
 };
 
 /**
+ * Overrides cellSizeUpdated() in mxGraph.  Only to add 10px instead of 8px as the collapse/expanded icon size.
+ * @param cell
+ * @param ignoreChildren
+ * @author Gabriel Leonardo Diaz, 04.02.2014.
+ */
+CLASSGraph.prototype.cellSizeUpdated = function(cell, ignoreChildren) {
+  if (cell != null) {
+    this.model.beginUpdate();
+    
+    try {
+      var size = this.getPreferredSizeForCell(cell);
+      var geo = this.model.getGeometry(cell);
+      
+      if (size != null && geo != null) {
+        var collapsed = this.isCellCollapsed(cell);
+        geo = geo.clone();
+        
+        if (this.isSwimlane(cell)) {
+          var state = this.view.getState(cell);
+          var style = (state != null) ? state.style : this.getCellStyle(cell);
+          var cellStyle = this.model.getStyle(cell);
+          
+          if (cellStyle == null) {
+            cellStyle = '';
+          }
+          
+          if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true)) {
+            cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.height + 10);
+            
+            if (collapsed) {
+              geo.height = size.height + 10;
+            }
+            
+            geo.width = size.width;
+          }
+          else {
+            cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.width + 10);
+            
+            if (collapsed) {
+              geo.width = size.width + 10;
+            }
+            
+            geo.height = size.height;
+          }
+          
+          this.model.setStyle(cell, cellStyle);
+        }
+        else {
+          geo.width = size.width;
+          geo.height = size.height;
+        }
+        
+        if (!ignoreChildren && !collapsed) {
+          var bounds = this.view.getBounds(this.model.getChildren(cell));
+          
+          if (bounds != null) {
+            var tr = this.view.translate;
+            var scale = this.view.scale;
+            
+            var width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
+            var height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
+            
+            geo.width = Math.max(geo.width, width);
+            geo.height = Math.max(geo.height, height);
+          }
+        }
+        
+        this.cellsResized([cell], [geo]);
+      }
+    }
+    finally {
+      this.model.endUpdate();
+    }
+  }
+};
+
+/**
  * Overrides isCellSelectable() in mxGraph. Determines if the given cell can be selected.
  * @param cell
  * @returns {Boolean}
@@ -452,8 +529,6 @@ CLASSGraph.prototype.getTypes = function () {
   return jSonData;
 };
 
-// SECOND LABEL TODO
-
 /**
  * Check if the given node is a UML classifier.
  * 
@@ -595,4 +670,73 @@ CLASSGraph.prototype.isSection = function (node) {
     return false;
   }
   return node.nodeName.toLowerCase() == "section";
+};
+
+/**
+ * Checks if the given node is a relationship UML element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isRelationship = function (node) {
+  // TODO GD
+};
+
+/**
+ * Checks if the given node is an association UML element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isAssociation = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "association";
+};
+
+/**
+ * Checks if the given node is an dependency UML element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isDependency = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "dependency";
+};
+
+/**
+ * Checks if the given node is a realization UML element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isRealization = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "realization";
+};
+
+/**
+ * Checks if the given node is a generalization UML element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isGeneralization = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "generalization";
+};
+
+/**
+ * Checks if the given node is a UML comment link.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isLink = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "link";
 };

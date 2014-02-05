@@ -83,8 +83,8 @@ ShapeComment.prototype.constructor = ShapeComment;
 ShapeComment.prototype.redrawPath  = function (path, x, y, w, h, isForeground) {
   
   var s = w * 0.20;
-  if (s > 15) {
-    s = 15; // No more than 15px.
+  if (s > 10) {
+    s = 10; // No more than 10px.
   }
   
   this.size = s;

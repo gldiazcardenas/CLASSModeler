@@ -81,6 +81,7 @@ CLASSEditor.prototype.createGraph = function () {
 
   // Redirects the function for creating the popupmenu items
   graph.panningHandler.autoExpand = true;
+  graph.panningHandler.useGrid = true;
   graph.panningHandler.factoryMethod = mxUtils.bind(this, function(menu, cell, evt) {
     return this.createPopupMenu(menu, cell, evt);
   });
@@ -136,7 +137,7 @@ CLASSEditor.prototype.createGraph = function () {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.createEdge = function (source, target) {
-  mxEditor.prototype.createEdge.call(this, arguments);
+  return mxEditor.prototype.createEdge.call(this, arguments);
 };
 
 /**
