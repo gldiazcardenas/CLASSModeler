@@ -187,6 +187,10 @@ CLASSToolbox.prototype.addSelection = function (toolboxItem) {
   }
   
   toolboxItem.className = toolboxItem.className + " " + this.selectedStyle;
+  var cellTemplate = this.editor.getTemplate(toolboxItem.id);
+  if (cellTemplate && cellTemplate.isEdge()) {
+    this.editor.defaultEdge = cellTemplate;
+  }
 };
 
 /**
@@ -198,6 +202,7 @@ CLASSToolbox.prototype.addSelection = function (toolboxItem) {
  */
 CLASSToolbox.prototype.removeSelection = function (toolboxItem) {
   toolboxItem.className = toolboxItem.className.replace(" " + this.selectedStyle, "");
+  this.editor.defaultEdge = this.editor.getTemplate("association");
 };
 
 /**

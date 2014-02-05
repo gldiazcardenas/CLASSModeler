@@ -18,7 +18,6 @@ CLASSAttributes = function (editor) {
   
   this.configureVisibilityCombo();
   this.configureTypeCombo();
-  this.configureMultiplicityCombo();
   this.configureAttributesTable();
 };
 

@@ -89,10 +89,58 @@
         
         <add as="association">
             <Association name="association">
-                <mxCell vertex="0">
-                    <mxGeometry as="geometry" width="0" height="20" />
+                <mxCell edge="1" style="association">
+                    <mxGeometry as="geometry" relative="1" />
                 </mxCell>
             </Association>
+        </add>
+        
+        <add as="aggregation">
+            <Aggregation name="aggregation" kind="shared">
+                <mxCell edge="1" style="aggregation">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Aggregation>
+        </add>
+        
+        <add as="composition">
+            <Aggregation name="aggregation" kind="composite">
+                <mxCell edge="1" style="aggregation;endFill=1">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Aggregation>
+        </add>
+        
+        <add as="generalization">
+            <Generalization name="generalization">
+                <mxCell edge="1" style="generalization">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Generalization>
+        </add>
+        
+         <add as="realization">
+            <Realization name="realization">
+                <mxCell edge="1" style="realization">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Realization>
+        </add>
+        
+        <add as="dependency">
+            <Dependency name="dependency">
+                <mxCell edge="1" style="dependency">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Dependency>
+        </add>
+        
+        <add as="link">
+            <Link name="link">
+                <mxCell edge="1" style="link">
+                    <mxGeometry as="geometry" relative="1" />
+                </mxCell>
+            </Link>
         </add>
         
     </Array>
@@ -112,6 +160,8 @@
                 <add as="rounded" value="1"/>
                 <add as="strokeColor" value="#000000"/>
                 <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
             </add>
             
             <add as="classifier">
@@ -170,14 +220,6 @@
                 <add as="spacingBottom" value="20"/>
             </add>
             
-            <add as="composition">
-                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
-                <add as="startArrow" value="diamondThin"/>
-                <add as="startSize" value="14"/>
-                <add as="endArrow" value="open"/>
-                <add as="endSize" value="10"/>
-            </add>
-            
             <add as="section">
                 <add as="shape" value="swimlane"/>
                 <add as="perimeter" value="RectanglePerimeter"/>
@@ -192,6 +234,80 @@
                 <add as="foldable" value="0"/>
                 <add as="resizable" value="0"/>
                 <add as="movable" value="0"/>
+            </add>
+            
+            <add as="association">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+            </add>
+            
+            <add as="aggregation">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+                <add as="endArrow" value="diamond"/>
+                <add as="endSize" value="12"/>
+                <add as="endFill" value="0"/>
+            </add>
+            
+            <add as="generalization">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+                <add as="endArrow" value="block"/>
+                <add as="endSize" value="11"/>
+                <add as="endFill" value="0"/>
+            </add>
+            
+            <add as="realization">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+                <add as="endArrow" value="block"/>
+                <add as="endSize" value="11"/>
+                <add as="endFill" value="0"/>
+                <add as="dashed" value="1"/>
+            </add>
+            
+            <add as="dependency">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+                <add as="endArrow" value="open"/>
+                <add as="endSize" value="8"/>
+                <add as="dashed" value="1"/>
+            </add>
+            
+            <add as="link">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="elbow" value="horizontal"/>
+                <add as="dashed" value="1"/>
             </add>
             
         </mxStylesheet>

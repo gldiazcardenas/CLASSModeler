@@ -29,6 +29,11 @@ CLASSEditor.prototype.attrDialog;
 CLASSEditor.prototype.operDialog;
 
 /**
+ * The id of the selected edge.
+ */
+CLASSEditor.prototype.selectedEdge;
+
+/**
  * Function called on initializing the editor component.
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
@@ -36,7 +41,7 @@ CLASSEditor.prototype.onInit = function () {
   // Set the section template used to create attributes and operations.
   this.graph.sectionTemplate = this.getTemplate("section");
   
-  // Association is the default edge
+  // Default edge is Association
   this.defaultEdge = this.getTemplate("association");
 };
 
@@ -53,6 +58,7 @@ CLASSEditor.prototype.createGraph = function () {
   graph.setTooltips(true);
   graph.setPanning(true);
   graph.setConnectable(true);
+  graph.disconnectOnMove = false;
 
   // Overrides the dblclick method on the graph to
   // invoke the dblClickAction for a cell and reset
@@ -110,7 +116,7 @@ CLASSEditor.prototype.createGraph = function () {
           }
         }
         
-        this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, 'cells', cells));
+        this.fireEvent(new mxEventObject(mxEvent.LAYOUT_CELLS, "cells", cells));
       }
       finally {
         model.endUpdate();
@@ -119,6 +125,18 @@ CLASSEditor.prototype.createGraph = function () {
   };
   
   return graph;
+};
+
+/**
+ * Overrides createEdge() in mxEditor. Configures the new edge cell from source
+ * to target.
+ * 
+ * @param source
+ * @param target
+ * @author Gabriel Leonardo Diaz, 04.02.2014.
+ */
+CLASSEditor.prototype.createEdge = function (source, target) {
+  mxEditor.prototype.createEdge.call(this, arguments);
 };
 
 /**
@@ -140,18 +158,6 @@ CLASSEditor.prototype.createSwimlaneLayout = function () {
 };
 
 /**
- * Overrides createEdge() in mxEditor. Creates the edge cell from source to
- * target.
- * 
- * @param source
- * @param target
- * @author Gabriel Leonardo Diaz, 01.02.2014.
- */
-CLASSEditor.prototype.createEdge = function (source, target) {
-  mxEditor.prototype.createEdge.call(this, arguments);
-};
-
-/**
  * Creates the pop-up menu for the given selected cell.
  * 
  * @param menu
@@ -166,51 +172,55 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var self = this;
   
   var undo = function () {
-    self.execute('undo');
+    self.execute("undo");
   };
   
   var redo = function () {
-    self.execute('redo');
+    self.execute("redo");
   };
   
   var copy = function () {
-    self.execute('copy');
+    self.execute("copy");
   };
   
   var cut = function () {
-    self.execute('cut');
+    self.execute("cut");
   };
   
   var paste = function () {
-    self.execute('paste');
+    self.execute("paste");
   };
   
   var deleteAll = function () {
-    self.execute('delete');
+    self.execute("delete");
   };
   
   var selectAll = function () {
-    self.execute('selectAll');
+    self.execute("selectAll");
   };
   
   var showAttributes = function () {
-    self.execute('showAttributes');
+    self.execute("showAttributes");
   };
   
   var showOperations = function () {
-    self.execute('showOperations');
+    self.execute("showOperations");
+  };
+  
+  var editConnector = function () {
+    self.execute("editConnector");
   };
   
   var generateCode = function () {
-    self.execute('generateCode');
+    self.execute("generateCode");
   };
   
   var generateImage = function () {
-    self.execute('generateImage');
+    self.execute("generateImage");
   };
   
   var viewXML = function () {
-    self.execute('viewXML');
+    self.execute("viewXML");
   };
   
   menu.addItem("Deshacer", null, undo, null, null, true);
@@ -231,6 +241,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifierCell(cell));
+  menu.addItem("Conector", null, editConnector, null, null, self.isConnectorCell(cell));
   
   menu.addSeparator();
   
@@ -253,6 +264,15 @@ CLASSEditor.prototype.isClassifierCell = function (cell) {
 };
 
 /**
+ * Determines if the given cell represents a connector UML.
+ * 
+ * @author Gabriel Leonardo Diaz, 04.02.2014.
+ */
+CLASSEditor.prototype.isConnectorCell = function (cell) {
+  return cell != null && cell.isEdge();
+};
+
+/**
  * Overrides the addActions() function in mxEditor in order to add some custom
  * actions to the array.
  * 
@@ -262,71 +282,76 @@ CLASSEditor.prototype.addActions = function () {
   // super.addActions();
   mxEditor.prototype.addActions.call(this);
   
-  this.addAction('zoom25', function (editor) {
+  this.addAction("zoom25", function (editor) {
     editor.graph.zoomTo(25/100);
   });
   
-  this.addAction('zoom50', function (editor) {
+  this.addAction("zoom50", function (editor) {
     editor.graph.zoomTo(50/100);
   });
   
-  this.addAction('zoom75', function (editor) {
+  this.addAction("zoom75", function (editor) {
     editor.graph.zoomTo(75/100);
   });
   
-  this.addAction('zoom100', function (editor) {
+  this.addAction("zoom100", function (editor) {
     editor.graph.zoomTo(100/100);
   });
   
-  this.addAction('zoom150', function (editor) {
+  this.addAction("zoom150", function (editor) {
     editor.graph.zoomTo(150/100);
   });
   
-  this.addAction('zoom200', function (editor) {
+  this.addAction("zoom200", function (editor) {
     editor.graph.zoomTo(200/100);
   });
   
-  this.addAction('zoom400', function (editor) {
+  this.addAction("zoom400", function (editor) {
     editor.graph.zoomTo(400/100);
   });
   
-  this.addAction('moveLeft', function (editor) {
+  this.addAction("moveLeft", function (editor) {
     editor.moveCells(37);
   });
   
-  this.addAction('moveUp', function (editor) {
+  this.addAction("moveUp", function (editor) {
     editor.moveCells(38);
   });
   
-  this.addAction('moveRight', function (editor) {
+  this.addAction("moveRight", function (editor) {
     editor.moveCells(39);
   });
   
-  this.addAction('moveDown', function (editor) {
+  this.addAction("moveDown", function (editor) {
     editor.moveCells(40);
   });
   
-  this.addAction('showAttributes', function (editor) {
+  this.addAction("showAttributes", function (editor) {
     editor.showAttributes(editor.graph.getSelectionCell());
   });
   
-  this.addAction('showOperations', function (editor) {
+  this.addAction("showOperations", function (editor) {
     editor.showOperations(editor.graph.getSelectionCell());
   });
   
-  this.addAction('generateCode', function (editor) {
+  this.addAction("generateCode", function (editor) {
     editor.generateCode();
   });
   
-  this.addAction('generateImage', function (editor) {
+  this.addAction("generateImage", function (editor) {
     editor.generateImage();
   });
   
-  this.addAction('viewXML', function (editor) {
+  this.addAction("editConnector", function (editor) {
+    editor.editConnector(editor.graph.getSelectionCell());
+  });
+  
+  this.addAction("viewXML", function (editor) {
     var encoder = new mxCodec();
     var node = encoder.encode(editor.graph.getModel());
     mxUtils.popup(mxUtils.getPrettyXml(node), true);
   });
+  
 };
 
 /**
@@ -406,6 +431,16 @@ CLASSEditor.prototype.showOperations = function (cell) {
   }
   this.operDialog.init(cell);
   this.operDialog.show();
+};
+
+/**
+ * Edits the UML connector contained into the given cell.
+ * 
+ * @param cell
+ * @author Gabriel Leonardo Diaz, 04.02.2014.
+ */
+CLASSEditor.prototype.editConnector = function (cell) {
+  // TODO GD
 };
 
 
