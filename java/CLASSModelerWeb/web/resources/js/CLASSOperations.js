@@ -15,6 +15,7 @@ CLASSOperations = function (editor) {
   this.editor = editor;
   this.graph  = editor.graph;
   this.dialog = dlgOperations; // Defined by a PrimeFaces dialog.
+  this.title  = dlgOperations.titlebar.children("span.ui-dialog-title").html();
   
   var self    = this;
   this.dialog.content[0].onclick = function () {
@@ -64,6 +65,11 @@ CLASSOperations.prototype.operationIndex;
 CLASSOperations.prototype.parameterIndex;
 
 /**
+ * The localized title text.
+ */
+CLASSAttributes.prototype.title;
+
+/**
  * Initializes the dialog to edit the operations of the given classifier cell.
  * @param cell
  */
@@ -71,9 +77,21 @@ CLASSOperations.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.operationCell  = null;
   this.operationIndex = null;
+  
   this.loadOperationTableData();
   this.clearSelection();
   this.clearFields();
+  this.setTitle();
+};
+
+/**
+ * Sets the title of the dialog by appending the name of the classifier being
+ * edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 10.02.2014.
+ */
+CLASSOperations.prototype.setTitle = function () {
+  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
 };
 
 /**

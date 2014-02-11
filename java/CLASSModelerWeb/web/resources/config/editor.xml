@@ -88,7 +88,10 @@
         </add>
         
         <add as="association">
-            <Association name="association">
+            <Association name="association" isDerived="false">
+                <Property as="source" id="" />
+                <Property as="target" id="" />
+                
                 <mxCell edge="1" style="association">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -96,23 +99,26 @@
         </add>
         
         <add as="aggregation">
-            <Aggregation name="aggregation" kind="shared">
+            <Association name="aggregation" isDerived="false">
+                <Property as="source" id="" />
+                <Property as="target" id="" />
+                
                 <mxCell edge="1" style="aggregation">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
-            </Aggregation>
+            </Association>
         </add>
         
         <add as="composition">
-            <Aggregation name="aggregation" kind="composite">
-                <mxCell edge="1" style="aggregation;endFill=1">
+            <Association name="composition" isDerived="false">
+                <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
-            </Aggregation>
+            </Association>
         </add>
         
         <add as="generalization">
-            <Generalization name="generalization">
+            <Generalization name="generalization" isSubstitutable="false">
                 <mxCell edge="1" style="generalization">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -136,7 +142,7 @@
         </add>
         
         <add as="link">
-            <Link name="link">
+            <Link>
                 <mxCell edge="1" style="link">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -240,6 +246,8 @@
                 <add as="fontColor" value="#000000"/>
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
                 <add as="elbow" value="horizontal"/>
+                <add as="endArrow" value="open"/>
+                <add as="endSize" value="8"/>
             </add>
             
             <add as="aggregation">
@@ -253,6 +261,22 @@
                 <add as="endArrow" value="diamond"/>
                 <add as="endSize" value="12"/>
                 <add as="endFill" value="0"/>
+                <add as="startArrow" value="open"/>
+                <add as="startSize" value="8"/>
+            </add>
+            
+            <add as="composition">
+                <add as="align" value="center"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="rounded" value="1"/>
+                <add as="strokeColor" value="#000000"/>
+                <add as="fontColor" value="#000000"/>
+                <add as="edgeStyle" value="orthogonalEdgeStyle"/>
+                <add as="endArrow" value="diamond"/>
+                <add as="endSize" value="12"/>
+                <add as="endFill" value="1"/>
+                <add as="startArrow" value="open"/>
+                <add as="startSize" value="8"/>
             </add>
             
             <add as="generalization">

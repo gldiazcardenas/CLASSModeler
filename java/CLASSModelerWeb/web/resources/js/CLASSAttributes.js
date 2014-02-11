@@ -15,6 +15,7 @@ CLASSAttributes = function (editor) {
   this.editor = editor;
   this.graph  = editor.graph;
   this.dialog = dlgAttributes; // Defined by a PrimeFaces dialog.
+  this.title  = dlgAttributes.titlebar.children("span.ui-dialog-title").html();
   
   this.configureVisibilityCombo();
   this.configureTypeCombo();
@@ -52,6 +53,11 @@ CLASSAttributes.prototype.attributeCell;
 CLASSAttributes.prototype.attributeIndex;
 
 /**
+ * The localized title text.
+ */
+CLASSAttributes.prototype.title;
+
+/**
  * Initializes the dialog with the attributes of the given cell containing a
  * classifier XML node.
  * 
@@ -61,11 +67,23 @@ CLASSAttributes.prototype.attributeIndex;
  */
 CLASSAttributes.prototype.init = function (cell) {
   this.classifierCell = cell;
-  this.attributeCell = null;
+  this.attributeCell  = null;
   this.attributeIndex = null;
+  
   this.loadTableData();
   this.clearSelection();
   this.clearFields();
+  this.setTitle();
+};
+
+/**
+ * Sets the title of the dialog by appending the name of the classifier being
+ * edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 10.02.2014.
+ */
+CLASSAttributes.prototype.setTitle = function () {
+  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
 };
 
 /**

@@ -545,7 +545,8 @@ CLASSGraph.prototype.isClassifier = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isNamedElement = function (node) {
-  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node) || this.isEnumerationLiteral(node);
+  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node) || this.isEnumerationLiteral(node) ||
+         this.isAssociation(node) || this.isDependency(node) || this.isRealization(node) || this.isGeneralization(node);
 };
 
 /**
@@ -678,7 +679,7 @@ CLASSGraph.prototype.isSection = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isRelationship = function (node) {
-  // TODO GD
+  return this.isAssociation(node) || this.isDependency(node) || this.isRealization(node) || this.isGeneralization(node);
 };
 
 /**
@@ -740,3 +741,6 @@ CLASSGraph.prototype.isLink = function (node) {
   }
   return node.nodeName.toLowerCase() == "link";
 };
+
+
+

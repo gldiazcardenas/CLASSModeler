@@ -59,6 +59,7 @@ CLASSEditor.prototype.createGraph = function () {
   graph.setPanning(true);
   graph.setConnectable(true);
   graph.disconnectOnMove = false;
+  graph.vertexLabelsMovable = true;
 
   // Overrides the dblclick method on the graph to
   // invoke the dblClickAction for a cell and reset
