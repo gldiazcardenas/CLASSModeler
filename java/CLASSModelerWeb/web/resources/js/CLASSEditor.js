@@ -402,7 +402,41 @@ CLASSEditor.prototype.generateCode = function () {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSEditor.prototype.generateImage = function () {
-  // TODO GD
+  var scale  = 1;
+  var bounds = this.graph.getGraphBounds();
+  
+  // Creates XML node to hold output
+  var xmlDoc = mxUtils.createXmlDocument();
+  var root = xmlDoc.createElement("output");
+  xmlDoc.appendChild(root);
+  
+  // Creates interface for rendering output
+  var xmlCanvas = new mxXmlCanvas2D(root);
+  xmlCanvas.scale(scale);
+  xmlCanvas.translate(Math.round(-bounds.x * scale), Math.round(-bounds.y * scale));
+  
+  // Renders output to interface
+  var imgExport = new mxImageExport();
+  imgExport.drawState(this.graph.getView().getState(this.graph.model.root), xmlCanvas);
+
+  // Puts request data together
+  var filename   = "export.png";
+  var format     = "png";
+  var background = "#FFFFFF";
+  var width      = Math.round((bounds.width + 4) * scale);
+  var height     = Math.round((bounds.height + 4) * scale);
+  var xml        = mxUtils.getXml(root);
+  
+  // Compression is currently not used in this example
+  // Requires base64.js and redeflate.js
+  // xml = encodeURIComponent(Base64.encode(RawDeflate.deflate(xml), true));
+  new mxXmlRequest(this.urlImage.substring(1), "filename=" + filename + 
+                                               "&format=" + format + 
+                                               "&bg=" + background + 
+                                               "&w=" + width + 
+                                               "&h=" + height + 
+                                               "&xml=" + encodeURIComponent(xml))
+     .simulate(document, "_blank");
 };
 
 /**

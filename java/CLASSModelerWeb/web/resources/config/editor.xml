@@ -1,4 +1,4 @@
-<mxEditor><!-- urlImage="/Designer?image" urlInit="/Designer?init" urlPoll="/Designer?poll" urlNotify="/Designer?notify" -->
+<mxEditor urlImage="/CLASSModeler/Designer?image" urlInit="/CLASSModeler/Designer?init" urlPoll="/CLASSModeler/Designer?poll" urlNotify="/CLASSModeler/Designer?notify">
     <ui>
         <!-- <resource basename="resources/messages"/> -->
         <add as="graph" element="graph"/>

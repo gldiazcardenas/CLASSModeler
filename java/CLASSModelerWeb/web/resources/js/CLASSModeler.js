@@ -39,6 +39,20 @@ var CLASSModeler = (function () {
       
       editor = new CLASSEditor(mxUtils.load(mxBasePath + "/config/editor.xml").getDocumentElement());
       
+      // Changes the zoom on mouseWheel events
+      mxEvent.addMouseWheelListener(function (evt, up) {
+        if (!mxEvent.isConsumed(evt)) {
+          if (up) {
+            editor.execute("zoomIn");
+          }
+          else {
+            editor.execute("zoomOut");
+          }
+        
+          mxEvent.consume(evt);
+        }
+      });
+      
       toolbox = new CLASSToolbox(editor);
       toolbox.init(document.getElementById("toolbox"));
       
