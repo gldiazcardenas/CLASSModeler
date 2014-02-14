@@ -22,6 +22,7 @@ import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
+import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
@@ -86,7 +87,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   @Override
   public void deleteDiagram(int diagramKey) {
     
-    // TODO validate the diagrammer account the modify the diagram has privileges.
+    // TODO validate the diagrammer account modifying the diagram has privileges.
     
     Diagram diagram = em.find(Diagram.class, Integer.valueOf(diagramKey));
     if (diagram != null) {
@@ -121,8 +122,30 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public void shareDiagram(Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege) {
+  public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege) {
     // TODO Auto-generated method stub
+  }
+  
+  @Override
+  public EDiagramPrivilege checkDiagramPrivilege(Diagram diagram, User user) {
+    if (diagram.getKey() < 0) {
+      // Non existing diagram, everybody is able to edit.
+      return EDiagramPrivilege.OWNER;
+    }
+    
+    if (!user.isRegisteredUser()) {
+      // Guest user does not have privileges over existing diagrams.
+      return null;
+    }
+    
+    Diagrammer diagrammer = (Diagrammer) user;
+    
+    if (diagram.isOwner(diagrammer)) {
+      return EDiagramPrivilege.OWNER;
+    }
+    
+    // TODO Auto-generated method stub
+    return EDiagramPrivilege.OWNER;
   }
   
 }

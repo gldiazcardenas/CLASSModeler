@@ -61,7 +61,7 @@
                     <p:ajax event="contextMenu" update=":sharingsForm, :diagramButtonsForm, :sharingButtonsForm" />
                     
                     <p:column headerText="#{msgs.COLUMN_DIAGRAM_NAME_LABEL}" sortBy="#{diagram.name}">
-                        <h:commandLink action="#{designerController.designDiagram(diagram)}" value="#{diagram.name}" title="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}" />
+                        <h:commandLink action="#{designerController.draw(diagram, sessionController.user)}" value="#{diagram.name}" title="#{msgs.BUTTON_OPEN_DESIGNER_DIAGRAM_LABEL}" />
                     </p:column>
                     
                     <p:column headerText="#{msgs.COLUMN_DIAGRAM_MODIFIER_LABEL}" sortBy="#{diagram.modifiedBy.name}">

@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import classmodeler.domain.diagram.Diagram;
+
 /**
  * Utility class that contains generic method to handle common operations like
  * validations, conversions and so on.
@@ -208,6 +210,18 @@ public final class GenericUtils {
     }
     
     return MessageFormat.format(bundle.getString(messageKey), arguments);
+  }
+  
+  /**
+   * Generates an empty fake diagram, this is used to start creating a diagram in GUEST mode.
+   * @return The new diagram.
+   * @author Gabriel Leonardo Diaz, 13.02.2014
+   */
+  public static Diagram generateEmptyDiagram () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    diagram.setName(getLocalizedMessage("NEW_DIAGRAM_NAME"));
+    return diagram;
   }
   
 }

@@ -16,6 +16,7 @@ import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.domain.user.User;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.UnprivilegedException;
 
@@ -100,5 +101,17 @@ public interface DiagramService {
    * @author Gabriel Leonardo Diaz, 12.08.2013.
    */
   public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege);
+  
+  /**
+   * Looks for the privilege of the given user over the given diagram.
+   * 
+   * @param diagram
+   *          The diagram to be edited.
+   * @param user
+   *          The user who is going to edit the diagram.
+   * @return The privilege of the user over the diagram.
+   * @author Gabriel Leonardo Diaz, 13.02.2014
+   */
+  public EDiagramPrivilege checkDiagramPrivilege (Diagram diagram, User user);
   
 }
