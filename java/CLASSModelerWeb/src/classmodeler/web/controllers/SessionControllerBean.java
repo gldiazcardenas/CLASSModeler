@@ -93,10 +93,12 @@ public class SessionControllerBean extends JSFGenericBean {
    *          The user email.
    * @param password
    *          The password of the system.
-   * @throws InactivatedUserAccountException 
+   * @return The user logged in.
+   * @throws InactivatedUserAccountException
    */
-  public void login (String email, String password) throws InvalidDiagrammerAccountException {
-    user = sessionService.logIn(email, password);
+  public User login (String email, String password) throws InvalidDiagrammerAccountException {
+    this.user = sessionService.logIn(email, password);
+    return this.user;
   }
   
   /**

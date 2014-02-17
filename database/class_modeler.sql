@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `class_modeler` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `class_modeler`;
--- MySQL dump 10.13  Distrib 5.6.11, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
 -- Host: localhost    Database: class_modeler
 -- ------------------------------------------------------
--- Server version	5.6.11
+-- Server version	5.6.14
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,154 +28,82 @@ CREATE TABLE `diagram` (
   `diagram_key` int(11) NOT NULL AUTO_INCREMENT,
   `diagram_name` varchar(255) NOT NULL,
   `diagram_description` text,
+  `diagram_xml` longtext NOT NULL,
   `diagram_created_by` int(11) NOT NULL,
   `diagram_created_date` datetime NOT NULL,
   `diagram_modified_by` int(11) NOT NULL,
   `diagram_modified_date` datetime NOT NULL,
-  `diagram_xmi` longtext NOT NULL,
   PRIMARY KEY (`diagram_key`),
-  KEY `FK_DIAGRAM_USER_OWNER` (`diagram_created_by`),
-  KEY `FK_DIAGRAM_USER_MODIFIER` (`diagram_modified_by`),
-  CONSTRAINT `FK_DIAGRAM_USER_MODIFIER` FOREIGN KEY (`diagram_modified_by`) REFERENCES `user` (`user_key`),
-  CONSTRAINT `FK_DIAGRAM_USER_OWNER` FOREIGN KEY (`diagram_created_by`) REFERENCES `user` (`user_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  KEY `IDX_DIAGRAM_DIAGRAMMER_OWNER` (`diagram_created_by`),
+  KEY `IDX_DIAGRAM_DIAGRAMMER_MODIFIER` (`diagram_modified_by`),
+  CONSTRAINT `FK_DIAGRAM_DIAGRAMMER_MODIFIER` FOREIGN KEY (`diagram_modified_by`) REFERENCES `diagrammer` (`diagrammer_key`),
+  CONSTRAINT `FK_DIAGRAM_DIAGRAMMER_OWNER` FOREIGN KEY (`diagram_created_by`) REFERENCES `diagrammer` (`diagrammer_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `diagram`
+-- Table structure for table `diagrammer`
 --
 
-LOCK TABLES `diagram` WRITE;
-/*!40000 ALTER TABLE `diagram` DISABLE KEYS */;
-INSERT INTO `diagram` VALUES (1,'Gabriel Test','Mi Primer Diagrama',1,'2013-06-20 20:17:10',1,'2013-06-20 20:17:10',''),(2,'Gabriel Test - Copy','Mi Primer Diagrama',1,'2013-06-20 20:17:21',1,'2013-06-20 20:17:21',''),(3,'Gabriel Test Number 1','Mi Primer Diagrama',1,'2013-06-20 20:23:18',1,'2013-06-20 20:23:18','');
-/*!40000 ALTER TABLE `diagram` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `preference`
---
-
-DROP TABLE IF EXISTS `preference`;
+DROP TABLE IF EXISTS `diagrammer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `preference` (
-  `preference_key` int(11) NOT NULL AUTO_INCREMENT,
-  `preference_name` varchar(255) NOT NULL,
-  `preference_value` varchar(4000) NOT NULL,
-  `user_key` int(11) DEFAULT NULL,
-  PRIMARY KEY (`preference_key`),
-  UNIQUE KEY `UK_PREFERENCE_NAME` (`preference_name`),
-  KEY `FK_PREFERENCE_USER` (`user_key`),
-  CONSTRAINT `FK_PREFERENCE_USER` FOREIGN KEY (`user_key`) REFERENCES `user` (`user_key`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `diagrammer` (
+  `diagrammer_key` int(11) NOT NULL AUTO_INCREMENT,
+  `diagrammer_first_name` varchar(50) NOT NULL,
+  `diagrammer_last_name` varchar(50) NOT NULL,
+  `diagrammer_email` varchar(255) NOT NULL,
+  `diagrammer_password` varchar(20) NOT NULL,
+  `diagrammer_gender` int(11) NOT NULL COMMENT '0 = Male\n1 = Female',
+  `diagrammer_account_status` int(11) NOT NULL DEFAULT '0' COMMENT '0 = Inactived\n1 = Actived\n2 = Deactived\n',
+  `diagrammer_registration_date` datetime NOT NULL,
+  `diagrammer_avatar_path` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`diagrammer_key`),
+  UNIQUE KEY `UK_DIAGRAMMER_EMAIL` (`diagrammer_email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `security_code`
+--
+
+DROP TABLE IF EXISTS `security_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `security_code` (
+  `security_code_key` int(11) NOT NULL AUTO_INCREMENT,
+  `security_code_hash` varchar(255) NOT NULL,
+  `security_code_expiration_date` datetime NOT NULL,
+  `security_code_type` int(11) NOT NULL COMMENT '0 = Activate Account\n1 = Reset Password',
+  `security_code_valid` bit(1) NOT NULL,
+  `diagrammer_key` int(11) NOT NULL,
+  PRIMARY KEY (`security_code_key`),
+  KEY `IDX_VERIFICATION_DIAGRAMMER` (`diagrammer_key`),
+  CONSTRAINT `FK_VERIFICATION_DIAGRAMMER` FOREIGN KEY (`diagrammer_key`) REFERENCES `diagrammer` (`diagrammer_key`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shared_item`
+--
+
+DROP TABLE IF EXISTS `shared_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shared_item` (
+  `shared_item_key` int(11) NOT NULL AUTO_INCREMENT,
+  `shared_item_date` datetime NOT NULL,
+  `shared_item_privilege` int(11) NOT NULL COMMENT '0 = Read\n1 = Write',
+  `shared_item_diagrammer_key` int(11) NOT NULL,
+  `shared_item_diagram_key` int(11) NOT NULL,
+  PRIMARY KEY (`shared_item_key`),
+  UNIQUE KEY `UK_SHARED_ITEM_DIAGRAMMER` (`shared_item_diagrammer_key`,`shared_item_diagram_key`),
+  KEY `IDX_SHARED_ITEM_DIAGRAM` (`shared_item_diagram_key`),
+  KEY `IDX_SHARED_ITEM_DIAGRAMMER` (`shared_item_diagrammer_key`),
+  CONSTRAINT `FK_SHARED_ITEM_DIAGRAM` FOREIGN KEY (`shared_item_diagram_key`) REFERENCES `diagram` (`diagram_key`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_SHARED_ITEM_DIAGRAMMER` FOREIGN KEY (`shared_item_diagrammer_key`) REFERENCES `diagrammer` (`diagrammer_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `preference`
---
-
-LOCK TABLES `preference` WRITE;
-/*!40000 ALTER TABLE `preference` DISABLE KEYS */;
-/*!40000 ALTER TABLE `preference` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shared`
---
-
-DROP TABLE IF EXISTS `shared`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shared` (
-  `shared_key` int(11) NOT NULL AUTO_INCREMENT,
-  `shared_date` datetime NOT NULL,
-  `shared_comment` text,
-  `shared_privilege` varchar(10) NOT NULL,
-  `shared_from_user` int(11) NOT NULL,
-  `shared_to_user` int(11) NOT NULL,
-  `shared_diagram_key` int(11) NOT NULL,
-  PRIMARY KEY (`shared_key`),
-  UNIQUE KEY `UK_SHARED_TOUSER` (`shared_to_user`,`shared_diagram_key`),
-  KEY `FK_SHARED_DIAGRAM` (`shared_diagram_key`),
-  KEY `FK_SHARED_FROMUSER` (`shared_from_user`),
-  KEY `FK_SHARED_TOUSER` (`shared_to_user`),
-  CONSTRAINT `FK_SHARED_DIAGRAM` FOREIGN KEY (`shared_diagram_key`) REFERENCES `diagram` (`diagram_key`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_SHARED_FROMUSER` FOREIGN KEY (`shared_from_user`) REFERENCES `user` (`user_key`),
-  CONSTRAINT `FK_SHARED_TOUSER` FOREIGN KEY (`shared_to_user`) REFERENCES `user` (`user_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shared`
---
-
-LOCK TABLES `shared` WRITE;
-/*!40000 ALTER TABLE `shared` DISABLE KEYS */;
-/*!40000 ALTER TABLE `shared` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `user_key` int(11) NOT NULL AUTO_INCREMENT,
-  `user_first_name` varchar(50) NOT NULL,
-  `user_last_name` varchar(50) NOT NULL,
-  `user_email` varchar(255) NOT NULL,
-  `user_password` varchar(20) NOT NULL,
-  `user_gender` varchar(10) NOT NULL,
-  `user_account_status` varchar(15) NOT NULL DEFAULT '0' COMMENT '0 = Inactived\n1 = Actived\n2 = Deactived\n',
-  `user_birthdate` date DEFAULT NULL,
-  `user_created_date` datetime NOT NULL,
-  `user_avatar` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_key`),
-  UNIQUE KEY `UK_USER_EMAIL` (`user_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Gabriel Leonardo','Diaz Cardenas','gabriel.leonardo.diaz@gmail.com','1234','MALE','ACTIVATED','1988-11-24','2013-06-20 20:16:27','/resources/uploads/male_avatar.png');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `verification`
---
-
-DROP TABLE IF EXISTS `verification`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `verification` (
-  `verification_key` int(11) NOT NULL AUTO_INCREMENT,
-  `verification_code` varchar(255) NOT NULL,
-  `verification_expire_date` datetime NOT NULL,
-  `verification_valid` bit(1) NOT NULL,
-  `verification_type` varchar(20) NOT NULL,
-  `user_key` int(11) NOT NULL,
-  PRIMARY KEY (`verification_key`),
-  KEY `FK_VERIFICATION_USER` (`user_key`),
-  CONSTRAINT `FK_VERIFICATION_USER` FOREIGN KEY (`user_key`) REFERENCES `user` (`user_key`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `verification`
---
-
-LOCK TABLES `verification` WRITE;
-/*!40000 ALTER TABLE `verification` DISABLE KEYS */;
-INSERT INTO `verification` VALUES (1,'6430e48fb18a824f719690c49fef6467','2013-06-22 20:16:27','\0','ACTIVATE_ACCOUNT',1);
-/*!40000 ALTER TABLE `verification` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -186,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-09 18:48:27
+-- Dump completed on 2014-02-16 18:58:50

@@ -8,11 +8,14 @@
 
 package classmodeler.web.controllers;
 
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.user.Guest;
+import classmodeler.domain.user.User;
+import classmodeler.service.DiagramService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.GenericUtils;
@@ -28,18 +31,18 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   
   private String email;
   private String password;
-  private ELoginMode mode;
   
   @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
   
   @ManagedProperty("#{designerController}")
   private DesignerControllerBean designerController;
+  
+  @EJB
+  private DiagramService diagramService;
 
   public LogInControllerBean() {
     super();
-    
-    mode = ELoginMode.REGISTERED_USER;
   }
   
   public String getEmail() {
@@ -76,7 +79,6 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   public String processGuest () {
     email    = Guest.GUEST_EMAIL;
     password = Guest.GUEST_PASSWORD;
-    mode     = ELoginMode.GUEST_USER;
     return process();
   }
 
@@ -91,15 +93,15 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
     
     if (isAllValid()) {
       try {
-        sessionController.login(email, password);
+        User user = sessionController.login(email, password);
         
-        if (mode == ELoginMode.REGISTERED_USER) {
+        if (user.isRegisteredUser()) {
           // Redirects to the DashBoard
           outcome = JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
         }
         else {
           // Redirects to the Designer Page
-          outcome = designerController.draw(GenericUtils.generateEmptyDiagram(), sessionController.getUser());
+          outcome = designerController.design(DiagramControllerBean.generateEmpty(), user);
         }
       }
       catch (InvalidDiagrammerAccountException e) {
@@ -132,15 +134,6 @@ public class LogInControllerBean extends JSFGenericBean implements JSFFormContro
   @Override
   public void processAJAX() {
     // Not used.
-  }
-  
-  /**
-   * The type of user that is trying to login in.
-   * @author Gabriel Leonardo Diaz, 23.05.2013.
-   */
-  private static enum ELoginMode {
-    GUEST_USER,
-    REGISTERED_USER
   }
   
 }

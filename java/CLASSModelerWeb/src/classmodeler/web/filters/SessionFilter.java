@@ -51,57 +51,59 @@ public class SessionFilter implements Filter {
   /**
    * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
    */
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-                                                                                                   ServletException {
-    
-    HttpServletRequest req  = (HttpServletRequest) request;
-    HttpServletResponse res = (HttpServletResponse) response;
-    
-    final HttpSession session = req.getSession(false);
-    String url = req.getServletPath();
+  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) req;
+    HttpServletResponse response = (HttpServletResponse) res;
+    HttpSession session = request.getSession(false);
+    String url = request.getServletPath();
     
     if (session != null) {
       SessionControllerBean sessionController = (SessionControllerBean) session.getAttribute("sessionController");
       DesignerControllerBean designerController = (DesignerControllerBean) session.getAttribute("designerController");
       
       if (sessionController == null || sessionController.getUser() == null) {
-        if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
+        if (url.contains(JSFOutcomeUtil.DESIGNER_SERVLET)) {
+          // Forbidden access, but this is an AJAX request
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          return;
+        }
+        else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
           // Forbidden access, redirect to the index page.
-          session.setAttribute("from", req.getRequestURI());
-          res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
+          session.setAttribute("from", request.getRequestURI());
+          response.sendRedirect(request.getContextPath() + JSFOutcomeUtil.INDEX);
           return;
         }
       }
       else if (url.contains(JSFOutcomeUtil.INDEX) || url.contains(JSFOutcomeUtil.PORTAL_PATH)) {
         if (sessionController.isRegisteredUser()) {
           // Avoids the user get out without closing the session.
-          session.setAttribute("from", req.getRequestURI());
-          res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DASHBOARD);
+          session.setAttribute("from", request.getRequestURI());
+          response.sendRedirect(request.getContextPath() + JSFOutcomeUtil.DASHBOARD);
           return;
         }
       }
       else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) && !sessionController.isRegisteredUser()) {
         // DashBoard page is only for registered users.
-        session.setAttribute("from", req.getRequestURI());
-        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.DESIGNER);
+        session.setAttribute("from", request.getRequestURI());
+        response.sendRedirect(request.getContextPath() + JSFOutcomeUtil.DESIGNER);
         return;
       }
       else if (url.contains(JSFOutcomeUtil.DESIGNER_PATH) && (designerController == null || designerController.getDiagram() == null)) {
         // Requested the Designer Page but the data is invalid.
-        req.getSession().setAttribute("from", req.getRequestURI());
-        res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
+        request.getSession().setAttribute("from", request.getRequestURI());
+        response.sendRedirect(request.getContextPath() + JSFOutcomeUtil.INDEX);
         return;
       }
     }
     // Forbidden access, redirect to the index page.
     else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
-      req.getSession().setAttribute("from", req.getRequestURI());
-      res.sendRedirect(req.getContextPath() + JSFOutcomeUtil.INDEX);
+      request.getSession().setAttribute("from", request.getRequestURI());
+      response.sendRedirect(request.getContextPath() + JSFOutcomeUtil.INDEX);
       return;
     }
     
     // pass the request along the filter chain
-    chain.doFilter(request, response);
+    chain.doFilter(req, res);
   }
   
   /**

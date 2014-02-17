@@ -10,7 +10,7 @@
             <p:submenu label="#{msgs.MENU_FILE_LABEL}" icon="ui-icon-document">
                 <p:menuitem value="#{msgs.MENU_ITEM_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" disabled="#{!sessionController.registeredUser}" />
                 <p:menuitem value="#{msgs.MENU_ITEM_OPEN_DIAGRAM_LABEL}" icon="ui-icon-folder-open" disabled="#{!sessionController.registeredUser}" />
-                <p:menuitem value="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" />
+                <p:menuitem value="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" disabled="#{!sessionController.registeredUser}" onclick="CLASSModeler.execute('save')" />
                 <p:separator />
                 <p:menuitem value="#{msgs.USER_SECTION_GO_TO_DASHBOARD_LABEL}" icon="ui-icon-bookmark" disabled="#{!sessionController.registeredUser}" action="#{dashBoardController.goToDashboard()}" />
             </p:submenu>
@@ -48,8 +48,7 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script" onclick="CLASSModeler.execute('generateCode')" />
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image" onclick="CLASSModeler.execute('generateImage')" />
                 <p:separator/>
-                <p:menuitem value="#{msgs.MENU_ITEM_IMPORT_LABEL}" icon="ui-icon-arrowthickstop-1-s" />
-                <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" />
+                <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('exportImage')" />
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_HELP_LABEL}" icon="ui-icon-help">

@@ -59,7 +59,6 @@ CLASSEditor.prototype.createGraph = function () {
   graph.setPanning(true);
   graph.setConnectable(true);
   graph.disconnectOnMove = false;
-  graph.vertexLabelsMovable = true;
 
   // Overrides the dblclick method on the graph to
   // invoke the dblClickAction for a cell and reset
@@ -210,7 +209,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   };
   
   var editConnector = function () {
-    self.execute("editConnector");
+    self.execute("showRelationship");
   };
   
   var generateCode = function () {
@@ -218,7 +217,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   };
   
   var generateImage = function () {
-    self.execute("generateImage");
+    self.execute("exportImage");
   };
   
   var viewXML = function () {
@@ -340,12 +339,12 @@ CLASSEditor.prototype.addActions = function () {
     editor.generateCode();
   });
   
-  this.addAction("generateImage", function (editor) {
-    editor.generateImage();
-  });
+//  this.addAction("generateImage", function (editor) {
+//    editor.generateImage();
+//  });
   
-  this.addAction("editConnector", function (editor) {
-    editor.editConnector(editor.graph.getSelectionCell());
+  this.addAction("showRelationship", function (editor) {
+    editor.showRelationship(editor.graph.getSelectionCell());
   });
   
   this.addAction("viewXML", function (editor) {
@@ -396,48 +395,48 @@ CLASSEditor.prototype.generateCode = function () {
   dlgGenerateCode.show();
 };
 
-/**
- * Generates a plain image of the current diagram.
- * 
- * @author Gabriel Leonardo Diaz, 14.01.2014.
- */
-CLASSEditor.prototype.generateImage = function () {
-  var scale  = 1;
-  var bounds = this.graph.getGraphBounds();
-  
-  // Creates XML node to hold output
-  var xmlDoc = mxUtils.createXmlDocument();
-  var root = xmlDoc.createElement("output");
-  xmlDoc.appendChild(root);
-  
-  // Creates interface for rendering output
-  var xmlCanvas = new mxXmlCanvas2D(root);
-  xmlCanvas.scale(scale);
-  xmlCanvas.translate(Math.round(-bounds.x * scale), Math.round(-bounds.y * scale));
-  
-  // Renders output to interface
-  var imgExport = new mxImageExport();
-  imgExport.drawState(this.graph.getView().getState(this.graph.model.root), xmlCanvas);
-
-  // Puts request data together
-  var filename   = "export.png";
-  var format     = "png";
-  var background = "#FFFFFF";
-  var width      = Math.round((bounds.width + 4) * scale);
-  var height     = Math.round((bounds.height + 4) * scale);
-  var xml        = mxUtils.getXml(root);
-  
-  // Compression is currently not used in this example
-  // Requires base64.js and redeflate.js
-  // xml = encodeURIComponent(Base64.encode(RawDeflate.deflate(xml), true));
-  new mxXmlRequest(this.urlImage.substring(1), "filename=" + filename + 
-                                               "&format=" + format + 
-                                               "&bg=" + background + 
-                                               "&w=" + width + 
-                                               "&h=" + height + 
-                                               "&xml=" + encodeURIComponent(xml))
-     .simulate(document, "_blank");
-};
+///**
+// * Generates a plain image of the current diagram.
+// * 
+// * @author Gabriel Leonardo Diaz, 14.01.2014.
+// */
+//CLASSEditor.prototype.generateImage = function () {
+//  var scale  = 1;
+//  var bounds = this.graph.getGraphBounds();
+//  
+//  // Creates XML node to hold output
+//  var xmlDoc = mxUtils.createXmlDocument();
+//  var root = xmlDoc.createElement("output");
+//  xmlDoc.appendChild(root);
+//  
+//  // Creates interface for rendering output
+//  var xmlCanvas = new mxXmlCanvas2D(root);
+//  xmlCanvas.scale(scale);
+//  xmlCanvas.translate(Math.round(-bounds.x * scale), Math.round(-bounds.y * scale));
+//  
+//  // Renders output to interface
+//  var imgExport = new mxImageExport();
+//  imgExport.drawState(this.graph.getView().getState(this.graph.model.root), xmlCanvas);
+//
+//  // Puts request data together
+//  var filename   = "export.png";
+//  var format     = "png";
+//  var background = "#FFFFFF";
+//  var width      = Math.round((bounds.width + 4) * scale);
+//  var height     = Math.round((bounds.height + 4) * scale);
+//  var xml        = mxUtils.getXml(root);
+//  
+//  // Compression is currently not used in this example
+//  // Requires base64.js and redeflate.js
+//  // xml = encodeURIComponent(Base64.encode(RawDeflate.deflate(xml), true));
+//  new mxXmlRequest(this.urlImage.substring(1), "filename=" + filename + 
+//                                               "&format=" + format + 
+//                                               "&bg=" + background + 
+//                                               "&w=" + width + 
+//                                               "&h=" + height + 
+//                                               "&xml=" + encodeURIComponent(xml))
+//     .simulate(document, "_blank");
+//};
 
 /**
  * Shows the attributes of one classifier.
@@ -475,7 +474,7 @@ CLASSEditor.prototype.showOperations = function (cell) {
  * @param cell
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
-CLASSEditor.prototype.editConnector = function (cell) {
+CLASSEditor.prototype.showRelationship = function (cell) {
   // TODO GD
 };
 

@@ -80,7 +80,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   
   var nameValue        = null;
   var visibilityValue  = null;
-  var stereotypeValue  = null;
   var attributesValue  = null;
   var operationsValue  = null;
   var abstractValue    = null;
@@ -99,7 +98,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var specEditor       = null;
   var spinnerEditor    = null;
   var visibilityEditor = null;
-  var stereotypeEditor = null;
   var attributesEditor = null;
   var operationsEditor = null;
   
@@ -134,12 +132,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         ]
       }};
       
-      stereotypeEditor = {"type":"combobox", "options": {
-        "valueField":"id",
-        "textField":"text",
-        "panelHeight":"90"
-      }};
-      
       if (this.graph.isClassifier(node)) {
         abstractEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
         specEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
@@ -162,7 +154,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Estereotipo", "value":stereotypeValue, "group":"General", "editor":stereotypeEditor},
       {"name":"Atributos", "value":attributesValue, "group":"General", "editor":attributesEditor},
       {"name":"Metodos", "value":operationsValue, "group":"General", "editor":operationsEditor},
       

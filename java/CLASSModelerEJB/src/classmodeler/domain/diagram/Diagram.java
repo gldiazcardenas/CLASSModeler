@@ -96,8 +96,8 @@ public class Diagram implements Serializable {
    * XMI representation of the diagram structure, this is a well formed XML document.
    */
   @Lob
-  @Column(name="diagram_xmi", nullable=false)
-  private String XMI;
+  @Column(name="diagram_xml", nullable=false)
+  private String XML;
 
   public Diagram() {
     super();
@@ -159,12 +159,12 @@ public class Diagram implements Serializable {
     this.modifiedDate = modifiedDate;
   }
   
-  public String getXMI() {
-    return XMI;
+  public String getXML() {
+    return XML;
   }
   
-  public void setXMI(String XMI) {
-    this.XMI = XMI;
+  public void setXML(String XML) {
+    this.XML = XML;
   }
 
   @Override

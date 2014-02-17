@@ -61,7 +61,6 @@ public @Stateless class DiagramServiceBean implements DiagramService {
       throw new InvalidDiagrammerAccountException("The owner account has not been activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
     }
     
-    diagram.setXMI(""); // TODO put a valid XMI representation
     diagram.setCreatedDate(Calendar.getInstance().getTime());
     diagram.setModifiedBy(diagram.getCreatedBy());
     diagram.setModifiedDate(diagram.getCreatedDate());

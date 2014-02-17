@@ -1,4 +1,8 @@
-<mxEditor urlImage="/CLASSModeler/Designer?image" urlInit="/CLASSModeler/Designer?init" urlPoll="/CLASSModeler/Designer?poll" urlNotify="/CLASSModeler/Designer?notify">
+<mxEditor urlImage= "/CLASSModeler/pages/designer/servlet?image"
+          urlInit=  "/CLASSModeler/pages/designer/servlet?init"
+          urlPoll=  "/CLASSModeler/pages/designer/servlet?poll"
+          urlNotify="/CLASSModeler/pages/designer/servlet?notify">
+          
     <ui>
         <!-- <resource basename="resources/messages"/> -->
         <add as="graph" element="graph"/>

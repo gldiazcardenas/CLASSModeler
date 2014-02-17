@@ -6,8 +6,13 @@
          id="WebApp_ID"
          version="3.0">
          
-  <!-- Appplication name -->
+  <!-- Application name -->
   <display-name>CLASS Modeler</display-name>
+  
+  <!-- Session Configuration --> 
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
   
   <!-- Welcome File -->
   <welcome-file-list>

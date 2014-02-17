@@ -35,8 +35,19 @@ import classmodeler.web.util.JSFGenericBean;
 @ManagedBean(name="diagramController")
 @ViewScoped
 public class DiagramControllerBean extends JSFGenericBean implements JSFFormControllerBean {
-
+  
   private static final long serialVersionUID = 1L;
+  
+  /**
+   * Default representation of the diagram XML.
+   */
+  public static final String DEFAULT_XML_DIAGRAM = 
+      "<mxGraphModel>" + 
+          "<root>" + 
+              "<Workflow label=\"Diagram\" id=\"0\" />" +
+              "<Layer label=\"UMLDiagram\" id=\"1\"><mxCell parent=\"0\" /></Layer>" +
+          "</root>" +
+      "</mxGraphModel>";
   
   private String name;
   private String description;
@@ -174,6 +185,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     name        = null;
     description = null;
     diagram     = new Diagram();
+    diagram.setXML(DEFAULT_XML_DIAGRAM);
     title       = GenericUtils.getLocalizedMessage("DIAGRAM_NEW_FORM_TITLE");
     mode        = EDiagramControllerMode.CREATE;
   }
@@ -221,10 +233,10 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     if (diagram != null) {
       name        = diagram.getName();
       description = diagram.getDescription();
-      String copyXMI = diagram.getXMI();
+      String copyXML = diagram.getXML();
       
       diagram = new Diagram();
-      diagram.setXMI(copyXMI);
+      diagram.setXML(copyXML);
       
       title   = GenericUtils.getLocalizedMessage("DIAGRAM_COPY_FORM_TITLE", name);
       mode    = EDiagramControllerMode.COPY;
@@ -304,6 +316,20 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   @Override
   public String process() {
     return null; // Not used.
+  }
+  
+  /**
+   * Generates an empty diagram with the default XML representation.
+   * 
+   * @return
+   * @author Gabriel Leonardo Diaz, 16.02.2014.
+   */
+  public static Diagram generateEmpty() {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    diagram.setName(GenericUtils.getLocalizedMessage("NEW_DIAGRAM_NAME"));
+    diagram.setXML(DEFAULT_XML_DIAGRAM);
+    return diagram;
   }
   
   /**
