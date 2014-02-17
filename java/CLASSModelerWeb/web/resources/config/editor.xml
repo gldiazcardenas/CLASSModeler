@@ -1,7 +1,8 @@
-<mxEditor urlImage= "/CLASSModeler/pages/designer/servlet?image"
-          urlInit=  "/CLASSModeler/pages/designer/servlet?init"
-          urlPoll=  "/CLASSModeler/pages/designer/servlet?poll"
-          urlNotify="/CLASSModeler/pages/designer/servlet?notify">
+<mxEditor urlImage  = "/CLASSModeler/pages/designer/servlet?image"
+          urlInit   = "/CLASSModeler/pages/designer/servlet?init"
+          urlPoll   = "/CLASSModeler/pages/designer/servlet?poll"
+          urlNotify = "/CLASSModeler/pages/designer/servlet?notify"
+          urlPost   = "/CLASSModeler/pages/designer/servlet?save">
           
     <ui>
         <!-- <resource basename="resources/messages"/> -->

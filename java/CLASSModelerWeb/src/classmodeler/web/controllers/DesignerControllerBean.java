@@ -118,7 +118,8 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public String init () {
-    return this.diagramSession.init();
+    String value = this.diagramSession.init();
+    return value;
   }
   
   /**
@@ -129,7 +130,8 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public String poll () throws InterruptedException {
-    return this.diagramSession.poll();
+    String value = this.diagramSession.poll();
+    return value;
   }
   
   /**
@@ -177,16 +179,31 @@ public class DesignerControllerBean extends JSFGenericBean {
     ImageIO.write(image, format, output);
   }
   
+  /**
+   * Saves the changes made on the edited diagram to database.
+   * 
+   * @author Gabriel Leonardo Diaz, 17.02.2014
+   */
   public void save () {
-    
+    // TODO GD
   }
   
+  /**
+   * Generates the source code of the current diagram representation.
+   * 
+   * @author Gabriel Leonardo Diaz, 17.02.2014
+   */
   public void generateCode () {
     
   }
   
+  /**
+   * Exports the edited diagram to XMI format.
+   * 
+   * @author Gabriel Leonardo Diaz, 17.02.2014
+   */
   public void exportXMI () {
-    
+    // TODO GD
   }
   
 }

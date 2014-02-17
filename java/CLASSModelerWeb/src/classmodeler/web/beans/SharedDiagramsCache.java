@@ -8,6 +8,7 @@
 
 package classmodeler.web.beans;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,7 +29,7 @@ public class SharedDiagramsCache {
    * Key -> Diagram Id.
    * Value -> Shared Diagram object.
    */
-  private Map<Integer, SharedDiagram> sharedDiagrams;
+  private Map<Integer, SharedDiagram> sharedDiagrams = new HashMap<Integer, SharedDiagram>();
   
   private SharedDiagramsCache () {
     super();
@@ -80,6 +81,11 @@ public class SharedDiagramsCache {
     SharedDiagram shared = this.sharedDiagrams.get(diagram.getKey());
     if (shared == null) {
       shared = new SharedDiagram(diagram);
+      
+      // Do not put fake diagrams
+      if (shared.getKey() > 0) {
+        this.sharedDiagrams.put(shared.getKey(), shared);
+      }
     }
     return shared;
   }

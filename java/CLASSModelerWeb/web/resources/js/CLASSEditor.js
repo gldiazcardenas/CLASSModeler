@@ -216,8 +216,12 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     self.execute("generateCode");
   };
   
-  var generateImage = function () {
+  var exportImage = function () {
     self.execute("exportImage");
+  };
+  
+  var exportXMI = function () {
+    self.execute("exportXMI");
   };
   
   var viewXML = function () {
@@ -248,7 +252,8 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
-  menu.addItem("Generar Imagen", null, generateImage, subMenu, null, true);
+  menu.addItem("Generar Imagen", null, exportImage, subMenu, null, true);
+  menu.addItem("Exportar XMI", null, exportXMI, subMenu, null, true);
   
   menu.addSeparator();
   menu.addItem("Ver XML", null, viewXML, null, null, true);
@@ -339,12 +344,12 @@ CLASSEditor.prototype.addActions = function () {
     editor.generateCode();
   });
   
-//  this.addAction("generateImage", function (editor) {
-//    editor.generateImage();
-//  });
-  
   this.addAction("showRelationship", function (editor) {
     editor.showRelationship(editor.graph.getSelectionCell());
+  });
+  
+  this.addAction("exportXMI", function (editor) {
+    editor.exportXMI();
   });
   
   this.addAction("viewXML", function (editor) {
@@ -352,7 +357,6 @@ CLASSEditor.prototype.addActions = function () {
     var node = encoder.encode(editor.graph.getModel());
     mxUtils.popup(mxUtils.getPrettyXml(node), true);
   });
-  
 };
 
 /**
@@ -395,49 +399,6 @@ CLASSEditor.prototype.generateCode = function () {
   dlgGenerateCode.show();
 };
 
-///**
-// * Generates a plain image of the current diagram.
-// * 
-// * @author Gabriel Leonardo Diaz, 14.01.2014.
-// */
-//CLASSEditor.prototype.generateImage = function () {
-//  var scale  = 1;
-//  var bounds = this.graph.getGraphBounds();
-//  
-//  // Creates XML node to hold output
-//  var xmlDoc = mxUtils.createXmlDocument();
-//  var root = xmlDoc.createElement("output");
-//  xmlDoc.appendChild(root);
-//  
-//  // Creates interface for rendering output
-//  var xmlCanvas = new mxXmlCanvas2D(root);
-//  xmlCanvas.scale(scale);
-//  xmlCanvas.translate(Math.round(-bounds.x * scale), Math.round(-bounds.y * scale));
-//  
-//  // Renders output to interface
-//  var imgExport = new mxImageExport();
-//  imgExport.drawState(this.graph.getView().getState(this.graph.model.root), xmlCanvas);
-//
-//  // Puts request data together
-//  var filename   = "export.png";
-//  var format     = "png";
-//  var background = "#FFFFFF";
-//  var width      = Math.round((bounds.width + 4) * scale);
-//  var height     = Math.round((bounds.height + 4) * scale);
-//  var xml        = mxUtils.getXml(root);
-//  
-//  // Compression is currently not used in this example
-//  // Requires base64.js and redeflate.js
-//  // xml = encodeURIComponent(Base64.encode(RawDeflate.deflate(xml), true));
-//  new mxXmlRequest(this.urlImage.substring(1), "filename=" + filename + 
-//                                               "&format=" + format + 
-//                                               "&bg=" + background + 
-//                                               "&w=" + width + 
-//                                               "&h=" + height + 
-//                                               "&xml=" + encodeURIComponent(xml))
-//     .simulate(document, "_blank");
-//};
-
 /**
  * Shows the attributes of one classifier.
  * 
@@ -475,6 +436,15 @@ CLASSEditor.prototype.showOperations = function (cell) {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.showRelationship = function (cell) {
+  // TODO GD
+};
+
+/**
+ * Exports the current diagram into an XML file with XMI standard format.
+ * 
+ * @author Gabriel Leonardo Diaz, 17.02.2014.
+ */
+CLASSEditor.prototype.exportXMI = function () {
   // TODO GD
 };
 

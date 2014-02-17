@@ -186,6 +186,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     description = null;
     diagram     = new Diagram();
     diagram.setXML(DEFAULT_XML_DIAGRAM);
+    
     title       = GenericUtils.getLocalizedMessage("DIAGRAM_NEW_FORM_TITLE");
     mode        = EDiagramControllerMode.CREATE;
   }

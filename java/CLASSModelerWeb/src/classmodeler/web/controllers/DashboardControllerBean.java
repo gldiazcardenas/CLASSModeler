@@ -120,6 +120,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the Dashboard page
    */
   public String goToDashboard () {
+    designerController.tearDown();
     return JSFOutcomeUtil.DASHBOARD + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
   

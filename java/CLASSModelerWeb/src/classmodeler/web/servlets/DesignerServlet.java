@@ -105,12 +105,12 @@ public class DesignerServlet extends HttpServlet {
       break;
       
     case IMAGE:
-      String xml = request.getParameter("xml");
-      String width = request.getParameter("w");
-      String height = request.getParameter("h");
+      String xml        = request.getParameter("xml");
+      String width      = request.getParameter("w");
+      String height     = request.getParameter("h");
       String background = request.getParameter("bg");
-      String filename = request.getParameter("filename");
-      String format = request.getParameter("format");
+      String filename   = request.getParameter("filename");
+      String format     = request.getParameter("format");
       
       try {
         designerController.generateImage(xml, filename, format, background, Integer.parseInt(width), Integer.parseInt(height), response.getOutputStream());
