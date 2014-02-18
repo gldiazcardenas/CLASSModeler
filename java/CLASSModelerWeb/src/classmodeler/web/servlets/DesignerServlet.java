@@ -83,7 +83,7 @@ public class DesignerServlet extends HttpServlet {
       
       try {
         if (action == EDesignerAction.INIT) {
-          writer.println(designerController.init());
+          writer.println(designerController.initialize());
         }
         else {
           writer.println(designerController.poll());
@@ -100,20 +100,17 @@ public class DesignerServlet extends HttpServlet {
       break;
       
     case NOTIFY:
-      designerController.process(request.getParameter("xml"));
+      designerController.notify(request.getParameter("xml"));
       response.setStatus(HttpServletResponse.SC_OK);
       break;
       
     case IMAGE:
-      String xml        = request.getParameter("xml");
-      String width      = request.getParameter("w");
-      String height     = request.getParameter("h");
-      String background = request.getParameter("bg");
-      String filename   = request.getParameter("filename");
-      String format     = request.getParameter("format");
+      response.setContentType("image/png");
+      response.setHeader("Content-Disposition", "attachment; filename=diagram.png");
+      response.setStatus(HttpServletResponse.SC_OK);
       
       try {
-        designerController.generateImage(xml, filename, format, background, Integer.parseInt(width), Integer.parseInt(height), response.getOutputStream());
+        designerController.generateImage(request.getParameter("xml"), response.getOutputStream());
       }
       catch (NumberFormatException e) {
         throw new ServletException(e);
@@ -125,10 +122,11 @@ public class DesignerServlet extends HttpServlet {
         throw new ServletException(e);
       }
       
-      response.setContentType("image/" + format);
-      response.setHeader("Content-Disposition", "attachment; filename=" + filename);
-      response.setStatus(HttpServletResponse.SC_OK);
       break;
+      
+    case SAVE:
+      designerController.save();
+      response.setStatus(HttpServletResponse.SC_OK);
       
     default:
       break;
@@ -149,7 +147,8 @@ public class DesignerServlet extends HttpServlet {
     INIT ("init"),
     POLL ("poll"),
     NOTIFY ("notify"),
-    IMAGE ("image");
+    IMAGE ("image"),
+    SAVE ("save");
     
     private String name;
     

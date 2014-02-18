@@ -44,8 +44,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public static final String DEFAULT_XML_DIAGRAM = 
       "<mxGraphModel>" + 
           "<root>" + 
-              "<Workflow label=\"Diagram\" id=\"0\" />" +
-              "<Layer label=\"UMLDiagram\" id=\"1\"><mxCell parent=\"0\" /></Layer>" +
+              "<Workflow label=\"UML\" id=\"0\" />" +
+              "<Layer label=\"ClassDiagram\" id=\"1\"><mxCell parent=\"0\" /></Layer>" +
           "</root>" +
       "</mxGraphModel>";
   

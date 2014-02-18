@@ -122,7 +122,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @Override
   public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege) {
-    // TODO Auto-generated method stub
+    // TODO GD
   }
   
   @Override
@@ -143,7 +143,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
       return EDiagramPrivilege.OWNER;
     }
     
-    // TODO Auto-generated method stub
+    // TODO GD
     return EDiagramPrivilege.OWNER;
   }
   

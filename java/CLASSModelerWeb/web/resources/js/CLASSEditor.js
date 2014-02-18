@@ -129,6 +129,25 @@ CLASSEditor.prototype.createGraph = function () {
 };
 
 /**
+ * Overrides setModified() in mxEditor. This was extended to visually mark the
+ * diagram as edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 17.02.2014.
+ */
+CLASSEditor.prototype.setModified = function (modified) {
+  mxEditor.prototype.setModified.call(this, arguments);
+  
+  var pendingChangesLbl = document.getElementById("pendingChanges");
+  
+  if (modified) {
+    pendingChangesLbl.innerHTML = "*";
+  }
+  else {
+    pendingChangesLbl.innerHTML = "";
+  }
+};
+
+/**
  * Overrides createEdge() in mxEditor. Configures the new edge cell from source
  * to target.
  * 

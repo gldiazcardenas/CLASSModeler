@@ -51,7 +51,7 @@ public @Stateless class SessionServiceBean implements SessionService {
   
   @Override
   public void logOut(User user) {
-    // TODO Auto-generated method stub
+    // TODO GD what to do?
   }
   
 }

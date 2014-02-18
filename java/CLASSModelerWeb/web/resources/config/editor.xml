@@ -351,6 +351,7 @@
         <add as="88" control="1" action="cut"/>
         <add as="67" control="1" action="copy"/>
         <add as="86" control="1" action="paste"/>
+        <add as="71" control="1" action="save"/>
     </mxDefaultKeyHandler>
     
 </mxEditor>

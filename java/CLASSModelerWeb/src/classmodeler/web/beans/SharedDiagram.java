@@ -11,41 +11,40 @@ package classmodeler.web.beans;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.service.util.CollectionUtils;
 
-import com.mxgraph.sharing.mxSharedState;
+import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.sharing.mxSharedGraphModel;
+import com.mxgraph.util.mxXmlUtils;
 
 /**
  * Bean that represents the shared state of the diagram.
  * 
  * @author Gabriel Leonardo Diaz, 16.02.2014.
  */
-public class SharedDiagram extends mxSharedState {
+public class SharedDiagram extends mxSharedGraphModel {
   
-  private int key;
-  private String name;
   private Diagram diagram;
   
   public SharedDiagram (Diagram diagram) {
-    super(diagram.getXML());
-    
-    this.key = diagram.getKey();
-    this.name = diagram.getName();
+    super((mxGraphModel) new mxCodec().decode(mxXmlUtils.parseXml(diagram.getXML()).getDocumentElement()));
     this.diagram = diagram;
   }
   
   public int getKey() {
-    return key;
+    return diagram.getKey();
   }
   
   public String getName() {
-    return name;
+    return diagram.getName();
   }
   
-  public Diagram getDiagram() {
+  public Diagram getWrappedDiagram() {
     return diagram;
   }
   
-  public void applyChanges () {
-    this.diagram.setXML(getState());
+  public void publishChanges () {
+    String value = getState();
+    this.diagram.setXML(value);
   }
   
   public boolean hasMoreListeners () {

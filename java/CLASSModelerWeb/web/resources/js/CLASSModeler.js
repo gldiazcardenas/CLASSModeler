@@ -21,6 +21,21 @@ var CLASSModeler = (function () {
   var toolbox       = null;
   var properties    = null;
   
+  function stopLoading () {
+    // Fades-out the splash screen
+    var loading = document.getElementById('loading');
+    
+    if (loading != null) {
+      try {
+        mxEvent.release(loading);
+        mxEffects.fadeOut(loading, 100, true);
+      }
+      catch (e) {
+        loading.parentNode.removeChild(loading);
+      }
+    }
+  }
+  
   return {
     init : function () {
       if (!mxClient.isBrowserSupported()) {
@@ -38,6 +53,7 @@ var CLASSModeler = (function () {
       mxConstants.EDGE_SELECTION_COLOR = "#E1061A";
       
       editor = new CLASSEditor(mxUtils.load(mxBasePath + "/config/editor.xml").getDocumentElement());
+      editor.addListener(mxEvent.ROOT, stopLoading);
       
       // Changes the zoom on mouseWheel events
       mxEvent.addMouseWheelListener(function (evt, up) {
