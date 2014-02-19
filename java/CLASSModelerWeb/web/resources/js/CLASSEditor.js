@@ -55,14 +55,14 @@ CLASSEditor.prototype.createGraph = function () {
   var graph = new CLASSGraph(null, null, this.graphRenderHint);
   
   // Enables rubberband, tooltips, panning
-  graph.setTooltips(true);
+  graph.setTooltips(false);
   graph.setPanning(true);
-  graph.setConnectable(true);
-  graph.disconnectOnMove = false;
+  graph.setConnectable(false);
+  graph.setAllowDanglingEdges(false);
+  graph.setDisconnectOnMove(false);
 
-  // Overrides the dblclick method on the graph to
-  // invoke the dblClickAction for a cell and reset
-  // the selection tool in the toolbar
+  // Overrides the dblclick method on the graph to invoke the dblClickAction
+  // for a cell and reset the selection tool in the toolbar
   this.installDblClickHandler(graph);
   
   // Installs the command history
@@ -74,11 +74,10 @@ CLASSEditor.prototype.createGraph = function () {
   // Installs the handler for validation
   this.installChangeHandler(graph);
 
-  // Installs the handler for calling the
-  // insert function and consume the
+  // Installs the handler for calling the insert function and consume the
   // event if an insert function is defined
   this.installInsertHandler(graph);
-
+  
   // Redirects the function for creating the popupmenu items
   graph.panningHandler.autoExpand = true;
   graph.panningHandler.useGrid = true;
@@ -90,6 +89,12 @@ CLASSEditor.prototype.createGraph = function () {
   graph.connectionHandler.factoryMethod = mxUtils.bind(this, function(source, target) {
     return this.createEdge(source, target);
   });
+  
+  // Connect preview for elbow edges
+  graph.connectionHandler.createEdgeState = function (me) {
+    var edge = this.graph.createEdge(null, null, null, null, null, "edgeStyle=elbowEdgeStyle");
+    return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+  };
   
   // Maintains swimlanes and installs autolayout
   this.layoutSwimlanes = true;
@@ -247,13 +252,21 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
     self.execute("viewXML");
   };
   
+  var toFront = function () {
+    self.execute("toFront");
+  };
+  
+  var toBack = function () {
+    self.execute("toBack");
+  };
+  
   menu.addItem("Deshacer", null, undo, null, null, true);
   menu.addItem("Rehacer", null, redo, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Copiar", null, copy, null, null, this.isClassifierCell(cell));
   menu.addItem("Cortar", null, cut, null, null, this.isClassifierCell(cell));
+  menu.addItem("Copiar", null, copy, null, null, this.isClassifierCell(cell));
   menu.addItem("Pegar", null, paste, null, null, true);
   
   menu.addSeparator();
@@ -263,19 +276,37 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addSeparator();
   
+  var subMenu = menu.addItem("Orden Z");
+  menu.addItem("Traer adelante", null, toFront, subMenu, null, self.isElementVertexCell(cell));
+  menu.addItem("Enviar atras", null, toBack, subMenu, null, self.isElementVertexCell(cell));
+  
+  menu.addSeparator();
+  
   menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifierCell(cell));
-  menu.addItem("Conector", null, editConnector, null, null, self.isConnectorCell(cell));
+  menu.addItem("Editar Relacion", null, editConnector, null, null, self.isRelationshipCell(cell));
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
   menu.addItem("Generar Imagen", null, exportImage, subMenu, null, true);
+  menu.addItem("Generar Metodos GET/SET", null, exportImage, subMenu, null, self.isPropertyCell(cell));
+  menu.addSeparator(subMenu);
   menu.addItem("Exportar XMI", null, exportXMI, subMenu, null, true);
-  
-  menu.addSeparator();
-  menu.addItem("Ver XML", null, viewXML, null, null, true);
+  menu.addItem("Mostrar XML", null, viewXML, subMenu, null, true);
+};
+
+/**
+ * Determines if the user object (node) of the given cell is a Property UML.
+ * @param cell
+ * @returns
+ */
+CLASSEditor.prototype.isPropertyCell = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.graph.isProperty(cell.value);
 };
 
 /**
@@ -289,12 +320,27 @@ CLASSEditor.prototype.isClassifierCell = function (cell) {
 };
 
 /**
+ * Check if the given cell 
+ * @param cell
+ * @returns {Boolean}
+ */
+CLASSEditor.prototype.isElementVertexCell = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.graph.isElementVertex(cell.value);
+};
+
+/**
  * Determines if the given cell represents a connector UML.
  * 
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
-CLASSEditor.prototype.isConnectorCell = function (cell) {
-  return cell != null && cell.isEdge();
+CLASSEditor.prototype.isRelationshipCell = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.graph.isRelationship(cell.value);
 };
 
 /**
@@ -466,5 +512,4 @@ CLASSEditor.prototype.showRelationship = function (cell) {
 CLASSEditor.prototype.exportXMI = function () {
   // TODO GD
 };
-
 

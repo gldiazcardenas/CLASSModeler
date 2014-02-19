@@ -75,31 +75,30 @@ CLASSProperties.prototype.clearProperties = function () {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSProperties.prototype.configureProperties = function (cell) {
-  var self             = this;
-  var selfEditor       = this.editor;
+  var self               = this;
+  var selfEditor         = this.editor;
   
-  var nameValue        = null;
-  var visibilityValue  = null;
-  var attributesValue  = null;
-  var operationsValue  = null;
-  var abstractValue    = null;
-  var staticValue      = null;
-  var finalValue       = null;
-  var specValue        = null;
-  var widthValue       = null;
-  var heightValue      = null;
-  var xValue           = null;
-  var yValue           = null;
+  var nameValue          = null;
+  var visibilityValue    = null;
+  var abstractValue      = null;
+  var staticValue        = null;
+  var finalValue         = null;
+  var specValue          = null;
+  var widthValue         = null;
+  var heightValue        = null;
+  var xValue             = null;
+  var yValue             = null;
   
-  var nameEditor       = null;
-  var abstractEditor   = null;
-  var staticEditor     = null;
-  var finalEditor      = null;
-  var specEditor       = null;
-  var spinnerEditor    = null;
-  var visibilityEditor = null;
-  var attributesEditor = null;
-  var operationsEditor = null;
+  var nameEditor         = null;
+  var abstractEditor     = null;
+  var staticEditor       = null;
+  var finalEditor        = null;
+  var specEditor         = null;
+  var spinnerEditor      = null;
+  var visibilityEditor   = null;
+  var attributesEditor   = null;
+  var operationsEditor   = null;
+  var relationshipEditor = null;
   
   if (this.isCellEditable(cell)) {
     this.cell       = cell;
@@ -113,12 +112,13 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     finalValue      = node.getAttribute("isFinal");
     specValue       = node.getAttribute("isSpec");
     
-    // Editors
-    nameEditor      = "text";
+    if (this.graph.isNamedElement(node)) {
+      nameEditor      = "text";
+    }
     
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
       staticEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
-      finalEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
+      finalEditor  = {"type":"checkbox", "options": {"on":true, "off":false}};
       
       visibilityEditor = {"type":"combobox", "options": {
         "valueField":"id",
@@ -145,6 +145,12 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         }}};
       }
     }
+    
+    if (this.graph.isRelationship(node)) {
+      relationshipEditor = {"type":"button", "options": {"onclick": function () {
+        selfEditor.showRelationship(cell);
+      }}};
+    }
   }
   else {
     this.cell = null;
@@ -154,8 +160,9 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Atributos", "value":attributesValue, "group":"General", "editor":attributesEditor},
-      {"name":"Metodos", "value":operationsValue, "group":"General", "editor":operationsEditor},
+      {"name":"Atributos", "value":null, "group":"General", "editor":attributesEditor},
+      {"name":"Operaciones", "value":null, "group":"General", "editor":operationsEditor},
+      {"name":"Relacion", "value":null, "group":"General", "editor":relationshipEditor},
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
@@ -182,7 +189,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         if (row.editor == null) {
           return "color: #CCCCCC;";
         }
-        
         return "color: #000000;";
       }
   });

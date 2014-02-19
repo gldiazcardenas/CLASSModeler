@@ -540,6 +540,14 @@ CLASSGraph.prototype.isClassifier = function (node) {
 };
 
 /**
+ * Checks if the node is a UML classifier or Comment or Package.
+ * @param node
+ */
+CLASSGraph.prototype.isElementVertex = function (node) {
+  return this.isClassifier(node) || this.isComment(node) || this.isPackage(node);
+};
+
+/**
  * Checks if the given node is a UML named element.
  * @param node
  * @returns {Boolean}
@@ -742,5 +750,156 @@ CLASSGraph.prototype.isLink = function (node) {
   return node.nodeName.toLowerCase() == "link";
 };
 
+/**
+ * Overrides createHandler() in mxGraph, this allows to configure the custom
+ * handler for context icons.
+ * 
+ * @param state
+ * @returns
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraph.prototype.createHandler = function (state) {
+  if (state && this.model.isVertex(state.cell)) {
+    return new CLASSGraphContextIconHandler(state);
+  }
+  return mxGraph.prototype.createHandler.apply(this, arguments);
+};
+
+/**
+ * Internal class to handle context icons on vertexes.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraphContextIconHandler = function (state) {
+  mxVertexHandler.apply(this, arguments);
+};
+mxUtils.extend(CLASSGraphContextIconHandler, mxVertexHandler);
+
+/**
+ * The node that will contain the icons.
+ */
+CLASSGraphContextIconHandler.prototype.domNode;
+
+/**
+ * Initializes the component.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraphContextIconHandler.prototype.init = function () {
+  mxVertexHandler.prototype.init.apply(this, arguments);
+  
+  if (this.state.cell == null || !this.graph.isElementVertex(this.state.cell.value)) {
+    // Invalid cell user object.
+    return;
+  }
+  
+  this.domNode = document.createElement("div");
+  this.domNode.style.position = "absolute";
+  this.domNode.style.whiteSpace = "nowrap";
+  
+  // 1. CONNECT
+  var img = this.createImage("/CLASSModeler/resources/images/next_16x16.png");
+  mxEvent.addListener(img, "click", mxUtils.bind(this, function (evt) {
+    var point = mxUtils.convertPoint(this.graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+    this.graph.connectionHandler.start(this.state, point.x, point.y);
+    this.graph.isMouseDown = true;
+    mxEvent.consume(evt);
+  }));
+  this.domNode.appendChild(img);
+  
+  // 2. DELETE
+  var img = this.createImage("/CLASSModeler/resources/images/delete_16x16.png");
+  mxEvent.addListener(img, "click", mxUtils.bind(this, function (evt) {
+    this.graph.removeCells([this.state.cell]);
+    mxEvent.consume(evt);
+  }));
+  this.domNode.appendChild(img);
+  
+  // Finishes the configuration
+  this.graph.container.appendChild(this.domNode);
+  this.redrawTools();
+};
+
+/**
+ * Overrides redraw() in mxGraph. Just to call another method redrawTools().
+ * 
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraphContextIconHandler.prototype.redraw = function (){
+  mxVertexHandler.prototype.redraw.apply(this);
+  this.redrawTools();
+};
+
+/**
+ * Locates the dom element a side of the vertext graphic.
+ * 
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraphContextIconHandler.prototype.redrawTools = function() {
+  if (this.state != null && this.domNode != null) {
+    var dy = (mxClient.IS_VML && document.compatMode == "CSS1Compat") ? 20 : 2;
+    this.domNode.style.left = (this.state.x + this.state.width + dy) + "px";
+    this.domNode.style.top = (this.state.y + dy) + "px";
+  }
+};
+
+/**
+ * Removes the dom element from the document.
+ * 
+ * @param sender
+ * @param me
+ * @author Gabriel Leonardo Diaz, 18.02.2014.
+ */
+CLASSGraphContextIconHandler.prototype.destroy = function (sender, me) {
+  mxVertexHandler.prototype.destroy.apply(this, arguments);
+  if (this.domNode != null) {
+    this.domNode.parentNode.removeChild(this.domNode);
+    this.domNode = null;
+  }
+};
+
+/**
+ * Utility method to create images.
+ * @param src
+ * @returns
+ */
+CLASSGraphContextIconHandler.prototype.createImage = function (src) {
+  var img;
+  
+  if (mxClient.IS_IE && !mxClient.IS_SVG) {
+    img = document.createElement("div");
+    img.style.backgroundImage = "url(" + src + ")";
+    img.style.backgroundPosition = "center";
+    img.style.backgroundRepeat = "no-repeat";
+  }
+  else {
+    img = mxUtils.createImage(src);
+  }
+  
+  img.style.cursor = "pointer";
+  img.style.width  = "16px";
+  img.style.height = "16px";
+  img.style.display = "block";
+  img.style.margin = "3px";
+  
+  img.onmouseover = function () {
+    this.style.border = "1px solid #CCCCCC";
+    this.style.margin = "1px";
+    this.style.backgroundColor = "#FFFFFF";
+  };
+  
+  img.onmouseout = function () {
+    this.style.border = "";
+    this.style.margin = "3px";
+    this.style.backgroundColor = "";
+  };
+  
+  mxEvent.addGestureListeners(img, mxUtils.bind(this, function (evt) {
+    // Disables dragging the image
+    mxEvent.consume(evt);
+  }));
+  
+  return img;
+};
 
 
