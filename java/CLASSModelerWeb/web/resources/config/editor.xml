@@ -333,6 +333,7 @@
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
                 <add as="elbow" value="horizontal"/>
                 <add as="dashed" value="1"/>
+                <add as="editable" value="0"/>
             </add>
             
         </mxStylesheet>

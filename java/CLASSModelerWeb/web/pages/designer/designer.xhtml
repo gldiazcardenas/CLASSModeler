@@ -12,7 +12,7 @@
     <!-- Scripts -->
     <script type="text/javascript">
         /** Defines the base path of resources for mxClient library. */
-        mxBasePath = '/CLASSModeler/resources';
+        mxBasePath = "/CLASSModeler/resources";
         
         /** Avoid loading localization resources */
         mxLoadResources = false;
@@ -38,6 +38,7 @@
     <h:outputScript library="js" name="CLASSProperties.js" />
     <h:outputScript library="js" name="CLASSAttributes.js" />
     <h:outputScript library="js" name="CLASSOperations.js" />
+    <h:outputScript library="js" name="CLASSRelationship.js" />
     
     <!-- Icon -->
     <link rel="icon" type="image/x-icon" href="/CLASSModeler/resources/images/favicon.ico" />
@@ -85,6 +86,7 @@
     <ui:include src="/pages/designer/attributes.xhtml"/>
     <ui:include src="/pages/designer/operations.xhtml"/>
     <ui:include src="/pages/designer/generateCode.xhtml"/>
+    <ui:include src="/pages/designer/relationship.xhtml"/>
     <ui:include src="/pages/designer/importXMI.xhtml"/>
     <ui:include src="/pages/designer/exportXMI.xhtml"/>
 </h:body>

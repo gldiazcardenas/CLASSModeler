@@ -50,7 +50,7 @@ CLASSProperties.prototype.init = function () {
 CLASSProperties.prototype.selectionChanged = function (sender, evt) {
   var cells = this.graph.getSelectionCells();
   
-  if (cells.length == 1 && cells[0].isVertex()) {
+  if (cells.length == 1) {
     this.configureProperties(cells[0]);
   }
   else {
@@ -117,9 +117,8 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     }
     
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
-      staticEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
-      finalEditor  = {"type":"checkbox", "options": {"on":true, "off":false}};
-      
+      staticEditor     = {"type":"checkbox", "options": {"on":true, "off":false}};
+      finalEditor      = {"type":"checkbox", "options": {"on":true, "off":false}};
       visibilityEditor = {"type":"combobox", "options": {
         "valueField":"id",
         "textField":"text",
@@ -160,15 +159,18 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Atributos", "value":null, "group":"General", "editor":attributesEditor},
-      {"name":"Operaciones", "value":null, "group":"General", "editor":operationsEditor},
-      {"name":"Relacion", "value":null, "group":"General", "editor":relationshipEditor},
+      {"name":"Paquete", "value":visibilityValue, "group":"General", "editor":null},
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
       {"name":"Es Estatico", "value":staticValue, "group":"Avanzado", "editor":staticEditor},
       {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
       {"name":"Es Especificacion", "value":specValue, "group":"Avanzado", "editor":specEditor},
+      
+      // SPECIFIC
+      {"name":"Atributos", "value":null, "group":"Especifico", "editor":attributesEditor},
+      {"name":"Operaciones", "value":null, "group":"Especifico", "editor":operationsEditor},
+      {"name":"Editar Relacion", "value":null, "group":"Especifico", "editor":relationshipEditor},
       
       // GEOMETRY
       {"name":"Ancho", "value":widthValue, "group":"Geometria", "editor":spinnerEditor},

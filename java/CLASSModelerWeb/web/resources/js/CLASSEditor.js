@@ -29,9 +29,9 @@ CLASSEditor.prototype.attrDialog;
 CLASSEditor.prototype.operDialog;
 
 /**
- * The id of the selected edge.
+ * Instance of the dialog used to edit relationships.
  */
-CLASSEditor.prototype.selectedEdge;
+CLASSEditor.prototype.relationDialog;
 
 /**
  * Function called on initializing the editor component.
@@ -145,7 +145,7 @@ CLASSEditor.prototype.setModified = function (modified) {
   var pendingChangesLbl = document.getElementById("pendingChanges");
   
   if (modified) {
-    pendingChangesLbl.innerHTML = "*";
+    pendingChangesLbl.innerHTML = "* ";
   }
   else {
     pendingChangesLbl.innerHTML = "";
@@ -196,105 +196,41 @@ CLASSEditor.prototype.createSwimlaneLayout = function () {
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var self = this;
   
-  var undo = function () {
-    self.execute("undo");
-  };
-  
-  var redo = function () {
-    self.execute("redo");
-  };
-  
-  var copy = function () {
-    self.execute("copy");
-  };
-  
-  var cut = function () {
-    self.execute("cut");
-  };
-  
-  var paste = function () {
-    self.execute("paste");
-  };
-  
-  var deleteAll = function () {
-    self.execute("delete");
-  };
-  
-  var selectAll = function () {
-    self.execute("selectAll");
-  };
-  
-  var showAttributes = function () {
-    self.execute("showAttributes");
-  };
-  
-  var showOperations = function () {
-    self.execute("showOperations");
-  };
-  
-  var editConnector = function () {
-    self.execute("showRelationship");
-  };
-  
-  var generateCode = function () {
-    self.execute("generateCode");
-  };
-  
-  var exportImage = function () {
-    self.execute("exportImage");
-  };
-  
-  var exportXMI = function () {
-    self.execute("exportXMI");
-  };
-  
-  var viewXML = function () {
-    self.execute("viewXML");
-  };
-  
-  var toFront = function () {
-    self.execute("toFront");
-  };
-  
-  var toBack = function () {
-    self.execute("toBack");
-  };
-  
-  menu.addItem("Deshacer", null, undo, null, null, true);
-  menu.addItem("Rehacer", null, redo, null, null, true);
+  menu.addItem("Deshacer", null, function () { self.execute("undo"); }, null, null, true);
+  menu.addItem("Rehacer", null, function () { self.execute("redo"); }, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Cortar", null, cut, null, null, this.isClassifierCell(cell));
-  menu.addItem("Copiar", null, copy, null, null, this.isClassifierCell(cell));
-  menu.addItem("Pegar", null, paste, null, null, true);
+  menu.addItem("Cortar", null, function () { self.execute("cut"); }, null, null, this.isClassifierCell(cell));
+  menu.addItem("Copiar", null, function () { self.execute("copy"); }, null, null, this.isClassifierCell(cell));
+  menu.addItem("Pegar", null, function () { self.execute("paste"); }, null, null, true);
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, deleteAll, null, null, cell != null);
-  menu.addItem("Seleccionar Todo", null, selectAll, null, null, true);
+  menu.addItem("Eliminar", null, function () { self.execute("delete"); }, null, null, cell != null);
+  menu.addItem("Seleccionar Todo", null, function () { self.execute("selectAll"); }, null, null, true);
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Orden Z");
-  menu.addItem("Traer adelante", null, toFront, subMenu, null, self.isElementVertexCell(cell));
-  menu.addItem("Enviar atras", null, toBack, subMenu, null, self.isElementVertexCell(cell));
+  menu.addItem("Traer adelante", null, function () { self.execute("toFront"); }, subMenu, null, self.isElementVertexCell(cell));
+  menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, self.isElementVertexCell(cell));
   
   menu.addSeparator();
   
-  menu.addItem("Atributos", null, showAttributes, null, null, self.isClassifierCell(cell));
-  menu.addItem("Operaciones", null, showOperations, null, null, self.isClassifierCell(cell));
-  menu.addItem("Editar Relacion", null, editConnector, null, null, self.isRelationshipCell(cell));
+  menu.addItem("Atributos", null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
+  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassifierCell(cell));
+  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isRelationshipCell(cell));
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Herramientas");
-  menu.addItem("Generar Codigo", null, generateCode, subMenu, null, true);
-  menu.addItem("Generar Imagen", null, exportImage, subMenu, null, true);
-  menu.addItem("Generar Metodos GET/SET", null, exportImage, subMenu, null, self.isPropertyCell(cell));
+  menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, true);
+  menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, true);
+  menu.addItem("Generar Metodos GET/SET", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
   menu.addSeparator(subMenu);
-  menu.addItem("Exportar XMI", null, exportXMI, subMenu, null, true);
-  menu.addItem("Mostrar XML", null, viewXML, subMenu, null, true);
+  menu.addItem("Exportar XMI", null, function () { self.execute("exportXMI"); }, subMenu, null, true);
+  menu.addItem("Mostrar XML", null, function () { self.execute("viewXML"); }, subMenu, null, true);
 };
 
 /**
@@ -413,6 +349,10 @@ CLASSEditor.prototype.addActions = function () {
     editor.showRelationship(editor.graph.getSelectionCell());
   });
   
+  this.addAction("generateGetSet", function (editor) {
+    editor.generateGetSet(editor.graph.getSelectionCell());
+  });
+  
   this.addAction("exportXMI", function (editor) {
     editor.exportXMI();
   });
@@ -501,7 +441,11 @@ CLASSEditor.prototype.showOperations = function (cell) {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.showRelationship = function (cell) {
-  // TODO GD
+  if (!this.relationDialog) {
+    this.relationDialog = new CLASSRelationship(this);
+  }
+  this.relationDialog.init(cell);
+  this.relationDialog.show();
 };
 
 /**
@@ -510,6 +454,15 @@ CLASSEditor.prototype.showRelationship = function (cell) {
  * @author Gabriel Leonardo Diaz, 17.02.2014.
  */
 CLASSEditor.prototype.exportXMI = function () {
+  // TODO GD
+};
+
+/**
+ * Generates getter/setter method for the given property cell.
+ * 
+ * @author Gabriel Leonardo Diaz, 19.02.2014.
+ */
+CLASSEditor.prototype.generateGetSet = function (cell) {
   // TODO GD
 };
 

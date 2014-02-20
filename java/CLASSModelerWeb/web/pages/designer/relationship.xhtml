@@ -5,7 +5,30 @@
                 
 <p:dialog id="relationshipDialog" widgetVar="dlgRelationship" width="600" header="#{msgs.RELATIONSHIP_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true">
     <h:form id="relationshipForm">
+        <table style="width:100%;">
+            <tr>
+                <td width="20%"><h:outputText value="#{msgs.RELATIONSHIP_FORM_NAME_FIELD}" /></td>
+                <td><input id="relName" class="easyui-validatebox" style="width:100%" /></td>
+            </tr>
+            <tr>
+                <td><h:outputText value="#{msgs.RELATIONSHIP_FORM_DIRECTION_FIELD}" /></td>
+                <td><input id="relDirection" /></td>
+            </tr>
+        </table>
         
+        <p:fieldset legend="#{msgs.RELATIONSHIP_FORM_SOURCE_LEGEND}">
+            
+        </p:fieldset>
+        
+        <p:fieldset legend="#{msgs.RELATIONSHIP_FORM_TARGET_LEGEND}">
+            
+        </p:fieldset>
+        
+        <p:separator />
+        
+        <h:panelGrid columns="2">
+            <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgRelationship.hide()" />
+        </h:panelGrid>
     </h:form>
 </p:dialog>
 

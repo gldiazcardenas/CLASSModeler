@@ -223,6 +223,9 @@ CLASSGraph.prototype.cellLabelChanged = function (cell, newValue, autoSize) {
   if (this.isNamedElement(cell.value)) {
     this.cellEditProperty(cell, "name", newValue, true);
   }
+  else if (this.isComment(cell.value)) {
+    this.cellEditProperty(cell, "body", newValue, true);
+  }
 };
 
 /**
@@ -236,6 +239,9 @@ CLASSGraph.prototype.cellLabelChanged = function (cell, newValue, autoSize) {
 CLASSGraph.prototype.getEditingValue = function (cell, evt) {
   if (this.isNamedElement(cell.value)) {
     return cell.value.getAttribute("name");
+  }
+  else if (this.isComment(cell.value)) {
+    return cell.value.getAttribute("body");
   }
   
   return mxGraph.prototype.getEditingValue.call(this, arguments);
@@ -631,6 +637,15 @@ CLASSGraph.prototype.isPackage = function (node) {
 };
 
 /**
+ * Checks if the given node is a packageable element.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isPackageableElement = function (node) {
+  return this.isClassifier(node) || this.isAssociation(node);
+};
+
+/**
  * Checks if the given node is an enumeration element.
  * 
  * @param node
@@ -880,17 +895,17 @@ CLASSGraphContextIconHandler.prototype.createImage = function (src) {
   img.style.width  = "16px";
   img.style.height = "16px";
   img.style.display = "block";
-  img.style.margin = "3px";
+  img.style.margin = "2px";
   
   img.onmouseover = function () {
     this.style.border = "1px solid #CCCCCC";
-    this.style.margin = "1px";
+    this.style.margin = "0px";
     this.style.backgroundColor = "#FFFFFF";
   };
   
   img.onmouseout = function () {
     this.style.border = "";
-    this.style.margin = "3px";
+    this.style.margin = "2px";
     this.style.backgroundColor = "";
   };
   
