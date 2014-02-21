@@ -12,27 +12,43 @@
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
 CLASSRelationship = function (editor) {
-  this.editor = editor;
-  this.graph  = editor.graph;
-  this.dialog = dlgRelationship; // Defined by a PrimeFaces dialog.
-  this.title  = dlgRelationship.titlebar.children("span.ui-dialog-title").html();
+  this.editor      = editor;
+  this.graph       = editor.graph;
+  this.dialog      = dlgRelationship; // Defined by a PrimeFaces dialog.
+  this.title       = dlgRelationship.titlebar.children("span.ui-dialog-title").html();
+  this.sourceTitle = $("#sourceFields").children("legend.ui-fieldset-legend").html();
+  this.targetTitle = $("#targetFields").children("legend.ui-fieldset-legend").html();
   
-//  var self    = this;
-//  this.dialog.content[0].onclick = function () {
-//    self.stopEditingParameter();
-//  };
-  
-//  this.configureOperationsTable();
-//  this.configureVisibilityCombo();
-//  this.configureParametersTable();
-//  this.configureReturnTypeComboBox();
-//  this.configureConcurrencyComboBox();
+  this.configureDirectionCombo();
+  this.configureMultiplicityCombo("sourceMultiplicity");
+  this.configureMultiplicityCombo("targetMultiplicity");
+  this.configureVisibilityCombo("sourceVisibility");
+  this.configureVisibilityCombo("targetVisibility");
+  this.configureCollectionsCombo("sourceCollectionType");
+  this.configureCollectionsCombo("targetCollectionType");
+  this.configureAttributesCombo("sourceAttribute");
+  this.configureAttributesCombo("targetAttribute");
 };
 
 /**
  * The instance of the relationship being edited.
  */
 CLASSRelationship.prototype.relationshipCell;
+
+/**
+ * The localized text for the dialog title.
+ */
+CLASSRelationship.prototype.title;
+
+/**
+ * The localized text for the source property title.
+ */
+CLASSRelationship.prototype.sourceTitle;
+
+/**
+ * The localized text for the target property title.
+ */
+CLASSRelationship.prototype.targetTitle;
 
 /**
  * Initializes the dialog to edit relationship contained by the given cell.
@@ -42,7 +58,174 @@ CLASSRelationship.prototype.relationshipCell;
  */
 CLASSRelationship.prototype.init = function (cell) {
   this.relationshipCell = cell;
+  
+  this.loadAttributesComboData("sourceAttribute", cell.source);
+  this.loadAttributesComboData("targetAttribute", cell.target);
+  
   this.setTitle();
+  this.setSourceTargetTitle();
+};
+
+/**
+ * Loads the data for the attributes combo box component with the attributes of
+ * the given classifier.
+ * 
+ * @param comboId
+ * @param classifier
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.loadAttributesComboData = function (comboId, classifier) {
+  comboId = "#" + comboId;
+  
+  var jSonData = [];
+  
+  var attributes = this.graph.getAttributes(classifier);
+  if (attributes) {
+    var attribute;
+    for (var i = 0; i < attributes.length; i++) {
+      attribute = attributes[i];
+      jSonData.push({id: attribute.getAttribute("name"), text: attribute.getAttribute("name")});
+    }
+  }
+  
+  $(comboId).combobox({"data" : jSonData});
+};
+
+/**
+ * Configures the combo box for direction property.
+ * 
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.configureDirectionCombo = function () {
+  $("#relDirection").combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: [
+          {id:"unspecified",     text:"Indeterminado"},
+          {id:"bidirectional",   text:"Bidireccional"},
+          {id:"sourcetarget",    text:"Origen -> Final"},
+          {id:"targetsource",    text:"Final -> Origen"}
+      ]
+  });
+  
+  $("#relDirection").combobox("setValue", "sourcetarget"); // default value
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $("#relDirection").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Configures the multiplicity combo box for the element identified by the given
+ * ID.
+ * 
+ * @param elementId
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.configureMultiplicityCombo = function (elementId) {
+  elementId = "#" + elementId;
+  
+  $(elementId).combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: [
+          {id:"many",        text:"*"},
+          {id:"zero",        text:"0"},
+          {id:"zeromany",    text:"0..*"},
+          {id:"zeroone",     text:"0..1"},
+          {id:"one",         text:"1"},
+          {id:"onemany",     text:"1..*"},
+      ]
+  });
+  
+  $(elementId).combobox("setValue", "1"); // default value
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $(elementId).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Configures the visibility combo box for the element identified by the given
+ * ID.
+ * 
+ * @param elementId
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
+  elementId = "#" + elementId;
+  
+  $(elementId).combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: [
+          {id:"public",    text:"public"},
+          {id:"protected", text:"protected"},
+          {id:"package",   text:"package"},
+          {id:"private",   text:"private"}
+      ]
+  });
+  
+  $(elementId).combobox("setValue", "private"); // default value
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $(elementId).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Configures the collections combo box for the element identified by the given
+ * ID.
+ * 
+ * @param elementId
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
+  elementId = "#" + elementId;
+  
+  $(elementId).combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: [
+          {id:"array",      text:"[ ]"},
+          {id:"list",       text:"List"},
+          {id:"listarray",  text:"ArrayList"},
+          {id:"listlinked", text:"LinkedList"},
+          {id:"set",        text:"Set"},
+          {id:"sethash",    text:"HashSet"},
+          {id:"vector",     text:"Vector"}
+      ]
+  });
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $(elementId).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Configures the attributes combo box for the element identified by the given
+ * ID.
+ * 
+ * @param elementId
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.configureAttributesCombo = function (elementId) {
+  elementId = "#" + elementId;
+  
+  $(elementId).combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: []
+  });
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $(elementId).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -53,6 +236,18 @@ CLASSRelationship.prototype.init = function (cell) {
  */
 CLASSRelationship.prototype.setTitle = function () {
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.relationshipCell.getAttribute("name")));
+};
+
+/**
+ * Sets the title of the source and target fieldsets.
+ * 
+ * @author Gabriel Leonardo Diaz, 20.02.2014.
+ */
+CLASSRelationship.prototype.setSourceTargetTitle = function () {
+  var sourceCell = this.relationshipCell.source;
+  var targetCell = this.relationshipCell.target;
+  $("#sourceFields").children("legend.ui-fieldset-legend").html(this.sourceTitle.replace("{0}", "<b>" + sourceCell.getAttribute("name") + "</b>"));
+  $("#targetFields").children("legend.ui-fieldset-legend").html(this.targetTitle.replace("{0}", "<b>" + targetCell.getAttribute("name") + "</b>"));
 };
 
 /**

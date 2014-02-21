@@ -4,7 +4,7 @@
                 xmlns:p="http://primefaces.org/ui">
                 
 <p:dialog id="relationshipDialog" widgetVar="dlgRelationship" width="600" header="#{msgs.RELATIONSHIP_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true">
-    <h:form id="relationshipForm">
+    <h:form id="relationshipForm" prependId="false">
         <table style="width:100%;">
             <tr>
                 <td width="20%"><h:outputText value="#{msgs.RELATIONSHIP_FORM_NAME_FIELD}" /></td>
@@ -16,17 +16,52 @@
             </tr>
         </table>
         
-        <p:fieldset legend="#{msgs.RELATIONSHIP_FORM_SOURCE_LEGEND}">
-            
+        <p:fieldset id="sourceFields" legend="#{msgs.RELATIONSHIP_FORM_SOURCE_LEGEND}" style="margin-top: 10px; margin-bottom: 10px;">
+            <table style="width:100%;">
+                <tr>
+                    <td width="20%"><h:outputText value="#{msgs.RELATIONSHIP_FORM_ATTRIBUTE_FIELD}" /></td>
+                    <td><input id="sourceAttribute" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputText value="#{msgs.RELATIONSHIP_FORM_VISIBILITY_FIELD}" /></td>
+                    <td><input id="sourceVisibility" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputText value="#{msgs.RELATIONSHIP_FORM_MULTIPLICITY_FIELD}" /></td>
+                    <td><input id="sourceMultiplicity" /></td>
+                </tr>
+                <tr>
+                    <td><label><input id="sourceCollectionCheck" type="checkbox" /> <h:outputText value="#{msgs.RELATIONSHIP_FORM_IS_COLLECTION_FIELD}" /></label></td>
+                    <td><input id="sourceCollectionType" /></td>
+                </tr>
+            </table>
         </p:fieldset>
         
-        <p:fieldset legend="#{msgs.RELATIONSHIP_FORM_TARGET_LEGEND}">
-            
+        <p:fieldset id="targetFields" legend="#{msgs.RELATIONSHIP_FORM_TARGET_LEGEND}">
+            <table style="width:100%;">
+                <tr>
+                    <td width="20%"><h:outputText value="#{msgs.RELATIONSHIP_FORM_ATTRIBUTE_FIELD}" /></td>
+                    <td><input id="targetAttribute" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputText value="#{msgs.RELATIONSHIP_FORM_VISIBILITY_FIELD}" /></td>
+                    <td><input id="targetVisibility" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputText value="#{msgs.RELATIONSHIP_FORM_MULTIPLICITY_FIELD}" /></td>
+                    <td><input id="targetMultiplicity" /></td>
+                </tr>
+                <tr>
+                    <td><label><input id="targetCollectionCheck" type="checkbox" /> <h:outputText value="#{msgs.RELATIONSHIP_FORM_IS_COLLECTION_FIELD}" /></label></td>
+                    <td><input id="targetCollectionType" /></td>
+                </tr>
+            </table>
         </p:fieldset>
         
         <p:separator />
         
         <h:panelGrid columns="2">
+            <p:commandButton value="#{msgs.SAVE_LABEL}" type="button" onclick="dlgRelationship.hide()" />
             <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgRelationship.hide()" />
         </h:panelGrid>
     </h:form>
