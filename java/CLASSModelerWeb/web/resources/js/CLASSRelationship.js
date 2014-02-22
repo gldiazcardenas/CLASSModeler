@@ -59,11 +59,38 @@ CLASSRelationship.prototype.targetTitle;
 CLASSRelationship.prototype.init = function (cell) {
   this.relationshipCell = cell;
   
+  this.loadNameTextFieldData();
+  this.loadDirectionComboData();
+  
   this.loadAttributesComboData("sourceAttribute", cell.source);
   this.loadAttributesComboData("targetAttribute", cell.target);
   
   this.setTitle();
   this.setSourceTargetTitle();
+};
+
+/**
+ * Loads the name of the relationship in the text field.
+ * 
+ * @author Gabriel Leonardo Diaz, 22.02.2014.
+ */
+CLASSRelationship.prototype.loadNameTextFieldData = function () {
+  $("#relName").val(this.attributeCell.getAttribute("name"));
+};
+
+/**
+ * Loads the direction combo box value.
+ * 
+ * @author Gabriel Leonardo Diaz, 22.02.2014.
+ */
+CLASSRelationship.prototype.loadDirectionComboData = function () {
+  if (this.graph.isGeneralization(this.relationshipCell.value) || this.graph.isRealization(this.relationshipCell.value)) {
+    $("#relDirection").combobox("setValue", "");
+    
+    return;
+  }
+  
+  // TODO GD get the styles of the edge and check the startArrow and endArrow values.
 };
 
 /**
@@ -89,6 +116,10 @@ CLASSRelationship.prototype.loadAttributesComboData = function (comboId, classif
   }
   
   $(comboId).combobox({"data" : jSonData});
+};
+
+CLASSRelationship.prototype.loadVisibilityComboData = function (comboId, classifier) {
+  
 };
 
 /**
