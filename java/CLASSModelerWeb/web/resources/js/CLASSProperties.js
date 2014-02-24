@@ -80,10 +80,10 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   
   var nameValue          = null;
   var visibilityValue    = null;
+  var packageValue       = null;
   var abstractValue      = null;
   var staticValue        = null;
   var finalValue         = null;
-  var specValue          = null;
   var widthValue         = null;
   var heightValue        = null;
   var xValue             = null;
@@ -93,7 +93,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var abstractEditor     = null;
   var staticEditor       = null;
   var finalEditor        = null;
-  var specEditor         = null;
   var spinnerEditor      = null;
   var visibilityEditor   = null;
   var attributesEditor   = null;
@@ -110,7 +109,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     abstractValue   = node.getAttribute("isAbstract");
     staticValue     = node.getAttribute("isStatic");
     finalValue      = node.getAttribute("isFinal");
-    specValue       = node.getAttribute("isSpec");
     
     if (this.graph.isNamedElement(node)) {
       nameEditor      = "text";
@@ -133,7 +131,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       
       if (this.graph.isClassifier(node)) {
         abstractEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
-        specEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
         
         attributesEditor = {"type": "button", "options": {"onclick": function () {
           selfEditor.showAttributes(cell);
@@ -159,13 +156,12 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Paquete", "value":visibilityValue, "group":"General", "editor":null},
+      {"name":"Paquete", "value":packageValue, "group":"General", "editor":null},
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
       {"name":"Es Estatico", "value":staticValue, "group":"Avanzado", "editor":staticEditor},
       {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
-      {"name":"Es Especificacion", "value":specValue, "group":"Avanzado", "editor":specEditor},
       
       // SPECIFIC
       {"name":"Atributos", "value":null, "group":"Especifico", "editor":attributesEditor},

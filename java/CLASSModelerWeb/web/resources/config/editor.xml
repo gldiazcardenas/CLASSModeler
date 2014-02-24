@@ -13,7 +13,7 @@
     <!-- Templates -->
     <Array as="templates">
         <add as="class">
-            <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
+            <Class name="Clase" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -21,7 +21,7 @@
         </add>
         
         <add as="interface">
-            <Interface name="Interfaz" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="true">
+            <Interface name="Interfaz" visibility="public" isAbstract="true" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -29,7 +29,7 @@
         </add>
         
         <add as="enumeration">
-            <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false" isSpec="false">
+            <Enumeration name="Enumeracion" visibility="public" isAbstract="false" isStatic="false" isFinal="false">
                 <mxCell vertex="1" style="classifier">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -37,7 +37,7 @@
         </add>
         
         <add as="package">
-            <Package name="Paquete">
+            <Package name="">
                 <mxCell vertex="1" style="package">
                     <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
@@ -45,7 +45,7 @@
         </add>
         
         <add as="comment">
-            <Comment body="Comentario">
+            <Comment body="">
                 <mxCell vertex="1" style="comment">
                     <mxGeometry as="geometry" width="0" height="0" />
                 </mxCell>
@@ -61,7 +61,7 @@
         </add>
         
         <add as="property">
-            <Property name="property" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
+            <Property name="" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
