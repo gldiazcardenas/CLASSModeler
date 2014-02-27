@@ -33,11 +33,11 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
   }
   
   if (this.isProperty (node)) {
-    return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + ": " + node.getAttribute("type");
+    return this.convertPropertyToString(node);
   }
   
   if (this.isOperation(node)) {
-    return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + "(" + this.convertParametersToString(cell) + ")" + " : " + node.getAttribute("returnType");
+    return this.convertOperationToString(node);
   }
   
   if (this.isNamedElement(node)) {
@@ -48,19 +48,18 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
 };
 
 /**
- * Gets the string representation of the given property.
+ * Converts the XML property node to a string representation.
  * 
  * @param property
- *          The property XML node.
- * @author Gabriel Leonardo Diaz, 19.01.2014.
+ * @return {String}
+ * @author Gabriel Leonardo Diaz, 25.02.2014.
  */
-CLASSGraph.prototype.getPropertyLabel = function (property) {
-  var visibility = property.getAttribute("visibility");
-  var name = property.getAttribute("name");
-  var type = property.getAttribute("type");
+CLASSGraph.prototype.convertPropertyToString = function (property) {
+  var visibility   = property.getAttribute("visibility");
+  var name         = property.getAttribute("name");
+  var type         = property.getAttribute("type");
   var initialValue = property.getAttribute("initialValue");
-  
-  var label = this.getVisibilityChar(visibility) + " " + name;
+  var label        = this.getVisibilityChar(visibility) + " " + name;
   
   if (type && type.length > 0) {
     label += ": " + type;
@@ -71,6 +70,45 @@ CLASSGraph.prototype.getPropertyLabel = function (property) {
   }
   
   return label;
+};
+
+/**
+ * Converts the XML operation node to a string representation.
+ * 
+ * @param operation
+ * @returns {String}
+ * @author Gabriel Leonardo Diaz, 25.02.2014.
+ */
+CLASSGraph.prototype.convertOperationToString = function (operation) {
+  return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + 
+  "(" + this.convertParametersToString(cell) + ")" + " : " + node.getAttribute("returnType");
+};
+
+/**
+ * The operations we want to have the String representation of its parameters.
+ * 
+ * @param operation
+ *          The operation cell.
+ * @author Gabriel Leonardo Diaz, 29.01.2014.
+ */
+CLASSGraph.prototype.convertParametersToString = function (operation) {
+  if (operation == null || !this.isOperation(operation.value)) {
+    return "";
+  }
+  
+  var parameterString = "";
+  var separator = "";
+  
+  var param;
+  var node = operation.value;
+  
+  for (var i = 0; i < node.childNodes.length; i++) {
+    param = node.childNodes[i];
+    parameterString += separator + param.getAttribute("type");
+    separator = ", ";
+  }
+  
+  return parameterString;
 };
 
 /**
@@ -117,7 +155,7 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
   
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
-    if (section.getAttribute("isAttribute") == "true") {
+    if (section.getAttribute("attribute") == "true") {
       return section.children;
     }
   }
@@ -140,39 +178,12 @@ CLASSGraph.prototype.getOperations = function (classifier) {
   
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
-    if (section.getAttribute("isAttribute") == "false") {
+    if (section.getAttribute("attribute") == "false") {
       return section.children;
     }
   }
   
   return [];
-};
-
-/**
- * The operations we want to have the String representation of its parameters.
- * 
- * @param operation
- *          The operation cell.
- * @author Gabriel Leonardo Diaz, 29.01.2014.
- */
-CLASSGraph.prototype.convertParametersToString = function (operation) {
-  if (operation == null || !this.isOperation(operation.value)) {
-    return "";
-  }
-  
-  var parameterString = "";
-  var separator = "";
-  
-  var param;
-  var node = operation.value;
-  
-  for (var i = 0; i < node.childNodes.length; i++) {
-    param = node.childNodes[i];
-    parameterString += separator + param.getAttribute("type");
-    separator = ", ";
-  }
-  
-  return parameterString;
 };
 
 /**
@@ -194,7 +205,7 @@ CLASSGraph.prototype.getLiterals = function (enumeration) {
   
   for (var i = 0; i < enumeration.children.length; i++) {
     section = enumeration.getChildAt(i);
-    if (section.getAttribute("isAttribute") == "true") {
+    if (section.getAttribute("attribute") == "true") {
       for (var j = 0; j < section.children.length; j++) {
         child = section.getChildAt(j);
         if (this.isEnumerationLiteral(child.value)) {
@@ -395,14 +406,14 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
     
     if (classifierCell.children && classifierCell.children.length > 0) {
       var child = classifierCell.children[0];
-      if (child.getAttribute("isAttribute") == "true") {
+      if (child.getAttribute("attribute") == "true") {
         attrSection = child;
       }
     }
     
     if (attrSection == null) {
       attrSection = this.model.cloneCell(this.sectionTemplate);
-      attrSection.setAttribute("isAttribute", "true");
+      attrSection.setAttribute("attribute", "true");
       
       this.addCell(attrSection, classifierCell, 0);
     }
@@ -441,14 +452,14 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
         child = classifierCell.children[1];
       }
       
-      if (child.getAttribute("isAttribute") == "false") {
+      if (child.getAttribute("attribute") == "false") {
         operSection = child;
       }
     }
     
     if (operSection == null) {
       operSection = this.model.cloneCell(this.sectionTemplate);
-      operSection.setAttribute("isAttribute", "false");
+      operSection.setAttribute("attribute", "false");
       
       this.addCell(operSection, classifierCell, 1);
     }
@@ -502,15 +513,20 @@ CLASSGraph.prototype.editAttribute = function (attributeCell, newAttributeCell) 
 };
 
 /**
- * Gets the default UML types for classifiers and features.
+ * Gets the default UML types for classifiers and features in form of a JSon
+ * object.
  * 
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  * @returns A JSon object with the available types.
  */
-CLASSGraph.prototype.getTypes = function () {
+CLASSGraph.prototype.getTypesJSon = function (includeVoid) {
   var jSonData   = [];
   
   // Fixed types
+  if (includeVoid) {
+    jSonData.push({id:"void",    text:"void"});
+  }
+  
   jSonData.push({id:"boolean", text:"boolean"});
   jSonData.push({id:"byte",    text:"byte"});
   jSonData.push({id:"char",    text:"char"});
@@ -528,7 +544,33 @@ CLASSGraph.prototype.getTypes = function () {
     cell = this.model.getCell(key);
     
     if (this.isClassifier(cell.value)) {
-      jSonData.push({id:cell.getAttribute("name"), text: cell.getAttribute("name")});
+      jSonData.push({ id:cell.id, text: cell.getAttribute("name") });
+    }
+  }
+  
+  return jSonData;
+};
+
+/**
+ * Gets the packages available in the current diagram in form of a JSon object.
+ * 
+ * @returns {Array}
+ * @author Gabriel Leonardo Diaz, 24.02.2014.
+ */
+CLASSGraph.prototype.getPackagesJSon = function () {
+  var jSonData   = [];
+  
+  // Fixed types
+  jSonData.push({id:"default", text:"Por Defecto"});
+  
+  var cell;
+  
+  // Dynamic types
+  for (var key in this.model.cells) {
+    cell = this.model.getCell(key);
+    
+    if (this.isPackage(cell.value)) {
+      jSonData.push({ id:cell.id, text: cell.getAttribute("name") });
     }
   }
   
@@ -712,6 +754,34 @@ CLASSGraph.prototype.isRelationship = function (node) {
  */
 CLASSGraph.prototype.isAssociation = function (node) {
   if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "association";
+};
+
+/**
+ * Checks if the given node is an association UML element where one of its parts
+ * is aggregate kind.
+ * 
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isAggregation = function (node) {
+  if (node == null || node.nodeName == null || node.nodeName.toLowerCase() != "association") {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "association";
+};
+
+/**
+ * Checks if the given node is an association UML element where one of its parts
+ * is composite kind.
+ * 
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isComposition = function (node) {
+  if (node == null || node.nodeName == null || node.nodeName.toLowerCase() != "association") {
     return false;
   }
   return node.nodeName.toLowerCase() == "association";

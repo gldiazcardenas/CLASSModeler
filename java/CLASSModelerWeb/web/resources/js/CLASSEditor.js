@@ -220,13 +220,14 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   menu.addItem("Atributos", null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassifierCell(cell));
-  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isRelationshipCell(cell));
+  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, true);
   menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, true);
+  menu.addItem("Generar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, self.isClassCell(cell));
   menu.addItem("Generar Metodos GET/SET", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
   menu.addSeparator(subMenu);
   menu.addItem("Exportar XMI", null, function () { self.execute("exportXMI"); }, subMenu, null, true);
@@ -243,6 +244,18 @@ CLASSEditor.prototype.isPropertyCell = function (cell) {
     return false;
   }
   return this.graph.isProperty(cell.value);
+};
+
+/**
+ * Determines if the user object (node) of the given cell is a Class UML.
+ * @param cell
+ * @returns
+ */
+CLASSEditor.prototype.isClassCell = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.graph.isClass(cell.value);
 };
 
 /**
@@ -272,11 +285,11 @@ CLASSEditor.prototype.isElementVertexCell = function (cell) {
  * 
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
-CLASSEditor.prototype.isRelationshipCell = function (cell) {
+CLASSEditor.prototype.isAssociationCell = function (cell) {
   if (cell == null) {
     return false;
   }
-  return this.graph.isRelationship(cell.value);
+  return this.graph.isAssociation(cell.value);
 };
 
 /**
@@ -347,6 +360,10 @@ CLASSEditor.prototype.addActions = function () {
   
   this.addAction("showRelationship", function (editor) {
     editor.showRelationship(editor.graph.getSelectionCell());
+  });
+  
+  this.addAction("generateConstructor", function (editor) {
+    editor.generateConstructor(editor.graph.getSelectionCell());
   });
   
   this.addAction("generateGetSet", function (editor) {
@@ -463,6 +480,15 @@ CLASSEditor.prototype.exportXMI = function () {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateGetSet = function (cell) {
+  // TODO GD
+};
+
+/**
+ * Generates default constructor for the given class cell.
+ * 
+ * @author Gabriel Leonardo Diaz, 19.02.2014.
+ */
+CLASSEditor.prototype.generateConstructor = function (cell) {
   // TODO GD
 };
 

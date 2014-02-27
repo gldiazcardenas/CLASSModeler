@@ -35,6 +35,7 @@ import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
 import classmodeler.web.beans.SharedDiagramSession;
 import classmodeler.web.beans.SharedDiagramsCache;
+import classmodeler.web.converters.UMLConverter;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -199,7 +200,8 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    // TODO GD
+    UMLConverter converter = new UMLConverter(this.diagram.getModel());
+    converter.convert();
   }
   
   /**

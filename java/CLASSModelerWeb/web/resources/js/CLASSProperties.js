@@ -98,6 +98,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var attributesEditor   = null;
   var operationsEditor   = null;
   var relationshipEditor = null;
+  var packageEditor      = null;
   
   if (this.isCellEditable(cell)) {
     this.cell       = cell;
@@ -111,7 +112,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     finalValue      = node.getAttribute("isFinal");
     
     if (this.graph.isNamedElement(node)) {
-      nameEditor      = "text";
+      nameEditor = "text";
     }
     
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
@@ -122,10 +123,10 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         "textField":"text",
         "panelHeight":"90",
         "data":[
-            {"id":"public","text":"public"},
-            {"id":"protected","text":"protected"},
-            {"id":"package","text":"package"},
-            {"id":"private","text":"private"}
+            {"id":"public",    "text":"public"},
+            {"id":"protected", "text":"protected"},
+            {"id":"package",   "text":"package"},
+            {"id":"private",   "text":"private"}
         ]
       }};
       
@@ -139,6 +140,13 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         operationsEditor = {"type":"button", "options": {"onclick": function () {
           selfEditor.showOperations(cell);
         }}};
+        
+        packageEditor = {"type":"combobox", "options": {
+          "valueField":"id",
+          "textField":"text",
+          "panelHeight":"90",
+          "data":this.graph.getPackagesJSon()
+        }};
       }
     }
     
@@ -156,7 +164,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Paquete", "value":packageValue, "group":"General", "editor":null},
+      {"name":"Paquete", "value":packageValue, "group":"General", "editor":packageEditor},
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
@@ -222,25 +230,29 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
     case 1: // Visibility
       this.graph.cellEditProperty(this.cell, "visibility", changes.value, true);
       break;
-      
-    case 2: // Stereotype
-      this.graph.cellEditProperty(this.cell, "stereotype", changes.value, true);
-      break;
     
-    case 5: // Abstract
+    case 3: // Abstract
       this.graph.cellEditProperty(this.cell, "isAbstract", changes.value, true);
       break;
       
-    case 6: // Static
+    case 4: // Static
       this.graph.cellEditProperty(this.cell, "isStatic", changes.value, true);
       break;
       
-    case 7: // Final
+    case 5: // Final
       this.graph.cellEditProperty(this.cell, "isFinal", changes.value, true);
       break;
       
-    case 8: // Specification
-      this.graph.cellEditProperty(this.cell, "isSpec", changes.value, true);
+    case 9: // Width
+      break;
+      
+    case 10: // Height
+      break;
+      
+    case 11: // X
+      break;
+      
+    case 12: // Y
       break;
     }
   }

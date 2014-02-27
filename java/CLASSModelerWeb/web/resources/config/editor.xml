@@ -53,7 +53,7 @@
         </add>
         
         <add as="section">
-            <Section isAttribute="true">
+            <Section attribute="true">
                 <mxCell vertex="1" connectable="0" style="section">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -61,7 +61,8 @@
         </add>
         
         <add as="property">
-            <Property name="" type="int" visibility="private" isStatic="false" isFinal="false" initialValue="">
+            <Property name="" visibility="private" isStatic="false" isFinal="false" initialValue="" aggregationKind="none" lower="" upper="">
+                <Type collectionKind="" classifierKind="" primitiveKind="" />
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -69,7 +70,8 @@
         </add>
         
         <add as="operation">
-            <Operation name="operation" returnType="void" visibility="public" isStatic="false" isFinal="false" isAbstract="false" isSync="false" concurrency="secuencial">
+            <Operation name="" visibility="public" isStatic="false" isFinal="false" isAbstract="false" concurrency="secuencial" lower="" upper="">
+                <Type collectionKind="" classifierKind="" primitiveKind="" />
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -77,7 +79,8 @@
         </add>
         
         <add as="parameter">
-            <Parameter name="parameter" type="int" direction="in">
+            <Parameter name="" lower="" upper="">
+                <Type collectionKind="" classifierKind="" primitiveKind="" />
                 <mxCell vertex="1">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -85,7 +88,7 @@
         </add>
         
         <add as="literal">
-            <EnumerationLiteral name="LITERAL">
+            <EnumerationLiteral name="">
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -93,10 +96,7 @@
         </add>
         
         <add as="association">
-            <Association name="association" isDerived="false">
-                <Property as="source" id="" />
-                <Property as="target" id="" />
-                
+            <Association name="">
                 <mxCell edge="1" style="association">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -104,10 +104,7 @@
         </add>
         
         <add as="aggregation">
-            <Association name="aggregation" isDerived="false">
-                <Property as="source" id="" />
-                <Property as="target" id="" />
-                
+            <Association name="">
                 <mxCell edge="1" style="aggregation">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -115,7 +112,7 @@
         </add>
         
         <add as="composition">
-            <Association name="composition" isDerived="false">
+            <Association name="">
                 <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -123,7 +120,7 @@
         </add>
         
         <add as="generalization">
-            <Generalization name="generalization" isSubstitutable="false">
+            <Generalization name="">
                 <mxCell edge="1" style="generalization">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -131,7 +128,7 @@
         </add>
         
          <add as="realization">
-            <Realization name="realization">
+            <Realization name="">
                 <mxCell edge="1" style="realization">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -139,7 +136,7 @@
         </add>
         
         <add as="dependency">
-            <Dependency name="dependency">
+            <Dependency name="">
                 <mxCell edge="1" style="dependency">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>

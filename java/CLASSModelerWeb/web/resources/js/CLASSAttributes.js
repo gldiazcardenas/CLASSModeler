@@ -92,7 +92,7 @@ CLASSAttributes.prototype.setTitle = function () {
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
 CLASSAttributes.prototype.configureTypeCombo = function () {
-  var jSonData = this.graph.getTypes();
+  var jSonData = this.graph.getTypesJSon();
   
   $("#attrType").combobox({
       valueField:"id",
@@ -199,7 +199,7 @@ CLASSAttributes.prototype.loadTableData = function () {
       var typeValue    = attributes[i].getAttribute("type");
       var initialValue = attributes[i].getAttribute("initialValue");
       
-      jSonData.push({name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: initialValue});
+      jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: initialValue });
     }
   }
   

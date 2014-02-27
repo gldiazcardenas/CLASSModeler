@@ -202,13 +202,8 @@ CLASSOperations.prototype.configureVisibilityCombo = function () {
  */
 CLASSOperations.prototype.configureParametersTable = function () {
   var self      = this;
-  var jSonTypes = this.graph.getTypes();
-  var jSonDirs  = [];
   
-  jSonDirs.push({id:"in",     text:"in"});
-  jSonDirs.push({id:"inout",  text:"inout"});
-  jSonDirs.push({id:"out",    text:"out"});
-  jSonDirs.push({id:"return", text:"return"});
+  var jSonTypes = this.graph.getTypesJSon();
   
   $("#parametersTable").datagrid({
       toolbar: "#paramsTbToolbar",
@@ -219,9 +214,11 @@ CLASSOperations.prototype.configureParametersTable = function () {
       },
       
       columns:[[
-          {field:"name", title:"Nombre",    width:150, editor:"text"},
-          {field:"type", title:"Tipo",      width:100, editor: {type:"combobox", options: {valueField:"id",  textField:"text", panelHeight: 200, data:jSonTypes, required: true}}},
-          {field:"dir",  title:"Direccion", width:100, editor: {type:"combobox", options: {valueField:"id", textField:"text", panelHeight: 90, data:jSonDirs, required: true}}}
+          { field:"name", title:"Nombre", width:150, editor:"text" },
+          { field:"type", title:"Tipo",   width:100, editor: {
+              type:"combobox",
+              options: { valueField:"id",  textField:"text", panelHeight: 200, data:jSonTypes, required: true }
+          }},
       ]]
   });
   
@@ -250,36 +247,11 @@ CLASSOperations.prototype.configureParametersTable = function () {
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
 CLASSOperations.prototype.configureReturnTypeComboBox = function () {
-  var jSonData   = [];
-  
-  // Fixed types
-  jSonData.push({id:"void",    text:"void"});
-  jSonData.push({id:"boolean", text:"boolean"});
-  jSonData.push({id:"byte",    text:"byte"});
-  jSonData.push({id:"char",    text:"char"});
-  jSonData.push({id:"double",  text:"double"});
-  jSonData.push({id:"float",   text:"float"});
-  jSonData.push({id:"int",     text:"int"});
-  jSonData.push({id:"long",    text:"long"});
-  jSonData.push({id:"short",   text:"short"});
-  jSonData.push({id:"String",  text:"String"});
-  
-  var cell;
-  
-  // Dynamic types
-  for (var key in this.graph.model.cells) {
-    cell = this.graph.model.getCell(key);
-    
-    if (this.graph.isClassifier(cell.value)) {
-      jSonData.push({id:cell.getAttribute("name"), text: cell.getAttribute("name")});
-    }
-  }
-  
   $("#operReturnType").combobox({
       valueField:"id",
       textField:"text",
       panelHeight: 200,
-      data: jSonData
+      data: this.graph.getTypesJSon(true)
   });
   
   $("#operReturnType").combobox("setValue", "void"); // default value
@@ -333,7 +305,6 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
     $("#operStaticCheck").prop("checked", this.operationCell.getAttribute("isStatic") == "true");
     $("#operFinalCheck").prop("checked", this.operationCell.getAttribute("isFinal") == "true");
     $("#operAbstractCheck").prop("checked", this.operationCell.getAttribute("isAbstract") == "true");
-    $("#operSyncCheck").attr("checked", this.operationCell.getAttribute("isSync") == "true");
     $("#operReturnType").combobox("setValue", this.operationCell.getAttribute("returnType"));
     $("#operConcurrency").combobox("setValue", this.operationCell.getAttribute("concurrency"));
     
@@ -346,9 +317,8 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
         
         var nameValue = param.getAttribute("name");
         var typeValue = param.getAttribute("type");
-        var dirValue  = param.getAttribute("direction");
         
-        jSonData.push({name: nameValue, type: typeValue, dir: dirValue});
+        jSonData.push({name: nameValue, type: typeValue});
       }
     }
     
@@ -378,7 +348,6 @@ CLASSOperations.prototype.clearFields = function () {
   $("#operStaticCheck").prop("checked", false);
   $("#operFinalCheck").prop("checked", false);
   $("#operAbstractCheck").prop("checked", false);
-  $("#operSyncCheck").prop("checked", false);
   $("#parametersTable").datagrid({data:[]});
   $("#parametersTable").datagrid("reload");
   $("#operReturnType").combobox("setValue", "void");
@@ -422,7 +391,6 @@ CLASSOperations.prototype.saveOperation = function () {
   var staticValue     = $("#operStaticCheck").is(":checked");
   var finalValue      = $("#operFinalCheck").is(":checked");
   var abstractValue   = $("#operAbstractCheck").is(":checked");
-  var syncValue       = $("#operSyncCheck").is(":checked");
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid NAME
@@ -466,7 +434,6 @@ CLASSOperations.prototype.saveOperation = function () {
   operation.setAttribute("isStatic", staticValue);
   operation.setAttribute("isFinal", finalValue);
   operation.setAttribute("isAbstract", abstractValue);
-  operation.setAttribute("isSync", syncValue);
   operation.value.innerHTML = ""; // Remove all child nodes
   
   var paramRows = $("#parametersTable").datagrid("getRows");
@@ -482,7 +449,6 @@ CLASSOperations.prototype.saveOperation = function () {
       param = cell.value;
       param.setAttribute("name", row.name);
       param.setAttribute("type", row.type);
-      param.setAttribute("direction", row.dir);
       
       operation.value.appendChild(param);
     }
@@ -512,7 +478,7 @@ CLASSOperations.prototype.saveOperation = function () {
  */
 CLASSOperations.prototype.newParameter = function () {
   if (this.stopEditingParameter()) {
-    $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "", dir: "in" }});
+    $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "" }});
     this.startEditingParameter($('#parametersTable').datagrid("getRows").length - 1);
   }
 };
@@ -581,10 +547,6 @@ CLASSOperations.prototype.startEditingParameter = function (index) {
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
   editor = $("#parametersTable").datagrid("getEditor", {index:index, field:"type"});
-  comboPanel = $(editor.target).combobox("panel");
-  comboPanel.panel("panel").css("z-index", "2000");
-  
-  editor = $("#parametersTable").datagrid("getEditor", {index:index, field:"dir"});
   comboPanel = $(editor.target).combobox("panel");
   comboPanel.panel("panel").css("z-index", "2000");
 };

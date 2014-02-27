@@ -75,7 +75,7 @@ CLASSRelationship.prototype.init = function (cell) {
  * @author Gabriel Leonardo Diaz, 22.02.2014.
  */
 CLASSRelationship.prototype.loadNameTextFieldData = function () {
-  $("#relName").val(this.attributeCell.getAttribute("name"));
+  $("#relName").val(this.relationshipCell.getAttribute("name"));
 };
 
 /**
@@ -86,7 +86,7 @@ CLASSRelationship.prototype.loadNameTextFieldData = function () {
 CLASSRelationship.prototype.loadDirectionComboData = function () {
   if (this.graph.isGeneralization(this.relationshipCell.value) || this.graph.isRealization(this.relationshipCell.value)) {
     $("#relDirection").combobox("setValue", "");
-    
+    $("#relDirection").combobox("disable");
     return;
   }
   
@@ -132,6 +132,7 @@ CLASSRelationship.prototype.configureDirectionCombo = function () {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
+      width: 300,
       data: [
           {id:"unspecified",     text:"Indeterminado"},
           {id:"bidirectional",   text:"Bidireccional"},
@@ -139,8 +140,6 @@ CLASSRelationship.prototype.configureDirectionCombo = function () {
           {id:"targetsource",    text:"Final -> Origen"}
       ]
   });
-  
-  $("#relDirection").combobox("setValue", "sourcetarget"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
   var comboPanel = $("#relDirection").combobox("panel");
@@ -161,6 +160,7 @@ CLASSRelationship.prototype.configureMultiplicityCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
+      width: 300,
       data: [
           {id:"many",        text:"*"},
           {id:"zero",        text:"0"},
@@ -192,6 +192,7 @@ CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
+      width: 300,
       data: [
           {id:"public",    text:"public"},
           {id:"protected", text:"protected"},
@@ -221,6 +222,7 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
+      width: 300,
       data: [
           {id:"array",      text:"[ ]"},
           {id:"list",       text:"List"},
@@ -251,6 +253,7 @@ CLASSRelationship.prototype.configureAttributesCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
+      width: 300,
       data: []
   });
   
@@ -266,7 +269,19 @@ CLASSRelationship.prototype.configureAttributesCombo = function (elementId) {
  * @author Gabriel Leonardo Diaz, 10.02.2014.
  */
 CLASSRelationship.prototype.setTitle = function () {
-  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.relationshipCell.getAttribute("name")));
+  var relationshipName = "";
+  
+  if (this.graph.isAggregation(this.relationshipCell.value)) {
+    relationshipName = "Agregacion";
+  }
+  else if (this.graph.isComposition(this.relationshipCell.value)) {
+    relationshipName = "Composicion";
+  }
+  else {
+    relationshipName = "Asociacion";
+  }
+  
+  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", relationshipName));
 };
 
 /**

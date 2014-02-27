@@ -38,6 +38,11 @@ CLASSToolbox.prototype.toolboxItemStyle = "toolbox_item";
 CLASSToolbox.prototype.draggableItemStyle = "draggable";
 
 /**
+ * Map that stores the quantity of instances created by object kind. Allows to adjust the 
+ */
+CLASSToolbox.prototype.instanceQuantity = {};
+
+/**
  * Initializer method for the CLASS Modeler toolBox.
  */
 CLASSToolbox.prototype.init = function (container) {
@@ -54,6 +59,11 @@ CLASSToolbox.prototype.init = function (container) {
   for (var i = 0; i < toolboxItems.length; i++) {
     this.configureSelection(toolboxItems[i]);
   }
+  
+  // Initialize the instances quantity
+  this.instanceQuantity["class"] = 0;
+  this.instanceQuantity["interface"] = 0;
+  this.instanceQuantity["enumeration"] = 0;
 };
 
 /**
@@ -71,6 +81,7 @@ CLASSToolbox.prototype.init = function (container) {
  */
 CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
   var editor = this.editor;
+  var self   = this;
   
   // Drop handler
   var doDrop = function (graph, evt, overCell) {
@@ -91,33 +102,48 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       // CLASS sections
       if (graph.isClass(newCell.value)) {
         var attrSection = model.cloneCell(editor.getTemplate("section"));
-        attrSection.setAttribute("isAttribute", "true");
+        attrSection.setAttribute("attribute", "true");
         attrSection.setVertex(true);
         
         var operSection = model.cloneCell(editor.getTemplate("section"));
-        operSection.setAttribute("isAttribute", "false");
+        operSection.setAttribute("attribute", "false");
         operSection.setVertex(true);
         
         newCell.insert(attrSection);
         newCell.insert(operSection);
+        
+        // Adjust the name
+        var nameNumber = self.instanceQuantity["class"] + 1;
+        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        self.instanceQuantity["class"] = nameNumber;
       }
       
       // INTERFACE sections
       else if (graph.isInterface(newCell.value)) {
         var attrSection = model.cloneCell(editor.getTemplate("section"));
-        attrSection.setAttribute("isAttribute", "false");
+        attrSection.setAttribute("attribute", "false");
         attrSection.setVertex(true);
         
         newCell.insert(attrSection);
+        
+        // Adjust the name
+        var nameNumber = self.instanceQuantity["interface"] + 1;
+        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        self.instanceQuantity["interface"] = nameNumber;
       }
       
       // ENUMERATION sections
       else if (graph.isEnumeration(newCell.value)) {
         var attrSection = model.cloneCell(editor.getTemplate("section"));
-        attrSection.setAttribute("isAttribute", "true");
+        attrSection.setAttribute("attribute", "true");
         attrSection.setVertex(true);
         
         newCell.insert(attrSection);
+        
+        // Adjust the name
+        var nameNumber = self.instanceQuantity["enumeration"] + 1;
+        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        self.instanceQuantity["enumeration"] = nameNumber;
       }
       
       graph.addCell(newCell, parent);
