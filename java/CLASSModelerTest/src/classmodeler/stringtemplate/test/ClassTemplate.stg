@@ -1,5 +1,0 @@
-class (visibility, name) ::= <<
-<visibility> class <name> {
-  
-}
->>

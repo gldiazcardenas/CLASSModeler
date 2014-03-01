@@ -57,57 +57,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.common_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.common.source_2.9.0.v20130314-0814.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.ecore_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.ecore.source_2.9.0.v20130314-0814.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.ecore.xmi_2.9.0.v20130314-0814.jar" sourcepath="lib/EMF/org.eclipse.emf.ecore.xmi.source_2.9.0.v20130314-0814.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/EMF/org.eclipse.emf.mapping.ecore2xml_2.7.0.v20130318-0639.jar" sourcepath="lib/EMF/org.eclipse.emf.mapping.ecore2xml.source_2.7.0.v20130318-0639.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.common_1.8.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.common.source_1.8.0.v20130318-0942.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml_4.1.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.source_4.1.0.v20130318-0942.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml.resources_4.1.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.resources.source_4.1.0.v20130318-0942.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/Commons-Codec-1.8/commons-codec-1.8.jar" sourcepath="lib/Commons-Codec-1.8/commons-codec-1.8-sources.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.types_1.0.100.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.types.source_1.0.100.v20130318-0942.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml.profile.l2_1.1.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.profile.l2.source_1.1.0.v20130318-0942.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.uml.profile.l3_1.0.100.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.uml.profile.l3.source_1.0.100.v20130318-0942.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
 		</attributes>
@@ -120,6 +70,26 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/iText-2.1.7/iText-2.1.7_mx-1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/mxGraph/mxgraph-core.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/StringTemplate-4.0.7/antlr-3.5-complete.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/StringTemplate-4.0.7/ST-4.0.7.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>

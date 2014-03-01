@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.web.beans;
+package classmodeler.domain.share;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.service.util.CollectionUtils;
@@ -23,30 +23,44 @@ import com.mxgraph.util.mxXmlUtils;
  */
 public class SharedDiagram extends mxSharedGraphModel {
   
-  private Diagram diagram;
+  private Diagram wrappedDiagram;
   
   public SharedDiagram (Diagram diagram) {
     super((mxGraphModel) new mxCodec().decode(mxXmlUtils.parseXml(diagram.getXML()).getDocumentElement()));
-    this.diagram = diagram;
+    this.wrappedDiagram = diagram;
   }
   
   public int getKey() {
-    return diagram.getKey();
+    return wrappedDiagram.getKey();
   }
   
   public String getName() {
-    return diagram.getName();
+    return wrappedDiagram.getName();
   }
   
   public Diagram getWrappedDiagram() {
-    return diagram;
+    return wrappedDiagram;
   }
   
+  /**
+   * Publishes the changes to the wrapped diagram in form of XML. This copies
+   * the XML representation to the local diagram and prepares it to be saved in
+   * DB.
+   * 
+   * @author Gabriel Leonardo Diaz, 01.03.2014.
+   */
   public void publishChanges () {
     String value = getState();
-    this.diagram.setXML(value);
+    this.wrappedDiagram.setXML(value);
   }
   
+  /**
+   * Checks if the diagram has listeners of its state, it means other users are
+   * also editing/seeing the diagram.
+   * 
+   * @return
+   * @author Gabriel Leonardo Diaz, 01.03.2014.
+   */
   public boolean hasMoreListeners () {
     return !CollectionUtils.isEmptyCollection(this.diagramChangeListeners);
   }

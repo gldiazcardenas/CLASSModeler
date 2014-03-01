@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.web.beans;
+package classmodeler.domain.share;
 
 import java.util.HashMap;
 import java.util.Iterator;

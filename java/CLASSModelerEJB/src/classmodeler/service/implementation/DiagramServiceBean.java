@@ -8,18 +8,30 @@
 
 package classmodeler.service.implementation;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
+import classmodeler.domain.share.SharedDiagram;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
@@ -28,6 +40,8 @@ import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.CollectionUtils;
+
+import com.mxgraph.reader.mxGraphViewImageReader;
 
 /**
  * Session bean implementation for Diagram service.
@@ -145,6 +159,21 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     
     // TODO GD
     return EDiagramPrivilege.OWNER;
+  }
+  
+  @Override
+  public List<String> generateCode(SharedDiagram sharedDiagram) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
+  @Override
+  public void generateImage(String rawXML, OutputStream output) throws ParserConfigurationException, SAXException, IOException {
+    String xml = URLDecoder.decode(rawXML, "UTF-8");
+    mxGraphViewImageReader reader = new mxGraphViewImageReader(Color.WHITE, 4, true, true);
+    InputSource inputSource = new InputSource(new StringReader(xml));
+    BufferedImage image = mxGraphViewImageReader.convert(inputSource, reader);
+    ImageIO.write(image, "png", output);
   }
   
 }

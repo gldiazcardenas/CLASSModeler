@@ -8,38 +8,32 @@
 
 package classmodeler.web.controllers;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
+import classmodeler.domain.share.SharedDiagram;
+import classmodeler.domain.share.SharedDiagramSession;
+import classmodeler.domain.share.SharedDiagramsCache;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
-import classmodeler.web.beans.SharedDiagram;
-import classmodeler.web.beans.SharedDiagramSession;
-import classmodeler.web.beans.SharedDiagramsCache;
-import classmodeler.web.converters.UMLConverter;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
-import com.mxgraph.reader.mxGraphViewImageReader;
 import com.mxgraph.util.mxXmlUtils;
 
 /**
@@ -187,11 +181,7 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 17.02.2014.
    */
   public void generateImage (String rawXML, OutputStream output) throws SAXException, ParserConfigurationException, IOException {
-    String xml = URLDecoder.decode(rawXML, "UTF-8");
-    mxGraphViewImageReader reader = new mxGraphViewImageReader(Color.WHITE, 4, true, true);
-    InputSource inputSource = new InputSource(new StringReader(xml));
-    BufferedImage image = mxGraphViewImageReader.convert(inputSource, reader);
-    ImageIO.write(image, "png", output);
+    diagramService.generateImage(rawXML, output);
   }
   
   /**
@@ -200,8 +190,8 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    UMLConverter converter = new UMLConverter(this.diagram.getModel());
-    converter.convert();
+    List<String> files = diagramService.generateCode(diagram);
+    files.size();
   }
   
   /**
