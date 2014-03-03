@@ -84,16 +84,11 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var abstractValue      = null;
   var staticValue        = null;
   var finalValue         = null;
-  var widthValue         = null;
-  var heightValue        = null;
-  var xValue             = null;
-  var yValue             = null;
   
   var nameEditor         = null;
   var abstractEditor     = null;
   var staticEditor       = null;
   var finalEditor        = null;
-  var spinnerEditor      = null;
   var visibilityEditor   = null;
   var attributesEditor   = null;
   var operationsEditor   = null;
@@ -104,20 +99,21 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     this.cell       = cell;
     var node        = cell.value;
     
-    // Values
-    nameValue       = node.getAttribute("name");
-    visibilityValue = node.getAttribute("visibility");
-    abstractValue   = node.getAttribute("isAbstract");
-    staticValue     = node.getAttribute("isStatic");
-    finalValue      = node.getAttribute("isFinal");
-    
     if (this.graph.isNamedElement(node)) {
+      nameValue  = node.getAttribute("name");
       nameEditor = "text";
     }
     
+    if (this.graph.isClass(node) || this.graph.isFeature(node)) {
+      staticValue  = this.convertBooleanToString(node.getAttribute("static"));
+      staticEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
+      
+      finalValue  = this.convertBooleanToString(node.getAttribute("final"));
+      finalEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
+    }
+    
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
-      staticEditor     = {"type":"checkbox", "options": {"on":true, "off":false}};
-      finalEditor      = {"type":"checkbox", "options": {"on":true, "off":false}};
+      visibilityValue  = node.getAttribute("visibility");
       visibilityEditor = {"type":"combobox", "options": {
         "valueField":"id",
         "textField":"text",
@@ -131,8 +127,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       }};
       
       if (this.graph.isClassifier(node)) {
-        abstractEditor = {"type":"checkbox", "options": {"on":true, "off":false}};
-        
         attributesEditor = {"type": "button", "options": {"onclick": function () {
           selfEditor.showAttributes(cell);
         }}};
@@ -141,12 +135,20 @@ CLASSProperties.prototype.configureProperties = function (cell) {
           selfEditor.showOperations(cell);
         }}};
         
+        packageValue  = node.getAttribute("package");
         packageEditor = {"type":"combobox", "options": {
           "valueField":"id",
           "textField":"text",
           "panelHeight":"90",
           "data":this.graph.getPackagesJSon()
         }};
+      }
+    }
+    
+    if (this.graph.isClass(node) || this.graph.isInterface(node) || this.graph.isOperation(node)) {
+      abstractValue = this.convertBooleanToString(node.getAttribute("abstract"));
+      if (!this.graph.isInterface(node)) {
+        abstractEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
       }
     }
     
@@ -174,13 +176,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // SPECIFIC
       {"name":"Atributos", "value":null, "group":"Especifico", "editor":attributesEditor},
       {"name":"Operaciones", "value":null, "group":"Especifico", "editor":operationsEditor},
-      {"name":"Editar Relacion", "value":null, "group":"Especifico", "editor":relationshipEditor},
-      
-      // GEOMETRY
-      {"name":"Ancho", "value":widthValue, "group":"Geometria", "editor":spinnerEditor},
-      {"name":"Alto", "value":heightValue, "group":"Geometria", "editor":spinnerEditor},
-      {"name":"X", "value":xValue, "group":"Geometria", "editor":spinnerEditor},
-      {"name":"Y", "value":yValue, "group":"Geometria", "editor":spinnerEditor}
+      {"name":"Editar Relacion", "value":null, "group":"Especifico", "editor":relationshipEditor}
   ];
   
   $("#propertyTable").propertygrid({
@@ -198,6 +194,27 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         return "color: #000000;";
       }
   });
+};
+
+/**
+ * Converts the boolean to string.
+ * @param booleanValue
+ * @returns
+ */
+CLASSProperties.prototype.convertBooleanToString = function (booleanValue) {
+  if (booleanValue != null) {
+    return booleanValue == "1" ? "Si" : "No";
+  }
+  return "";
+};
+
+/**
+ * Convert the string to boolean.
+ * @param stringValue
+ * @returns
+ */
+CLASSProperties.prototype.convertStringToBoolean = function (stringValue) {
+  return stringValue == "Si" ? "1" : "0";
 };
 
 /**
@@ -221,7 +238,7 @@ CLASSProperties.prototype.isCellEditable = function (cell) {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes) {
-  if (changes.value) {
+  if (changes.value != null) {
     switch (rowIndex) {
     case 0: // Name
       this.graph.cellEditProperty(this.cell, "name", changes.value, true);
@@ -231,28 +248,20 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
       this.graph.cellEditProperty(this.cell, "visibility", changes.value, true);
       break;
     
+    case 2: // Package
+      this.graph.cellEditProperty(this.cell, "package", changes.value, true);
+      break;
+    
     case 3: // Abstract
-      this.graph.cellEditProperty(this.cell, "isAbstract", changes.value, true);
+      this.graph.cellEditProperty(this.cell, "abstract", this.convertStringToBoolean(changes.value), true);
       break;
       
     case 4: // Static
-      this.graph.cellEditProperty(this.cell, "isStatic", changes.value, true);
+      this.graph.cellEditProperty(this.cell, "static", this.convertStringToBoolean(changes.value), true);
       break;
       
     case 5: // Final
-      this.graph.cellEditProperty(this.cell, "isFinal", changes.value, true);
-      break;
-      
-    case 9: // Width
-      break;
-      
-    case 10: // Height
-      break;
-      
-    case 11: // X
-      break;
-      
-    case 12: // Y
+      this.graph.cellEditProperty(this.cell, "final", this.convertStringToBoolean(changes.value), true);
       break;
     }
   }

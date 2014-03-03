@@ -102,7 +102,7 @@ public abstract class JSFGenericBean implements Serializable {
     return (T) FacesContext.getCurrentInstance().getApplication()
                                                 .getELResolver()
                                                 .getValue(elContext, null, beanName);
-}
+  } 
   
   /**
    * Generic method that adds messages to the JSF context with the given

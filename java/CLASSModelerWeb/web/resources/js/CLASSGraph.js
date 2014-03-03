@@ -40,11 +40,28 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
     return this.convertOperationToString(node);
   }
   
+  if (this.isClassifier(node)) {
+    return this.convertClassifierToString(node);
+  }
+  
   if (this.isNamedElement(node)) {
     return node.getAttribute("name");
   }
   
   return "";
+};
+
+/**
+ * Converts the XML classifier to a string representation.
+ * @param classifier
+ * @returns
+ */
+CLASSGraph.prototype.convertClassifierToString = function (classifier) {
+  var packageName = classifier.getAttribute("package");
+  if (packageName != null && packageName.length > 0) {
+    return packageName + "::" + classifier.getAttribute("name");
+  }
+  return classifier.getAttribute("name");
 };
 
 /**
@@ -58,15 +75,15 @@ CLASSGraph.prototype.convertPropertyToString = function (property) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
   var type         = property.getAttribute("type");
-  var initialValue = property.getAttribute("initialValue");
+  var defaultValue = property.getAttribute("defaultValue");
   var label        = this.getVisibilityChar(visibility) + " " + name;
   
-  if (type && type.length > 0) {
-    label += ": " + type;
+  if (type) {
+    label += ": " + this.convertTypeToString(type);
   }
   
-  if (initialValue && initialValue.length > 0) {
-    label += " " + initialValue;
+  if (defaultValue) {
+    label += " " + defaultValue;
   }
   
   return label;
@@ -109,6 +126,18 @@ CLASSGraph.prototype.convertParametersToString = function (operation) {
   }
   
   return parameterString;
+};
+
+/**
+ * Converts the given type to string.
+ * @param type
+ */
+CLASSGraph.prototype.convertTypeToString = function (type) {
+  var cell = this.model.getCell(type);
+  if (cell != null) {
+    return type.getAttribute("name");
+  }
+  return type;
 };
 
 /**
@@ -285,6 +314,16 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
     // Set the user object of the cell
     this.model.setValue(cell, clone);
     
+    // Adjust the styles
+    if (attrName == "abstract" || attrName == "static") {
+      this.adjustStyleCell(cell);
+    }
+    
+    // Package adjust classifiers names
+    if (this.isPackage(node)) {
+      this.adjustClassifiersPackage(node.getAttribute("name"), clone.getAttribute("name"));
+    }
+    
     // Adjust the cell size
     if (autoSize) {
       this.cellSizeUpdated(cell, false);
@@ -293,6 +332,94 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
   finally {
     this.model.endUpdate();
   }
+};
+
+/**
+ * Overrides the function cellsRemoved() in mxGraph. This allows to adjust the
+ * data in the model after deleting some objects.
+ * 
+ * @param cells
+ * @author Gabriel Leonardo Diaz, 02.03.2014.
+ */
+CLASSGraph.prototype.cellsRemoved = function (cells) {
+  mxGraph.prototype.cellsRemoved.apply(this, arguments);
+  
+  var cell;
+  
+  for (var i = 0; i < cells.length; i++) {
+    cell = cells[i];
+    
+    if (this.isPackage(cell.value)) {
+      this.removeClassifiersPackage(cell.getAttribute("name"));
+    }
+  }
+};
+
+/**
+ * Removes the package of the classifiers assigned to the given one name.
+ * @param packageName
+ */
+CLASSGraph.prototype.removeClassifiersPackage = function (packageName) {
+  var cell;
+  for (var key in this.model.cells) {
+    cell = this.model.getCell(key);
+    
+    if (this.isClassifier(cell.value) && cell.getAttribute("package") == packageName) {
+      var node  = cell.value;
+      
+      // Clones the value for correct UNDO/REDO
+      var clone = node.cloneNode(true);
+      clone.setAttribute("package", "");
+      
+      // Set the user object of the cell
+      this.model.setValue(cell, clone);
+    }
+  }
+};
+
+/**
+ * Changes the classifier package name.
+ * 
+ * @author Gabriel Leonardo Diaz, 02.03.2014.
+ */
+CLASSGraph.prototype.adjustClassifiersPackage = function (oldPackageName, newPackageName) {
+  var cell;
+  for (var key in this.model.cells) {
+    cell = this.model.getCell(key);
+    
+    if (this.isClassifier(cell.value) && cell.getAttribute("package") == oldPackageName) {
+      var node  = cell.value;
+      
+      // Clones the value for correct UNDO/REDO
+      var clone = node.cloneNode(true);
+      clone.setAttribute("package", newPackageName);
+      
+      // Set the user object of the cell
+      this.model.setValue(cell, clone);
+    }
+  }
+};
+
+/**
+ * Adjusts the cell style.
+ * @param cell
+ */
+CLASSGraph.prototype.adjustStyleCell = function (cell) {
+  var styleValue = 0;
+  
+  if (this.isClassifier(cell.value)) {
+    styleValue += mxConstants.FONT_BOLD;
+  }
+  
+  if (cell.getAttribute("abstract") == "1") {
+    styleValue += mxConstants.FONT_ITALIC;
+  }
+  
+  if (cell.getAttribute("static") == "1") {
+    styleValue += mxConstants.FONT_UNDERLINE;
+  }
+  
+  this.setCellStyles(mxConstants.STYLE_FONTSTYLE, styleValue, [cell]);
 };
 
 /**
@@ -418,6 +545,7 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
       this.addCell(attrSection, classifierCell, 0);
     }
     
+    this.adjustStyleCell(attributeCell);
     this.addCell(attributeCell, attrSection);
     this.cellSizeUpdated(attributeCell, false);
   }
@@ -464,6 +592,7 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
       this.addCell(operSection, classifierCell, 1);
     }
     
+    this.adjustStyleCell(operationCell);
     this.addCell(operationCell, operSection);
     this.cellSizeUpdated(operationCell, false);
   }
@@ -483,6 +612,7 @@ CLASSGraph.prototype.editOperation = function (operationCell, newOperationCell) 
   
   try {
     this.model.setValue(operationCell, newOperationCell.value);
+    this.adjustStyleCell(operationCell);
     this.cellSizeUpdated(operationCell, false);
   }
   finally {
@@ -505,6 +635,7 @@ CLASSGraph.prototype.editAttribute = function (attributeCell, newAttributeCell) 
   
   try {
     this.model.setValue(attributeCell, newAttributeCell.value);
+    this.adjustStyleCell(attributeCell);
     this.cellSizeUpdated(attributeCell, false);
   }
   finally {
@@ -561,7 +692,7 @@ CLASSGraph.prototype.getPackagesJSon = function () {
   var jSonData   = [];
   
   // Fixed types
-  jSonData.push({id:"default", text:"Por Defecto"});
+  jSonData.push({id:"", text:" --- "});
   
   var cell;
   
@@ -570,7 +701,7 @@ CLASSGraph.prototype.getPackagesJSon = function () {
     cell = this.model.getCell(key);
     
     if (this.isPackage(cell.value)) {
-      jSonData.push({ id:cell.id, text: cell.getAttribute("name") });
+      jSonData.push({ id: cell.getAttribute("name"), text: cell.getAttribute("name") });
     }
   }
   
@@ -679,15 +810,6 @@ CLASSGraph.prototype.isPackage = function (node) {
 };
 
 /**
- * Checks if the given node is a packageable element.
- * @param node
- * @returns {Boolean}
- */
-CLASSGraph.prototype.isPackageableElement = function (node) {
-  return this.isClassifier(node) || this.isAssociation(node);
-};
-
-/**
  * Checks if the given node is an enumeration element.
  * 
  * @param node
@@ -767,10 +889,10 @@ CLASSGraph.prototype.isAssociation = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isAggregation = function (node) {
-  if (node == null || node.nodeName == null || node.nodeName.toLowerCase() != "association") {
+  if (!this.isAssociation(node)) {
     return false;
   }
-  return node.nodeName.toLowerCase() == "association";
+  return node.getAttribute("aggregation") == "shared";
 };
 
 /**
@@ -781,10 +903,10 @@ CLASSGraph.prototype.isAggregation = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isComposition = function (node) {
-  if (node == null || node.nodeName == null || node.nodeName.toLowerCase() != "association") {
+  if (!this.isAssociation(node)) {
     return false;
   }
-  return node.nodeName.toLowerCase() == "association";
+  return node.getAttribute("aggregation") == "composite";
 };
 
 /**

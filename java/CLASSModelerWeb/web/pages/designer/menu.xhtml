@@ -51,9 +51,7 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('exportXMI')" />
             </p:submenu>
             
-            <p:submenu label="#{msgs.MENU_HELP_LABEL}" icon="ui-icon-help">
-                <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
-            </p:submenu>
+            <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
             
             <f:facet name="options">
                 <ui:include src="/pages/dashboard/user.xhtml" />

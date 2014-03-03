@@ -92,13 +92,11 @@ CLASSAttributes.prototype.setTitle = function () {
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
 CLASSAttributes.prototype.configureTypeCombo = function () {
-  var jSonData = this.graph.getTypesJSon();
-  
   $("#attrType").combobox({
       valueField:"id",
       textField:"text",
       panelHeight: 200,
-      data: jSonData
+      data: this.graph.getTypesJSon()
   });
   
   $("#attrType").combobox("setValue", "int"); // default value
@@ -197,9 +195,9 @@ CLASSAttributes.prototype.loadTableData = function () {
       var visibility   = attributes[i].getAttribute("visibility");
       var nameValue    = attributes[i].getAttribute("name");
       var typeValue    = attributes[i].getAttribute("type");
-      var initialValue = attributes[i].getAttribute("initialValue");
+      var defaultValue = attributes[i].getAttribute("defaultValue");
       
-      jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: initialValue });
+      jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: defaultValue });
     }
   }
   
@@ -226,9 +224,9 @@ CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
     $("#attrName").val(this.attributeCell.getAttribute("name"));
     $("#attrType").combobox("setValue", this.attributeCell.getAttribute("type"));
     $("#attrVisibility").combobox("setValue", this.attributeCell.getAttribute("visibility"));
-    $("#attrInitValue").val(this.attributeCell.getAttribute("initialValue"));
-    $("#staticCheck").prop("checked", this.attributeCell.getAttribute("isStatic") == "true");
-    $("#finalCheck").prop("checked", this.attributeCell.getAttribute("isFinal") == "true");
+    $("#attrInitValue").val(this.attributeCell.getAttribute("defaultValue"));
+    $("#staticCheck").prop("checked", this.attributeCell.getAttribute("static") == "1");
+    $("#finalCheck").prop("checked", this.attributeCell.getAttribute("final") == "1");
   }
 };
 
@@ -264,9 +262,9 @@ CLASSAttributes.prototype.saveAttribute = function () {
   var nameValue       = $("#attrName").val();
   var typeValue       = $("#attrType").combobox("getValue");
   var visibilityValue = $("#attrVisibility").combobox("getValue");
-  var initialValue    = $("#attrInitValue").val();
-  var staticValue     = $("#staticCheck").is(":checked");
-  var finalValue      = $("#finalCheck").is(":checked");
+  var defaultValue    = $("#attrInitValue").val();
+  var staticValue     = $("#staticCheck").is(":checked") ? "1" : "0";
+  var finalValue      = $("#finalCheck").is(":checked") ? "1" : "0";
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid Name
@@ -305,15 +303,15 @@ CLASSAttributes.prototype.saveAttribute = function () {
   if (this.graph.isProperty(attribute.value)) {
     attribute.setAttribute("type", typeValue);
     attribute.setAttribute("visibility", visibilityValue);
-    attribute.setAttribute("initialValue", initialValue);
-    attribute.setAttribute("isStatic", staticValue);
-    attribute.setAttribute("isFinal", finalValue);
+    attribute.setAttribute("defaultValue", defaultValue);
+    attribute.setAttribute("static", staticValue);
+    attribute.setAttribute("final", finalValue);
   }
   
   var attrName = attribute.getAttribute("name");
   var attrVis  = attribute.getAttribute("visibility");
   var attrType = attribute.getAttribute("type");
-  var attrVal  = attribute.getAttribute("initialValue");
+  var attrVal  = attribute.getAttribute("defaultValue");
   var visChar  = this.graph.getVisibilityChar(attrVis);
   
   // Apply changes

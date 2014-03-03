@@ -64,6 +64,7 @@ CLASSToolbox.prototype.init = function (container) {
   this.instanceQuantity["class"] = 0;
   this.instanceQuantity["interface"] = 0;
   this.instanceQuantity["enumeration"] = 0;
+  this.instanceQuantity["package"] = 0;
 };
 
 /**
@@ -80,12 +81,11 @@ CLASSToolbox.prototype.init = function (container) {
  * @author Gabriel Leonardo Diaz, 17.10.2013.
  */
 CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
-  var editor = this.editor;
-  var self   = this;
+  var self = this;
   
   // Drop handler
   var doDrop = function (graph, evt, overCell) {
-    graph.stopEditing(false);
+    graph.stopEditing(true);
     
     var model = graph.getModel();
     model.beginUpdate();
@@ -101,11 +101,11 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       
       // CLASS sections
       if (graph.isClass(newCell.value)) {
-        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        var attrSection = model.cloneCell(self.editor.getTemplate("section"));
         attrSection.setAttribute("attribute", "true");
         attrSection.setVertex(true);
         
-        var operSection = model.cloneCell(editor.getTemplate("section"));
+        var operSection = model.cloneCell(self.editor.getTemplate("section"));
         operSection.setAttribute("attribute", "false");
         operSection.setVertex(true);
         
@@ -120,7 +120,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       
       // INTERFACE sections
       else if (graph.isInterface(newCell.value)) {
-        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        var attrSection = model.cloneCell(self.editor.getTemplate("section"));
         attrSection.setAttribute("attribute", "false");
         attrSection.setVertex(true);
         
@@ -134,7 +134,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       
       // ENUMERATION sections
       else if (graph.isEnumeration(newCell.value)) {
-        var attrSection = model.cloneCell(editor.getTemplate("section"));
+        var attrSection = model.cloneCell(self.editor.getTemplate("section"));
         attrSection.setAttribute("attribute", "true");
         attrSection.setVertex(true);
         
@@ -144,6 +144,12 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
         var nameNumber = self.instanceQuantity["enumeration"] + 1;
         newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
         self.instanceQuantity["enumeration"] = nameNumber;
+      }
+      else if (graph.isPackage(newCell.value)) {
+        // Adjust the name
+        var nameNumber = self.instanceQuantity["package"] + 1;
+        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        self.instanceQuantity["package"] = nameNumber;
       }
       
       graph.addCell(newCell, parent);
