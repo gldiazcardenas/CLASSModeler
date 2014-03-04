@@ -75,15 +75,15 @@ CLASSGraph.prototype.convertPropertyToString = function (property) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
   var type         = property.getAttribute("type");
-  var defaultValue = property.getAttribute("defaultValue");
+  var initialValue = property.getAttribute("initialValue");
   var label        = this.getVisibilityChar(visibility) + " " + name;
   
   if (type) {
-    label += ": " + this.convertTypeToString(type);
+    label += ": " + this.convertTypeToString(property);
   }
   
-  if (defaultValue) {
-    label += " " + defaultValue;
+  if (initialValue) {
+    label += " = " + initialValue;
   }
   
   return label;
@@ -129,15 +129,41 @@ CLASSGraph.prototype.convertParametersToString = function (operation) {
 };
 
 /**
- * Converts the given type to string.
- * @param type
+ * Converts the type of the given property to string.
+ * @param feature
  */
-CLASSGraph.prototype.convertTypeToString = function (type) {
+CLASSGraph.prototype.convertTypeToString = function (feature) {
+  var typeName;
+  
+  var type = feature.getAttribute("type");
+  var collection = feature.getAttribute("collection");
   var cell = this.model.getCell(type);
+  
   if (cell != null) {
-    return type.getAttribute("name");
+    typeName = cell.getAttribute("name");
   }
-  return type;
+  else {
+    typeName = type;
+  }
+  
+  if (collection) {
+    if (collection == "array") {
+      typeName = "[ ] " + typeName;
+    }
+    else {
+      var collectionName = collection;
+      var collections = this.getCollectionsJSon();
+      for (var i = 0; i < collections.length; i++) {
+        if (collections[i].id == collection) {
+          collectionName = collections[i].text;
+          break;
+        }
+      }
+      typeName = collectionName + "<" + typeName + ">";
+    }
+  }
+  
+  return typeName;
 };
 
 /**
@@ -352,12 +378,40 @@ CLASSGraph.prototype.cellsRemoved = function (cells) {
     if (this.isPackage(cell.value)) {
       this.removeClassifiersPackage(cell.getAttribute("name"));
     }
+    else if (this.isClassifier(cell.value)) {
+      this.resetElementsType(cell.id);
+    }
+  }
+};
+
+/**
+ * Resets the element type to 'int' for properties, operations and parameters referencing the deleted classifier.
+ * @param classifierCell
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
+ */
+CLASSGraph.prototype.resetElementsType = function (typeId) {
+  var cell;
+  for (var key in this.model.cells) {
+    cell = this.model.getCell(key);
+    
+    if (cell.getAttribute("type") == typeId && (this.isProperty(cell.value) || this.isOperation(cell.value) || this.isParameter(cell.value))) {
+      var node  = cell.value;
+      
+      // Clones the value for correct UNDO/REDO
+      var clone = node.cloneNode(true);
+      clone.setAttribute("type", "int");
+      
+      // Set the user object of the cell
+      this.model.setValue(cell, clone);
+    }
   }
 };
 
 /**
  * Removes the package of the classifiers assigned to the given one name.
+ * 
  * @param packageName
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
  */
 CLASSGraph.prototype.removeClassifiersPackage = function (packageName) {
   var cell;
@@ -541,12 +595,14 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
     if (attrSection == null) {
       attrSection = this.model.cloneCell(this.sectionTemplate);
       attrSection.setAttribute("attribute", "true");
-      
+      attrSection.insert(attributeCell);
       this.addCell(attrSection, classifierCell, 0);
+    }
+    else {
+      this.addCell(attributeCell, attrSection);
     }
     
     this.adjustStyleCell(attributeCell);
-    this.addCell(attributeCell, attrSection);
     this.cellSizeUpdated(attributeCell, false);
   }
   finally {
@@ -588,12 +644,14 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
     if (operSection == null) {
       operSection = this.model.cloneCell(this.sectionTemplate);
       operSection.setAttribute("attribute", "false");
-      
+      operSection.insert(operationCell);
       this.addCell(operSection, classifierCell, 1);
+    }
+    else {
+      this.addCell(operationCell, operSection);
     }
     
     this.adjustStyleCell(operationCell);
-    this.addCell(operationCell, operSection);
     this.cellSizeUpdated(operationCell, false);
   }
   finally {
@@ -655,7 +713,7 @@ CLASSGraph.prototype.getTypesJSon = function (includeVoid) {
   
   // Fixed types
   if (includeVoid) {
-    jSonData.push({id:"void",    text:"void"});
+    jSonData.push({id:"void",  text:"void"});
   }
   
   jSonData.push({id:"boolean", text:"boolean"});
@@ -675,7 +733,7 @@ CLASSGraph.prototype.getTypesJSon = function (includeVoid) {
     cell = this.model.getCell(key);
     
     if (this.isClassifier(cell.value)) {
-      jSonData.push({ id:cell.id, text: cell.getAttribute("name") });
+      jSonData.push({ id: cell.id, text: cell.getAttribute("name") });
     }
   }
   
@@ -704,6 +762,42 @@ CLASSGraph.prototype.getPackagesJSon = function () {
       jSonData.push({ id: cell.getAttribute("name"), text: cell.getAttribute("name") });
     }
   }
+  
+  return jSonData;
+};
+
+/**
+ * Gets a JSon object with the available visibility kinds.
+ * @returns {Array}
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
+ */
+CLASSGraph.prototype.getVisibilityJSon = function () {
+  var jSonData   = [];
+  
+  jSonData.push({id: "public",    text: "public"});
+  jSonData.push({id: "protected", text: "protected"});
+  jSonData.push({id: "package",   text: "package"});
+  jSonData.push({id: "private",   text: "private"});
+  
+  return jSonData;
+};
+
+/**
+ * Gets a JSon object with the available collections in the system.
+ * 
+ * @returns {Array}
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
+ */
+CLASSGraph.prototype.getCollectionsJSon = function () {
+  var jSonData   = [];
+  
+  jSonData.push({id: "array",      text: "[ ]"});
+  jSonData.push({id: "vector",     text: "Vector"});
+  jSonData.push({id: "list",       text: "List"});
+  jSonData.push({id: "arraylist",  text: "ArrayList"});
+  jSonData.push({id: "linkedlist", text: "LinkedList"});
+  jSonData.push({id: "set",        text: "Set"});
+  jSonData.push({id: "hashset",    text: "HashSet"});
   
   return jSonData;
 };

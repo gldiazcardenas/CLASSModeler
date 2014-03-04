@@ -116,6 +116,10 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public String initialize () {
+    if (isPendingChanges()) {
+      save();
+    }
+    
     String value = this.diagramSession.init();
     return value;
   }
@@ -153,7 +157,9 @@ public class DesignerControllerBean extends JSFGenericBean {
   public void save () {
     try {
       this.diagram.publishChanges();
-      this.diagramService.updateDiagram(this.diagram.getWrappedDiagram());
+      if (this.user.isRegisteredUser()) {
+        this.diagramService.updateDiagram(this.diagram.getWrappedDiagram());
+      }
       this.pendingChanges = false;
     }
     catch (UnprivilegedException e) {
@@ -192,15 +198,6 @@ public class DesignerControllerBean extends JSFGenericBean {
   public void generateCode () {
     List<String> files = diagramService.generateCode(diagram);
     files.size();
-  }
-  
-  /**
-   * Exports the edited diagram to XMI format.
-   * 
-   * @author Gabriel Leonardo Diaz, 17.02.2014
-   */
-  public void exportXMI () {
-    // TODO GD
   }
   
 }

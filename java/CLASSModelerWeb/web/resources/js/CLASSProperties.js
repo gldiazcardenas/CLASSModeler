@@ -94,6 +94,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var operationsEditor   = null;
   var relationshipEditor = null;
   var packageEditor      = null;
+  var attributesName     = "Atributos";
   
   if (this.isCellEditable(cell)) {
     this.cell       = cell;
@@ -106,10 +107,12 @@ CLASSProperties.prototype.configureProperties = function (cell) {
     
     if (this.graph.isClass(node) || this.graph.isFeature(node)) {
       staticValue  = this.convertBooleanToString(node.getAttribute("static"));
-      staticEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
-      
       finalValue  = this.convertBooleanToString(node.getAttribute("final"));
-      finalEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
+      
+      if (cell.parent == null || cell.parent.parent == null || !this.graph.isInterface(cell.parent.parent.value)) {
+        staticEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
+        finalEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
+      }
     }
     
     if (this.graph.isClassifier(node) || this.graph.isFeature(node)) {
@@ -118,12 +121,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         "valueField":"id",
         "textField":"text",
         "panelHeight":"90",
-        "data":[
-            {"id":"public",    "text":"public"},
-            {"id":"protected", "text":"protected"},
-            {"id":"package",   "text":"package"},
-            {"id":"private",   "text":"private"}
-        ]
+        "data": this.graph.getVisibilityJSon()
       }};
       
       if (this.graph.isClassifier(node)) {
@@ -131,9 +129,15 @@ CLASSProperties.prototype.configureProperties = function (cell) {
           selfEditor.showAttributes(cell);
         }}};
         
-        operationsEditor = {"type":"button", "options": {"onclick": function () {
-          selfEditor.showOperations(cell);
-        }}};
+        if (this.graph.isClass(node) || this.graph.isInterface(node)) {
+          operationsEditor = {"type":"button", "options": {"onclick": function () {
+            selfEditor.showOperations(cell);
+          }}};
+        }
+        
+        if (this.graph.isEnumeration(node)) {
+          attributesName = "Literales";
+        }
         
         packageValue  = node.getAttribute("package");
         packageEditor = {"type":"combobox", "options": {
@@ -145,11 +149,9 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       }
     }
     
-    if (this.graph.isClass(node) || this.graph.isInterface(node) || this.graph.isOperation(node)) {
+    if (this.graph.isClass(node) || this.graph.isOperation(node)) {
       abstractValue = this.convertBooleanToString(node.getAttribute("abstract"));
-      if (!this.graph.isInterface(node)) {
-        abstractEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
-      }
+      abstractEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
     }
     
     if (this.graph.isRelationship(node)) {
@@ -174,7 +176,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
       
       // SPECIFIC
-      {"name":"Atributos", "value":null, "group":"Especifico", "editor":attributesEditor},
+      {"name":attributesName, "value":null, "group":"Especifico", "editor":attributesEditor},
       {"name":"Operaciones", "value":null, "group":"Especifico", "editor":operationsEditor},
       {"name":"Editar Relacion", "value":null, "group":"Especifico", "editor":relationshipEditor}
   ];

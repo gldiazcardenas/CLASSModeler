@@ -18,6 +18,7 @@ CLASSAttributes = function (editor) {
   this.title  = dlgAttributes.titlebar.children("span.ui-dialog-title").html();
   
   this.configureVisibilityCombo();
+  this.configureCollectionsCombo();
   this.configureTypeCombo();
   this.configureAttributesTable();
 };
@@ -70,10 +71,44 @@ CLASSAttributes.prototype.init = function (cell) {
   this.attributeCell  = null;
   this.attributeIndex = null;
   
+  this.configureGUI();
   this.loadTableData();
   this.clearSelection();
   this.clearFields();
   this.setTitle();
+};
+
+/**
+ * Configures the special GUI component behavior depending on the classifier
+ * cell being edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
+ */
+CLASSAttributes.prototype.configureGUI = function () {
+  if (this.graph.isEnumeration(this.classifierCell.value)) {
+    $("#staticCheck").attr("disabled", true);
+    $("#finalCheck").attr("disabled", true);
+    $("#attrType").combobox("disable");
+    $("#attrVisibility").combobox("disable");
+    $("#attrCollection").combobox("disable");
+    $("#attrInitValue").attr("disabled", true);
+  }
+  else if (this.graph.isInterface(this.classifierCell.value)) {
+    $("#staticCheck").attr("disabled", true);
+    $("#finalCheck").attr("disabled", true);
+    $("#attrType").combobox("enable");
+    $("#attrVisibility").combobox("enable");
+    $("#attrCollection").combobox("enable");
+    $("#attrInitValue").removeAttr("disabled");
+  }
+  else {
+    $("#staticCheck").removeAttr("disabled");
+    $("#finalCheck").removeAttr("disabled");
+    $("#attrType").combobox("enable");
+    $("#attrVisibility").combobox("enable");
+    $("#attrCollection").combobox("enable");
+    $("#attrInitValue").removeAttr("disabled");
+  }
 };
 
 /**
@@ -116,18 +151,33 @@ CLASSAttributes.prototype.configureVisibilityCombo = function () {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
-      data: [
-          {id:"public",    text:"public"},
-          {id:"protected", text:"protected"},
-          {id:"package",   text:"package"},
-          {id:"private",   text:"private"}
-      ]
+      data: this.graph.getVisibilityJSon()
   });
   
   $("#attrVisibility").combobox("setValue", "private"); // default value
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
   var comboPanel = $("#attrVisibility").combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Populates and sets up the combo box component for Collection selection.
+ * 
+ * @author Gabriel Leonardo Diaz, 03.03.2014.
+ */
+CLASSAttributes.prototype.configureCollectionsCombo = function () {
+  $("#attrCollection").combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      data: this.graph.getCollectionsJSon()
+  });
+  
+  $("#attrCollection").combobox("setValue", ""); // default value
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $("#attrCollection").combobox("panel");
   comboPanel.panel("panel").css("z-index", "2000");
 };
 
@@ -194,10 +244,20 @@ CLASSAttributes.prototype.loadTableData = function () {
     for (var i = 0; i < attributes.length; i++) {
       var visibility   = attributes[i].getAttribute("visibility");
       var nameValue    = attributes[i].getAttribute("name");
-      var typeValue    = attributes[i].getAttribute("type");
-      var defaultValue = attributes[i].getAttribute("defaultValue");
       
-      jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: defaultValue });
+      var typeValue    = this.graph.convertTypeToString(attributes[i]);
+      if (typeValue) {
+        typeValue = typeValue.replace("<", "&lt;");
+        typeValue = typeValue.replace(">", "&gt;");
+      }
+      
+      var initialValue = attributes[i].getAttribute("initialValue");
+      if (initialValue) {
+        initialValue = initialValue.replace("<", "&lt;");
+        initialValue = initialValue.replace(">", "&gt;");
+      }
+      
+      jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: initialValue });
     }
   }
   
@@ -223,8 +283,9 @@ CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
     
     $("#attrName").val(this.attributeCell.getAttribute("name"));
     $("#attrType").combobox("setValue", this.attributeCell.getAttribute("type"));
+    $("#attrCollection").combobox("setValue", this.attributeCell.getAttribute("collection"));
     $("#attrVisibility").combobox("setValue", this.attributeCell.getAttribute("visibility"));
-    $("#attrInitValue").val(this.attributeCell.getAttribute("defaultValue"));
+    $("#attrInitValue").val(this.attributeCell.getAttribute("initialValue"));
     $("#staticCheck").prop("checked", this.attributeCell.getAttribute("static") == "1");
     $("#finalCheck").prop("checked", this.attributeCell.getAttribute("final") == "1");
   }
@@ -262,9 +323,10 @@ CLASSAttributes.prototype.saveAttribute = function () {
   var nameValue       = $("#attrName").val();
   var typeValue       = $("#attrType").combobox("getValue");
   var visibilityValue = $("#attrVisibility").combobox("getValue");
-  var defaultValue    = $("#attrInitValue").val();
+  var initialValue    = $("#attrInitValue").val();
   var staticValue     = $("#staticCheck").is(":checked") ? "1" : "0";
   var finalValue      = $("#finalCheck").is(":checked") ? "1" : "0";
+  var collectionValue = $("#attrCollection").combobox("getValue");
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid Name
@@ -283,13 +345,30 @@ CLASSAttributes.prototype.saveAttribute = function () {
     }
   }
   
+  if (this.graph.isInterface(this.classifierCell.value)) {
+    if (staticValue == "0") {
+      // Invalid static
+      return;
+    }
+    
+    if (finalValue == "0") {
+      // Invalid final
+      return;
+    }
+    
+    if (initialValue == null || initialValue.length == 0) {
+      // Invalid constant for interface
+      return;
+    }
+  }
+  
   // Prepare attribute
   var attribute;
   if (this.attributeCell) {
     attribute = this.attributeCell.clone(true);
   }
   else {
-    if (typeValue && typeValue.length > 0) {
+    if (typeValue) {
       attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
     }
     else {
@@ -303,25 +382,34 @@ CLASSAttributes.prototype.saveAttribute = function () {
   if (this.graph.isProperty(attribute.value)) {
     attribute.setAttribute("type", typeValue);
     attribute.setAttribute("visibility", visibilityValue);
-    attribute.setAttribute("defaultValue", defaultValue);
     attribute.setAttribute("static", staticValue);
     attribute.setAttribute("final", finalValue);
+    attribute.setAttribute("initialValue", initialValue);
+    attribute.setAttribute("collection", collectionValue);
   }
   
-  var attrName = attribute.getAttribute("name");
-  var attrVis  = attribute.getAttribute("visibility");
-  var attrType = attribute.getAttribute("type");
-  var attrVal  = attribute.getAttribute("defaultValue");
-  var visChar  = this.graph.getVisibilityChar(attrVis);
+  var attrName = this.graph.getVisibilityChar(attribute.getAttribute("visibility")) + " " + attribute.getAttribute("name");
+  
+  var attrType = this.graph.convertTypeToString(attribute);
+  if (attrType) {
+    attrType = attrType.replace("<", "&lt;");
+    attrType = attrType.replace(">", "&gt;");
+  }
+  
+  var attrVal  = attribute.getAttribute("initialValue");
+  if (attrVal) {
+    attrVal = initialValue.replace("<", "&lt;");
+    attrVal = initialValue.replace(">", "&gt;");
+  }
   
   // Apply changes
   if (this.attributeCell) {
     this.graph.editAttribute(this.attributeCell, attribute);
-    $("#attributesTable").datagrid("updateRow", {index: this.attributeIndex, row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
+    $("#attributesTable").datagrid("updateRow", {index: this.attributeIndex, row: { name: attrName, type: attrType, value: attrVal }});
   }
   else {
     this.graph.addAttribute (this.classifierCell, attribute);
-    $("#attributesTable").datagrid("insertRow", {row: { name: visChar + " " + attrName, type: attrType, value: attrVal }});
+    $("#attributesTable").datagrid("insertRow", {row: { name: attrName, type: attrType, value: attrVal }});
     $("#attributesTable").datagrid("selectRow", $("#attributesTable").datagrid("getRows").length - 1);
   }
   
@@ -339,16 +427,17 @@ CLASSAttributes.prototype.clearFields = function () {
   if (this.graph.isEnumeration(this.classifierCell.value)) {
     $("#attrType").combobox("clear");
     $("#attrVisibility").combobox("clear");
-    
+    $("#attrCollection").combobox("clear");
   }
   else {
     $("#attrType").combobox("setValue", "int");
     $("#attrVisibility").combobox("setValue", "private");
+    $("#attrCollection").combobox("setValue", "");
   }
  
   $("#attrInitValue").val("");
-  $("#staticCheck").prop("checked", false);
-  $("#finalCheck").prop("checked", false);
+  $("#staticCheck").prop("checked", this.graph.isInterface(this.classifierCell.value));
+  $("#finalCheck").prop("checked", this.graph.isInterface(this.classifierCell.value));
 };
 
 /**

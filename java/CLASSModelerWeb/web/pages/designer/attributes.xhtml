@@ -19,7 +19,10 @@
             </tr>
             <tr>
                 <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_TYPE_FIELD}" /></td>
-                <td><input id="attrType" /></td>
+                <td>
+                    <input id="attrType" />
+                    <input id="attrCollection" />
+                </td>
             </tr>
             <tr>
                 <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
@@ -36,7 +39,7 @@
         <div id="attrTbToolbar">
             <a href="javascript:void(0)" id="newAttributeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-add', plain:true"><h:outputText value="#{msgs.NEW_LABEL}" /></a>
             <a href="javascript:void(0)" id="delAttributeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-delete', plain:true"><h:outputText value="#{msgs.DELETE_LABEL}" /></a>
-            <a href="javascript:void(0)" id="saveAttributeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save', plain:true"><h:outputText value="#{msgs.ADD_LABEL}" /></a>
+            <a href="javascript:void(0)" id="saveAttributeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save', plain:true"><h:outputText value="#{msgs.SAVE_LABEL}" /></a>
         </div>
         
         <table id="attributesTable" style="height: 200px;" />

@@ -193,12 +193,7 @@ CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
       textField:"text",
       panelHeight: 90,
       width: 300,
-      data: [
-          {id:"public",    text:"public"},
-          {id:"protected", text:"protected"},
-          {id:"package",   text:"package"},
-          {id:"private",   text:"private"}
-      ]
+      data: this.graph.getVisibilityJSon()
   });
   
   $(elementId).combobox("setValue", "private"); // default value

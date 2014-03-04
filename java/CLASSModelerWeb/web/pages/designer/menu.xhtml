@@ -28,18 +28,16 @@
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_VIEW_LABEL}" icon="ui-icon-pin-s">
-                <p:submenu label="#{msgs.MENU_SUB_ZOOM_LABEL}" icon="ui-icon-search">
-                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="CLASSModeler.execute('zoomIn')" />
-                    <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="CLASSModeler.execute('zoomOut')" />
-                    <p:separator/>
-                    <p:menuitem value="25%" onclick="CLASSModeler.execute('zoom25')" />
-                    <p:menuitem value="50%" onclick="CLASSModeler.execute('zoom50')" />
-                    <p:menuitem value="75%" onclick="CLASSModeler.execute('zoom75')" />
-                    <p:menuitem value="100%" onclick="CLASSModeler.execute('zoom100')" />
-                    <p:menuitem value="150%" onclick="CLASSModeler.execute('zoom150')" />
-                    <p:menuitem value="200%" onclick="CLASSModeler.execute('zoom200')" />
-                    <p:menuitem value="400%" onclick="CLASSModeler.execute('zoom400')" />
-                </p:submenu>
+                <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_IN_LABEL}" icon="ui-icon-zoomin" onclick="CLASSModeler.execute('zoomIn')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_ZOOM_OUT_LABEL}" icon="ui-icon-zoomout" onclick="CLASSModeler.execute('zoomOut')" />
+                <p:separator/>
+                <p:menuitem value="25%" onclick="CLASSModeler.execute('zoom25')" />
+                <p:menuitem value="50%" onclick="CLASSModeler.execute('zoom50')" />
+                <p:menuitem value="75%" onclick="CLASSModeler.execute('zoom75')" />
+                <p:menuitem value="100%" onclick="CLASSModeler.execute('zoom100')" />
+                <p:menuitem value="150%" onclick="CLASSModeler.execute('zoom150')" />
+                <p:menuitem value="200%" onclick="CLASSModeler.execute('zoom200')" />
+                <p:menuitem value="400%" onclick="CLASSModeler.execute('zoom400')" />
                 <p:separator />
                 <p:menuitem value="#{msgs.MENU_ITEM_REFRESH_LABEL}" icon="ui-icon-refresh" onclick="CLASSModeler.execute('zoom100')" />
             </p:submenu>
@@ -48,7 +46,7 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script" onclick="CLASSModeler.execute('generateCode')" />
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image" onclick="CLASSModeler.execute('exportImage')" />
                 <p:separator/>
-                <p:menuitem value="#{msgs.MENU_ITEM_EXPORT_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('exportXMI')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIEW_XML_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('viewXML')" />
             </p:submenu>
             
             <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />

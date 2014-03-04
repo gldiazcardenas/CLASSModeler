@@ -154,6 +154,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       
       graph.addCell(newCell, parent);
       graph.cellSizeUpdated(newCell, false);
+      graph.adjustStyleCell(newCell);
       graph.setSelectionCell(newCell);
     }
     finally {

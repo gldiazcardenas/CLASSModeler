@@ -217,9 +217,9 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, self.isElementVertexCell(cell));
   
   menu.addSeparator();
-  
-  menu.addItem("Atributos", null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
-  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassifierCell(cell));
+  var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) ? "Atributos" : "Literales";
+  menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
+  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassCell(cell) || self.isInterfaceCell(cell));
   menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));
   
   menu.addSeparator();
@@ -230,7 +230,6 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   menu.addItem("Generar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, self.isClassCell(cell));
   menu.addItem("Generar Metodos GET/SET", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
   menu.addSeparator(subMenu);
-  menu.addItem("Exportar XMI", null, function () { self.execute("exportXMI"); }, subMenu, null, true);
   menu.addItem("Mostrar XML", null, function () { self.execute("viewXML"); }, subMenu, null, true);
 };
 
@@ -256,6 +255,18 @@ CLASSEditor.prototype.isClassCell = function (cell) {
     return false;
   }
   return this.graph.isClass(cell.value);
+};
+
+/**
+ * Determines if the user object (node) of the given cell is an Interface UML.
+ * @param cell
+ * @returns
+ */
+CLASSEditor.prototype.isInterfaceCell = function (cell) {
+  if (cell == null) {
+    return false;
+  }
+  return this.graph.isInterface(cell.value);
 };
 
 /**
@@ -463,15 +474,6 @@ CLASSEditor.prototype.showRelationship = function (cell) {
   }
   this.relationDialog.init(cell);
   this.relationDialog.show();
-};
-
-/**
- * Exports the current diagram into an XML file with XMI standard format.
- * 
- * @author Gabriel Leonardo Diaz, 17.02.2014.
- */
-CLASSEditor.prototype.exportXMI = function () {
-  // TODO GD
 };
 
 /**
