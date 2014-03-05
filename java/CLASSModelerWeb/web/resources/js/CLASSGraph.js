@@ -74,13 +74,10 @@ CLASSGraph.prototype.convertClassifierToString = function (classifier) {
 CLASSGraph.prototype.convertPropertyToString = function (property) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
-  var type         = property.getAttribute("type");
   var initialValue = property.getAttribute("initialValue");
   var label        = this.getVisibilityChar(visibility) + " " + name;
   
-  if (type) {
-    label += ": " + this.convertTypeToString(property);
-  }
+  label += ": " + this.convertTypeToString(property);
   
   if (initialValue) {
     label += " = " + initialValue;
@@ -100,7 +97,12 @@ CLASSGraph.prototype.convertOperationToString = function (operationCell) {
   var visibilityChar = this.getVisibilityChar(operationCell.getAttribute("visibility"));
   var name           = " " + operationCell.getAttribute("name");
   var parameters     = "(" + this.convertParametersToString(operationCell) + ")";
-  var returnType     = " : " + this.convertTypeToString(operationCell.value);
+  var returnType     = "";
+  
+  if (operationCell.getAttribute("type")) {
+    returnType = " : " + this.convertTypeToString(operationCell.value);
+  }
+  
   return visibilityChar + name + parameters + returnType;
 };
 

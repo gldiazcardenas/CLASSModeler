@@ -482,7 +482,33 @@ CLASSEditor.prototype.showRelationship = function (cell) {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateGetSet = function (cell) {
-  // TODO GD
+  var name = cell.getAttribute("name");
+  var upperName = name.charAt(0).toUpperCase() + name.substring(1);
+  var type = cell.getAttribute("type");
+  var collection = cell.getAttribute("collection");
+  if (collection == null) {
+    collection = "";
+  }
+  
+  var get = this.graph.model.cloneCell(this.getTemplate("operation"));
+  get.setAttribute("name", "get" + upperName);
+  get.setAttribute("visibility", "public");
+  get.setAttribute("type", type);
+  get.setAttribute("collection", collection);
+  
+  var set = this.graph.model.cloneCell(this.getTemplate("operation"));
+  set.setAttribute("name", "set" + upperName);
+  set.setAttribute("visibility", "public");
+  set.setAttribute("type", "void");
+  
+  var param = this.graph.model.cloneCell(this.getTemplate("parameter")).value;
+  param.setAttribute("name", name);
+  param.setAttribute("type", type);
+  param.setAttribute("collection", collection);
+  set.value.appendChild(param);
+  
+  this.graph.addOperation(cell.parent.parent, get);
+  this.graph.addOperation(cell.parent.parent, set);
 };
 
 /**
@@ -491,6 +517,9 @@ CLASSEditor.prototype.generateGetSet = function (cell) {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateConstructor = function (cell) {
-  // TODO GD
+  var constructor = this.graph.model.cloneCell(this.getTemplate("operation"));
+  constructor.setAttribute("name", cell.getAttribute("name"));
+  constructor.setAttribute("visibility", "public");
+  this.graph.addOperation(cell, constructor);
 };
 

@@ -27,7 +27,6 @@ CLASSOperations = function (editor) {
   this.configureReturnTypeComboBox();
   this.configureOperationsTable();
   this.configureParametersTable();
-  this.configureChecks();
 };
 
 /**
@@ -93,26 +92,6 @@ CLASSOperations.prototype.init = function (cell) {
  */
 CLASSOperations.prototype.setTitle = function () {
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
-};
-
-/**
- * Configures the check boxes to enable/disable others based on the Java
- * language rules.
- * 
- * @author Gabriel Leonardo Diaz, 04.03.2014.
- */
-CLASSOperations.prototype.configureChecks = function () {
-  $("#operAbstractCheck").change(function(e) {
-    alert(e);
-  });
-  
-  $("#operFinalCheck").change(function(e) {
-    alert(e);
-  });
-  
-  $("#operStaticCheck").change(function(e) {
-    alert(e);
-  });
 };
 
 /**

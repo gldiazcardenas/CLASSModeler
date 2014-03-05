@@ -317,13 +317,14 @@ CLASSAttributes.prototype.saveAttribute = function () {
   var staticValue     = $("#staticCheck").is(":checked") ? "1" : "0";
   var finalValue      = $("#finalCheck").is(":checked") ? "1" : "0";
   var collectionValue = $("#attrCollection").combobox("getValue");
+  var isEnum          = this.graph.isEnumeration(this.classifierCell.value);
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid Name
     return;
   }
   
-  if (!this.graph.isEnumeration(this.classifierCell.value)) {
+  if (!isEnum) {
     if (typeValue == null || typeValue.length == 0) {
       // Invalid Type
       return;
@@ -358,11 +359,11 @@ CLASSAttributes.prototype.saveAttribute = function () {
     attribute = this.attributeCell.clone(true);
   }
   else {
-    if (typeValue) {
-      attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
+    if (isEnum) {
+      attribute = this.graph.model.cloneCell(this.editor.getTemplate("literal"));
     }
     else {
-      attribute = this.graph.model.cloneCell(this.editor.getTemplate("literal"));
+      attribute = this.graph.model.cloneCell(this.editor.getTemplate("property"));
     }
   }
   
