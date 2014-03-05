@@ -60,6 +60,7 @@ CLASSEditor.prototype.createGraph = function () {
   graph.setConnectable(false);
   graph.setAllowDanglingEdges(false);
   graph.setDisconnectOnMove(false);
+  graph.setAllowLoops(true);
 
   // Overrides the dblclick method on the graph to invoke the dblClickAction
   // for a cell and reset the selection tool in the toolbar
@@ -95,6 +96,11 @@ CLASSEditor.prototype.createGraph = function () {
     var edge = this.graph.createEdge(null, null, null, null, null, "edgeStyle=elbowEdgeStyle");
     return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
   };
+  
+  // Relationships validations
+  graph.validateEdge = mxUtils.bind(this, function (edge, source, target) {
+    return this.validateEdge(edge, source, target);
+  });
   
   // Maintains swimlanes and installs autolayout
   this.layoutSwimlanes = true;
@@ -134,6 +140,47 @@ CLASSEditor.prototype.createGraph = function () {
 };
 
 /**
+ * Function that validates the relationship to be created between the source and
+ * target cells.
+ * 
+ * @param edge
+ * @param source
+ * @param target
+ * @author Gabriel Leonardo Diaz, 04.03.2014.
+ */
+CLASSEditor.prototype.validateEdge = function (edge, source, target) {
+  if (this.graph.isPackage(source.value) || this.graph.isPackage(target.value)) {
+    return "No se permiten relaciones desde o hacia paquetes.";
+  }
+  
+  return null;
+};
+
+/**
+ * Overrides createEdge() in mxEditor. Configures the new edge cell from source
+ * to target.
+ * 
+ * @param source
+ * @param target
+ * @author Gabriel Leonardo Diaz, 04.02.2014.
+ */
+CLASSEditor.prototype.createEdge = function (source, target) {
+  // Save default edge
+  var oldDefaultEdge = this.defaultEdge;
+  if (this.graph.isComment(source.value) || this.graph.isComment(target.value)) {
+    this.defaultEdge = this.getTemplate("link");
+  }
+  
+  // super
+  var edge = mxEditor.prototype.createEdge.call(this, arguments);
+  
+  // Restore default edge
+  this.defaultEdge = oldDefaultEdge;
+  
+  return edge;
+};
+
+/**
  * Overrides setModified() in mxEditor. This was extended to visually mark the
  * diagram as edited.
  * 
@@ -150,18 +197,6 @@ CLASSEditor.prototype.setModified = function (modified) {
   else {
     pendingChangesLbl.innerHTML = "";
   }
-};
-
-/**
- * Overrides createEdge() in mxEditor. Configures the new edge cell from source
- * to target.
- * 
- * @param source
- * @param target
- * @author Gabriel Leonardo Diaz, 04.02.2014.
- */
-CLASSEditor.prototype.createEdge = function (source, target) {
-  return mxEditor.prototype.createEdge.call(this, arguments);
 };
 
 /**

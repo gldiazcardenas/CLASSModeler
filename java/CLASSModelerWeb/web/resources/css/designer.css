@@ -14,7 +14,7 @@ body {
 }
 
 #center {
-    min-height: 520px;
+    min-height: 510px;
 }
 
 #center-layout {
@@ -30,6 +30,10 @@ body {
 #right .ui-tree {
     width: 100%;
     border: none;
+}
+
+#footer {
+    padding: 8px 0px !important;
 }
 
 #toolbox {
