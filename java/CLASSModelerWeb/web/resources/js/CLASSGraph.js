@@ -37,7 +37,7 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
   }
   
   if (this.isOperation(node)) {
-    return this.convertOperationToString(node);
+    return this.convertOperationToString(cell);
   }
   
   if (this.isClassifier(node)) {
@@ -96,9 +96,12 @@ CLASSGraph.prototype.convertPropertyToString = function (property) {
  * @returns {String}
  * @author Gabriel Leonardo Diaz, 25.02.2014.
  */
-CLASSGraph.prototype.convertOperationToString = function (operation) {
-  return this.getVisibilityChar(node.getAttribute("visibility")) + " " + node.getAttribute("name") + 
-  "(" + this.convertParametersToString(cell) + ")" + " : " + node.getAttribute("returnType");
+CLASSGraph.prototype.convertOperationToString = function (operationCell) {
+  var visibilityChar = this.getVisibilityChar(operationCell.getAttribute("visibility"));
+  var name           = " " + operationCell.getAttribute("name");
+  var parameters     = "(" + this.convertParametersToString(operationCell) + ")";
+  var returnType     = " : " + this.convertTypeToString(operationCell.value);
+  return visibilityChar + name + parameters + returnType;
 };
 
 /**
@@ -121,7 +124,7 @@ CLASSGraph.prototype.convertParametersToString = function (operation) {
   
   for (var i = 0; i < node.childNodes.length; i++) {
     param = node.childNodes[i];
-    parameterString += separator + param.getAttribute("type");
+    parameterString += separator + this.convertTypeToString(param);
     separator = ", ";
   }
   
@@ -136,34 +139,47 @@ CLASSGraph.prototype.convertTypeToString = function (feature) {
   var typeName;
   
   var type = feature.getAttribute("type");
-  var collection = feature.getAttribute("collection");
-  var cell = this.model.getCell(type);
-  
-  if (cell != null) {
-    typeName = cell.getAttribute("name");
-  }
-  else {
-    typeName = type;
-  }
-  
-  if (collection) {
-    if (collection == "array") {
-      typeName = "[ ] " + typeName;
+  if (type) {
+    var cell = this.model.getCell(type);
+    if (cell) {
+      typeName = cell.getAttribute("name");
     }
     else {
-      var collectionName = collection;
-      var collections = this.getCollectionsJSon();
-      for (var i = 0; i < collections.length; i++) {
-        if (collections[i].id == collection) {
-          collectionName = collections[i].text;
-          break;
-        }
-      }
+      typeName = type;
+    }
+  }
+  else {
+    typeName = "";
+  }
+  
+  var collection = feature.getAttribute("collection");
+  if (collection) {
+    var collectionName = this.getCollectionName(collection);
+    if (collection == "array") {
+      typeName = typeName + collectionName;
+    }
+    else {
       typeName = collectionName + "<" + typeName + ">";
     }
   }
   
   return typeName;
+};
+
+/**
+ * Gets the collection name identified by the given collection id.
+ * 
+ * @param collectionId
+ * @author Gabriel Leonardo Diaz, 04.03.2014.
+ */
+CLASSGraph.prototype.getCollectionName = function (collectionId) {
+  var collections = this.getCollectionsJSon();
+  for (var i = 0; i < collections.length; i++) {
+    if (collections[i].id == collectionId) {
+      return collections[i].text;
+    }
+  }
+  return collectionId;
 };
 
 /**
@@ -263,7 +279,7 @@ CLASSGraph.prototype.getLiterals = function (enumeration) {
     if (section.getAttribute("attribute") == "true") {
       for (var j = 0; j < section.children.length; j++) {
         child = section.getChildAt(j);
-        if (this.isEnumerationLiteral(child.value)) {
+        if (this.isLiteral(child.value)) {
           literals.push(child);
         }
       }
@@ -826,7 +842,7 @@ CLASSGraph.prototype.isElementVertex = function (node) {
  * @returns {Boolean}
  */
 CLASSGraph.prototype.isNamedElement = function (node) {
-  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node) || this.isEnumerationLiteral(node) ||
+  return this.isClassifier(node) || this.isFeature(node) || this.isPackage(node) || this.isLiteral(node) ||
          this.isAssociation(node) || this.isDependency(node) || this.isRealization(node) || this.isGeneralization(node);
 };
 
@@ -865,16 +881,28 @@ CLASSGraph.prototype.isOperation = function (node) {
 };
 
 /**
+ * Checks if the given node is a parameter.
+ * @param node
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isParameter = function (node) {
+  if (node == null || node.nodeName == null) {
+    return false;
+  }
+  return node.nodeName.toLowerCase() == "parameter";
+};
+
+/**
  * Checks if the given node is an enumeration literal.
  * 
  * @param node
  * @return {Boolean}
  */
-CLASSGraph.prototype.isEnumerationLiteral = function (node) {
+CLASSGraph.prototype.isLiteral = function (node) {
   if (node == null || node.nodeName == null) {
     return false;
   }
-  return node.nodeName.toLowerCase() == "enumerationliteral";
+  return node.nodeName.toLowerCase() == "literal";
 };
 
 /**
@@ -1201,6 +1229,21 @@ CLASSGraphContextIconHandler.prototype.createImage = function (src) {
   }));
   
   return img;
+};
+
+/**
+ * Returns a new string value with the special characters converted to HTML.
+ * 
+ * @param stringValue
+ * @author Gabriel Leonardo Diaz, 04.03.2014.
+ */
+CLASSGraph.prototype.escape = function (stringValue) {
+  var escapedString = stringValue;
+  if (escapedString) {
+    escapedString = escapedString.replace("<", "&lt;");
+    escapedString = escapedString.replace(">", "&gt;");
+  }
+  return escapedString;
 };
 
 

@@ -244,18 +244,8 @@ CLASSAttributes.prototype.loadTableData = function () {
     for (var i = 0; i < attributes.length; i++) {
       var visibility   = attributes[i].getAttribute("visibility");
       var nameValue    = attributes[i].getAttribute("name");
-      
-      var typeValue    = this.graph.convertTypeToString(attributes[i]);
-      if (typeValue) {
-        typeValue = typeValue.replace("<", "&lt;");
-        typeValue = typeValue.replace(">", "&gt;");
-      }
-      
-      var initialValue = attributes[i].getAttribute("initialValue");
-      if (initialValue) {
-        initialValue = initialValue.replace("<", "&lt;");
-        initialValue = initialValue.replace(">", "&gt;");
-      }
+      var typeValue    = this.graph.escape(this.graph.convertTypeToString(attributes[i]));
+      var initialValue = this.graph.escape(attributes[i].getAttribute("initialValue"));
       
       jSonData.push({ name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: typeValue, value: initialValue });
     }
@@ -389,18 +379,8 @@ CLASSAttributes.prototype.saveAttribute = function () {
   }
   
   var attrName = this.graph.getVisibilityChar(attribute.getAttribute("visibility")) + " " + attribute.getAttribute("name");
-  
-  var attrType = this.graph.convertTypeToString(attribute);
-  if (attrType) {
-    attrType = attrType.replace("<", "&lt;");
-    attrType = attrType.replace(">", "&gt;");
-  }
-  
-  var attrVal  = attribute.getAttribute("initialValue");
-  if (attrVal) {
-    attrVal = initialValue.replace("<", "&lt;");
-    attrVal = initialValue.replace(">", "&gt;");
-  }
+  var attrType = this.graph.escape(this.graph.convertTypeToString(attribute));
+  var attrVal  = this.graph.escape(attribute.getAttribute("initialValue"));
   
   // Apply changes
   if (this.attributeCell) {

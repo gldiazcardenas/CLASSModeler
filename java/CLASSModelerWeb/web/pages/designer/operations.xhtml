@@ -14,9 +14,10 @@
             <tr>
                 <td></td>
                 <td>
-                    <label><input id="operStaticCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_STATIC_FIELD}" /></label>
-                    <label><input id="operFinalCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_FINAL_FIELD}" /></label>
                     <label><input id="operAbstractCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_ABSTRACT_FIELD}" /></label>
+                    <label><input id="operFinalCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_FINAL_FIELD}" /></label>
+                    <label><input id="operStaticCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_STATIC_FIELD}" /></label>
+                    <label><input id="operSyncCheck" type="checkbox" /> <h:outputText value="#{msgs.OPERATIONS_FORM_SYNCHRONIZED_FIELD}" /></label>
                 </td>
             </tr>
             
@@ -31,11 +32,6 @@
                     <input id="operReturnType" />
                     <input id="operCollection" />
                 </td>
-            </tr>
-            
-            <tr>
-                <td><h:outputText value="#{msgs.OPERATIONS_FORM_CONCURRENCY_FIELD}" /></td>
-                <td><input id="operConcurrency" /></td>
             </tr>
             
             <tr>

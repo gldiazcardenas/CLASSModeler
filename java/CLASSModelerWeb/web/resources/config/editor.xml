@@ -69,7 +69,7 @@
         </add>
         
         <add as="operation">
-            <Operation name="" visibility="public" static="0" final="0" abstract="0" concurrency="secuencial" lower="" upper="" type="" collection="">
+            <Operation name="" visibility="public" static="0" final="0" abstract="0" synchronized="0" type="" collection="">
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -85,11 +85,11 @@
         </add>
         
         <add as="literal">
-            <EnumerationLiteral name="">
+            <Literal name="">
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
-            </EnumerationLiteral>
+            </Literal>
         </add>
         
         <add as="association">

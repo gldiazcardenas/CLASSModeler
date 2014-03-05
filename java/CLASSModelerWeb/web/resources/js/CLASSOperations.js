@@ -22,12 +22,12 @@ CLASSOperations = function (editor) {
     self.stopEditingParameter();
   };
   
-  this.configureOperationsTable();
-  this.configureVisibilityCombo();
+  this.configureVisibilityComboBox();
   this.configureCollectionsComboBox();
-  this.configureParametersTable();
   this.configureReturnTypeComboBox();
-  this.configureConcurrencyComboBox();
+  this.configureOperationsTable();
+  this.configureParametersTable();
+  this.configureChecks();
 };
 
 /**
@@ -96,6 +96,26 @@ CLASSOperations.prototype.setTitle = function () {
 };
 
 /**
+ * Configures the check boxes to enable/disable others based on the Java
+ * language rules.
+ * 
+ * @author Gabriel Leonardo Diaz, 04.03.2014.
+ */
+CLASSOperations.prototype.configureChecks = function () {
+  $("#operAbstractCheck").change(function(e) {
+    alert(e);
+  });
+  
+  $("#operFinalCheck").change(function(e) {
+    alert(e);
+  });
+  
+  $("#operStaticCheck").change(function(e) {
+    alert(e);
+  });
+};
+
+/**
  * Creates the operations table component.
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
@@ -157,12 +177,11 @@ CLASSOperations.prototype.loadOperationTableData = function () {
   
   if (operations) {
     for (var i = 0; i < operations.length; i++) {
-      var visibility   = operations[i].getAttribute("visibility");
-      var nameValue    = operations[i].getAttribute("name");
-      var retTypeValue = operations[i].getAttribute("type");
-      var paramValue   = this.graph.convertParametersToString(operations[i]);
+      var nameValue    = this.graph.getVisibilityChar(operations[i].getAttribute("visibility")) + " " + operations[i].getAttribute("name");
+      var typeValue    = this.graph.escape(this.graph.convertTypeToString(operations[i]));
+      var paramValue   = this.graph.escape(this.graph.convertParametersToString(operations[i]));
       
-      jSonData.push({name: this.graph.getVisibilityChar(visibility) + " " + nameValue, type: retTypeValue, parameters: paramValue});
+      jSonData.push({name: nameValue, type: typeValue, parameters: paramValue});
     }
   }
   
@@ -175,7 +194,7 @@ CLASSOperations.prototype.loadOperationTableData = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSOperations.prototype.configureVisibilityCombo = function () {
+CLASSOperations.prototype.configureVisibilityComboBox = function () {
   $("#operVisibility").combobox({
       valueField:"id",
       textField:"text",
@@ -208,15 +227,22 @@ CLASSOperations.prototype.configureParametersTable = function () {
       },
       
       columns:[[
-          { field:"name", title:"Nombre", width:150, editor:"text" },
+          { field:"name", title:"Nombre", width:150, editor: { type: "validatebox", options: { required: true, missingMessage: "" }}},
+          
           { field:"type", title:"Tipo",   width:100, editor: {
               type:"combobox",
-              options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getTypesJSon(), required: true }
+              options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getTypesJSon(), required: true, missingMessage: "" }
           }},
-          { field:"collection", title:"Coleccion",   width:100, editor: {
+          
+          { field:"collection", title:"Coleccion", width:100, editor: {
               type:"combobox",
               options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getCollectionsJSon() }
-          }},
+            },
+            
+            formatter: function (value, row, index) {
+              return self.graph.getCollectionName(value);
+            }
+          },
       ]]
   });
   
@@ -280,30 +306,6 @@ CLASSOperations.prototype.configureCollectionsComboBox = function () {
 };
 
 /**
- * Constructs the combo box for concurrency field.
- * 
- * @author Gabriel Leonardo Diaz, 26.01.2014.
- */
-CLASSOperations.prototype.configureConcurrencyComboBox = function () {
-  $("#operConcurrency").combobox({
-      valueField:"id",
-      textField:"text",
-      panelHeight: 70,
-      data: [
-          {id:"secuencial",    text:"secuencial"},
-          {id:"protegido",     text:"protegido"},
-          {id:"concurrente",   text:"concurrente"}
-      ]
-  });
-  
-  $("#operConcurrency").combobox("setValue", "secuencial"); // default value
-  
-  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#operConcurrency").combobox("panel");
-  comboPanel.panel("panel").css("z-index", "2000");
-};
-
-/**
  * Processes the selection changes on the operations table.
  * 
  * @param rowIndex
@@ -320,11 +322,11 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
     this.operationIndex = rowIndex;
     
     $("#operName").val(this.operationCell.getAttribute("name"));
-    $("#operStaticCheck").prop("checked", this.operationCell.getAttribute("static") == "true");
-    $("#operFinalCheck").prop("checked", this.operationCell.getAttribute("final") == "true");
-    $("#operAbstractCheck").prop("checked", this.operationCell.getAttribute("abstract") == "true");
+    $("#operStaticCheck").prop("checked", this.operationCell.getAttribute("static") == "1");
+    $("#operFinalCheck").prop("checked", this.operationCell.getAttribute("final") == "1");
+    $("#operAbstractCheck").prop("checked", this.operationCell.getAttribute("abstract") == "1");
+    $("#operSyncCheck").prop("checked", this.operationCell.getAttribute("synchronized") == "1");
     $("#operReturnType").combobox("setValue", this.operationCell.getAttribute("type"));
-    $("#operConcurrency").combobox("setValue", this.operationCell.getAttribute("concurrency"));
     $("#operCollection").combobox("setValue", this.operationCell.getAttribute("collection"));
     
     var jSonData = [];
@@ -368,6 +370,7 @@ CLASSOperations.prototype.clearFields = function () {
   $("#operStaticCheck").prop("checked", false);
   $("#operFinalCheck").prop("checked", false);
   $("#operAbstractCheck").prop("checked", false);
+  $("#operSyncCheck").prop("checked", false);
   $("#parametersTable").datagrid({data:[]});
   $("#parametersTable").datagrid("reload");
   $("#operReturnType").combobox("setValue", "void");
@@ -408,10 +411,11 @@ CLASSOperations.prototype.saveOperation = function () {
   var nameValue       = $("#operName").val();
   var visValue        = $("#operVisibility").combobox("getValue");
   var retTypeValue    = $("#operReturnType").combobox("getValue");
-  var concurValue     = $("#operConcurrency").combobox("getValue");
-  var staticValue     = $("#operStaticCheck").is(":checked");
-  var finalValue      = $("#operFinalCheck").is(":checked");
-  var abstractValue   = $("#operAbstractCheck").is(":checked");
+  var staticValue     = $("#operStaticCheck").is(":checked") ? "1" : "0";
+  var finalValue      = $("#operFinalCheck").is(":checked") ? "1" : "0";
+  var abstractValue   = $("#operAbstractCheck").is(":checked") ? "1" : "0";
+  var syncValue       = $("#operSyncCheck").is(":checked") ? "1" : "0";
+  var collectionValue = $("#operCollection").combobox("getValue");
   
   if (nameValue == null || nameValue.length == 0) {
     // Invalid NAME
@@ -423,14 +427,11 @@ CLASSOperations.prototype.saveOperation = function () {
     return;
   }
   
-  if (retTypeValue == null || retTypeValue.length == 0) {
-    // Invalid Return Type
-    return;
-  }
-  
-  if (concurValue == null || concurValue.length == 0) {
-    // Invalid Concurrency
-    return;
+  if (this.graph.isInterface(this.classifierCell.value)) {
+    if (retTypeValue == null || retTypeValue.length == 0) {
+      // Invalid Return Type
+      return;
+    }
   }
   
   if (!this.stopEditingParameter()) {
@@ -451,41 +452,40 @@ CLASSOperations.prototype.saveOperation = function () {
   operation.setAttribute("name", nameValue);
   operation.setAttribute("visibility", visValue);
   operation.setAttribute("type", retTypeValue);
-  operation.setAttribute("concurrency", concurValue);
   operation.setAttribute("static", staticValue);
   operation.setAttribute("final", finalValue);
   operation.setAttribute("abstract", abstractValue);
+  operation.setAttribute("synchronized", syncValue);
+  operation.setAttribute("collection", collectionValue);
   operation.value.innerHTML = ""; // Remove all child nodes
   
   var paramRows = $("#parametersTable").datagrid("getRows");
   if (paramRows) {
-    var row;
-    var cell;
-    var param;
-    
     for (var i = 0; i < paramRows.length; i++) {
-      row = paramRows[i];
-      cell = this.graph.model.cloneCell(this.editor.getTemplate("parameter"));
+      var row   = paramRows[i];
+      var cell  = this.graph.model.cloneCell(this.editor.getTemplate("parameter"));
       
-      param = cell.value;
+      var param = cell.value;
       param.setAttribute("name", row.name);
       param.setAttribute("type", row.type);
+      param.setAttribute("collection", row.collection);
       
       operation.value.appendChild(param);
     }
   }
   
-  var paramsValue = this.graph.convertParametersToString(operation);
-  var visChar     = this.graph.getVisibilityChar(visValue);
+  var operName    = this.graph.getVisibilityChar(visValue) + " " + operation.getAttribute("name");
+  var operRetType = this.graph.escape(this.graph.convertTypeToString(operation));
+  var operParams  = this.graph.escape(this.graph.convertParametersToString(operation));
   
   // Apply changes
   if (this.operationCell) {
     this.graph.editOperation(this.operationCell, operation);
-    $("#operationsTable").datagrid("updateRow", {index: this.operationIndex, row: { name: visChar + " " + nameValue, type: retTypeValue, parameters:  paramsValue}});
+    $("#operationsTable").datagrid("updateRow", {index: this.operationIndex, row: { name: operName, type: operRetType, parameters:  operParams}});
   }
   else {
     this.graph.addOperation(this.classifierCell, operation);
-    $("#operationsTable").datagrid("insertRow", {row: { name: visChar + " " + nameValue, type: retTypeValue, parameters: paramsValue }});
+    $("#operationsTable").datagrid("insertRow", {row: { name: operName, type: operRetType, parameters: operParams }});
     $("#operationsTable").datagrid("selectRow", $("#operationsTable").datagrid("getRows").length - 1);
   }
   
@@ -568,6 +568,10 @@ CLASSOperations.prototype.startEditingParameter = function (index) {
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
   editor = $("#parametersTable").datagrid("getEditor", {index:index, field:"type"});
+  comboPanel = $(editor.target).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+  
+  editor = $("#parametersTable").datagrid("getEditor", {index:index, field:"collection"});
   comboPanel = $(editor.target).combobox("panel");
   comboPanel.panel("panel").css("z-index", "2000");
 };

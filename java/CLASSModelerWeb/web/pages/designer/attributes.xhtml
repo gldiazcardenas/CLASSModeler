@@ -17,6 +17,12 @@
                     <label><input id="finalCheck" type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_FINAL_FIELD}" /></label>
                 </td>
             </tr>
+            
+            <tr>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
+                <td><input id="attrVisibility" /></td>
+            </tr>
+            
             <tr>
                 <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_TYPE_FIELD}" /></td>
                 <td>
@@ -24,10 +30,7 @@
                     <input id="attrCollection" />
                 </td>
             </tr>
-            <tr>
-                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
-                <td><input id="attrVisibility" /></td>
-            </tr>
+            
             <tr>
                 <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_INITIAL_VALUE_FIELD}" /></td>
                 <td><input id="attrInitValue" class="easyui-validatebox" style="width:100%" /></td>

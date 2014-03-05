@@ -64,7 +64,7 @@ public class SessionFilter implements Filter {
       if (sessionController == null || sessionController.getUser() == null) {
         if (url.contains(JSFOutcomeUtil.DESIGNER_SERVLET)) {
           // Forbidden access, but this is an AJAX request
-          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          response.setStatus(HttpServletResponse.SC_NOT_FOUND); // This is from designer, so avoid infinite polling calls.
           return;
         }
         else if (url.contains(JSFOutcomeUtil.DASHBOARD_PATH) || url.contains(JSFOutcomeUtil.DESIGNER_PATH)) {
