@@ -16,7 +16,6 @@ class (package, imports, documentation, author, date, visibility, name, extends,
   <methods>
   
 }
-
 >>
 
 interface (package, imports, documentation, author, date, visibility, name, extends, attributes, methods) ::= <<
@@ -37,7 +36,6 @@ interface (package, imports, documentation, author, date, visibility, name, exte
   <methods>
   
 }
-
 >>
 
 enumeration (package, imports, documentation, author, date, visibility, name, literals, methods) ::= <<
@@ -50,7 +48,6 @@ enumeration (package, imports, documentation, author, date, visibility, name, li
  ****************************************************/
 
 <package>
-<imports>
 <documentation>
 <visibility> enum <name> {
   
@@ -58,6 +55,17 @@ enumeration (package, imports, documentation, author, date, visibility, name, li
   <methods>
   
 }
-
 >>
+
+operation (visibility, modifiers, type, name, paramaters, content) ::= <<
+<visibility> <modifiers> <type> <name> (<parameters>) {
+  <content>
+}
+>>
+
+property (visibility, modifiers, type, name, value) ::= <<
+<visibility> <modifiers> <type> <name><value>;
+>>
+
+literal (name) ::= "<name>"
 
