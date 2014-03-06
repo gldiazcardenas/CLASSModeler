@@ -8,20 +8,32 @@
 
 package classmodeler.web.controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.share.SharedDiagram;
@@ -29,6 +41,7 @@ import classmodeler.domain.share.SharedDiagramSession;
 import classmodeler.domain.share.SharedDiagramsCache;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
+import classmodeler.service.SourceCodeService;
 import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
@@ -51,11 +64,19 @@ public class DesignerControllerBean extends JSFGenericBean {
   @EJB
   private DiagramService diagramService;
   
+  @EJB
+  private SourceCodeService sourceCodeService;
+  
   private User user;
   private SharedDiagram diagram;
   private SharedDiagramSession diagramSession;
   private EDiagramPrivilege privilege;
   private boolean pendingChanges;
+  
+  // Used specially for code generation
+  private String generateCodeTitle;
+  private List<SourceCodeFile> sourceCodeFiles     = new ArrayList<SourceCodeFile>();
+  private Map<SourceCodeFile, StreamedContent> generatedFiles = new HashMap<SourceCodeFile, StreamedContent>();
   
   public DesignerControllerBean() {
     super();
@@ -79,6 +100,14 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   public boolean isPendingChanges() {
     return pendingChanges;
+  }
+  
+  public String getGenerateCodeTitle() {
+    return generateCodeTitle;
+  }
+  
+  public List<SourceCodeFile> getSourceCodeFiles() {
+    return sourceCodeFiles;
   }
   
   /**
@@ -105,6 +134,7 @@ public class DesignerControllerBean extends JSFGenericBean {
     this.diagram = SharedDiagramsCache.getInstance().putDiagram(diagram);
     this.diagramSession = new SharedDiagramSession(this.diagram);
     this.pendingChanges = false;
+    this.generateCodeTitle = GenericUtils.getLocalizedMessage("GENERATE_CODE_FORM_TITLE", this.diagram.getName());
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
@@ -196,8 +226,63 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    List<String> files = diagramService.generateCode(diagram);
-    files.size();
+    // Clear previous generated
+    this.sourceCodeFiles.clear();
+    this.generatedFiles.clear();
+    
+    
+    // Generate the sources
+    this.sourceCodeFiles.addAll(sourceCodeService.generateCode(diagram));
+    Collections.sort(this.sourceCodeFiles, SourceCodeService.SOURCE_FILES_COMPARATOR);
+  }
+  
+  /**
+   * Downloads the given file.
+   * @param file
+   * @return
+   * @author Gabriel Leonardo Diaz, 5.03.2014.
+   */
+  public StreamedContent downloadFile (SourceCodeFile sourceFile) {
+    StreamedContent file = this.generatedFiles.get(sourceFile);
+    if (file == null) {
+      file = new DefaultStreamedContent(new ByteArrayInputStream(sourceFile.getCode().getBytes()), "text/plain", sourceFile.getFullName(), "UTF-8");
+      this.generatedFiles.put(sourceFile, file);
+    }
+    return file;
+  }
+  
+  /**
+   * Downloads a ZIP file containing all objects.
+   * 
+   * @return
+   * @author Gabriel Leonardo Diaz, 05.03.2014.
+   */
+  public StreamedContent downloadZIP () {
+    DefaultStreamedContent file = new DefaultStreamedContent();
+    file.setName("sourceCode.zip");
+    file.setContentType("application/x-compressed");
+    
+    try {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      ZipOutputStream zipFile = new ZipOutputStream(outputStream);
+      
+      ZipEntry zipEntry;
+      
+      for (SourceCodeFile sourceFile : this.sourceCodeFiles) {
+        zipEntry = new ZipEntry(sourceFile.getFullName());
+        zipFile.putNextEntry(zipEntry);
+        zipFile.write(sourceFile.getCode().getBytes(Charset.forName("UTF-8")));
+      }
+      
+      zipFile.flush();
+      zipFile.close();
+      file.setStream(new ByteArrayInputStream(outputStream.toByteArray()));
+    }
+    catch (IOException e) {
+      file.setStream(new ByteArrayInputStream(new byte[] {1}));
+    }
+    
+    return file;
   }
   
 }

@@ -31,11 +31,11 @@ import org.xml.sax.SAXException;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
-import classmodeler.domain.share.SharedDiagram;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
+import classmodeler.service.SourceCodeService;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
@@ -55,6 +55,9 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @EJB
   private UserService userService;
+  
+  @EJB
+  private SourceCodeService sourceCodeService;
   
   @Override
   public Diagram insertDiagram(Diagram diagram) throws InvalidDiagrammerAccountException {
@@ -159,12 +162,6 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     
     // TODO GD
     return EDiagramPrivilege.OWNER;
-  }
-  
-  @Override
-  public List<String> generateCode(SharedDiagram sharedDiagram) {
-    // TODO Auto-generated method stub
-    return null;
   }
   
   @Override

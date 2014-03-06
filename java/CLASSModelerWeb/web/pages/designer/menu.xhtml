@@ -43,7 +43,7 @@
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_TOOLS_LABEL}" icon="ui-icon-wrench">
-                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script" onclick="CLASSModeler.execute('generateCode')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script" actionListener="#{designerController.generateCode()}" update=":generateCodeForm" oncomplete="dlgGenerateCode.show();" />
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image" onclick="CLASSModeler.execute('exportImage')" />
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_VIEW_XML_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('viewXML')" />

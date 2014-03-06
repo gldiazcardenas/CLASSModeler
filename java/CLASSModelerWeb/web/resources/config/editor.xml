@@ -94,6 +94,9 @@
         
         <add as="association">
             <Association name="" aggregation="none">
+                <Property as="source" id="" />
+                <Property as="target" id="" />
+                
                 <mxCell edge="1" style="association">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -102,6 +105,9 @@
         
         <add as="aggregation">
             <Association name="" aggregation="shared">
+                <Property as="source" id="" />
+                <Property as="target" id="" />
+                
                 <mxCell edge="1" style="aggregation">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>
@@ -110,6 +116,9 @@
         
         <add as="composition">
             <Association name="" aggregation="composite">
+                <Property as="source" id="" />
+                <Property as="target" id="" />
+                
                 <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" />
                 </mxCell>

@@ -3,8 +3,31 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-<p:dialog id="generateCodeDialog" widgetVar="dlgGenerateCode" width="600" header="Generar Codigo Fuente" modal="true" closable="true" closeOnEscape="true">
-    
+<p:dialog id="generateCodeDialog" widgetVar="dlgGenerateCode" width="500" header="#{designerController.generateCodeTitle}" modal="true" closable="true" closeOnEscape="true">
+    <h:form id="generateCodeForm">
+        <h:panelGrid columns="1" width="100%">
+            <p:dataList value="#{designerController.sourceCodeFiles}" var="source" itemType="circle">
+                <p:commandLink value="#{source.fullName}" ajax="false">
+                    <p:fileDownload value="#{designerController.downloadFile(source)}" />
+                </p:commandLink>
+            </p:dataList> 
+            
+            <p:commandLink value="Descargar ZIP" ajax="false" disabled="#{empty designerController.sourceCodeFiles}">
+                <p:fileDownload value="#{designerController.downloadZIP()}" />
+            </p:commandLink>
+            
+            <p:separator />
+            
+            <h:panelGrid columns="2">
+                <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgGenerateCode.hide()"/>
+                
+                <p:ajaxStatus style="width: 16px; height: 16px;">
+                    <f:facet name="start"><h:graphicImage name="loading.gif" library="images" /></f:facet>
+                    <f:facet name="complete"><h:outputText value="" /></f:facet>
+                </p:ajaxStatus>
+            </h:panelGrid>
+        </h:panelGrid>
+    </h:form>
 </p:dialog>
 
 </ui:composition>

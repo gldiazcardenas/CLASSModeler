@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.diagram.SharedItem;
-import classmodeler.domain.share.SharedDiagram;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.User;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
@@ -119,18 +118,6 @@ public interface DiagramService {
    * @author Gabriel Leonardo Diaz, 13.02.2014
    */
   public EDiagramPrivilege checkDiagramPrivilege (Diagram diagram, User user);
-  
-  /**
-   * Generates the source code of the given diagram, this converts the internal
-   * mxGraph model to code representation by using the templates created for
-   * this purpose.
-   * 
-   * @param sharedDiagram
-   *          The diagram to generate the code.
-   * @return A list of strings, one per file generated. Never null.
-   * @author Gabriel Leonardo Diaz, 01.03.2014.
-   */
-  public List<String> generateCode (SharedDiagram sharedDiagram);
   
   /**
    * Generates the image representation of the diagram using the XML
