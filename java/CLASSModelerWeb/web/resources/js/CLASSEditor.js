@@ -255,15 +255,16 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) ? "Atributos" : "Literales";
   menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassCell(cell) || self.isInterfaceCell(cell));
-  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));
+  menu.addItem("Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, true);
   menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, true);
-  menu.addItem("Generar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, self.isClassCell(cell));
-  menu.addItem("Generar Metodos GET/SET", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
+  menu.addSeparator(subMenu);
+  menu.addItem("Agregar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, self.isClassCell(cell));
+  menu.addItem("Agregar Get/Set", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
   menu.addSeparator(subMenu);
   menu.addItem("Mostrar XML", null, function () { self.execute("viewXML"); }, subMenu, null, true);
 };
@@ -475,6 +476,10 @@ CLASSEditor.prototype.generateCode = function () {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showAttributes = function (cell) {
+  if (!this.isClassifierCell(cell)) {
+    return;
+  }
+    
   if (!this.attrDialog) {
     this.attrDialog = new CLASSAttributes(this);
   }
@@ -490,6 +495,10 @@ CLASSEditor.prototype.showAttributes = function (cell) {
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
 CLASSEditor.prototype.showOperations = function (cell) {
+  if (!this.isClassCell(cell) && !this.isInterfaceCell(cell)) {
+    return;
+  }
+  
   if (!this.operDialog) {
     this.operDialog = new CLASSOperations(this);
   }
@@ -504,6 +513,10 @@ CLASSEditor.prototype.showOperations = function (cell) {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.showRelationship = function (cell) {
+  if (!this.isAssociationCell(cell)) {
+    return;
+  }
+  
   if (!this.relationDialog) {
     this.relationDialog = new CLASSRelationship(this);
   }
@@ -517,6 +530,10 @@ CLASSEditor.prototype.showRelationship = function (cell) {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateGetSet = function (cell) {
+  if (cell == null || !this.graph.isProperty(cell.value)) {
+    return;
+  }
+  
   var name = cell.getAttribute("name");
   var upperName = name.charAt(0).toUpperCase() + name.substring(1);
   var type = cell.getAttribute("type");
@@ -552,6 +569,10 @@ CLASSEditor.prototype.generateGetSet = function (cell) {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateConstructor = function (cell) {
+  if (cell == null || !this.graph.isClass(cell.value)) {
+    return;
+  }
+  
   var constructor = this.graph.model.cloneCell(this.getTemplate("operation"));
   constructor.setAttribute("name", cell.getAttribute("name"));
   constructor.setAttribute("visibility", "public");

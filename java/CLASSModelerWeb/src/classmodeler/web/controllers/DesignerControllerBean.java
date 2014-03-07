@@ -17,9 +17,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -75,8 +73,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   // Used specially for code generation
   private String generateCodeTitle;
-  private List<SourceCodeFile> sourceCodeFiles     = new ArrayList<SourceCodeFile>();
-  private Map<SourceCodeFile, StreamedContent> generatedFiles = new HashMap<SourceCodeFile, StreamedContent>();
+  private List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
   
   public DesignerControllerBean() {
     super();
@@ -228,8 +225,6 @@ public class DesignerControllerBean extends JSFGenericBean {
   public void generateCode () {
     // Clear previous generated
     this.sourceCodeFiles.clear();
-    this.generatedFiles.clear();
-    
     
     // Generate the sources
     this.sourceCodeFiles.addAll(sourceCodeService.generateCode(diagram));
@@ -243,12 +238,7 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 5.03.2014.
    */
   public StreamedContent downloadFile (SourceCodeFile sourceFile) {
-    StreamedContent file = this.generatedFiles.get(sourceFile);
-    if (file == null) {
-      file = new DefaultStreamedContent(new ByteArrayInputStream(sourceFile.getCode().getBytes()), "text/plain", sourceFile.getFullName(), "UTF-8");
-      this.generatedFiles.put(sourceFile, file);
-    }
-    return file;
+    return new DefaultStreamedContent(new ByteArrayInputStream(sourceFile.getCode().getBytes(Charset.forName("UTF-8"))), "text/plain", sourceFile.getFullName(), "UTF-8");
   }
   
   /**

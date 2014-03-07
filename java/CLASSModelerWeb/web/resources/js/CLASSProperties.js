@@ -154,7 +154,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       abstractEditor = {"type":"checkbox", "options": {"on":"Si", "off":"No"}};
     }
     
-    if (this.graph.isRelationship(node)) {
+    if (this.graph.isAssociation(node)) {
       relationshipEditor = {"type":"button", "options": {"onclick": function () {
         selfEditor.showRelationship(cell);
       }}};
@@ -175,10 +175,10 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       {"name":"Es Estatico", "value":staticValue, "group":"Avanzado", "editor":staticEditor},
       {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
       
-      // SPECIFIC
-      {"name":attributesName, "value":null, "group":"Especifico", "editor":attributesEditor},
-      {"name":"Operaciones", "value":null, "group":"Especifico", "editor":operationsEditor},
-      {"name":"Editar Relacion", "value":null, "group":"Especifico", "editor":relationshipEditor}
+      // SHOW
+      {"name":attributesName, "value":null, "group":"Mostrar", "editor":attributesEditor},
+      {"name":"Operaciones", "value":null, "group":"Mostrar", "editor":operationsEditor},
+      {"name":"Relacion", "value":null, "group":"Mostrar", "editor":relationshipEditor}
   ];
   
   $("#propertyTable").propertygrid({

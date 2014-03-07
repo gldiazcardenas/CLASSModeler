@@ -17,7 +17,6 @@ public class SourceCodeFile {
   
   private String name;
   private String format;
-  private String icon;
   private String code;
   
   public SourceCodeFile() {
@@ -46,14 +45,6 @@ public class SourceCodeFile {
   
   public void setCode(String code) {
     this.code = code;
-  }
-  
-  public String getIcon() {
-    return icon;
-  }
-  
-  public void setIcon(String icon) {
-    this.icon = icon;
   }
   
   public String getFullName () {
