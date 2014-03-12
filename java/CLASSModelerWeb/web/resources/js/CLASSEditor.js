@@ -85,7 +85,7 @@ CLASSEditor.prototype.createGraph = function () {
   graph.panningHandler.factoryMethod = mxUtils.bind(this, function(menu, cell, evt) {
     return this.createPopupMenu(menu, cell, evt);
   });
-
+  
   // Redirects the function for creating new connections in the diagram
   graph.connectionHandler.factoryMethod = mxUtils.bind(this, function(source, target) {
     return this.createEdge(source, target);
@@ -96,6 +96,13 @@ CLASSEditor.prototype.createGraph = function () {
     var edge = this.graph.createEdge(null, null, null, null, null, "edgeStyle=elbowEdgeStyle");
     return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
   };
+  
+  // Handler to capture events after creating relationships
+  graph.connectionHandler.addListener(mxEvent.CONNECT, mxUtils.bind(this, function(sender, evt) {
+    if (this.graph.isAssociation(evt.properties.cell.value)) {
+      //this.showRelationship(evt.properties.cell);
+    }
+  }));
   
   // Relationships validations
   graph.validateEdge = mxUtils.bind(this, function (edge, source, target) {
@@ -151,6 +158,15 @@ CLASSEditor.prototype.createGraph = function () {
 CLASSEditor.prototype.validateEdge = function (edge, source, target) {
   if (this.graph.isPackage(source.value) || this.graph.isPackage(target.value)) {
     return "No se permiten relaciones desde o hacia paquetes.";
+  }
+  
+  if (this.graph.isRealization(this.defaultEdge.value) && (!this.graph.isClass(source.value) || !this.graph.isInterface(target.value))) {
+    return "No se puede crear una Realizacion entre los elementos seleccionados.";
+  }
+  
+  if (this.graph.isGeneralization(this.defaultEdge.value) && (!(this.graph.isClass(source.value) && this.graph.isClass(target.value)) || 
+                                                              !(this.graph.isInterface(source.value) && this.graph.isInterface(target.value)))) {
+    return "No se puede crear una Generalizacion entre los elementos seleccionados.";
   }
   
   return null;
@@ -252,7 +268,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, self.isElementVertexCell(cell));
   
   menu.addSeparator();
-  var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) ? "Atributos" : "Literales";
+  var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) || cell == null ? "Atributos" : "Literales";
   menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassCell(cell) || self.isInterfaceCell(cell));
   menu.addItem("Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));

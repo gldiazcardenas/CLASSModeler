@@ -175,10 +175,10 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       {"name":"Es Estatico", "value":staticValue, "group":"Avanzado", "editor":staticEditor},
       {"name":"Es Final", "value":finalValue, "group":"Avanzado", "editor":finalEditor},
       
-      // SHOW
-      {"name":attributesName, "value":null, "group":"Mostrar", "editor":attributesEditor},
-      {"name":"Operaciones", "value":null, "group":"Mostrar", "editor":operationsEditor},
-      {"name":"Relacion", "value":null, "group":"Mostrar", "editor":relationshipEditor}
+      // VIEW
+      {"name":attributesName, "value":null, "group":"Ver", "editor":attributesEditor},
+      {"name":"Operaciones", "value":null, "group":"Ver", "editor":operationsEditor},
+      {"name":"Relaci&oacute;n", "value":null, "group":"Ver", "editor":relationshipEditor}
   ];
   
   $("#propertyTable").propertygrid({

@@ -809,13 +809,21 @@ CLASSGraph.prototype.getVisibilityJSon = function () {
 CLASSGraph.prototype.getCollectionsJSon = function () {
   var jSonData   = [];
   
-  jSonData.push({id: "array",      text: "[ ]"});
-  jSonData.push({id: "vector",     text: "Vector"});
-  jSonData.push({id: "list",       text: "List"});
-  jSonData.push({id: "arraylist",  text: "ArrayList"});
-  jSonData.push({id: "linkedlist", text: "LinkedList"});
-  jSonData.push({id: "set",        text: "Set"});
-  jSonData.push({id: "hashset",    text: "HashSet"});
+  jSonData.push({id: "array",       text: "Array [ ]"});
+  jSonData.push({id: "arraylist",   text: "ArrayList::java::util"});
+  jSonData.push({id: "collection",  text: "Collection::java::util"});
+  jSonData.push({id: "enumset",     text: "EnumSet::java::util"});
+  jSonData.push({id: "hashset",     text: "HashSet::java::util"});
+  jSonData.push({id: "list",        text: "List::java::util"});
+  jSonData.push({id: "linkedhset",  text: "LinkedHashSet::java::util"});
+  jSonData.push({id: "linkedlist",  text: "LinkedList::java::util"});
+  jSonData.push({id: "prioriqueue", text: "PriorityQueue::java::util"});
+  jSonData.push({id: "queue",       text: "Queue::java::util"});
+  jSonData.push({id: "set",         text: "Set::java::util"});
+  jSonData.push({id: "sortedset",   text: "SortedSet::java::util"});
+  jSonData.push({id: "stack",       text: "Stack::java::util"});
+  jSonData.push({id: "treeset",     text: "TreeSet::java::util"});
+  jSonData.push({id: "vector",      text: "Vector::java::util"});
   
   return jSonData;
 };

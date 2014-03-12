@@ -16,8 +16,6 @@ CLASSRelationship = function (editor) {
   this.graph       = editor.graph;
   this.dialog      = dlgRelationship; // Defined by a PrimeFaces dialog.
   this.title       = dlgRelationship.titlebar.children("span.ui-dialog-title").html();
-  this.sourceTitle = $("#sourceFields").children("legend.ui-fieldset-legend").html();
-  this.targetTitle = $("#targetFields").children("legend.ui-fieldset-legend").html();
   
   this.configureDirectionCombo();
   this.configureMultiplicityCombo("sourceMultiplicity");
@@ -26,8 +24,6 @@ CLASSRelationship = function (editor) {
   this.configureVisibilityCombo("targetVisibility");
   this.configureCollectionsCombo("sourceCollectionType");
   this.configureCollectionsCombo("targetCollectionType");
-  this.configureAttributesCombo("sourceAttribute");
-  this.configureAttributesCombo("targetAttribute");
 };
 
 /**
@@ -41,16 +37,6 @@ CLASSRelationship.prototype.relationshipCell;
 CLASSRelationship.prototype.title;
 
 /**
- * The localized text for the source property title.
- */
-CLASSRelationship.prototype.sourceTitle;
-
-/**
- * The localized text for the target property title.
- */
-CLASSRelationship.prototype.targetTitle;
-
-/**
  * Initializes the dialog to edit relationship contained by the given cell.
  * 
  * @param cell
@@ -62,11 +48,7 @@ CLASSRelationship.prototype.init = function (cell) {
   this.loadNameTextFieldData();
   this.loadDirectionComboData();
   
-  this.loadAttributesComboData("sourceAttribute", cell.source);
-  this.loadAttributesComboData("targetAttribute", cell.target);
-  
   this.setTitle();
-  this.setSourceTargetTitle();
 };
 
 /**
@@ -91,35 +73,6 @@ CLASSRelationship.prototype.loadDirectionComboData = function () {
   }
   
   // TODO GD get the styles of the edge and check the startArrow and endArrow values.
-};
-
-/**
- * Loads the data for the attributes combo box component with the attributes of
- * the given classifier.
- * 
- * @param comboId
- * @param classifier
- * @author Gabriel Leonardo Diaz, 20.02.2014.
- */
-CLASSRelationship.prototype.loadAttributesComboData = function (comboId, classifier) {
-  comboId = "#" + comboId;
-  
-  var jSonData = [];
-  
-  var attributes = this.graph.getAttributes(classifier);
-  if (attributes) {
-    var attribute;
-    for (var i = 0; i < attributes.length; i++) {
-      attribute = attributes[i];
-      jSonData.push({id: attribute.getAttribute("name"), text: attribute.getAttribute("name")});
-    }
-  }
-  
-  $(comboId).combobox({"data" : jSonData});
-};
-
-CLASSRelationship.prototype.loadVisibilityComboData = function (comboId, classifier) {
-  
 };
 
 /**
@@ -218,38 +171,7 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
       textField:"text",
       panelHeight: 90,
       width: 300,
-      data: [
-          {id:"array",      text:"[ ]"},
-          {id:"list",       text:"List"},
-          {id:"listarray",  text:"ArrayList"},
-          {id:"listlinked", text:"LinkedList"},
-          {id:"set",        text:"Set"},
-          {id:"sethash",    text:"HashSet"},
-          {id:"vector",     text:"Vector"}
-      ]
-  });
-  
-  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $(elementId).combobox("panel");
-  comboPanel.panel("panel").css("z-index", "2000");
-};
-
-/**
- * Configures the attributes combo box for the element identified by the given
- * ID.
- * 
- * @param elementId
- * @author Gabriel Leonardo Diaz, 20.02.2014.
- */
-CLASSRelationship.prototype.configureAttributesCombo = function (elementId) {
-  elementId = "#" + elementId;
-  
-  $(elementId).combobox({
-      valueField:"id",
-      textField:"text",
-      panelHeight: 90,
-      width: 300,
-      data: []
+      data: this.graph.getCollectionsJSon()
   });
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
@@ -277,18 +199,6 @@ CLASSRelationship.prototype.setTitle = function () {
   }
   
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", relationshipName));
-};
-
-/**
- * Sets the title of the source and target fieldsets.
- * 
- * @author Gabriel Leonardo Diaz, 20.02.2014.
- */
-CLASSRelationship.prototype.setSourceTargetTitle = function () {
-  var sourceCell = this.relationshipCell.source;
-  var targetCell = this.relationshipCell.target;
-  $("#sourceFields").children("legend.ui-fieldset-legend").html(this.sourceTitle.replace("{0}", "<b>" + sourceCell.getAttribute("name") + "</b>"));
-  $("#targetFields").children("legend.ui-fieldset-legend").html(this.targetTitle.replace("{0}", "<b>" + targetCell.getAttribute("name") + "</b>"));
 };
 
 /**

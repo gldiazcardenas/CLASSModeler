@@ -61,7 +61,7 @@
         </add>
         
         <add as="property">
-            <Property name="" visibility="private" static="0" final="0" initialValue="" association="" lower="" upper="" type="" collection="">
+            <Property name="" visibility="private" static="0" final="0" initialValue="" type="" collection="">
                 <mxCell vertex="1" connectable="0" style="feature">
                     <mxGeometry as="geometry" width="0" height="20" />
                 </mxCell>
@@ -94,8 +94,8 @@
         
         <add as="association">
             <Association name="" aggregation="none">
-                <Property as="source" id="" />
-                <Property as="target" id="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
                 
                 <mxCell edge="1" style="association">
                     <mxGeometry as="geometry" relative="1" />
@@ -105,8 +105,8 @@
         
         <add as="aggregation">
             <Association name="" aggregation="shared">
-                <Property as="source" id="" />
-                <Property as="target" id="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
                 
                 <mxCell edge="1" style="aggregation">
                     <mxGeometry as="geometry" relative="1" />
@@ -116,8 +116,8 @@
         
         <add as="composition">
             <Association name="" aggregation="composite">
-                <Property as="source" id="" />
-                <Property as="target" id="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
                 
                 <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" />
@@ -266,11 +266,11 @@
                 <add as="fontColor" value="#000000"/>
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
                 <add as="elbow" value="horizontal"/>
-                <add as="endArrow" value="diamond"/>
-                <add as="endSize" value="12"/>
-                <add as="endFill" value="0"/>
-                <add as="startArrow" value="open"/>
-                <add as="startSize" value="8"/>
+                <add as="startArrow" value="diamond"/>
+                <add as="startSize" value="12"/>
+                <add as="startFill" value="0"/>
+                <add as="endArrow" value="open"/>
+                <add as="endSize" value="8"/>
             </add>
             
             <add as="composition">
@@ -280,11 +280,11 @@
                 <add as="strokeColor" value="#000000"/>
                 <add as="fontColor" value="#000000"/>
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
-                <add as="endArrow" value="diamond"/>
-                <add as="endSize" value="12"/>
-                <add as="endFill" value="1"/>
-                <add as="startArrow" value="open"/>
-                <add as="startSize" value="8"/>
+                <add as="startArrow" value="diamond"/>
+                <add as="startSize" value="12"/>
+                <add as="startFill" value="1"/>
+                <add as="endArrow" value="open"/>
+                <add as="endSize" value="8"/>
             </add>
             
             <add as="generalization">
