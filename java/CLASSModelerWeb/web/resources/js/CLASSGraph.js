@@ -75,8 +75,9 @@ CLASSGraph.prototype.convertPropertyToString = function (property) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
   var initialValue = property.getAttribute("initialValue");
-  var label        = this.getVisibilityChar(visibility) + " " + name;
+  var label        = "";
   
+  label += this.getVisibilityChar(visibility) + " " + name;
   label += ": " + this.convertTypeToString(property);
   
   if (initialValue) {

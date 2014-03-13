@@ -129,8 +129,12 @@ CLASSEditor.prototype.createGraph = function () {
             this.executeLayout(this.getLayout(last), last);
             
             // GD, 25.10.2013. Applying layout to also child swimlane nodes
-            if (last.children != null) {
+            if (last.children) {
               this.layoutCells(last.children);
+              
+              if (graph.isAssociation(last.value)) {
+                graph.cellSizeUpdated(last, false);
+              }
             }
           }
         }
@@ -187,6 +191,8 @@ CLASSEditor.prototype.createEdge = function (source, target) {
     this.defaultEdge = this.getTemplate("link");
   }
   
+  var model = this.graph.model;
+  
   // super
   var edge = mxEditor.prototype.createEdge.call(this, arguments);
   
@@ -194,43 +200,26 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   this.defaultEdge = oldDefaultEdge;
   
   // Adjust the edge created
-  if (this.graph.isAssociation(edge.value)) {
-    var sourceProp = edge.value.children[0];
-    var targetProp = edge.value.children[1];
-    
-    if (this.graph.isAggregation(edge.value)) {
-      sourceProp.setAttribute("navigable", "0");
-      targetProp.setAttribute("upper", "*");
-      targetProp.setAttribute("navigable", "1");
-      targetProp.setAttribute("visibility", "private");
-      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
-    }
-    else if (this.graph.isGeneralization(edge.value)) {
-      sourceProp.setAttribute("navigable", "0");
-      targetProp.setAttribute("upper", "*");
-      targetProp.setAttribute("navigable", "1");
-      targetProp.setAttribute("visibility", "private");
-      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
-    }
-    else {
-      sourceProp.setAttribute("navigable", "0");
-      targetProp.setAttribute("upper", "1");
-      targetProp.setAttribute("navigable", "1");
-      targetProp.setAttribute("visibility", "private");
-      targetProp.setAttribute("name", "mi" + target.getAttribute("name"));
-      
-      var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=top;');
-      sourceLabel.geometry.relative = true;
-      sourceLabel.setConnectable(false);
-      sourceLabel.vertex = true;
-      edge.insert(sourceLabel);
-
-      var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom;');
-      targetLabel.geometry.relative = true;
-      targetLabel.setConnectable(false);
-      targetLabel.vertex = true;
-      edge.insert(targetLabel);
-    }
+  if (this.graph.isAggregation(edge.value)) {
+    sourceProp.setAttribute("navigable", "0");
+    targetProp.setAttribute("upper", "*");
+    targetProp.setAttribute("navigable", "1");
+    targetProp.setAttribute("visibility", "private");
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+  }
+  else if (this.graph.isGeneralization(edge.value)) {
+    sourceProp.setAttribute("navigable", "0");
+    targetProp.setAttribute("upper", "*");
+    targetProp.setAttribute("navigable", "1");
+    targetProp.setAttribute("visibility", "private");
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+  }
+  else if (this.graph.isAssociation(edge.value)) {
+    var targetProp = model.cloneCell(this.getTemplate("property"));
+    targetProp.setAttribute("name", "mi" + target.getAttribute("name"));
+    targetProp.setAttribute("type", target.id);
+    this.graph.setCellStyles(mxConstants.STYLE_MOVABLE, 1, [targetProp]);
+    edge.insert(targetProp);
   }
   
   return edge;
