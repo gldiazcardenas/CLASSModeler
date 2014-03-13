@@ -193,6 +193,46 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   // Restore default edge
   this.defaultEdge = oldDefaultEdge;
   
+  // Adjust the edge created
+  if (this.graph.isAssociation(edge.value)) {
+    var sourceProp = edge.value.children[0];
+    var targetProp = edge.value.children[1];
+    
+    if (this.graph.isAggregation(edge.value)) {
+      sourceProp.setAttribute("navigable", "0");
+      targetProp.setAttribute("upper", "*");
+      targetProp.setAttribute("navigable", "1");
+      targetProp.setAttribute("visibility", "private");
+      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+    }
+    else if (this.graph.isGeneralization(edge.value)) {
+      sourceProp.setAttribute("navigable", "0");
+      targetProp.setAttribute("upper", "*");
+      targetProp.setAttribute("navigable", "1");
+      targetProp.setAttribute("visibility", "private");
+      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+    }
+    else {
+      sourceProp.setAttribute("navigable", "0");
+      targetProp.setAttribute("upper", "1");
+      targetProp.setAttribute("navigable", "1");
+      targetProp.setAttribute("visibility", "private");
+      targetProp.setAttribute("name", "mi" + target.getAttribute("name"));
+      
+      var sourceLabel = new mxCell('parent', new mxGeometry(-1, 0, 0, 0), 'resizable=0;align=left;verticalAlign=top;');
+      sourceLabel.geometry.relative = true;
+      sourceLabel.setConnectable(false);
+      sourceLabel.vertex = true;
+      edge.insert(sourceLabel);
+
+      var targetLabel = new mxCell('child', new mxGeometry(1, 0, 0, 0), 'resizable=0;align=right;verticalAlign=bottom;');
+      targetLabel.geometry.relative = true;
+      targetLabel.setConnectable(false);
+      targetLabel.vertex = true;
+      edge.insert(targetLabel);
+    }
+  }
+  
   return edge;
 };
 

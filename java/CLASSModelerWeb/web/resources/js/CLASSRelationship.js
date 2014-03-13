@@ -17,7 +17,6 @@ CLASSRelationship = function (editor) {
   this.dialog      = dlgRelationship; // Defined by a PrimeFaces dialog.
   this.title       = dlgRelationship.titlebar.children("span.ui-dialog-title").html();
   
-  this.configureDirectionCombo();
   this.configureMultiplicityCombo("sourceMultiplicity");
   this.configureMultiplicityCombo("targetMultiplicity");
   this.configureVisibilityCombo("sourceVisibility");
@@ -45,58 +44,19 @@ CLASSRelationship.prototype.title;
 CLASSRelationship.prototype.init = function (cell) {
   this.relationshipCell = cell;
   
-  this.loadNameTextFieldData();
-  this.loadDirectionComboData();
+  $("#relName").val(this.relationshipCell.getAttribute("name"));
   
+  this.loadSource();
+  this.loadTarget();
   this.setTitle();
 };
 
-/**
- * Loads the name of the relationship in the text field.
- * 
- * @author Gabriel Leonardo Diaz, 22.02.2014.
- */
-CLASSRelationship.prototype.loadNameTextFieldData = function () {
-  $("#relName").val(this.relationshipCell.getAttribute("name"));
+CLASSRelationship.prototype.loadSource = function () {
+  
 };
 
-/**
- * Loads the direction combo box value.
- * 
- * @author Gabriel Leonardo Diaz, 22.02.2014.
- */
-CLASSRelationship.prototype.loadDirectionComboData = function () {
-  if (this.graph.isGeneralization(this.relationshipCell.value) || this.graph.isRealization(this.relationshipCell.value)) {
-    $("#relDirection").combobox("setValue", "");
-    $("#relDirection").combobox("disable");
-    return;
-  }
+CLASSRelationship.prototype.loadTarget = function () {
   
-  // TODO GD get the styles of the edge and check the startArrow and endArrow values.
-};
-
-/**
- * Configures the combo box for direction property.
- * 
- * @author Gabriel Leonardo Diaz, 20.02.2014.
- */
-CLASSRelationship.prototype.configureDirectionCombo = function () {
-  $("#relDirection").combobox({
-      valueField:"id",
-      textField:"text",
-      panelHeight: 90,
-      width: 300,
-      data: [
-          {id:"unspecified",     text:"Indeterminado"},
-          {id:"bidirectional",   text:"Bidireccional"},
-          {id:"sourcetarget",    text:"Origen -> Final"},
-          {id:"targetsource",    text:"Final -> Origen"}
-      ]
-  });
-  
-  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
-  var comboPanel = $("#relDirection").combobox("panel");
-  comboPanel.panel("panel").css("z-index", "2000");
 };
 
 /**
@@ -189,13 +149,13 @@ CLASSRelationship.prototype.setTitle = function () {
   var relationshipName = "";
   
   if (this.graph.isAggregation(this.relationshipCell.value)) {
-    relationshipName = "Agregacion";
+    relationshipName = "Agregaci&oacute;n";
   }
   else if (this.graph.isComposition(this.relationshipCell.value)) {
-    relationshipName = "Composicion";
+    relationshipName = "Composici&oacute;n";
   }
   else {
-    relationshipName = "Asociacion";
+    relationshipName = "Asociaci&oacute;n";
   }
   
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", relationshipName));

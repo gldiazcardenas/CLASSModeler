@@ -94,8 +94,8 @@
         
         <add as="association">
             <Association name="" aggregation="none">
-                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
-                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" navigable="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" navigable="" />
                 
                 <mxCell edge="1" style="association">
                     <mxGeometry as="geometry" relative="1" />
@@ -105,8 +105,8 @@
         
         <add as="aggregation">
             <Association name="" aggregation="shared">
-                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
-                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" navigable="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" navigable="" />
                 
                 <mxCell edge="1" style="aggregation">
                     <mxGeometry as="geometry" relative="1" />
@@ -116,8 +116,8 @@
         
         <add as="composition">
             <Association name="" aggregation="composite">
-                <Property as="source" name="" visibility="" upper="" lower="" collection="" />
-                <Property as="target" name="" visibility="" upper="" lower="" collection="" />
+                <Property as="source" name="" visibility="" upper="" lower="" collection="" navigable="" />
+                <Property as="target" name="" visibility="" upper="" lower="" collection="" navigable="" />
                 
                 <mxCell edge="1" style="composition">
                     <mxGeometry as="geometry" relative="1" />
@@ -256,6 +256,8 @@
                 <add as="elbow" value="horizontal"/>
                 <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="aggregation">
@@ -271,6 +273,8 @@
                 <add as="startFill" value="0"/>
                 <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="composition">
@@ -285,6 +289,8 @@
                 <add as="startFill" value="1"/>
                 <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="generalization">
@@ -298,6 +304,8 @@
                 <add as="endArrow" value="block"/>
                 <add as="endSize" value="11"/>
                 <add as="endFill" value="0"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="realization">
@@ -312,6 +320,8 @@
                 <add as="endSize" value="11"/>
                 <add as="endFill" value="0"/>
                 <add as="dashed" value="1"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="dependency">
@@ -325,6 +335,8 @@
                 <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
                 <add as="dashed" value="1"/>
+                <add as="labelBackgroundColor" value="#FFFFFF" />
+                <add as="labelPadding" value="2" />
             </add>
             
             <add as="link">
