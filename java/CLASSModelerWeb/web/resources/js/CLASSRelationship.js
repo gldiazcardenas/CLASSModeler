@@ -22,18 +22,29 @@ CLASSRelationship = function (editor) {
     }
   });
   
-  this.configureMultiplicityCombo("sourceMultiplicity");
-  this.configureMultiplicityCombo("targetMultiplicity");
+//  this.configureMultiplicityCombo("sourceMultiplicity");
+//  this.configureMultiplicityCombo("targetMultiplicity");
   this.configureVisibilityCombo("sourceVisibility");
   this.configureVisibilityCombo("targetVisibility");
-  this.configureCollectionsCombo("sourceCollectionType");
-  this.configureCollectionsCombo("targetCollectionType");
+  this.configureCollectionsCombo("sourceCollection");
+  this.configureCollectionsCombo("targetCollection");
+  this.configureNavigableCheckBoxes();
 };
 
 /**
  * The instance of the relationship being edited.
  */
 CLASSRelationship.prototype.relationshipCell;
+
+/**
+ * Reference to the source property of the relationship.
+ */
+CLASSRelationship.prototype.sourceProperty;
+
+/**
+ * Reference to the target property of the relationship.
+ */
+CLASSRelationship.prototype.targetProperty;
 
 /**
  * The localized text for the dialog title.
@@ -79,26 +90,63 @@ CLASSRelationship.prototype.loadSource = function () {
     return;
   }
   
-  var sourceProperty = null;
+  this.sourceProperty = null;
   
   for (var i = 0; i < this.relationshipCell.children.length; i++) {
     var child = this.relationshipCell.children[i];
     if (child.getAttribute("type") == this.relationshipCell.source.id) {
-      sourceProperty = child;
+      this.sourceProperty = child;
       break;
     }
   }
   
-  if (sourceProperty) {
-    $("#sourceRoleName").val(sourceProperty.getAttribute("name"));
-    $("#sourceRoleName").removeAttr("disabled");
-    
+  var sourceName       = "";
+  var sourceVisibility = "";
+  var sourceCollection = "";
+  var sourceType       = "";
+  var sourceLower      = "";
+  var sourceUpper      = "";
+  var sourceNavigable  = false;
+  
+  if (this.sourceProperty) {
+    sourceName       = this.sourceProperty.getAttribute("name");
+    sourceVisibility = this.sourceProperty.getAttribute("visibility");
+    sourceCollection = this.sourceProperty.getAttribute("collection");
+    sourceType       = this.graph.convertTypeIdToNameString(this.sourceProperty.getAttribute("type"));
+    sourceLower      = this.sourceProperty.getAttribute("lower");
+    sourceUpper      = this.sourceProperty.getAttribute("upper");
+    sourceNavigable  = true;
+  }
+  
+  $("#sourceName").val(sourceName);
+  $("#sourceVisibility").combobox("setValue", sourceVisibility);
+  $("#sourceType").val(sourceType);
+  $("#sourceCollection").combobox("setValue", sourceCollection);
+  $("#sourceLower").val(sourceLower);
+  $("#sourceUpper").val(sourceUpper);
+  $("#sourceNavigable").prop("checked", sourceNavigable);
+  this.setEnabledSource(sourceNavigable);
+};
+
+/**
+ * Enables/Disables the source role controls.
+ * 
+ * @author Gabriel Leonardo Diaz, 15.03.2014.
+ */
+CLASSRelationship.prototype.setEnabledSource = function (enabled) {
+  if (enabled) {
+    $("#sourceName").removeAttr("disabled");
+    $("#sourceVisibility").combobox("enable");
+    $("#sourceCollection").combobox("enable");
+    $("#sourceLower").removeAttr("disabled");
+    $("#sourceUpper").removeAttr("disabled");
   }
   else {
-    $("#sourceRoleName").val("");
-    $("#sourceRoleName").attr("disabled", true);
+    $("#sourceName").attr("disabled", true);
     $("#sourceVisibility").combobox("disable");
     $("#sourceCollection").combobox("disable");
+    $("#sourceLower").attr("disabled", true);
+    $("#sourceUpper").attr("disabled", true);
   }
 };
 
@@ -112,30 +160,85 @@ CLASSRelationship.prototype.loadTarget = function () {
     return;
   }
   
-  var targetProperty = null;
+  this.targetProperty = null;
   
   for (var i = 0; i < this.relationshipCell.children.length; i++) {
     var child = this.relationshipCell.children[i];
     if (child.getAttribute("type") == this.relationshipCell.target.id) {
-      targetProperty = child;
+      this.targetProperty = child;
       break;
     }
   }
   
-  if (targetProperty) {
-    $("#targetRoleName").val(targetProperty.getAttribute("name"));
-    $("#targetRoleName").removeAttr("disabled");
+  var targetName       = "";
+  var targetVisibility = "";
+  var targetCollection = "";
+  var targetType       = "";
+  var targetLower      = "";
+  var targetUpper      = "";
+  var targetNavigable  = false;
+  
+  if (this.targetProperty) {
+    targetName       = this.targetProperty.getAttribute("name");
+    targetVisibility = this.targetProperty.getAttribute("visibility");
+    targetCollection = this.targetProperty.getAttribute("collection");
+    targetType       = this.graph.convertTypeIdToNameString(this.targetProperty.getAttribute("type"));
+    targetLower      = this.targetProperty.getAttribute("lower");
+    targetUpper      = this.targetProperty.getAttribute("upper");
+    targetNavigable  = true;
+  }
+  
+  $("#targetName").val(targetName);
+  $("#targetVisibility").combobox("setValue", targetVisibility);
+  $("#targetType").val(targetType);
+  $("#targetCollection").combobox("setValue", targetCollection);
+  $("#targetLower").val(targetLower);
+  $("#targetUpper").val(targetUpper);
+  $("#targetNavigable").prop("checked", targetNavigable);
+  this.setEnabledTarget(targetNavigable);
+};
+
+/**
+ * 
+ * @param enabled
+ */
+CLASSRelationship.prototype.setEnabledTarget = function (enabled) {
+  if (enabled) {
+    $("#targetName").removeAttr("disabled");
     $("#targetVisibility").combobox("enable");
-    $("#targetVisibility").combobox("setValue", targetProperty.getAttribute("visibility"));
     $("#targetCollection").combobox("enable");
-    $("#targetCollection").combobox("setValue", targetProperty.getAttribute("collection"));
+    $("#targetLower").removeAttr("disabled");
+    $("#targetUpper").removeAttr("disabled");
   }
   else {
-    $("#targetRoleName").val("");
-    $("#targetRoleName").attr("disabled", true);
+    $("#targetName").attr("disabled", true);
     $("#targetVisibility").combobox("disable");
     $("#targetCollection").combobox("disable");
+    $("#targetLower").attr("disabled", true);
+    $("#targetUpper").attr("disabled", true);
   }
+};
+
+/**
+ * Sets the title of the dialog by appending the name of the relationship being
+ * edited.
+ * 
+ * @author Gabriel Leonardo Diaz, 10.02.2014.
+ */
+CLASSRelationship.prototype.setTitle = function () {
+  var relationshipName = "";
+  
+  if (this.graph.isAggregation(this.relationshipCell.value)) {
+    relationshipName = "Agregaci&oacute;n";
+  }
+  else if (this.graph.isComposition(this.relationshipCell.value)) {
+    relationshipName = "Composici&oacute;n";
+  }
+  else {
+    relationshipName = "Asociaci&oacute;n";
+  }
+  
+  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", relationshipName));
 };
 
 /**
@@ -209,7 +312,7 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
-      width: 300,
+      width: 200,
       data: this.graph.getCollectionsJSon()
   });
   
@@ -219,25 +322,20 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
 };
 
 /**
- * Sets the title of the dialog by appending the name of the relationship being
- * edited.
+ * Configures the checkboxes to enable/disable the fields when checked.
  * 
- * @author Gabriel Leonardo Diaz, 10.02.2014.
+ * @author Gabriel Leonardo Diaz, 15.03.2014.
  */
-CLASSRelationship.prototype.setTitle = function () {
-  var relationshipName = "";
+CLASSRelationship.prototype.configureNavigableCheckBoxes = function () {
+  var self = this;
   
-  if (this.graph.isAggregation(this.relationshipCell.value)) {
-    relationshipName = "Agregaci&oacute;n";
-  }
-  else if (this.graph.isComposition(this.relationshipCell.value)) {
-    relationshipName = "Composici&oacute;n";
-  }
-  else {
-    relationshipName = "Asociaci&oacute;n";
-  }
+  $("#sourceNavigable").change(function() {
+    self.setEnabledSource($(this).is(":checked"));
+  });
   
-  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", relationshipName));
+  $("#targetNavigable").change(function() {
+    self.setEnabledTarget($(this).is(":checked"));
+  });
 };
 
 /**

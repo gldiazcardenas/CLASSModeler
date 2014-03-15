@@ -169,6 +169,10 @@ CLASSEditor.prototype.validateEdge = function (edge, source, target) {
     return "No se puede crear una Generalizacion entre los elementos seleccionados.";
   }
   
+  if (this.graph.isAssociation(this.defaultEdge.value) && !this.graph.isClass(source.value)) {
+    return "No se puede crear una Asociacion entre los elementos seleccionados.";
+  }
+  
   return null;
 };
 

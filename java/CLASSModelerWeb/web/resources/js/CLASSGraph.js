@@ -156,21 +156,7 @@ CLASSGraph.prototype.convertParametersToString = function (operation) {
  * @param feature
  */
 CLASSGraph.prototype.convertTypeToString = function (feature) {
-  var typeName;
-  
-  var type = feature.getAttribute("type");
-  if (type) {
-    var cell = this.model.getCell(type);
-    if (cell) {
-      typeName = cell.getAttribute("name");
-    }
-    else {
-      typeName = type;
-    }
-  }
-  else {
-    typeName = "";
-  }
+  var typeName = this.convertTypeIdToNameString(feature.getAttribute("type"));
   
   var collection = feature.getAttribute("collection");
   if (collection) {
@@ -183,6 +169,25 @@ CLASSGraph.prototype.convertTypeToString = function (feature) {
     }
   }
   
+  return typeName;
+};
+
+/**
+ * Gets the type name of the given id.
+ * @param typeId
+ * @returns {String}
+ */
+CLASSGraph.prototype.convertTypeIdToNameString = function (typeId) {
+  var typeName = "";
+  if (typeId) {
+    var cell = this.model.getCell(typeId);
+    if (cell) {
+      typeName = cell.getAttribute("name");
+    }
+    else {
+      typeName = typeId;
+    }
+  }
   return typeName;
 };
 
