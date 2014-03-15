@@ -128,13 +128,9 @@ CLASSEditor.prototype.createGraph = function () {
             last = cells[i];
             this.executeLayout(this.getLayout(last), last);
             
-            // GD, 25.10.2013. Applying layout to also child swimlane nodes
+            // GD, 25.10.2013. Applying layout to also child nodes
             if (last.children) {
               this.layoutCells(last.children);
-              
-              if (graph.isAssociation(last.value)) {
-                graph.cellSizeUpdated(last, false);
-              }
             }
           }
         }
@@ -201,25 +197,20 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   
   // Adjust the edge created
   if (this.graph.isAggregation(edge.value)) {
-    sourceProp.setAttribute("navigable", "0");
-    targetProp.setAttribute("upper", "*");
-    targetProp.setAttribute("navigable", "1");
-    targetProp.setAttribute("visibility", "private");
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+    // TODO GD
   }
   else if (this.graph.isGeneralization(edge.value)) {
-    sourceProp.setAttribute("navigable", "0");
-    targetProp.setAttribute("upper", "*");
-    targetProp.setAttribute("navigable", "1");
-    targetProp.setAttribute("visibility", "private");
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "List");
+    // TODO GD
   }
   else if (this.graph.isAssociation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", "mi" + target.getAttribute("name"));
+    targetProp.setAttribute("name", "m" + target.getAttribute("name"));
     targetProp.setAttribute("type", target.id);
-    this.graph.setCellStyles(mxConstants.STYLE_MOVABLE, 1, [targetProp]);
+    targetProp.geometry.relative = true;
     edge.insert(targetProp);
+    
+    this.graph.setCellStyles(mxConstants.STYLE_MOVABLE, 1, [targetProp]);
+    this.graph.privateCellSizeUpdated(targetProp, false);
   }
   
   return edge;

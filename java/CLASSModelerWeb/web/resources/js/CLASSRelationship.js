@@ -16,6 +16,11 @@ CLASSRelationship = function (editor) {
   this.graph       = editor.graph;
   this.dialog      = dlgRelationship; // Defined by a PrimeFaces dialog.
   this.title       = dlgRelationship.titlebar.children("span.ui-dialog-title").html();
+  this.dialog.save = mxUtils.bind(this, function () {
+    if (this.saveRelationship()) {
+      this.dialog.hide();
+    }
+  });
   
   this.configureMultiplicityCombo("sourceMultiplicity");
   this.configureMultiplicityCombo("targetMultiplicity");
@@ -43,20 +48,94 @@ CLASSRelationship.prototype.title;
  */
 CLASSRelationship.prototype.init = function (cell) {
   this.relationshipCell = cell;
-  
-  $("#relName").val(this.relationshipCell.getAttribute("name"));
-  
+  this.loadRelationship();
   this.loadSource();
   this.loadTarget();
   this.setTitle();
 };
 
-CLASSRelationship.prototype.loadSource = function () {
-  
+/**
+ * 
+ * @returns {Boolean}
+ */
+CLASSRelationship.prototype.saveRelationship = function () {
+  return true;
 };
 
-CLASSRelationship.prototype.loadTarget = function () {
+/**
+ * 
+ */
+CLASSRelationship.prototype.loadRelationship = function () {
+  $("#relName").val(this.relationshipCell.getAttribute("name"));
+};
+
+/**
+ * Loads the fields in the source section.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.03.2014.
+ */
+CLASSRelationship.prototype.loadSource = function () {
+  if (!this.relationshipCell.children) {
+    return;
+  }
   
+  var sourceProperty = null;
+  
+  for (var i = 0; i < this.relationshipCell.children.length; i++) {
+    var child = this.relationshipCell.children[i];
+    if (child.getAttribute("type") == this.relationshipCell.source.id) {
+      sourceProperty = child;
+      break;
+    }
+  }
+  
+  if (sourceProperty) {
+    $("#sourceRoleName").val(sourceProperty.getAttribute("name"));
+    $("#sourceRoleName").removeAttr("disabled");
+    
+  }
+  else {
+    $("#sourceRoleName").val("");
+    $("#sourceRoleName").attr("disabled", true);
+    $("#sourceVisibility").combobox("disable");
+    $("#sourceCollection").combobox("disable");
+  }
+};
+
+/**
+ * Loads the fields in the target section.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.03.2014.
+ */
+CLASSRelationship.prototype.loadTarget = function () {
+  if (!this.relationshipCell.children) {
+    return;
+  }
+  
+  var targetProperty = null;
+  
+  for (var i = 0; i < this.relationshipCell.children.length; i++) {
+    var child = this.relationshipCell.children[i];
+    if (child.getAttribute("type") == this.relationshipCell.target.id) {
+      targetProperty = child;
+      break;
+    }
+  }
+  
+  if (targetProperty) {
+    $("#targetRoleName").val(targetProperty.getAttribute("name"));
+    $("#targetRoleName").removeAttr("disabled");
+    $("#targetVisibility").combobox("enable");
+    $("#targetVisibility").combobox("setValue", targetProperty.getAttribute("visibility"));
+    $("#targetCollection").combobox("enable");
+    $("#targetCollection").combobox("setValue", targetProperty.getAttribute("collection"));
+  }
+  else {
+    $("#targetRoleName").val("");
+    $("#targetRoleName").attr("disabled", true);
+    $("#targetVisibility").combobox("disable");
+    $("#targetCollection").combobox("disable");
+  }
 };
 
 /**

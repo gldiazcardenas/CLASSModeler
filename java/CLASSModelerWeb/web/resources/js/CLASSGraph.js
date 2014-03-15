@@ -33,7 +33,7 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
   }
   
   if (this.isProperty (node)) {
-    return this.convertPropertyToString(node);
+    return this.convertPropertyToString(node, this.isAssociation(cell.parent.value));
   }
   
   if (this.isOperation(node)) {
@@ -71,17 +71,34 @@ CLASSGraph.prototype.convertClassifierToString = function (classifier) {
  * @return {String}
  * @author Gabriel Leonardo Diaz, 25.02.2014.
  */
-CLASSGraph.prototype.convertPropertyToString = function (property) {
+CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
-  var initialValue = property.getAttribute("initialValue");
-  var label        = "";
   
-  label += this.getVisibilityChar(visibility) + " " + name;
-  label += ": " + this.convertTypeToString(property);
+  var label        = this.getVisibilityChar(visibility) + " " + name;
   
-  if (initialValue) {
-    label += " = " + initialValue;
+  if (isAssociation) {
+    var lower = property.getAttribute("lower");
+    var upper = property.getAttribute("upper");
+    
+    if (lower) {
+      label += "   {" + lower;
+      if (upper) {
+        label += ".." + upper;
+      }
+      label += " }";
+    }
+    else if (upper) {
+      label += "   {" + upper + "}";
+    }
+  }
+  else {
+    label += " : " + this.convertTypeToString(property);
+    
+    var initialValue = property.getAttribute("initialValue");
+    if (initialValue) {
+      label += " = " + initialValue;
+    }
   }
   
   return label;
@@ -506,69 +523,79 @@ CLASSGraph.prototype.cellSizeUpdated = function(cell, ignoreChildren) {
     this.model.beginUpdate();
     
     try {
-      var size = this.getPreferredSizeForCell(cell);
-      var geo = this.model.getGeometry(cell);
-      
-      if (size != null && geo != null) {
-        var collapsed = this.isCellCollapsed(cell);
-        geo = geo.clone();
-        
-        if (this.isSwimlane(cell)) {
-          var state = this.view.getState(cell);
-          var style = (state != null) ? state.style : this.getCellStyle(cell);
-          var cellStyle = this.model.getStyle(cell);
-          
-          if (cellStyle == null) {
-            cellStyle = '';
-          }
-          
-          if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true)) {
-            cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.height + 10);
-            
-            if (collapsed) {
-              geo.height = size.height + 10;
-            }
-            
-            geo.width = size.width;
-          }
-          else {
-            cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.width + 10);
-            
-            if (collapsed) {
-              geo.width = size.width + 10;
-            }
-            
-            geo.height = size.height;
-          }
-          
-          this.model.setStyle(cell, cellStyle);
-        }
-        else {
-          geo.width = size.width;
-          geo.height = size.height;
-        }
-        
-        if (!ignoreChildren && !collapsed) {
-          var bounds = this.view.getBounds(this.model.getChildren(cell));
-          
-          if (bounds != null) {
-            var tr = this.view.translate;
-            var scale = this.view.scale;
-            
-            var width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
-            var height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
-            
-            geo.width = Math.max(geo.width, width);
-            geo.height = Math.max(geo.height, height);
-          }
-        }
-        
-        this.cellsResized([cell], [geo]);
-      }
+      this.privateCellSizeUpdated(cell, ignoreChildren);
     }
     finally {
       this.model.endUpdate();
     }
+  }
+};
+
+/**
+ * Private method that does not start an update in the model, just updates the cell size.
+ * @param cell
+ * @param ignoreChildren
+ * @author Gabriel Leonardo Diaz, 14.03.2014.
+ */
+CLASSGraph.prototype.privateCellSizeUpdated = function (cell, ignoreChildren) {
+  var size = this.getPreferredSizeForCell(cell);
+  var geo = this.model.getGeometry(cell);
+  
+  if (size != null && geo != null) {
+    var collapsed = this.isCellCollapsed(cell);
+    geo = geo.clone();
+    
+    if (this.isSwimlane(cell)) {
+      var state = this.view.getState(cell);
+      var style = (state != null) ? state.style : this.getCellStyle(cell);
+      var cellStyle = this.model.getStyle(cell);
+      
+      if (cellStyle == null) {
+        cellStyle = '';
+      }
+      
+      if (mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true)) {
+        cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.height + 10);
+        
+        if (collapsed) {
+          geo.height = size.height + 10;
+        }
+        
+        geo.width = size.width;
+      }
+      else {
+        cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_STARTSIZE, size.width + 10);
+        
+        if (collapsed) {
+          geo.width = size.width + 10;
+        }
+        
+        geo.height = size.height;
+      }
+      
+      this.model.setStyle(cell, cellStyle);
+    }
+    else {
+      geo.width = size.width;
+      geo.height = size.height;
+    }
+    
+    if (!ignoreChildren && !collapsed) {
+      var bounds = this.view.getBounds(this.model.getChildren(cell));
+      
+      if (bounds != null) {
+        var tr = this.view.translate;
+        var scale = this.view.scale;
+        
+        var width = (bounds.x + bounds.width) / scale - geo.x - tr.x;
+        var height = (bounds.y + bounds.height) / scale - geo.y - tr.y;
+        
+        geo.width = Math.max(geo.width, width);
+        geo.height = Math.max(geo.height, height);
+      }
+    }
+    
+    this.cellsResized([cell], [geo]);
   }
 };
 
@@ -582,6 +609,18 @@ CLASSGraph.prototype.isCellSelectable = function (cell) {
     return false;
   }
   return !this.isSection(cell.value);
+};
+
+/**
+ * Avoid to lock properties cells on associations.
+ * @param cell
+ * @returns {Boolean}
+ */
+CLASSGraph.prototype.isCellLocked = function (cell) {
+  if (this.isProperty(cell.value)) {
+    return this.isCellsLocked();
+  }
+  return mxGraph.prototype.isCellLocked.apply(this, arguments);
 };
 
 /**

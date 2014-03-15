@@ -28562,8 +28562,7 @@ mxEdgeLabelLayout.prototype.placeLabels = function(v, e)
 		{
 			var edge = e[i];
 			
-			if (edge != null && edge.text != null &&
-				edge.text.boundingBox != null)
+			if (edge != null && edge.text != null && edge.text.boundingBox != null)
 			{
 				for (var j = 0; j < v.length; j++)
 				{
@@ -49924,8 +49923,7 @@ mxGraph.prototype.cloneCells = function(cells, allowInvalidEdges)
  * relative - Optional boolean that specifies if the geometry is relative.
  * Default is false.
  */
-mxGraph.prototype.insertVertex = function(parent, id, value,
-	x, y, width, height, style, relative)
+mxGraph.prototype.insertVertex = function(parent, id, value, x, y, width, height, style, relative)
 {
 	var vertex = this.createVertex(parent, id, value, x, y, width, height, style, relative);
 	
@@ -49937,8 +49935,7 @@ mxGraph.prototype.insertVertex = function(parent, id, value,
  * 
  * Hook method that creates the new vertex for <insertVertex>.
  */
-mxGraph.prototype.createVertex = function(parent, id, value,
-		x, y, width, height, style, relative)
+mxGraph.prototype.createVertex = function(parent, id, value, x, y, width, height, style, relative)
 {
 	// Creates the geometry for the vertex
 	var geometry = new mxGeometry(x, y, width, height);
@@ -51207,8 +51204,7 @@ mxGraph.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
 				this.setAllowNegativeCoordinates(true);
 			}
 			
-			this.cellsMoved(cells, dx, dy, !clone && this.isDisconnectOnMove()
-					&& this.isAllowDanglingEdges(), target == null);
+			this.cellsMoved(cells, dx, dy, !clone && this.isDisconnectOnMove() && this.isAllowDanglingEdges(), target == null);
 			
 			this.setAllowNegativeCoordinates(previous);
 
