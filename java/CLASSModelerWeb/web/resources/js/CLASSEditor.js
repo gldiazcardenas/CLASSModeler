@@ -201,20 +201,29 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   
   // Adjust the edge created
   if (this.graph.isAggregation(edge.value)) {
-    // TODO GD
+    var targetProp = model.cloneCell(this.getTemplate("property"));
+    targetProp.setAttribute("name", "a" + target.getAttribute("name"));
+    targetProp.setAttribute("visibility", "private");
+    targetProp.setAttribute("type", target.id);
+    targetProp.setAttribute("collection", "arraylist");
+    targetProp.setAttribute("upper", "*");
+    this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
-  else if (this.graph.isGeneralization(edge.value)) {
-    // TODO GD
+  else if (this.graph.isComposition(edge.value)) {
+    var targetProp = model.cloneCell(this.getTemplate("property"));
+    targetProp.setAttribute("name", "c" + target.getAttribute("name"));
+    targetProp.setAttribute("visibility", "private");
+    targetProp.setAttribute("type", target.id);
+    targetProp.setAttribute("collection", "arraylist");
+    targetProp.setAttribute("upper", "*");
+    this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
   else if (this.graph.isAssociation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", "m" + target.getAttribute("name"));
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase());
     targetProp.setAttribute("type", target.id);
-    targetProp.geometry.relative = true;
-    edge.insert(targetProp);
-    
-    this.graph.setCellStyles(mxConstants.STYLE_MOVABLE, 1, [targetProp]);
-    this.graph.privateCellSizeUpdated(targetProp, false);
+    targetProp.setAttribute("upper", "1");
+    this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
   
   return edge;
@@ -570,7 +579,7 @@ CLASSEditor.prototype.showRelationship = function (cell) {
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
 CLASSEditor.prototype.generateGetSet = function (cell) {
-  if (cell == null || !this.graph.isProperty(cell.value)) {
+  if (cell == null || cell.parent == null || !this.graph.isProperty(cell.value)) {
     return;
   }
   
@@ -599,8 +608,22 @@ CLASSEditor.prototype.generateGetSet = function (cell) {
   param.setAttribute("collection", collection);
   set.value.appendChild(param);
   
-  this.graph.addOperation(cell.parent.parent, get);
-  this.graph.addOperation(cell.parent.parent, set);
+  var parentCell;
+  if (this.graph.isAssociation(cell.parent.value)) {
+    if (cell.getAttribute("type") == cell.parent.source.id) {
+      parentCell = cell.parent.target;
+    }
+    else {
+      parentCell = cell.parent.source;
+    }
+  }
+  else {
+    // Class or Interface
+    parentCell = cell.parent.parent;
+  }
+  
+  this.graph.addOperation(parentCell, get);
+  this.graph.addOperation(parentCell, set);
 };
 
 /**

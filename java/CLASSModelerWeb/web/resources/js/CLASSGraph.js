@@ -86,7 +86,7 @@ CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation
       if (upper) {
         label += ".." + upper;
       }
-      label += " }";
+      label += "}";
     }
     else if (upper) {
       label += "   {" + upper + "}";
@@ -409,6 +409,19 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
  * @author Gabriel Leonardo Diaz, 02.03.2014.
  */
 CLASSGraph.prototype.cellsRemoved = function (cells) {
+  for (var i = 0; i < cells.length; i++) {
+    cell = cells[i];
+    
+    if (this.isProperty(cell.value) && cell.parent.isEdge() && this.isAssociation(cell.parent.value)) {
+      if (cell.getAttribute("type") == cell.parent.source.id) {
+        this.setCellStyles(mxConstants.STYLE_STARTARROW, "", [cell.parent]);
+      }
+      else {
+        this.setCellStyles(mxConstants.STYLE_ENDARROW, "", [cell.parent]);
+      }
+    }
+  }
+  
   mxGraph.prototype.cellsRemoved.apply(this, arguments);
   
   var cell;
@@ -761,6 +774,59 @@ CLASSGraph.prototype.editAttribute = function (attributeCell, newAttributeCell) 
   }
   finally {
     this.model.endUpdate();
+  }
+};
+
+/**
+ * Adds the attribute to the association.
+ * 
+ * @param associationCell
+ * @param attributeCell
+ * @param isSource
+ * @param isInsert
+ * @author Gabriel Leonardo Diaz, 16.03.2014.
+ */
+CLASSGraph.prototype.addAssociationAttribute = function (associationCell, attributeCell, isSource, isInsert) {
+  isInsert = isInsert || false;
+  isSource = isSource || false;
+  
+  // Adjust the attribute
+  attributeCell.geometry.relative = true;
+  if (isSource) {
+    attributeCell.geometry.x = -1;
+    this.setCellStyles(mxConstants.STYLE_STARTARROW, "open", [associationCell]);
+  }
+  else {
+    attributeCell.geometry.x = 1;
+    this.setCellStyles(mxConstants.STYLE_ENDARROW, "open", [associationCell]);
+  }
+  
+  // Add to the association
+  if (isInsert) {
+    associationCell.insert(attributeCell);
+  }
+  else {
+    this.addCell(attributeCell, associationCell);
+  }
+  
+  // Adjust styles
+  this.setCellStyles(mxConstants.STYLE_MOVABLE, 1, [attributeCell]);
+  this.privateCellSizeUpdated(attributeCell, false);
+};
+
+/**
+ * Removes the attribute from the model and adjusts the navigability of the
+ * association.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.03.2014.
+ */
+CLASSGraph.prototype.removeAssociationAttribute = function (associationCell, attributeCell, isSource) {
+  this.removeCells([attributeCell]);
+  if (isSource) {
+    this.setCellStyles(mxConstants.STYLE_STARTARROW, "", [associationCell]);
+  }
+  else {
+    this.setCellStyles(mxConstants.STYLE_ENDARROW, "", [associationCell]);
   }
 };
 

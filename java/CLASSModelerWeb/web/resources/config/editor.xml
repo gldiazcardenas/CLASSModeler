@@ -245,7 +245,6 @@
                 <add as="fontColor" value="#000000"/>
                 <add as="edgeStyle" value="orthogonalEdgeStyle"/>
                 <add as="elbow" value="horizontal"/>
-                <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
                 <add as="labelBackgroundColor" value="#FFFFFF" />
                 <add as="labelPadding" value="2" />
@@ -262,7 +261,6 @@
                 <add as="startArrow" value="diamond"/>
                 <add as="startSize" value="12"/>
                 <add as="startFill" value="0"/>
-                <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
                 <add as="labelBackgroundColor" value="#FFFFFF" />
                 <add as="labelPadding" value="2" />
@@ -278,7 +276,6 @@
                 <add as="startArrow" value="diamond"/>
                 <add as="startSize" value="12"/>
                 <add as="startFill" value="1"/>
-                <add as="endArrow" value="open"/>
                 <add as="endSize" value="8"/>
                 <add as="labelBackgroundColor" value="#FFFFFF" />
                 <add as="labelPadding" value="2" />
