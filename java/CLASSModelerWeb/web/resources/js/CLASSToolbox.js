@@ -102,11 +102,11 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       // CLASS sections
       if (graph.isClass(newCell.value)) {
         var attrSection = model.cloneCell(self.editor.getTemplate("section"));
-        attrSection.setAttribute("attribute", "true");
+        attrSection.setAttribute("attribute", "1");
         attrSection.setVertex(true);
         
         var operSection = model.cloneCell(self.editor.getTemplate("section"));
-        operSection.setAttribute("attribute", "false");
+        operSection.setAttribute("attribute", "0");
         operSection.setVertex(true);
         
         newCell.insert(attrSection);
@@ -121,7 +121,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       // INTERFACE sections
       else if (graph.isInterface(newCell.value)) {
         var attrSection = model.cloneCell(self.editor.getTemplate("section"));
-        attrSection.setAttribute("attribute", "false");
+        attrSection.setAttribute("attribute", "0");
         attrSection.setVertex(true);
         
         newCell.insert(attrSection);
@@ -135,7 +135,7 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
       // ENUMERATION sections
       else if (graph.isEnumeration(newCell.value)) {
         var attrSection = model.cloneCell(self.editor.getTemplate("section"));
-        attrSection.setAttribute("attribute", "true");
+        attrSection.setAttribute("attribute", "1");
         attrSection.setVertex(true);
         
         newCell.insert(attrSection);

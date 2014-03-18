@@ -227,7 +227,7 @@ public class DesignerControllerBean extends JSFGenericBean {
     this.sourceCodeFiles.clear();
     
     // Generate the sources
-    this.sourceCodeFiles.addAll(sourceCodeService.generateCode(diagram));
+    this.sourceCodeFiles.addAll(sourceCodeService.generateCode(user, diagram));
     Collections.sort(this.sourceCodeFiles, SourceCodeService.SOURCE_FILES_COMPARATOR);
   }
   

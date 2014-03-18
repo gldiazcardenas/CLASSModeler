@@ -156,20 +156,42 @@ CLASSEditor.prototype.createGraph = function () {
  * @author Gabriel Leonardo Diaz, 04.03.2014.
  */
 CLASSEditor.prototype.validateEdge = function (edge, source, target) {
-  if (this.graph.isPackage(source.value) || this.graph.isPackage(target.value)) {
-    return "No se permiten relaciones desde o hacia paquetes.";
+  edge = this.defaultEdge;
+  
+  if (this.graph.isPackage(source.value)) {
+    edge = this.getTemplate("link");
+    
+    if (!this.graph.isClassifier(target.value)) {
+      return "No se puede crear un vinculo entre estos elementos.";
+    }
+    
+    if (target.getAttribute("package") != null) {
+      return "Este elemento ya tiene un paquete.";
+    }
   }
   
-  if (this.graph.isRealization(this.defaultEdge.value) && (!this.graph.isClass(source.value) || !this.graph.isInterface(target.value))) {
+  if (this.graph.isPackage(target.value)) {
+    edge = this.getTemplate("link");
+    
+    if (!this.graph.isClassifier(source.value)) {
+      return "No se puede crear un vinculo entre estos elementos.";
+    }
+    
+    if (source.getAttribute("package") != null) {
+      return "Este elemento ya tiene un paquete.";
+    }
+  }
+  
+  if (this.graph.isRealization(edge.value) && (!this.graph.isClass(source.value) || !this.graph.isInterface(target.value))) {
     return "No se puede crear una Realizacion entre los elementos seleccionados.";
   }
   
-  if (this.graph.isGeneralization(this.defaultEdge.value) && (!(this.graph.isClass(source.value) && this.graph.isClass(target.value)) || 
-                                                              !(this.graph.isInterface(source.value) && this.graph.isInterface(target.value)))) {
+  if (this.graph.isGeneralization(edge.value) && (!(this.graph.isClass(source.value) && this.graph.isClass(target.value)) || 
+                                                  !(this.graph.isInterface(source.value) && this.graph.isInterface(target.value)))) {
     return "No se puede crear una Generalizacion entre los elementos seleccionados.";
   }
   
-  if (this.graph.isAssociation(this.defaultEdge.value) && !this.graph.isClass(source.value)) {
+  if (this.graph.isAssociation(edge.value) && !this.graph.isClass(source.value)) {
     return "No se puede crear una Asociacion entre los elementos seleccionados.";
   }
   
@@ -185,9 +207,12 @@ CLASSEditor.prototype.validateEdge = function (edge, source, target) {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.createEdge = function (source, target) {
+  var isSourcePackage = this.graph.isPackage(source.value);
+  var isTargetPackage = this.graph.isPackage(target.value);
+  
   // Save default edge
   var oldDefaultEdge = this.defaultEdge;
-  if (this.graph.isComment(source.value) || this.graph.isComment(target.value)) {
+  if (this.graph.isComment(source.value) || this.graph.isComment(target.value) || isSourcePackage || isTargetPackage) {
     this.defaultEdge = this.getTemplate("link");
   }
   
@@ -195,6 +220,13 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   
   // super
   var edge = mxEditor.prototype.createEdge.call(this, arguments);
+  
+  if (isSourcePackage) {
+    this.graph.cellEditProperty(target, "package", source.id, true);
+  }
+  else if (isTargetPackage) {
+    this.graph.cellEditProperty(source, "package", target.id, true);
+  }
   
   // Restore default edge
   this.defaultEdge = oldDefaultEdge;

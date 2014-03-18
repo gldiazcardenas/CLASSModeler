@@ -8,7 +8,6 @@
 
 package classmodeler.service.implementation;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,9 @@ import org.w3c.dom.Element;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.share.SharedDiagram;
+import classmodeler.domain.user.User;
 import classmodeler.service.SourceCodeService;
+import classmodeler.service.util.GenericUtils;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
@@ -31,14 +32,15 @@ import com.mxgraph.model.mxGraphModel;
  */
 public @Stateless class SourceCodeServiceBean implements SourceCodeService {
   
+  private mxGraphModel model;
   
   @Override
-  public List<SourceCodeFile> generateCode(SharedDiagram diagram) {
+  public List<SourceCodeFile> generateCode(User user, SharedDiagram diagram) {
     List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
     
-    mxCell mxCell;
-    mxGraphModel model = diagram.getModel();
+    model = diagram.getModel();
     
+    mxCell mxCell;
     SourceCodeFile file;
     
     for (Object cell : model.getCells().values()) {
@@ -63,11 +65,6 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
     return sourceCodeFiles;
   }
   
-  @Override
-  public File createDiskFile(SourceCodeFile file) {
-    return null; // TODO Auto-generated method stub
-  }
-  
   /**
    * Generates the source code of the given class element.
    * 
@@ -76,17 +73,35 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   private SourceCodeFile generateClass (mxCell classUML) {
-    ST classTemplate = TEMPLATES.getInstanceOf("class");
-    classTemplate.add("name", classUML.getAttribute("name"));
-    classTemplate.add("visibility", classUML.getAttribute("visibility"));
-    classTemplate.add("package", classUML.getAttribute("package"));
+    ST tempClass = TEMPLATES.getInstanceOf("class");
+    ST tempAttribute = TEMPLATES.getInstanceOf("property");
+    ST tempOperation = TEMPLATES.getInstanceOf("operation");
     
-    SourceCodeFile file = new SourceCodeFile();
-    file.setName(classUML.getAttribute("name"));
-    file.setFormat("java");
-    file.setCode(classTemplate.render());
+    tempClass.add("name", classUML.getAttribute("name"));
+    tempClass.add("visibility", classUML.getAttribute("visibility"));
+    tempClass.add("package", getPackage(classUML.getAttribute("package")));
     
-    return file;
+    List<String> attributes = new ArrayList<String>();
+    for (mxCell attribute : getAttributes(classUML)) {
+      tempAttribute.add("name", attribute.getAttribute("name"));
+      attributes.add(tempAttribute.render());
+    }
+    
+    List<String> operations = new ArrayList<String>();
+    for (mxCell operation : getOperations(classUML)) {
+      tempOperation.add("name", operation.getAttribute("name"));
+      operations.add(tempOperation.render());
+    }
+    
+    tempClass.add("attributes", attributes);
+    tempClass.add("operations", operations);
+    
+    SourceCodeFile source = new SourceCodeFile();
+    source.setName(classUML.getAttribute("name"));
+    source.setFormat("java");
+    source.setCode(tempClass.render());
+    
+    return source;
   }
   
   /**
@@ -97,38 +112,145 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   private SourceCodeFile generateInteface (mxCell interfaceUML) {
-    ST interfaceTemplate = TEMPLATES.getInstanceOf("interface");
-    interfaceTemplate.add("name", interfaceUML.getAttribute("name"));
-    interfaceTemplate.add("visibility", interfaceUML.getAttribute("visibility"));
-    interfaceTemplate.add("package", interfaceUML.getAttribute("package"));
+    ST tempInterface = TEMPLATES.getInstanceOf("interface");
+    tempInterface.add("name", interfaceUML.getAttribute("name"));
+    tempInterface.add("visibility", interfaceUML.getAttribute("visibility"));
+    tempInterface.add("package", getPackage(interfaceUML.getAttribute("package")));
     
-    SourceCodeFile file = new SourceCodeFile();
-    file.setName(interfaceUML.getAttribute("name"));
-    file.setFormat("java");
-    file.setCode(interfaceTemplate.render());
     
-    return file;
+    
+    SourceCodeFile source = new SourceCodeFile();
+    source.setName(interfaceUML.getAttribute("name"));
+    source.setFormat("java");
+    source.setCode(tempInterface.render());
+    
+    return source;
   }
   
   /**
    * Generates the source code of the given enumeration element.
    * 
-   * @param enumerationUML
+   * @param enumerationCell
    * @return
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
-  private SourceCodeFile generateEnumeration (mxCell enumerationUML) {
-    ST enumerationTemplate = TEMPLATES.getInstanceOf("enumeration");
-    enumerationTemplate.add("name", enumerationUML.getAttribute("name"));
-    enumerationTemplate.add("visibility", enumerationUML.getAttribute("visibility"));
-    enumerationTemplate.add("package", enumerationUML.getAttribute("package"));
+  private SourceCodeFile generateEnumeration (mxCell enumerationCell) {
+    ST tempEnum = TEMPLATES.getInstanceOf("enumeration");
+    tempEnum.add("name", enumerationCell.getAttribute("name"));
+    tempEnum.add("visibility", enumerationCell.getAttribute("visibility"));
+    tempEnum.add("package", getPackage(enumerationCell.getAttribute("package")));
     
-    SourceCodeFile file = new SourceCodeFile();
-    file.setName(enumerationUML.getAttribute("name"));
-    file.setFormat("java");
-    file.setCode(enumerationTemplate.render());
+    List<String> literals = new ArrayList<String>();
+    mxCell literalCell;
+    for (Object child : getLiterals(enumerationCell)) {
+      literalCell = (mxCell) child;
+      literals.add(literalCell.getAttribute("name"));
+    }
     
-    return file;
+    tempEnum.add("literals", literals);
+    
+    SourceCodeFile source = new SourceCodeFile();
+    source.setName(enumerationCell.getAttribute("name"));
+    source.setFormat("java");
+    source.setCode(tempEnum.render());
+    
+    return source;
+  }
+  
+  /**
+   * 
+   * @param packageId
+   * @return
+   */
+  private String getPackage (String packageId) {
+    mxCell packageCell = (mxCell) model.getCell(packageId);
+    if (packageCell == null) {
+      return "";
+    }
+    return "package " + packageCell.getAttribute("name") + ";";
+  }
+  
+  /**
+   * 
+   * @param classifier
+   * @return
+   */
+  private List<mxCell> getAttributes (mxCell classifier) {
+    List<mxCell> attributes = new ArrayList<mxCell>();
+    
+    for (int i = 0; i < classifier.getChildCount(); i++) {
+      mxCell child = (mxCell) classifier.getChildAt(i);
+      if (GenericUtils.equals(child.getAttribute("attribute"), "1")) {
+        for (int j = 0; j < child.getChildCount(); j++) {
+          attributes.add((mxCell) child.getChildAt(j));
+        }
+        break;
+      }
+    }
+    
+    if (isClass(classifier)) {
+      mxCell edge;
+      mxCell property;
+      
+      for (int i = 0; i < classifier.getEdgeCount(); i++) {
+        edge = (mxCell) classifier.getEdgeAt(i);
+        
+        if (!isAssociation(edge)) {
+          continue;
+        }
+        
+        for (int j = 0; j < edge.getChildCount(); j++) {
+          property = (mxCell) edge.getChildAt(j);
+          if (!GenericUtils.equals(property.getAttribute("type"), classifier.getId())) {
+            attributes.add(property);
+          }
+        }
+      }
+    }
+    
+    return attributes;
+  }
+  
+  /**
+   * 
+   * @param classifier
+   * @return
+   */
+  private List<mxCell> getLiterals (mxCell enumerationCell) {
+    List<mxCell> attributes = new ArrayList<mxCell>();
+    
+    for (int i = 0; i < enumerationCell.getChildCount(); i++) {
+      mxCell child = (mxCell) enumerationCell.getChildAt(i);
+      if (GenericUtils.equals(child.getAttribute("attribute"), "1")) {
+        for (int j = 0; j < child.getChildCount(); j++) {
+          attributes.add((mxCell) child.getChildAt(j));
+        }
+        break;
+      }
+    }
+    
+    return attributes;
+  }
+  
+  /**
+   * 
+   * @param classifier
+   * @return
+   */
+  private List<mxCell> getOperations (mxCell classifier) {
+    List<mxCell> operations = new ArrayList<mxCell>();
+    
+    for (int i = 0; i < classifier.getChildCount(); i++) {
+      mxCell child = (mxCell) classifier.getChildAt(i);
+      if (GenericUtils.equals(child.getAttribute("attribute"), "0")) {
+        for (int j = 0; j < child.getChildCount(); j++) {
+          operations.add((mxCell) child.getChildAt(j));
+        }
+        break;
+      }
+    }
+    
+    return operations;
   }
   
   /**
@@ -171,6 +293,20 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().equalsIgnoreCase("interface");
+  }
+  
+  /**
+   * Checks if the given cell contains a UML Association.
+   * 
+   * @param cell
+   * @return
+   * @author Gabriel Leonardo Diaz, 17.03.2014.
+   */
+  private boolean isAssociation (mxCell cell) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
+      return false;
+    }
+    return ((Element) cell.getValue()).getTagName().equalsIgnoreCase("association");
   }
   
 }

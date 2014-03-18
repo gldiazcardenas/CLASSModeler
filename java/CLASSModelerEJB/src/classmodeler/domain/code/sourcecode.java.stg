@@ -1,4 +1,4 @@
-class (package, imports, documentation, author, date, visibility, name, extends, impls, attributes, methods) ::= <<
+class (package, imports, javadoc, visibility, name, extends, impls, attributes, operations) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -9,16 +9,16 @@ class (package, imports, documentation, author, date, visibility, name, extends,
 
 <package>
 <imports>
-<documentation>
+<javadoc>
 <visibility> class <name><extends><impls> {
   
-  <attributes>
-  <methods>
+  $attributes; separator="\n\n"$
+  $operations; separator="\n\n"$
   
 }
 >>
 
-interface (package, imports, documentation, author, date, visibility, name, extends, attributes, methods) ::= <<
+interface (package, imports, javadoc, visibility, name, extends, attributes, operations) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -29,16 +29,16 @@ interface (package, imports, documentation, author, date, visibility, name, exte
 
 <package>
 <imports>
-<documentation>
+<javadoc>
 <visibility> interface <name><extends> {
   
-  <attributes>
-  <methods>
+  $attributes; separator="\n\n"$
+  $operations; separator="\n\n"$
   
 }
 >>
 
-enumeration (package, imports, documentation, author, date, visibility, name, literals, methods) ::= <<
+enumeration (package, javadoc, visibility, name, literals) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -48,11 +48,10 @@ enumeration (package, imports, documentation, author, date, visibility, name, li
  ****************************************************/
 
 <package>
-<documentation>
+<javadoc>
 <visibility> enum <name> {
   
-  <literals>
-  <methods>
+  <literals; separator=",\n">
   
 }
 >>
@@ -67,5 +66,15 @@ property (visibility, modifiers, type, name, value) ::= <<
 <visibility> <modifiers> <type> <name><value>;
 >>
 
-literal (name) ::= "<name>"
+javadoc (comments, author, date) ::= <<
+/*
+ * $comments:paragraphitem()$
+ * @author <author>, <date>.
+ */
+>>
+
+paragraphitem() ::= <<
+  <p>$it$</p>
+>>
+
 

@@ -57,9 +57,10 @@ CLASSGraph.prototype.convertValueToString = function (cell) {
  * @returns
  */
 CLASSGraph.prototype.convertClassifierToString = function (classifier) {
-  var packageName = classifier.getAttribute("package");
-  if (packageName != null && packageName.length > 0) {
-    return packageName + "::" + classifier.getAttribute("name");
+  var packageId = classifier.getAttribute("package");
+  if (packageId) {
+    var packageCell = this.model.getCell(packageId);
+    return packageCell.getAttribute("name") + "::" + classifier.getAttribute("name");
   }
   return classifier.getAttribute("name");
 };
@@ -251,7 +252,7 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
   
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
-    if (section.getAttribute("attribute") == "true") {
+    if (section.getAttribute("attribute") == "1") {
       return section.children;
     }
   }
@@ -274,7 +275,7 @@ CLASSGraph.prototype.getOperations = function (classifier) {
   
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
-    if (section.getAttribute("attribute") == "false") {
+    if (section.getAttribute("attribute") == "0") {
       return section.children;
     }
   }
@@ -301,7 +302,7 @@ CLASSGraph.prototype.getLiterals = function (enumeration) {
   
   for (var i = 0; i < enumeration.children.length; i++) {
     section = enumeration.getChildAt(i);
-    if (section.getAttribute("attribute") == "true") {
+    if (section.getAttribute("attribute") == "1") {
       for (var j = 0; j < section.children.length; j++) {
         child = section.getChildAt(j);
         if (this.isLiteral(child.value)) {
@@ -386,11 +387,6 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
       this.adjustStyleCell(cell);
     }
     
-    // Package adjust classifiers names
-    if (this.isPackage(node)) {
-      this.adjustClassifiersPackage(node.getAttribute("name"), clone.getAttribute("name"));
-    }
-    
     // Adjust the cell size
     if (autoSize) {
       this.cellSizeUpdated(cell, false);
@@ -430,7 +426,7 @@ CLASSGraph.prototype.cellsRemoved = function (cells) {
     cell = cells[i];
     
     if (this.isPackage(cell.value)) {
-      this.removeClassifiersPackage(cell.getAttribute("name"));
+      this.removeClassifiersPackage(cell.id);
     }
     else if (this.isClassifier(cell.value)) {
       this.resetElementsType(cell.id);
@@ -467,40 +463,17 @@ CLASSGraph.prototype.resetElementsType = function (typeId) {
  * @param packageName
  * @author Gabriel Leonardo Diaz, 03.03.2014.
  */
-CLASSGraph.prototype.removeClassifiersPackage = function (packageName) {
+CLASSGraph.prototype.removeClassifiersPackage = function (packageId) {
   var cell;
   for (var key in this.model.cells) {
     cell = this.model.getCell(key);
     
-    if (this.isClassifier(cell.value) && cell.getAttribute("package") == packageName) {
+    if (this.isClassifier(cell.value) && cell.getAttribute("1") == packageId) {
       var node  = cell.value;
       
       // Clones the value for correct UNDO/REDO
       var clone = node.cloneNode(true);
       clone.setAttribute("package", "");
-      
-      // Set the user object of the cell
-      this.model.setValue(cell, clone);
-    }
-  }
-};
-
-/**
- * Changes the classifier package name.
- * 
- * @author Gabriel Leonardo Diaz, 02.03.2014.
- */
-CLASSGraph.prototype.adjustClassifiersPackage = function (oldPackageName, newPackageName) {
-  var cell;
-  for (var key in this.model.cells) {
-    cell = this.model.getCell(key);
-    
-    if (this.isClassifier(cell.value) && cell.getAttribute("package") == oldPackageName) {
-      var node  = cell.value;
-      
-      // Clones the value for correct UNDO/REDO
-      var clone = node.cloneNode(true);
-      clone.setAttribute("package", newPackageName);
       
       // Set the user object of the cell
       this.model.setValue(cell, clone);
@@ -663,14 +636,14 @@ CLASSGraph.prototype.addAttribute = function (classifierCell, attributeCell) {
     
     if (classifierCell.children && classifierCell.children.length > 0) {
       var child = classifierCell.children[0];
-      if (child.getAttribute("attribute") == "true") {
+      if (child.getAttribute("attribute") == "1") {
         attrSection = child;
       }
     }
     
     if (attrSection == null) {
       attrSection = this.model.cloneCell(this.sectionTemplate);
-      attrSection.setAttribute("attribute", "true");
+      attrSection.setAttribute("attribute", "1");
       attrSection.insert(attributeCell);
       this.addCell(attrSection, classifierCell, 0);
     }
@@ -712,14 +685,14 @@ CLASSGraph.prototype.addOperation = function (classifierCell, operationCell) {
         child = classifierCell.children[1];
       }
       
-      if (child.getAttribute("attribute") == "false") {
+      if (child.getAttribute("attribute") == "0") {
         operSection = child;
       }
     }
     
     if (operSection == null) {
       operSection = this.model.cloneCell(this.sectionTemplate);
-      operSection.setAttribute("attribute", "false");
+      operSection.setAttribute("attribute", "0");
       operSection.insert(operationCell);
       this.addCell(operSection, classifierCell, 1);
     }
@@ -870,32 +843,6 @@ CLASSGraph.prototype.getTypesJSon = function (includeVoid) {
 };
 
 /**
- * Gets the packages available in the current diagram in form of a JSon object.
- * 
- * @returns {Array}
- * @author Gabriel Leonardo Diaz, 24.02.2014.
- */
-CLASSGraph.prototype.getPackagesJSon = function () {
-  var jSonData   = [];
-  
-  // Fixed types
-  jSonData.push({id:"", text:" --- "});
-  
-  var cell;
-  
-  // Dynamic types
-  for (var key in this.model.cells) {
-    cell = this.model.getCell(key);
-    
-    if (this.isPackage(cell.value)) {
-      jSonData.push({ id: cell.getAttribute("name"), text: cell.getAttribute("name") });
-    }
-  }
-  
-  return jSonData;
-};
-
-/**
  * Gets a JSon object with the available visibility kinds.
  * @returns {Array}
  * @author Gabriel Leonardo Diaz, 03.03.2014.
@@ -920,21 +867,21 @@ CLASSGraph.prototype.getVisibilityJSon = function () {
 CLASSGraph.prototype.getCollectionsJSon = function () {
   var jSonData   = [];
   
-  jSonData.push({id: "array",       text: "Array [ ]"});
-  jSonData.push({id: "arraylist",   text: "ArrayList::java::util"});
-  jSonData.push({id: "collection",  text: "Collection::java::util"});
-  jSonData.push({id: "enumset",     text: "EnumSet::java::util"});
-  jSonData.push({id: "hashset",     text: "HashSet::java::util"});
-  jSonData.push({id: "list",        text: "List::java::util"});
-  jSonData.push({id: "linkedhset",  text: "LinkedHashSet::java::util"});
-  jSonData.push({id: "linkedlist",  text: "LinkedList::java::util"});
-  jSonData.push({id: "prioriqueue", text: "PriorityQueue::java::util"});
-  jSonData.push({id: "queue",       text: "Queue::java::util"});
-  jSonData.push({id: "set",         text: "Set::java::util"});
-  jSonData.push({id: "sortedset",   text: "SortedSet::java::util"});
-  jSonData.push({id: "stack",       text: "Stack::java::util"});
-  jSonData.push({id: "treeset",     text: "TreeSet::java::util"});
-  jSonData.push({id: "vector",      text: "Vector::java::util"});
+  jSonData.push({id: "array",       text: "[ ]"});
+  jSonData.push({id: "arraylist",   text: "ArrayList"});
+  jSonData.push({id: "collection",  text: "Collection"});
+  jSonData.push({id: "enumset",     text: "EnumSet"});
+  jSonData.push({id: "hashset",     text: "HashSet"});
+  jSonData.push({id: "list",        text: "List"});
+  jSonData.push({id: "linkedhset",  text: "LinkedHashSet"});
+  jSonData.push({id: "linkedlist",  text: "LinkedList"});
+  jSonData.push({id: "prioriqueue", text: "PriorityQueue"});
+  jSonData.push({id: "queue",       text: "Queue"});
+  jSonData.push({id: "set",         text: "Set"});
+  jSonData.push({id: "sortedset",   text: "SortedSet"});
+  jSonData.push({id: "stack",       text: "Stack"});
+  jSonData.push({id: "treeset",     text: "TreeSet"});
+  jSonData.push({id: "vector",      text: "Vector"});
   
   return jSonData;
 };

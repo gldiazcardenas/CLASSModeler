@@ -93,7 +93,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
   var attributesEditor   = null;
   var operationsEditor   = null;
   var relationshipEditor = null;
-  var packageEditor      = null;
   var attributesName     = "Atributos";
   
   if (this.isCellEditable(cell)) {
@@ -140,12 +139,6 @@ CLASSProperties.prototype.configureProperties = function (cell) {
         }
         
         packageValue  = node.getAttribute("package");
-        packageEditor = {"type":"combobox", "options": {
-          "valueField":"id",
-          "textField":"text",
-          "panelHeight":"90",
-          "data":this.graph.getPackagesJSon()
-        }};
       }
     }
     
@@ -168,7 +161,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
       // GENERAL
       {"name":"Nombre", "value":nameValue, "group":"General", "editor":nameEditor},
       {"name":"Visibilidad", "value":visibilityValue, "group":"General", "editor":visibilityEditor},
-      {"name":"Paquete", "value":packageValue, "group":"General", "editor":packageEditor},
+      {"name":"Paquete", "value":packageValue, "group":"General", "editor":null},
       
       // ADVANCED
       {"name":"Es Abstracto", "value":abstractValue, "group":"Avanzado", "editor":abstractEditor},
@@ -248,10 +241,6 @@ CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes)
       
     case 1: // Visibility
       this.graph.cellEditProperty(this.cell, "visibility", changes.value, true);
-      break;
-    
-    case 2: // Package
-      this.graph.cellEditProperty(this.cell, "package", changes.value, true);
       break;
     
     case 3: // Abstract
