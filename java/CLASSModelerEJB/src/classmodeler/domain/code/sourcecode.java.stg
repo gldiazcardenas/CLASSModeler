@@ -1,4 +1,4 @@
-class (package, imports, javadoc, visibility, name, extends, impls, attributes, operations) ::= <<
+class (package, imports, title, visibility, name, extend, interfaces, attributes, operations) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -8,17 +8,20 @@ class (package, imports, javadoc, visibility, name, extends, impls, attributes, 
  ****************************************************/
 
 <package>
-<imports>
-<javadoc>
-<visibility> class <name><extends><impls> {
+
+<imports; separator="\n">
+
+<title>
+<visibility> class <name><extend><interfaces; separator=", "> {
   
-  $attributes; separator="\n\n"$
-  $operations; separator="\n\n"$
+  <attributes; separator="\n">
+  
+  <operations; separator="\n\n">
   
 }
 >>
 
-interface (package, imports, javadoc, visibility, name, extends, attributes, operations) ::= <<
+interface (package, imports, title, visibility, name, extends, attributes, operations) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -28,17 +31,20 @@ interface (package, imports, javadoc, visibility, name, extends, attributes, ope
  ****************************************************/
 
 <package>
-<imports>
-<javadoc>
+
+<imports; separator="\n">
+
+<title>
 <visibility> interface <name><extends> {
   
-  $attributes; separator="\n\n"$
-  $operations; separator="\n\n"$
+  <attributes; separator="\n">
+  
+  <operations; separator="\n\n">
   
 }
 >>
 
-enumeration (package, javadoc, visibility, name, literals) ::= <<
+enumeration (package, title, visibility, name, literals) ::= <<
 /****************************************************
  * 
  * Universidad Francisco de Paula Santander UFPS
@@ -48,7 +54,8 @@ enumeration (package, javadoc, visibility, name, literals) ::= <<
  ****************************************************/
 
 <package>
-<javadoc>
+
+<title>
 <visibility> enum <name> {
   
   <literals; separator=",\n">
@@ -56,25 +63,25 @@ enumeration (package, javadoc, visibility, name, literals) ::= <<
 }
 >>
 
-operation (visibility, modifiers, type, name, paramaters, content) ::= <<
-<visibility> <modifiers> <type> <name> (<parameters>) {
-  <content>
-}
+operation (visibility, modifiers, type, name, parameters, content) ::= <<
+  <visibility> <modifiers> <type> <name> (<parameters; separator=", ">) {
+    <content>
+  }
 >>
 
 property (visibility, modifiers, type, name, value) ::= <<
-<visibility> <modifiers> <type> <name><value>;
+  <visibility> <modifiers> <type> <name><value>;
 >>
 
-javadoc (comments, author, date) ::= <<
+title (comments, author, date) ::= <<
 /*
- * $comments:paragraphitem()$
+ * <comments:paragraph()>
  * @author <author>, <date>.
  */
 >>
 
-paragraphitem() ::= <<
-  <p>$it$</p>
+paragraph() ::= <<
+   <p><it></p>
 >>
 
 

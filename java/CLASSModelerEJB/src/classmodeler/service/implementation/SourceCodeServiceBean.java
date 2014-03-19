@@ -73,24 +73,21 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   private SourceCodeFile generateClass (mxCell classUML) {
-    ST tempClass = TEMPLATES.getInstanceOf("class");
-    ST tempAttribute = TEMPLATES.getInstanceOf("property");
-    ST tempOperation = TEMPLATES.getInstanceOf("operation");
+    ST tempClass     = TEMPLATES.getInstanceOf("class");
     
     tempClass.add("name", classUML.getAttribute("name"));
     tempClass.add("visibility", classUML.getAttribute("visibility"));
     tempClass.add("package", getPackage(classUML.getAttribute("package")));
     
     List<String> attributes = new ArrayList<String>();
-    for (mxCell attribute : getAttributes(classUML)) {
-      tempAttribute.add("name", attribute.getAttribute("name"));
-      attributes.add(tempAttribute.render());
+    for (mxCell property : getProperties(classUML)) {
+      
+      attributes.add(generateProperty(property));
     }
     
     List<String> operations = new ArrayList<String>();
     for (mxCell operation : getOperations(classUML)) {
-      tempOperation.add("name", operation.getAttribute("name"));
-      operations.add(tempOperation.render());
+      operations.add(generateOperation(operation));
     }
     
     tempClass.add("attributes", attributes);
@@ -159,6 +156,63 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
   
   /**
    * 
+   * @param property
+   * @return
+   */
+  private String generateProperty (mxCell property) {
+    ST tempProperty = TEMPLATES.getInstanceOf("property");
+    tempProperty.add("name", property.getAttribute("name"));
+    tempProperty.add("visibility", property.getAttribute("visibility"));
+    tempProperty.add("type", getType(property));
+    return tempProperty.render();
+  }
+  
+  /**
+   * 
+   * @param operation
+   * @return
+   */
+  private String generateOperation (mxCell operation) {
+    ST tempOperation = TEMPLATES.getInstanceOf("operation");
+    tempOperation.add("name", operation.getAttribute("name"));
+    tempOperation.add("visibility", operation.getAttribute("visibility"));
+    tempOperation.add("type", getType(operation));
+    return tempOperation.render();
+  }
+  
+  /**
+   * 
+   * @param feature
+   * @return
+   */
+  private String getType (mxCell feature) {
+    String type          = feature.getAttribute("type");
+    String collection    = feature.getAttribute("collection");
+    
+    StringBuilder result = new StringBuilder();
+    
+    mxCell typeCell      = (mxCell) model.getCell(type);
+    if (typeCell != null) {
+      type = typeCell.getAttribute("name"); 
+    }
+    
+    if (GenericUtils.isEmptyString(collection)) {
+      collection = getCollection(collection);
+      
+    }
+    else {
+      result.append(type);
+    }
+    
+    return result.toString();
+  }
+  
+  private String getCollection (String collection) {
+    return null;
+  }
+  
+  /**
+   * 
    * @param packageId
    * @return
    */
@@ -175,14 +229,14 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
    * @param classifier
    * @return
    */
-  private List<mxCell> getAttributes (mxCell classifier) {
-    List<mxCell> attributes = new ArrayList<mxCell>();
+  private List<mxCell> getProperties (mxCell classifier) {
+    List<mxCell> properties = new ArrayList<mxCell>();
     
     for (int i = 0; i < classifier.getChildCount(); i++) {
       mxCell child = (mxCell) classifier.getChildAt(i);
       if (GenericUtils.equals(child.getAttribute("attribute"), "1")) {
         for (int j = 0; j < child.getChildCount(); j++) {
-          attributes.add((mxCell) child.getChildAt(j));
+          properties.add((mxCell) child.getChildAt(j));
         }
         break;
       }
@@ -202,13 +256,13 @@ public @Stateless class SourceCodeServiceBean implements SourceCodeService {
         for (int j = 0; j < edge.getChildCount(); j++) {
           property = (mxCell) edge.getChildAt(j);
           if (!GenericUtils.equals(property.getAttribute("type"), classifier.getId())) {
-            attributes.add(property);
+            properties.add(property);
           }
         }
       }
     }
     
-    return attributes;
+    return properties;
   }
   
   /**
