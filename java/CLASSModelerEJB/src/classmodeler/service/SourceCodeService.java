@@ -13,8 +13,6 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-import org.stringtemplate.v4.STGroupFile;
-
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.share.SharedDiagram;
 import classmodeler.domain.user.User;
@@ -26,12 +24,6 @@ import classmodeler.domain.user.User;
  */
 @Local
 public interface SourceCodeService {
-  
-  /**
-   * Points to the templates of Java Source code, by the moment this is enough
-   * because only support Java Language.
-   */
-  public static final STGroupFile TEMPLATES = new STGroupFile("classmodeler/domain/code/sourcecode.java.stg");
   
   /**
    * Default source code files comparator.

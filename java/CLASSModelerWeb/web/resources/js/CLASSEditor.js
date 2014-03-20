@@ -186,8 +186,8 @@ CLASSEditor.prototype.validateEdge = function (edge, source, target) {
     return "No se puede crear una Realizacion entre los elementos seleccionados.";
   }
   
-  if (this.graph.isGeneralization(edge.value) && (!(this.graph.isClass(source.value) && this.graph.isClass(target.value)) || 
-                                                  !(this.graph.isInterface(source.value) && this.graph.isInterface(target.value)))) {
+  if (this.graph.isGeneralization(edge.value) && !((this.graph.isClass(source.value) && this.graph.isClass(target.value)) ||
+                                                   (this.graph.isInterface(source.value) && this.graph.isInterface(target.value)))) {
     return "No se puede crear una Generalizacion entre los elementos seleccionados.";
   }
   

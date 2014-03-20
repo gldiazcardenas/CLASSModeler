@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.service.test;
+package classmodeler.test.service;
 
 import javax.naming.NamingException;
 
