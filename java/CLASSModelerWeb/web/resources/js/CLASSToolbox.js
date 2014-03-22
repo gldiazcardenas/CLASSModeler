@@ -85,6 +85,10 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
   
   // Drop handler
   var doDrop = function (graph, evt, overCell) {
+    if (!graph.isEnabled()) {
+      return;
+    }
+    
     graph.stopEditing(true);
     
     var model = graph.getModel();

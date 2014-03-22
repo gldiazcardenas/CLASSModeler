@@ -13,7 +13,8 @@
  * 
  * @author Gabriel Leonardo Diaz, 07.10.2013.
  */
-CLASSEditor = function (config) {
+CLASSEditor = function (config, enabled) {
+  this.enabled = enabled;
   mxEditor.call(this, config);
 };
 mxUtils.extend(CLASSEditor, mxEditor);
@@ -32,6 +33,11 @@ CLASSEditor.prototype.operDialog;
  * Instance of the dialog used to edit relationships.
  */
 CLASSEditor.prototype.relationDialog;
+
+/**
+ * Flag that determines whether the editor should be read-only or not.
+ */
+CLASSEditor.prototype.enabled = true;
 
 /**
  * Function called on initializing the editor component.
@@ -61,6 +67,7 @@ CLASSEditor.prototype.createGraph = function () {
   graph.setAllowDanglingEdges(false);
   graph.setDisconnectOnMove(false);
   graph.setAllowLoops(true);
+  graph.setEnabled(this.enabled);
 
   // Overrides the dblclick method on the graph to invoke the dblClickAction
   // for a cell and reset the selection tool in the toolbar
@@ -156,6 +163,10 @@ CLASSEditor.prototype.createGraph = function () {
  * @author Gabriel Leonardo Diaz, 04.03.2014.
  */
 CLASSEditor.prototype.validateEdge = function (edge, source, target) {
+  if (!this.enabled) {
+    return "El diagrama se encuentra en modo solo lectura.";
+  }
+  
   edge = this.defaultEdge;
   
   if (this.graph.isPackage(source.value)) {

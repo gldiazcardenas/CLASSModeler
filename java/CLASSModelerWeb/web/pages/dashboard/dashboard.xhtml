@@ -80,7 +80,7 @@
         
         <div id="shareSection">
             <h:form id="sharingButtonsForm" style="margin-bottom: 5px;">
-                <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_CHANGE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedChangePrivilege}" style="margin-right: 3px;" />
+                <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_ALLOW_WRITE_LABEL}" disabled="#{!dashBoardController.allowedChangePrivilege}" style="margin-right: 3px;" />
                 <p:commandButton icon="ui-icon-closethick" title="#{msgs.BUTTON_REMOVE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedDeletePrivilege}" />
             </h:form>
             
@@ -100,10 +100,6 @@
                          
                 <p:ajax event="rowSelect" update=":sharingButtonsForm" />
                 <p:ajax event="rowUnselect" update=":sharingButtonsForm" />
-                
-                <p:column headerText=" " sortBy="#{shared.privilege}" style="text-align: center; width: 40px; padding-top: 1px; padding-bottom: 1px;">
-                    <h:graphicImage url="#{formatController.getDiagramPrivilegeImage(shared.privilege)}" title="#{formatController.getDiagramPrivilegeName(shared.privilege)}" />
-                </p:column>
                 
                 <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.diagrammer.name}">
                     <h:outputText value="#{formatController.getFormattedUserName(shared.diagrammer)}" />

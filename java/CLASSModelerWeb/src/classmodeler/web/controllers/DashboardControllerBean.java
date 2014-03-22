@@ -17,8 +17,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.diagram.SharedItem;
+import classmodeler.domain.share.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.util.CollectionUtils;
@@ -131,12 +130,8 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedToShareDiagram () {
-    if (this.diagram == null || this.diagrammer == null) {
-      return false;
-    }
-    
     // This is the owner of the diagram
-    return this.diagram.isOwner(diagrammer);
+    return this.diagram != null && this.diagram.isOwner(diagrammer);
   }
   
   /**
@@ -146,7 +141,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedEditDiagram () {
-    if (diagram == null || diagrammer == null) {
+    if (diagram == null) {
       return false;
     }
     
@@ -156,8 +151,8 @@ public class DashboardControllerBean extends JSFGenericBean {
     }
     
     if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (SharedItem sharing : sharings) {
-        if (diagram.equals(sharing.getDiagram()) && sharing.getPrivilege().isGreaterThan(EDiagramPrivilege.READ)) {
+      for (SharedItem item : sharings) {
+        if (diagram.equals(item.getDiagram()) && item.isWriteable()) {
           return true;
         }
       }
@@ -183,7 +178,7 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
   public boolean isAllowedDeleteDiagram () {
-    return diagram != null && diagrammer != null;
+    return this.diagram != null && this.diagram.isOwner(diagrammer);
   }
   
   /**

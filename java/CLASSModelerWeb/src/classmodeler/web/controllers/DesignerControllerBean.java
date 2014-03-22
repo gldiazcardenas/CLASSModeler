@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.share.SharedDiagram;
 import classmodeler.domain.share.SharedDiagramSession;
 import classmodeler.domain.share.SharedDiagramsCache;
@@ -68,7 +67,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   private User user;
   private SharedDiagram diagram;
   private SharedDiagramSession diagramSession;
-  private EDiagramPrivilege privilege;
+  private boolean writeable;
   private boolean pendingChanges;
   
   // Used specially for code generation
@@ -92,7 +91,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   }
   
   public boolean isReadOnly() {
-    return privilege == EDiagramPrivilege.READ;
+    return writeable;
   }
   
   public boolean isPendingChanges() {
@@ -119,10 +118,10 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 13.02.2014
    */
   public String design (Diagram diagram, User user) {
-    this.privilege = this.diagramService.checkDiagramPrivilege(diagram, user);
-    
-    // Unprivileged user
-    if (this.privilege == null) {
+    try {
+      this.writeable = this.diagramService.canWriteDiagram(diagram, user);
+    }
+    catch (UnprivilegedException e) {
       addErrorMessage(GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNPRIVILEGED_USER_MESSAGE", user.getName(), diagram.getName()), null);
       return null;
     }
@@ -269,7 +268,7 @@ public class DesignerControllerBean extends JSFGenericBean {
       file.setStream(new ByteArrayInputStream(outputStream.toByteArray()));
     }
     catch (IOException e) {
-      file.setStream(new ByteArrayInputStream(new byte[] {1}));
+      file.setStream(new ByteArrayInputStream(new byte[0]));
     }
     
     return file;

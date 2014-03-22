@@ -13,10 +13,9 @@ import java.util.Date;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-import classmodeler.domain.diagram.EDiagramPrivilege;
+import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
-import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.util.GenericUtils;
 
 /**
@@ -50,62 +49,6 @@ public class FormatControllerBean extends JSFGenericBean {
     }
     
     return user.getAvatar();
-  }
-  
-  /**
-   * Gets the image URL for the given privilege.
-   * 
-   * @param privilege
-   *          The privilege.
-   * @return The URL to the image.
-   * @author Gabriel Leonardo Diaz, 26.07.2013.
-   */
-  public String getDiagramPrivilegeImage (EDiagramPrivilege privilege) {
-    if (privilege == null) {
-      return null;
-    }
-    
-    switch (privilege) {
-    case READ:
-      return "/resources/images/zoom_in.png";
-      
-    case EDIT:
-      return "/resources/images/edit.png";
-      
-    case OWNER:
-      return "/resources/images/user.png";
-    
-    default:
-      return "";
-    }
-  }
-  
-  /**
-   * Retrieves the localized name of the privilege.
-   * 
-   * @param privilege
-   *          The privilege.
-   * @return A string representation with the privilege name.
-   * @author Gabriel Leonardo Diaz, 26.07.2013.
-   */
-  public String getDiagramPrivilegeName (EDiagramPrivilege privilege) {
-    if (privilege == null) {
-      return null;
-    }
-    
-    switch (privilege) {
-    case READ:
-      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_READ");
-      
-    case EDIT:
-      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_EDIT");
-      
-    case OWNER:
-      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_SHARE");
-      
-    default:
-      return "";
-    }
   }
   
   /**

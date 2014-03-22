@@ -63,7 +63,12 @@
                 <p:menuitem value="#{msgs.MENU_ITEM_VIEW_XML_LABEL}" icon="ui-icon-arrowthickstop-1-n" onclick="CLASSModeler.execute('viewXML')" />
             </p:submenu>
             
-            <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
+            <p:submenu label="#{msgs.MENU_HELP}" icon="ui-icon-help">
+                <p:menuitem value="#{msgs.MENU_ITEM_USER_MANUAL}" icon="ui-icon-note" />
+                <p:separator/>
+                <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
+            </p:submenu>
+            
             
             <f:facet name="options">
                 <ui:include src="/pages/dashboard/user.xhtml" />

@@ -29,8 +29,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.diagram.SharedItem;
+import classmodeler.domain.share.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
@@ -38,6 +37,7 @@ import classmodeler.service.DiagramService;
 import classmodeler.service.SourceCodeService;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
+import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.util.CollectionUtils;
 
@@ -60,7 +60,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   private SourceCodeService sourceCodeService;
   
   @Override
-  public Diagram insertDiagram(Diagram diagram) throws InvalidDiagrammerAccountException {
+  public Diagram insertDiagram (Diagram diagram) throws InvalidDiagrammerAccountException {
     if (diagram == null) {
       return null;
     }
@@ -88,7 +88,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public Diagram updateDiagram(Diagram diagram) {
+  public Diagram updateDiagram (Diagram diagram) {
     if (diagram == null) {
       return null;
     }
@@ -101,7 +101,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public void deleteDiagram(int diagramKey) {
+  public void deleteDiagram (int diagramKey) {
     
     // TODO validate the diagrammer account modifying the diagram has privileges.
     
@@ -138,30 +138,37 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
-  public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege) {
+  public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, boolean canWrite) {
     // TODO GD
   }
   
   @Override
-  public EDiagramPrivilege checkDiagramPrivilege(Diagram diagram, User user) {
+  public boolean canWriteDiagram(Diagram diagram, User user) throws UnprivilegedException {
     if (diagram.getKey() < 0) {
-      // Non existing diagram, everybody is able to edit.
-      return EDiagramPrivilege.OWNER;
+      // This is a fake diagram, so everybody can write on it.
+      return true;
     }
     
     if (!user.isRegisteredUser()) {
-      // Guest user does not have privileges over existing diagrams.
-      return null;
+      throw new UnprivilegedException("The user is not privileged for this diagram.");
     }
     
     Diagrammer diagrammer = (Diagrammer) user;
-    
     if (diagram.isOwner(diagrammer)) {
-      return EDiagramPrivilege.OWNER;
+      return true;
     }
     
-    // TODO GD
-    return EDiagramPrivilege.OWNER;
+    List<SharedItem> item = em.createQuery("SELECT si FROM SharedItem WHERE si.diagram = :diagram AND si.diagrammer = :diagrammer", SharedItem.class)
+                              .setParameter("diagram", diagram)
+                              .setParameter("diagrammer", diagrammer)
+                              .getResultList();
+    
+    if (CollectionUtils.isEmptyCollection(item)) {
+      throw new UnprivilegedException("The user is not privileged for this diagram.");
+    }
+    
+    // There should be only one item
+    return item.get(0).isWriteable();
   }
   
   @Override

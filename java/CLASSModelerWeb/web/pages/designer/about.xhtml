@@ -3,13 +3,25 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-<p:dialog id="aboutDialog" widgetVar="dlgAbout" width="300" header="Acerca de" modal="true" closable="true" closeOnEscape="true">
+<p:dialog id="aboutDialog" widgetVar="dlgAbout" width="400" header="#{msgs.ABOUT_FORM_TITLE}" modal="true" closable="true" closeOnEscape="true">
     <h:form id="aboutForm">
-        <div>CLASS Modeler</div>
-        <div>Universidad Francisco de Paula Santander</div>
-        <div>Programa de Ingenieria de Sistemas</div>
-        <div>Cucuta, Colombia</div>
-        <div>2014</div>
+        <table>
+            <tr>
+                <td width="85" align="center" style="border-right: 1px solid #CCCCCC; padding-right: 5px;">
+                    <h:graphicImage library="images" name="ufps_logo.png" />
+                </td>
+                <td style="padding: 15px; vertical-align: top;">
+                    <h2 style="margin: 5px">
+                        <h:outputText value="#{msgs.APPLICATION_NAME}" />
+                        <h:graphicImage style="margin-left: 10px" library="images" name="ingsistemas_miniature.png"  />
+                    </h2>
+                    <div><h:outputText value="#{msgs.UNIVERSITY_NAME}" /></div>
+                    <div><h:outputText value="#{msgs.FOOTER_COPYRIGHT_MESSAGE}" /></div>
+                    <div><h:outputText value="#{msgs.COUNTRY_CITY_NAME}" /></div>
+                </td>
+            </tr>
+        </table>
+        
     </h:form>
 </p:dialog>
 

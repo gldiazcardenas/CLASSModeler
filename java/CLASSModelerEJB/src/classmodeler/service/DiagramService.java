@@ -18,8 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.EDiagramPrivilege;
-import classmodeler.domain.diagram.SharedItem;
+import classmodeler.domain.share.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.User;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
@@ -101,23 +100,26 @@ public interface DiagramService {
    *          The diagram to share.
    * @param toDiagrammers
    *          The diagrammers that will receive the diagram.
-   * @param privilege
-   *          The privilege granted to the diagrammers.
+   * @param canWrite
+   *          Flag indicating the diagrammers can write the diagram.
    * @author Gabriel Leonardo Diaz, 12.08.2013.
    */
-  public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, EDiagramPrivilege privilege);
+  public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, boolean canWrite);
   
   /**
-   * Looks for the privilege of the given user over the given diagram.
+   * Checks if the user can write the diagram.
    * 
    * @param diagram
    *          The diagram to be edited.
    * @param user
    *          The user who is going to edit the diagram.
-   * @return The privilege of the user over the diagram.
+   * @return This returns a boolean value indicating the privilege.
+   * @throws If
+   *           the user has not privileges for the diagram, it means the diagram
+   *           was never shared to him.
    * @author Gabriel Leonardo Diaz, 13.02.2014
    */
-  public EDiagramPrivilege checkDiagramPrivilege (Diagram diagram, User user);
+  public boolean canWriteDiagram (Diagram diagram, User user) throws UnprivilegedException;
   
   /**
    * Generates the image representation of the diagram using the XML

@@ -6,15 +6,13 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.diagram;
+package classmodeler.domain.share;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Diagrammer;
 
 /**
@@ -56,9 +55,8 @@ public class SharedItem implements Serializable {
   /**
    * The privileged given to the user who receives the diagram.
    */
-  @Enumerated(EnumType.STRING)
-  @Column(name="shared_item_privilege", nullable=false)
-  private EDiagramPrivilege privilege;
+  @Column(name="shared_item_writeable", nullable=false)
+  private boolean writeable;
   
   /**
    * UNI-Directional many-to-one association to diagram. This is the reference
@@ -96,12 +94,12 @@ public class SharedItem implements Serializable {
     this.date = date;
   }
   
-  public EDiagramPrivilege getPrivilege() {
-    return privilege;
+  public boolean isWriteable() {
+    return writeable;
   }
   
-  public void setPrivilege(EDiagramPrivilege privilege) {
-    this.privilege = privilege;
+  public void setWriteable(boolean writeable) {
+    this.writeable = writeable;
   }
   
   public Diagram getDiagram() {

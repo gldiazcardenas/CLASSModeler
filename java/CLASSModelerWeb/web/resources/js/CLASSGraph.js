@@ -1198,8 +1198,10 @@ CLASSGraphContextIconHandler.prototype.init = function () {
   var img = this.createImage("/CLASSModeler/resources/images/next_16x16.png");
   mxEvent.addListener(img, "click", mxUtils.bind(this, function (evt) {
     var point = mxUtils.convertPoint(this.graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-    this.graph.connectionHandler.start(this.state, point.x, point.y);
-    this.graph.isMouseDown = true;
+    if (this.graph.isEnabled()) {
+      this.graph.connectionHandler.start(this.state, point.x, point.y);
+      this.graph.isMouseDown = true;
+    }
     mxEvent.consume(evt);
   }));
   this.domNode.appendChild(img);

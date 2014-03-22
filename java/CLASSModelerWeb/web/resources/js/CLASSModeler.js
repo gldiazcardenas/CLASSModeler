@@ -37,7 +37,7 @@ var CLASSModeler = (function () {
   }
   
   return {
-    init : function () {
+    init : function (enabled) {
       if (!mxClient.isBrowserSupported()) {
         mxUtils.error('Browser is not supported for mxGraph!', 200, false);
         return;
@@ -52,22 +52,8 @@ var CLASSModeler = (function () {
       mxConstants.VERTEX_SELECTION_COLOR = "#E1061A";
       mxConstants.EDGE_SELECTION_COLOR = "#E1061A";
       
-      editor = new CLASSEditor(mxUtils.load(mxBasePath + "/config/editor.xml").getDocumentElement());
+      editor = new CLASSEditor(mxUtils.load(mxBasePath + "/config/editor.xml").getDocumentElement(), enabled);
       editor.addListener(mxEvent.ROOT, stopLoading);
-      
-      // Changes the zoom on mouseWheel events
-      mxEvent.addMouseWheelListener(function (evt, up) {
-        if (!mxEvent.isConsumed(evt)) {
-          if (up) {
-            editor.execute("zoomIn");
-          }
-          else {
-            editor.execute("zoomOut");
-          }
-        
-          mxEvent.consume(evt);
-        }
-      });
       
       toolbox = new CLASSToolbox(editor);
       toolbox.init(document.getElementById("toolbox"));

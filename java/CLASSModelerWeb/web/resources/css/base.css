@@ -101,6 +101,15 @@ a:hover {
     color: #000000;
 }
 
+#slogan h1 {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+#slogan h4 {
+    margin: 0;
+}
+
 #ufps-logo {
     float: left;
     margin: 20px 9px;

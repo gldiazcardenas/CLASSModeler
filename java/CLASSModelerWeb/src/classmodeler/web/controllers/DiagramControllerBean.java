@@ -14,10 +14,8 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.diagram.EDiagramPrivilege;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
@@ -41,13 +39,13 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   /**
    * Default representation of the diagram XML.
    */
-  public static final String DEFAULT_XML_DIAGRAM = 
-      "<mxGraphModel>" + 
-          "<root>" + 
-              "<Workflow label=\"UML\" id=\"0\" />" +
-              "<Layer label=\"ClassDiagram\" id=\"1\"><mxCell parent=\"0\" /></Layer>" +
-          "</root>" +
-      "</mxGraphModel>";
+  public static final String DEFAULT_XML_DIAGRAM = new StringBuilder("<mxGraphModel>")
+                                                                .append("<root>")
+                                                                   .append("<Workflow label=\"UML\" id=\"0\" />")
+                                                                   .append("<Layer label=\"ClassDiagram\" id=\"1\"><mxCell parent=\"0\" /></Layer>")
+                                                                .append("</root>")
+                                                             .append("</mxGraphModel>")
+                                                             .toString();
   
   private String name;
   private String description;
@@ -56,7 +54,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   private EDiagramControllerMode mode;
   
   // Fields used to share a diagram
-  private EDiagramPrivilege privilege;
+  private boolean writeable;
   private List<Diagrammer> availableUsers;
   private List<Diagrammer> selectedUsers;
   
@@ -115,14 +113,6 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.formatController = formatController;
   }
   
-  public EDiagramPrivilege getPrivilege() {
-    return privilege;
-  }
-  
-  public void setPrivilege(EDiagramPrivilege privilege) {
-    this.privilege = privilege;
-  }
-  
   public List<Diagrammer> getAvailableUsers() {
     return availableUsers;
   }
@@ -135,25 +125,12 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.selectedUsers = selectedUsers;
   }
   
-  /**
-   * Gets the items for Radio button group used to select a privilege.
-   * 
-   * @return An array with the select items.
-   * @author Gabriel Leonardo Diaz, 27.07.2013.
-   */
-  public SelectItem[] getPrivilegesForSelectOneRadio () {
-    SelectItem[] items = new SelectItem[EDiagramPrivilege.values().length - 1];
-    
-    int i = 0;
-    for (EDiagramPrivilege p : EDiagramPrivilege.values()) {
-      if (p == EDiagramPrivilege.OWNER) {
-        continue;
-      }
-      
-      items[i++] = new SelectItem(p, formatController.getDiagramPrivilegeName(p));
-    }
-    
-    return items;
+  public boolean isWriteable() {
+    return writeable;
+  }
+  
+  public void setWriteable(boolean writeable) {
+    this.writeable = writeable;
   }
   
   /**
@@ -296,7 +273,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         break;
       
       case SHARE:
-        diagramService.shareDiagram(diagram, selectedUsers, privilege);
+        diagramService.shareDiagram(diagram, selectedUsers, writeable);
         break;
         
       default:

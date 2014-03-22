@@ -30,11 +30,8 @@
         </p:dataTable>
         
         <br/>
-        <br/>
         <h:outputText value="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic, bold" />
-        <p:selectOneRadio id="privilege" value="#{diagramController.privilege}" converter="privilegeConverter" required="true">
-            <f:selectItems value="#{diagramController.privilegesForSelectOneRadio}" />
-        </p:selectOneRadio>
+        <p:selectBooleanCheckbox value="#{diagramController.writeable}" />
         
         <p class="justify" style="margin-top: 25px;">
             <h:outputText value="#{msgs.NOTE_LABEL}: " styleClass="bold" />
