@@ -136,7 +136,7 @@ CLASSEditor.prototype.createGraph = function () {
             this.executeLayout(this.getLayout(last), last);
             
             // GD, 25.10.2013. Applying layout to also child nodes
-            if (last.children) {
+            if (last.children != null) {
               this.layoutCells(last.children);
             }
           }

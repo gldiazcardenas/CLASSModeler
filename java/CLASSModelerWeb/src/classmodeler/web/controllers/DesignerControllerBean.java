@@ -91,7 +91,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   }
   
   public boolean isReadOnly() {
-    return writeable;
+    return !writeable;
   }
   
   public boolean isPendingChanges() {

@@ -8,7 +8,7 @@
 
 package classmodeler.web.controllers;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -37,9 +37,9 @@ public class DashboardControllerBean extends JSFGenericBean {
   private static final long serialVersionUID = 1L;
   
   private Diagram diagram;
-  private SharedItem shared;
+  private SharedItem sharedItem;
   
-  private List<SharedItem> sharings;
+  private List<SharedItem> sharedItems;
   private List<Diagram> diagrams;
   
   @ManagedProperty("#{sessionController.diagrammer}")
@@ -74,11 +74,8 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return A list of shared objects.
    * @author Gabriel Leonardo Diaz, 26.07.2013.
    */
-  public List<SharedItem> getSharings () {
-    if (sharings == null) {
-      sharings = new ArrayList<SharedItem>();
-    }
-    return sharings;
+  public List<SharedItem> getSharedItems () {
+    return sharedItems;
   }
   
   public Diagram getDiagram() {
@@ -86,23 +83,23 @@ public class DashboardControllerBean extends JSFGenericBean {
   }
   
   public void setDiagram(Diagram diagram) {
-    this.diagram = diagram;
-    this.shared = null;
+    this.diagram    = diagram;
+    this.sharedItem = null;
     
     if (diagram != null) {
-      sharings = diagramService.getSharedItemsByDiagram(diagram);
+      sharedItems = diagramService.getSharedItemsByDiagram(diagram);
     }
     else {
-      sharings = new ArrayList<SharedItem>();
+      sharedItems = null;
     }
   }
   
-  public SharedItem getShared() {
-    return shared;
+  public SharedItem getSharedItem () {
+    return sharedItem;
   }
   
-  public void setShared(SharedItem shared) {
-    this.shared = shared;
+  public void setSharedItem (SharedItem sharedItem) {
+    this.sharedItem = sharedItem;
   }
   
   public void setDiagrammer(Diagrammer diagrammer) {
@@ -124,23 +121,12 @@ public class DashboardControllerBean extends JSFGenericBean {
   }
   
   /**
-   * Determines if the logged user is able to share the selected diagram.
-   * 
-   * @return True if the user is owner the diagram.
-   * @author Gabriel Leonardo Diaz, 27.07.2013.
-   */
-  public boolean isAllowedToShareDiagram () {
-    // This is the owner of the diagram
-    return this.diagram != null && this.diagram.isOwner(diagrammer);
-  }
-  
-  /**
    * Determines if the logged user is able to edit the selected diagram.
    * 
    * @return True if the user is the owner or has EDITION privilege.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedEditDiagram () {
+  public boolean isCanEditDiagram () {
     if (diagram == null) {
       return false;
     }
@@ -150,8 +136,8 @@ public class DashboardControllerBean extends JSFGenericBean {
       return true;
     }
     
-    if (!CollectionUtils.isEmptyCollection(sharings)) {
-      for (SharedItem item : sharings) {
+    if (!CollectionUtils.isEmptyCollection(sharedItems)) {
+      for (SharedItem item : sharedItems) {
         if (diagram.equals(item.getDiagram()) && item.isWriteable()) {
           return true;
         }
@@ -167,8 +153,8 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return True if the user is the owner or has EDITION privileges.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedCopyDiagram () {
-    return isAllowedEditDiagram();
+  public boolean isCanCopyDiagram () {
+    return isCanEditDiagram();
   }
   
   /**
@@ -177,7 +163,17 @@ public class DashboardControllerBean extends JSFGenericBean {
    * @return True if there is a diagram selected.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedDeleteDiagram () {
+  public boolean isCanDeleteDiagram () {
+    return this.diagram != null;
+  }
+  
+  /**
+   * Determines if the logged user is able to share the selected diagram.
+   * 
+   * @return True if the user is owner the diagram.
+   * @author Gabriel Leonardo Diaz, 27.07.2013.
+   */
+  public boolean isCanShareDiagram () {
     return this.diagram != null && this.diagram.isOwner(diagrammer);
   }
   
@@ -189,12 +185,8 @@ public class DashboardControllerBean extends JSFGenericBean {
    *         object has not OWNER privilege itself.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedChangePrivilege () {
-    if (shared == null || diagrammer == null) {
-      return false;
-    }
-    
-    return diagrammer.equals(shared.getDiagram().getCreatedBy());
+  public boolean isCanChangePrivilege () {
+    return sharedItem != null && isCanShareDiagram();
   }
   
   /**
@@ -205,12 +197,12 @@ public class DashboardControllerBean extends JSFGenericBean {
    *         object has not OWNER privilege itself.
    * @author Gabriel Leonardo Diaz, 27.07.2013.
    */
-  public boolean isAllowedDeletePrivilege () {
-    return false;
+  public boolean isCanRemovePrivilege () {
+    return isCanChangePrivilege();
   }
   
   /**
-   * Adds a single project to the current cached list.
+   * Adds a single diagram to the current cached list.
    * 
    * @param newDiagram
    *          The project to add.
@@ -220,28 +212,41 @@ public class DashboardControllerBean extends JSFGenericBean {
     if (newDiagram == null) {
       return;
     }
-    
     diagrams.add(newDiagram);
   }
   
   /**
-   * Removes the given project from the current cached list.
+   * Removes the given diagram from the current cached list.
    * 
-   * @param deletedProject
-   *          The project to delete.
+   * @param oldDiagram
+   *          The diagram to delete.
    * @author Gabriel Leonardo Diaz, 01.06.2013.
    */
-  public void deleteDiagram (Diagram deletedDiagram) {
-    if (deletedDiagram == null) {
+  public void deleteDiagram (Diagram oldDiagram) {
+    if (oldDiagram == null) {
       return;
     }
     
     // Remove from the list
-    diagrams.remove(deletedDiagram);
+    diagrams.remove(oldDiagram);
     
     // Remove the selected object
-    if (deletedDiagram.equals(diagram)) {
+    if (oldDiagram.equals(diagram)) {
       diagram = null;
+    }
+    
+    // Remove list of shared items
+    if (!CollectionUtils.isEmptyCollection(sharedItems)) {
+      for (Iterator<SharedItem> iterator = sharedItems.iterator(); iterator.hasNext();) {
+        if (iterator.next().getDiagram().equals(oldDiagram)) {
+          iterator.remove();
+        }
+      }
+    }
+    
+    // Remove shared item selected
+    if (sharedItem != null && sharedItem.getDiagram().equals(oldDiagram)) {
+      sharedItem = null;
     }
   }
 }

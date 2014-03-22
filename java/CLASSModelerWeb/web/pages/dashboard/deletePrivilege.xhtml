@@ -3,10 +3,9 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:dialog id="deletePrivDialog" header="" widgetVar="dlgDeletePriv" closable="true" closeOnEscape="true" modal="true" width="400">
-    <h:form id="deletePrivForm">
-        
-    </h:form>
-</p:dialog>
+<p:confirmDialog id="deletePrivDialog" widgetVar="dlgDeletePrivilege" header="#{diagramController.title}" severity="alert" message="#{diagramController.deleteDiagramMessage}" width="400">
+    <p:commandButton value="#{msgs.YES_LABEL}" actionListener="#{diagramController.processAJAX()}" update=":diagramsForm, :generalMessage, :diagramButtonsForm, :sharingsForm" oncomplete="dlgDeleteDiagram.hide()" />
+    <p:commandButton value="#{msgs.NO_LABEL}" type="button" onclick="dlgDeleteDiagram.hide()" />
+</p:confirmDialog>
 
 </ui:composition>

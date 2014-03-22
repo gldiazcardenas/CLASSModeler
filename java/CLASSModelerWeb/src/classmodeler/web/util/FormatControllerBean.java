@@ -13,6 +13,7 @@ import java.util.Date;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
+import classmodeler.domain.share.SharedItem;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
@@ -99,6 +100,34 @@ public class FormatControllerBean extends JSFGenericBean {
     default:
       return "/resources/images/warning.png";
     }
+  }
+  
+  /**
+   * Gets the image URL depending on the privilege of the shared item.
+   * 
+   * @param item
+   * @return
+   * @author Gabriel Leonardo Diaz, 22.03.2014.
+   */
+  public String getPrivilegeImage (SharedItem item) {
+    if (item.isWriteable()) {
+      return "/resources/images/edit_16x16.png";
+    }
+    return "/resources/images/eye.png";
+  }
+  
+  /**
+   * Gets the privilege name for the given shared item.
+   * 
+   * @param item
+   * @return
+   * @author Gabriel Leonardo Diaz, 22.03.2014.
+   */
+  public String getPrivilegeName (SharedItem item) {
+    if (item.isWriteable()) {
+      return GenericUtils.getLocalizedMessage("CAN_EDIT_LABEL");
+    }
+    return GenericUtils.getLocalizedMessage("READ_ONLY_LABEL");
   }
   
   /**

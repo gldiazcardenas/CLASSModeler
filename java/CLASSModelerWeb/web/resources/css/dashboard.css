@@ -27,3 +27,12 @@
 #diagramButtonsForm button, #sharingButtonsForm button {
     margin-right: 3px;
 }
+
+#shareForm .ui-picklist-list {
+    width: 250px;
+    height: 250px;
+}
+
+#shareForm .ui-picklist-filter {
+    width: 92%;
+}

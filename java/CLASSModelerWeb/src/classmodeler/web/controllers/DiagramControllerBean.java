@@ -14,6 +14,11 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+
+import org.primefaces.model.DualListModel;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Diagrammer;
@@ -32,7 +37,7 @@ import classmodeler.web.util.JSFGenericBean;
  */
 @ManagedBean(name="diagramController")
 @ViewScoped
-public class DiagramControllerBean extends JSFGenericBean implements JSFFormControllerBean {
+public class DiagramControllerBean extends JSFGenericBean implements JSFFormControllerBean, Converter {
   
   private static final long serialVersionUID = 1L;
   
@@ -46,17 +51,6 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
                                                                 .append("</root>")
                                                              .append("</mxGraphModel>")
                                                              .toString();
-  
-  private String name;
-  private String description;
-  private String title;
-  private Diagram diagram;
-  private EDiagramControllerMode mode;
-  
-  // Fields used to share a diagram
-  private boolean writeable;
-  private List<Diagrammer> availableUsers;
-  private List<Diagrammer> selectedUsers;
   
   @ManagedProperty("#{dashBoardController}")
   private DashboardControllerBean dashBoardController;
@@ -72,6 +66,15 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   @EJB
   private UserService userService;
+  
+  private String name;
+  private String description;
+  private String title;
+  private Diagram diagram;
+  private EDiagramControllerMode mode;
+  private boolean readOnly;
+  private List<Diagrammer> diagrammers;
+  private DualListModel<Diagrammer> pickListModel = new DualListModel<Diagrammer>();
   
   public DiagramControllerBean() {
     super();
@@ -113,24 +116,20 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.formatController = formatController;
   }
   
-  public List<Diagrammer> getAvailableUsers() {
-    return availableUsers;
+  public DualListModel<Diagrammer> getPickListModel() {
+    return pickListModel;
   }
   
-  public List<Diagrammer> getSelectedUsers() {
-    return selectedUsers;
+  public void setPickListModel (DualListModel<Diagrammer> model) {
+    this.pickListModel = model;
   }
   
-  public void setSelectedUsers(List<Diagrammer> selectedUsers) {
-    this.selectedUsers = selectedUsers;
+  public boolean isReadOnly() {
+    return readOnly;
   }
   
-  public boolean isWriteable() {
-    return writeable;
-  }
-  
-  public void setWriteable(boolean writeable) {
-    this.writeable = writeable;
+  public void setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
   }
   
   /**
@@ -145,7 +144,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public String getDeleteDiagramMessage () {
     StringBuilder sb = new StringBuilder();
     
-    if (mode == EDiagramControllerMode.DELETE && diagram != null && diagrammer != null) {
+    if (mode == EDiagramControllerMode.DELETE && diagram != null) {
       sb.append(GenericUtils.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
     }
     
@@ -209,8 +208,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   public void prepareCopyDiagram () {
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
-      name        = diagram.getName();
-      description = diagram.getDescription();
+      name           = diagram.getName();
+      description    = diagram.getDescription();
       String copyXML = diagram.getXML();
       
       diagram = new Diagram();
@@ -230,10 +229,13 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     diagram = dashBoardController.getDiagram();
     if (diagram != null) {
       name           = diagram.getName();
-      availableUsers = userService.getDiagrammersAllowedToShareDiagram(diagram);
-      
-      title  = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
-      mode   = EDiagramControllerMode.SHARE;
+      title          = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
+      mode           = EDiagramControllerMode.SHARE;
+      readOnly       = false;
+      diagrammers    = userService.getDiagrammersAllowedToShareDiagram(diagram);
+      pickListModel.getSource().clear();
+      pickListModel.getTarget().clear();
+      pickListModel.getSource().addAll(diagrammers);
     }
   }
   
@@ -268,12 +270,19 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         
         break;
       case DELETE:
-        diagramService.deleteDiagram(diagram.getKey());
+        if (diagram.isOwner(diagrammer)) {
+          diagramService.deleteDiagram(diagram.getKey());
+        }
+        else {
+          diagramService.deleteSharedItem(diagram.getKey(), diagrammer.getKey());
+        }
+        
         dashBoardController.deleteDiagram(diagram);
         break;
       
       case SHARE:
-        diagramService.shareDiagram(diagram, selectedUsers, writeable);
+        diagramService.shareDiagram(diagram, pickListModel.getTarget(), !readOnly);
+        dashBoardController.setDiagram(diagram);// Reload shared items
         break;
         
       default:
@@ -308,6 +317,22 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     diagram.setName(GenericUtils.getLocalizedMessage("NEW_DIAGRAM_NAME"));
     diagram.setXML(DEFAULT_XML_DIAGRAM);
     return diagram;
+  }
+  
+  @Override
+  public Object getAsObject(FacesContext context, UIComponent component, String value) {
+    int diagrammerKey = Integer.parseInt(value);
+    for (Diagrammer diagrammer : diagrammers) {
+      if (diagrammer.getKey() == diagrammerKey) {
+        return diagrammer;
+      }
+    }
+    return null;
+  }
+  
+  @Override
+  public String getAsString(FacesContext context, UIComponent component, Object value) {
+    return String.valueOf(((Diagrammer) value).getKey());
   }
   
   /**

@@ -72,6 +72,23 @@ public interface DiagramService {
   public void deleteDiagram (int diagramKey) throws UnprivilegedException;
   
   /**
+   * Deletes the shared item of the diagrammer for the given diagram.
+   * 
+   * @param diagramKey
+   * @param diagrammerKey
+   * @author Gabriel Leonardo Diaz, 22.03.2014.
+   */
+  public void deleteSharedItem (int diagramKey, int diagrammerKey);
+  
+  /**
+   * Deletes the shared item identified by the given key.
+   * 
+   * @param sharedItemKey
+   * @author Gabriel Leonardo Diaz, 22.03.2014.
+   */
+  public void deleteSharedItem (int sharedItemKey);
+  
+  /**
    * Gets the list of diagram that the diagrammer can see, it means the diagrams owned
    * by the diagrammer and all the diagrams shared by other diagrammers.
    * 

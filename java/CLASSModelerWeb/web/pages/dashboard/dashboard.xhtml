@@ -28,10 +28,10 @@
             
             <h:form id="diagramButtonsForm" style="margin-bottom: 5px; margin-top: 10px;">
                 <p:commandButton icon="ui-icon-document" value="#{msgs.BUTTON_NEW_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareNewDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" />
-                <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.allowedToShareDiagram}" />
-                <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedEditDiagram}" />
-                <p:commandButton icon="ui-icon-copy" title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.allowedCopyDiagram}"  />
-                <p:commandButton icon="ui-icon-trash" title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.allowedDeleteDiagram}" />
+                <p:commandButton icon="ui-icon-star" value="#{msgs.BUTTON_SHARE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareShareDiagram()}" update=":shareDialog" oncomplete="dlgShare.show()" disabled="#{!dashBoardController.canShareDiagram}" />
+                <p:commandButton icon="ui-icon-pencil" title="#{msgs.BUTTON_EDIT_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareEditDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.canEditDiagram}" />
+                <p:commandButton icon="ui-icon-copy" title="#{msgs.BUTTON_COPY_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareCopyDiagram()}" update=":diagramDialog" oncomplete="dlgDiagram.show()" disabled="#{!dashBoardController.canCopyDiagram}" />
+                <p:commandButton icon="ui-icon-trash" title="#{msgs.BUTTON_DELETE_DIAGRAM_LABEL}" actionListener="#{diagramController.prepareDeleteDiagram()}" update=":deleteDiagramDialog" oncomplete="dlgDeleteDiagram.show()" disabled="#{!dashBoardController.canDeleteDiagram}" />
             </h:form>
             
             <h:form id="diagramsForm">
@@ -80,29 +80,30 @@
         
         <div id="shareSection">
             <h:form id="sharingButtonsForm" style="margin-bottom: 5px;">
-                <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_ALLOW_WRITE_LABEL}" disabled="#{!dashBoardController.allowedChangePrivilege}" style="margin-right: 3px;" />
-                <p:commandButton icon="ui-icon-closethick" title="#{msgs.BUTTON_REMOVE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.allowedDeletePrivilege}" />
+                <p:commandButton icon="ui-icon-key" value="#{msgs.BUTTON_CHANGE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.canChangePrivilege}" style="margin-right: 3px;" />
+                <p:commandButton icon="ui-icon-closethick" title="#{msgs.BUTTON_REMOVE_PRIVILEGE_LABEL}" disabled="#{!dashBoardController.canRemovePrivilege}" />
             </h:form>
             
             <h:form id="sharingsForm">
                 <p:dataTable id="sharingsTable"
-                             value="#{dashBoardController.sharings}"
-                         var="shared"
-                         rowKey="#{shared.key}"
-                         selectionMode="single"
-                         selection="#{dashBoardController.shared}"
-                         emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
-                         paginator="true"
-                         paginatorPosition="bottom"
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="10, 20, 30"
-                         rows="20">
+                             value="#{dashBoardController.sharedItems}"
+                             var="sharedItem"
+                             rowKey="#{sharedItem.key}"
+                             selectionMode="single"
+                             selection="#{dashBoardController.sharedItem}"
+                             emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10, 20, 30"
+                             rows="20">
                          
                 <p:ajax event="rowSelect" update=":sharingButtonsForm" />
                 <p:ajax event="rowUnselect" update=":sharingButtonsForm" />
                 
-                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{shared.diagrammer.name}">
-                    <h:outputText value="#{formatController.getFormattedUserName(shared.diagrammer)}" />
+                <p:column headerText="#{msgs.COLUMN_SHARED_TO_LABEL}" sortBy="#{sharedItem.diagrammer.name}">
+                    <p:graphicImage url="#{formatController.getPrivilegeImage(sharedItem)}" style="margin-right: 5px; vertical-align: middle;" title="#{formatController.getPrivilegeName(sharedItem)}" />
+                    <h:outputText value="#{sharedItem.diagrammer.name}" dir="LTR" />
                 </p:column>
             </p:dataTable>
         </h:form>
@@ -114,7 +115,6 @@
     <ui:include src="/pages/dashboard/createEditDiagram.xhtml"/>
     <ui:include src="/pages/dashboard/deleteDiagram.xhtml"/>
     <ui:include src="/pages/dashboard/shareDiagram.xhtml"/>
-    <ui:include src="/pages/dashboard/changePrivilege.xhtml"/>
     <ui:include src="/pages/dashboard/deletePrivilege.xhtml"/>
     
 </ui:define>

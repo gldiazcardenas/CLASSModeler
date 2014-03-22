@@ -3,49 +3,52 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="600">
+<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="640">
     <h:form id="shareForm">
-        <h:outputText value="#{msgs.SHARE_FORM_USER_LIST_LABEL}" styleClass="italic, bold" />
-        <p:dataTable id="usersTable"
-                     value="#{diagramController.availableUsers}"
-                     var="user"
-                     rowKey="#{user.key}"
-                     selection="#{diagramController.selectedUsers}"
-                     emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
-                     paginator="true"
-                     paginatorPosition="bottom"
-                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     rowsPerPageTemplate="10, 20, 30"
-                     rows="20">
+        <h:outputText value="#{msgs.SHARE_FORM_DIAGRAMMER_LIST_LABEL}" styleClass="italic, bold" />
+        
+        <p:pickList id="usersList"
+                    value="#{diagramController.pickListModel}"
+                    var="diagrammer"
+                    itemValue="#{diagrammer}"
+                    itemLabel="#{diagrammer.name}"
+                    converter="#{diagramController}"
+                    showSourceControls="true"
+                    showTargetControls="true"
+                    showSourceFilter="true"
+                    showTargetFilter="true"
+                    filterMatchMode="contains"
+                    required="true"
+                    requiredMessage="#{msgs.SHARE_DIAGRAM_FORM_REQUIRED_MESSAGE}"
+                    style="margin-top: 5px;">
             
-            <p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!formatController.isActivatedAccount(user.accountStatus)}" />
+            <f:facet name="sourceCaption"><h:outputText value="#{msgs.AVAILABLE_LABEL}" /></f:facet>
+            <f:facet name="targetCaption"><h:outputText value="#{msgs.SELECTED_LABEL}" /></f:facet>
             
-            <p:column headerText="#{msgs.COLUMN_USER_NAME_LABEL}" sortBy="#{user.name}" disabledSelection="#{!formatController.isActivatedAccount(user.accountStatus)}">
-                <h:outputText value="#{user.name}" />
+            <p:column style="width:30px;">
+                <p:graphicImage url="#{diagrammer.avatar}" width="25" height="25" />
             </p:column>
             
-            <p:column headerText="#{msgs.COLUMN_USER_ACCOUNT_STATUS_LABEL}" sortBy="#{user.accountStatus}" style="width: 50px; text-align: center; padding-top: 1px; padding-bottom: 1px;">
-                <h:graphicImage url="#{formatController.getUserAccountStatusImage(user.accountStatus)}" title="#{formatController.getUserAccountStatusName(user.accountStatus)}" />
+            <p:column>
+                <h:outputText value="#{diagrammer.name}" />
             </p:column>
-        </p:dataTable>
+        </p:pickList>
         
-        <br/>
-        <h:outputText value="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic, bold" />
-        <p:selectBooleanCheckbox value="#{diagramController.writeable}" />
+        <table style="boder: 0px; margin-top: 10px; width: 100%;">
+            <tr>
+                <td width="110px"><p:selectBooleanCheckbox value="#{diagramController.readOnly}" itemLabel="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic, bold" /></td>
+                <td><h:outputText value="#{msgs.SHARE_DIAGRAM_FORM_READ_ONLY_MESSAGE}" styleClass="italic" /></td>
+            </tr>
+        </table>
         
-        <p class="justify" style="margin-top: 25px;">
-            <h:outputText value="#{msgs.NOTE_LABEL}: " styleClass="bold" />
-            <h:outputText value="#{msgs.SHARE_FORM_USER_ACCOUNT_STATUS_MESSAGE}" />
-        </p>
-        
-        <p:messages for="shareDialogMessage" />
+        <p:messages id="message" />
         
         <p:separator/>
         
         <h:panelGrid columns="3">
-            <p:commandButton id="btSaveSharingDiagram" value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"
+            <p:commandButton id="btShareDiagram" value="#{msgs.SAVE_LABEL}" actionListener="#{diagramController.processAJAX()}"
                              onclick="jQuery(this).addClass('ui-state-disabled'); jQuery(this).attr('disabled', 'disabled');"
-                             update=":shareForm, :generalMessage"
+                             update=":shareForm, :sharingsForm"
                              oncomplete="responseShareDiagram(xhr, status, args)"/>
             
             <p:commandButton value="#{msgs.CANCEL_LABEL}" type="button" onclick="dlgShare.hide()" />

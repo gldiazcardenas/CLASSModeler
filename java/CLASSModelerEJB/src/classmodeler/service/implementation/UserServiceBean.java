@@ -24,8 +24,8 @@ import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.service.EmailService;
-import classmodeler.service.UserService;
 import classmodeler.service.SecurityService;
+import classmodeler.service.UserService;
 import classmodeler.service.bean.InsertDiagrammerResult;
 import classmodeler.service.exception.ExpiredSecurityCodeException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
@@ -253,10 +253,10 @@ public @Stateless class UserServiceBean implements UserService {
     List<Diagrammer> diagrammers = new ArrayList<Diagrammer>();
     
     if (diagram != null) {
-      diagrammers = em.createNativeQuery("SELECT * FROM diagrammer WHERE diagrammer_key <> ?ownerKey AND diagrammer_key NOT IN (SELECT shared_to_diagrammer FROM shared WHERE shared_diagram_key = ?diagramKey)", Diagrammer.class)
-                .setParameter("ownerKey", Integer.valueOf(diagram.getCreatedBy().getKey()))
-                .setParameter("diagramKey", Integer.valueOf(diagram.getKey()))
-                .getResultList();
+      diagrammers = em.createNativeQuery("SELECT * FROM diagrammer WHERE diagrammer_key <> ?owner AND diagrammer_key NOT IN (SELECT shared_item_diagrammer_key FROM shared_item WHERE shared_item_diagram_key = ?diagram)", Diagrammer.class)
+                      .setParameter("owner", diagram.getCreatedBy().getKey())
+                      .setParameter("diagram", diagram.getKey())
+                      .getResultList();
     }
     
     return diagrammers;

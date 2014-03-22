@@ -16,6 +16,7 @@ import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -37,8 +38,8 @@ import classmodeler.service.DiagramService;
 import classmodeler.service.SourceCodeService;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
-import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
+import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.CollectionUtils;
 
 import com.mxgraph.reader.mxGraphViewImageReader;
@@ -112,6 +113,26 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   }
   
   @Override
+  public void deleteSharedItem(int diagramKey, int diagrammerKey) {
+    // TODO validate the diagrammer account modifying the diagram has privileges.
+    
+    em.createNativeQuery("DELETE FROM shared_item WHERE shared_item_diagrammer_key = ?diagrammer AND shared_item_diagram_key = ?diagram")
+      .setParameter("diagrammer", diagrammerKey)
+      .setParameter("diagram", diagramKey)
+      .executeUpdate();
+  }
+  
+  @Override
+  public void deleteSharedItem(int sharedItemKey) {
+    // TODO validate the diagrammer account modifying the diagram has privileges.
+    
+    SharedItem sharedItem = em.find(SharedItem.class, Integer.valueOf(sharedItemKey));
+    if (sharedItem != null) {
+      em.remove(sharedItem);
+    }
+  }
+  
+  @Override
   public List<Diagram> getDiagramsByDiagrammer (Diagrammer diagrammer) {
     List<Diagram> ownedDiagrams = em.createQuery("SELECT d FROM Diagram d WHERE d.createdBy = :owner", Diagram.class)
                                     .setParameter("owner", diagrammer)
@@ -139,7 +160,18 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @Override
   public void shareDiagram (Diagram diagram, List<Diagrammer> toDiagrammers, boolean canWrite) {
-    // TODO GD
+    SharedItem item;
+    Date now = Calendar.getInstance().getTime();
+    
+    for (Diagrammer diagrammer : toDiagrammers) {
+      item = new SharedItem();
+      item.setDate(now);
+      item.setDiagram(diagram);
+      item.setDiagrammer(diagrammer);
+      item.setWriteable(canWrite);
+      
+      em.persist(item);
+    }
   }
   
   @Override
@@ -158,7 +190,7 @@ public @Stateless class DiagramServiceBean implements DiagramService {
       return true;
     }
     
-    List<SharedItem> item = em.createQuery("SELECT si FROM SharedItem WHERE si.diagram = :diagram AND si.diagrammer = :diagrammer", SharedItem.class)
+    List<SharedItem> item = em.createQuery("SELECT si FROM SharedItem si WHERE si.diagram = :diagram AND si.diagrammer = :diagrammer", SharedItem.class)
                               .setParameter("diagram", diagram)
                               .setParameter("diagrammer", diagrammer)
                               .getResultList();
