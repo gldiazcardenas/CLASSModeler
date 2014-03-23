@@ -8,12 +8,6 @@
 
 package classmodeler.service.implementation;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,13 +15,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.share.SharedItem;
@@ -41,8 +30,6 @@ import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
 import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.CollectionUtils;
-
-import com.mxgraph.reader.mxGraphViewImageReader;
 
 /**
  * Session bean implementation for Diagram service.
@@ -99,6 +86,15 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     diagram.setModifiedDate(Calendar.getInstance().getTime());
     
     return em.merge(diagram);
+  }
+  
+  @Override
+  public SharedItem updatePrivilege(SharedItem sharedItem) throws UnprivilegedException {
+    if (sharedItem == null) {
+      return null;
+    }
+    
+    return em.merge(sharedItem);
   }
   
   @Override
@@ -201,15 +197,6 @@ public @Stateless class DiagramServiceBean implements DiagramService {
     
     // There should be only one item
     return item.get(0).isWriteable();
-  }
-  
-  @Override
-  public void generateImage(String rawXML, OutputStream output) throws ParserConfigurationException, SAXException, IOException {
-    String xml = URLDecoder.decode(rawXML, "UTF-8");
-    mxGraphViewImageReader reader = new mxGraphViewImageReader(Color.WHITE, 4, true, true);
-    InputSource inputSource = new InputSource(new StringReader(xml));
-    BufferedImage image = mxGraphViewImageReader.convert(inputSource, reader);
-    ImageIO.write(image, "png", output);
   }
   
 }

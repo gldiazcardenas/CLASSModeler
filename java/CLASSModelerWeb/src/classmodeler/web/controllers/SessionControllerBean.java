@@ -10,13 +10,16 @@ package classmodeler.web.controllers;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.User;
-import classmodeler.service.SessionService;
+import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
@@ -29,14 +32,17 @@ import classmodeler.web.util.JSFOutcomeUtil;
  */
 @ManagedBean(name="sessionController")
 @SessionScoped
-public class SessionControllerBean extends JSFGenericBean {
+public class SessionControllerBean extends JSFGenericBean implements HttpSessionBindingListener {
   
   private static final long serialVersionUID = 1L;
   
   private User user;
   
   @EJB
-  private SessionService sessionService;
+  private UserService userService;
+  
+  @ManagedProperty("#{designerController}")
+  private DesignerControllerBean designerController;
 
   public SessionControllerBean() {
     super();
@@ -86,6 +92,10 @@ public class SessionControllerBean extends JSFGenericBean {
     return user != null && user.isRegisteredUser();
   }
   
+  public void setDesignerController(DesignerControllerBean designerController) {
+    this.designerController = designerController;
+  }
+  
   /**
    * Logs in the system the user represented by the given credentials.
    * 
@@ -97,7 +107,7 @@ public class SessionControllerBean extends JSFGenericBean {
    * @throws InactivatedUserAccountException
    */
   public User login (String email, String password) throws InvalidDiagrammerAccountException {
-    this.user = sessionService.logIn(email, password);
+    this.user = userService.logIn(email, password);
     return this.user;
   }
   
@@ -108,14 +118,24 @@ public class SessionControllerBean extends JSFGenericBean {
    * @return The OUTCOME to the index page.
    */
   public String logout () {
-    // Remove the user specific information.
-    sessionService.logOut(user);
-    
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
     if (session != null) {
       session.invalidate();
     }
     return JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
+  }
+  
+  @Override
+  public void valueBound(HttpSessionBindingEvent event) {
+    // Do nothing
+  }
+  
+  @Override
+  public void valueUnbound(HttpSessionBindingEvent event) {
+    if (designerController != null) {
+      // Remove the session created for the diagram
+      designerController.destroy();
+    }
   }
   
 }

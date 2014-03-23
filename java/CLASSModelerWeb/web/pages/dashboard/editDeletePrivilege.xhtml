@@ -1,0 +1,16 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+<p:confirmDialog id="editPrivilegeDialog" widgetVar="dlgEditPrivilege" header="#{sharedItemController.title}" severity="alert" message="#{msgs.SHARE_DIAGRAM_EDIT_FORM_MESSAGE}" width="450">
+    <p:commandButton value="#{msgs.YES_LABEL}" actionListener="#{sharedItemController.processAJAX()}" update=":sharingsForm" oncomplete="dlgEditPrivilege.hide()" />
+    <p:commandButton value="#{msgs.NO_LABEL}" type="button" onclick="dlgEditPrivilege.hide()" />
+</p:confirmDialog>
+
+<p:confirmDialog id="deletePrivilegeDialog" widgetVar="dlgDeletePrivilege" header="#{sharedItemController.title}" severity="alert" message="#{msgs.SHARED_ITEM_DELETE_CONFIRMATION_MESSAGE}" width="450">
+    <p:commandButton value="#{msgs.YES_LABEL}" actionListener="#{sharedItemController.processAJAX()}" update=":diagramsForm, :generalMessage, :diagramButtonsForm, :sharingsForm" oncomplete="dlgDeletePrivilege.hide()" />
+    <p:commandButton value="#{msgs.NO_LABEL}" type="button" onclick="dlgDeletePrivilege.hide()" />
+</p:confirmDialog>
+
+</ui:composition>

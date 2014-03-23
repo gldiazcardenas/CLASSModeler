@@ -56,7 +56,7 @@ public class SharedDiagramsCache {
    * @return
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
-  public synchronized boolean existsSharedDiagram (Diagram diagram) {
+  public synchronized boolean existsDiagram (Diagram diagram) {
     if (diagram == null) {
       return false;
     }
@@ -96,7 +96,7 @@ public class SharedDiagramsCache {
    * 
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
-  public synchronized void clearCache () {
+  public synchronized void purgeCache () {
     Entry<Integer, SharedDiagram> entry;
     for (Iterator<Entry<Integer, SharedDiagram>> iterator = this.sharedDiagrams.entrySet().iterator(); iterator.hasNext();) {
       entry = iterator.next();
@@ -105,4 +105,5 @@ public class SharedDiagramsCache {
       }
     }
   }
+  
 }

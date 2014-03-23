@@ -12,12 +12,18 @@
         
     </pe:layoutPane>
     
-    <pe:layoutPane position="south" size="100">
+    <pe:layoutPane position="south" size="100" styleContent="padding: 10px;">
         <f:facet name="header"><h:outputText value="#{msgs.STATUS_PANEL_LABEL}" /></f:facet>
         
-        <!-- Component used to display properties of the selected element -->
-        <table id="propertyTable" />
+        <h:panelGroup rendered="#{designerController.writeable}">
+            <h:graphicImage name="accept.png" library="images" style="vertical-align: middle; margin-right: 5px;" />
+            <h:outputText value="#{msgs.UNLOCKED_LABEL}" />
+        </h:panelGroup>
         
+        <h:panelGroup rendered="#{!designerController.writeable}">
+            <h:graphicImage name="lock.png" library="images" style="vertical-align: middle; margin-right: 5px;" />
+            <h:outputText value="#{msgs.LOCKED_DUE_PRIVILEGES_LABEL}" />
+        </h:panelGroup>
     </pe:layoutPane>
     
 </ui:composition>

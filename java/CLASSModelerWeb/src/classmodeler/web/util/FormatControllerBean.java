@@ -125,9 +125,9 @@ public class FormatControllerBean extends JSFGenericBean {
    */
   public String getPrivilegeName (SharedItem item) {
     if (item.isWriteable()) {
-      return GenericUtils.getLocalizedMessage("CAN_EDIT_LABEL");
+      return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_EDIT");
     }
-    return GenericUtils.getLocalizedMessage("READ_ONLY_LABEL");
+    return GenericUtils.getLocalizedMessage("PRIVILEGE_NAME_READ");
   }
   
   /**

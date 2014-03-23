@@ -8,33 +8,39 @@
 
 package classmodeler.web.controllers;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.share.SharedDiagram;
-import classmodeler.domain.share.SharedDiagramSession;
 import classmodeler.domain.share.SharedDiagramsCache;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
@@ -44,6 +50,8 @@ import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
+import com.mxgraph.reader.mxGraphViewImageReader;
+import com.mxgraph.sharing.mxSession;
 import com.mxgraph.util.mxXmlUtils;
 
 /**
@@ -58,6 +66,8 @@ public class DesignerControllerBean extends JSFGenericBean {
 
   private static final long serialVersionUID = 1L;
   
+  public static final String SHARED_DIAGRAM_SESSION_ID = "SharedSessionID";
+  
   @EJB
   private DiagramService diagramService;
   
@@ -66,12 +76,9 @@ public class DesignerControllerBean extends JSFGenericBean {
   
   private User user;
   private SharedDiagram diagram;
-  private SharedDiagramSession diagramSession;
+  private SharedDiagramSession session;
   private boolean writeable;
   private boolean pendingChanges;
-  
-  // Used specially for code generation
-  private String generateCodeTitle;
   private List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
   
   public DesignerControllerBean() {
@@ -86,12 +93,8 @@ public class DesignerControllerBean extends JSFGenericBean {
     return diagram;
   }
   
-  public SharedDiagramSession getDiagramSession() {
-    return diagramSession;
-  }
-  
-  public boolean isReadOnly() {
-    return !writeable;
+  public boolean isWriteable() {
+    return writeable;
   }
   
   public boolean isPendingChanges() {
@@ -99,7 +102,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   }
   
   public String getGenerateCodeTitle() {
-    return generateCodeTitle;
+    return GenericUtils.getLocalizedMessage("GENERATE_CODE_FORM_TITLE", this.diagram.getName());
   }
   
   public List<SourceCodeFile> getSourceCodeFiles() {
@@ -126,11 +129,10 @@ public class DesignerControllerBean extends JSFGenericBean {
       return null;
     }
     
-    this.user = user;
-    this.diagram = SharedDiagramsCache.getInstance().putDiagram(diagram);
-    this.diagramSession = new SharedDiagramSession(this.diagram);
-    this.pendingChanges = false;
-    this.generateCodeTitle = GenericUtils.getLocalizedMessage("GENERATE_CODE_FORM_TITLE", this.diagram.getName());
+    this.user              = user;
+    this.diagram           = SharedDiagramsCache.getInstance().putDiagram(diagram);
+    this.session           = new SharedDiagramSession(this);
+    this.pendingChanges    = false;
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
@@ -146,7 +148,7 @@ public class DesignerControllerBean extends JSFGenericBean {
       save();
     }
     
-    String value = this.diagramSession.init();
+    String value = this.session.init();
     return value;
   }
   
@@ -158,7 +160,7 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public String poll () throws InterruptedException {
-    String value = this.diagramSession.poll();
+    String value = this.session.poll();
     return value;
   }
   
@@ -171,7 +173,7 @@ public class DesignerControllerBean extends JSFGenericBean {
   public void notify (String rawXML) throws UnsupportedEncodingException {
     String xml = URLDecoder.decode(rawXML, "UTF-8");
     Document document = mxXmlUtils.parseXml(xml);
-    this.diagramSession.receive(document.getDocumentElement());
+    this.session.receive(document.getDocumentElement());
     this.pendingChanges = true;
   }
   
@@ -199,7 +201,10 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public void destroy () {
-    this.diagramSession.destroy();
+    if (this.session != null) {
+      this.session.destroy(); // Removes the session from the listeners of the diagram.
+    }
+    SharedDiagramsCache.getInstance().purgeCache(); // Removes the diagrams without any listener
   }
   
   /**
@@ -213,7 +218,11 @@ public class DesignerControllerBean extends JSFGenericBean {
    * @author Gabriel Leonardo Diaz, 17.02.2014.
    */
   public void generateImage (String rawXML, OutputStream output) throws SAXException, ParserConfigurationException, IOException {
-    diagramService.generateImage(rawXML, output);
+    String xml = URLDecoder.decode(rawXML, "UTF-8");
+    mxGraphViewImageReader reader = new mxGraphViewImageReader(Color.WHITE, 4, true, true);
+    InputSource inputSource = new InputSource(new StringReader(xml));
+    BufferedImage image = mxGraphViewImageReader.convert(inputSource, reader);
+    ImageIO.write(image, "png", output);
   }
   
   /**
@@ -272,6 +281,45 @@ public class DesignerControllerBean extends JSFGenericBean {
     }
     
     return file;
+  }
+  
+  /**
+   * Creates a new session attached to the diagram in this controller.
+   * 
+   * @author Gabriel Leonardo Diaz, 23.03.2014.
+   */
+  public static class SharedDiagramSession extends mxSession {
+    
+    private DesignerControllerBean designerController;
+    
+    public SharedDiagramSession(DesignerControllerBean designerController) {
+      super (SHARED_DIAGRAM_SESSION_ID, designerController.getDiagram());
+      this.designerController = designerController;
+      new Timer().schedule(new SharedDiagramsTimerTask(), 5 * 60 * 1000);
+    }
+    
+    public User getUser () {
+      return this.designerController.getUser();
+    }
+    
+    @Override
+    public void destroy() {
+      super.destroy();
+      SharedDiagramsCache.getInstance().purgeCache();
+    }
+    
+    /**
+     * Task used to remove the items not being used.
+     * 
+     * @author Gabriel Leonardo Diaz, 23.03.2014.
+     */
+    private class SharedDiagramsTimerTask extends TimerTask {
+      @Override
+      public void run() {
+        // TODO
+      }
+    }
+    
   }
   
 }

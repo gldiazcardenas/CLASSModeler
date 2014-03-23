@@ -249,4 +249,25 @@ public class DashboardControllerBean extends JSFGenericBean {
       sharedItem = null;
     }
   }
+  
+  /**
+   * Removes the shared item from the local list and removes the reference in
+   * this controller.
+   * 
+   * @param oldSharedItem
+   * @author Gabriel Leonardo Diaz, 23.03.2014.
+   */
+  public void deleteSharedItem (SharedItem oldSharedItem) {
+    if (oldSharedItem == null) {
+      return;
+    }
+    
+    if (sharedItems != null) {
+      sharedItems.remove(oldSharedItem);
+    }
+    
+    if (oldSharedItem.equals(sharedItem)) {
+      sharedItem = null;
+    }
+  }
 }

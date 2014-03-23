@@ -133,25 +133,6 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   }
   
   /**
-   * Retrieves the localized message for deleting a diagram (either by the owner
-   * or another user). When the owner deletes the diagram this is in fact
-   * deleted with all sharing, but when a user who had the diagram shared only
-   * is able to delete the sharing.
-   * 
-   * @return The localized message.
-   * @author Gabriel Leonardo Diaz, 10.08.2013.
-   */
-  public String getDeleteDiagramMessage () {
-    StringBuilder sb = new StringBuilder();
-    
-    if (mode == EDiagramControllerMode.DELETE && diagram != null) {
-      sb.append(GenericUtils.getLocalizedMessage("DIAGRAM_DELETE_CONFIRMATION_MESSAGE"));
-    }
-    
-    return sb.toString();
-  }
-  
-  /**
    * Prepares the controller to create a new diagram. Sets an empty object to
    * the controller.
    * 
@@ -262,7 +243,6 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         break;
         
       case EDIT:
-      
         diagram.setName(name);
         diagram.setDescription(description);
         diagram.setModifiedBy(diagrammer);

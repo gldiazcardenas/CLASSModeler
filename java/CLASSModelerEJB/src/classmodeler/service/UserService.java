@@ -13,6 +13,7 @@ import javax.ejb.Local;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Diagrammer;
+import classmodeler.domain.user.User;
 import classmodeler.service.bean.InsertDiagrammerResult;
 import classmodeler.service.exception.ExpiredSecurityCodeException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
@@ -27,6 +28,21 @@ import classmodeler.service.exception.SendEmailException;
  */
 @Local
 public interface UserService {
+  
+  /**
+   * Service method that validates the user credentials and determines if the
+   * user is able to get logged in the system.
+   * 
+   * @param email
+   *          The email of the user.
+   * @param password
+   *          The password of the user account.
+   * @return The user logged in.
+   * @throws InvalidDiagrammerAccountException
+   *           When the user account does not exist or is invalid.
+   * @author Gabriel Leonardo Diaz, 01.10.2013.
+   */
+  User logIn (String email, String password) throws InvalidDiagrammerAccountException;
   
   /**
    * Service method that checks if the given user email already exists.

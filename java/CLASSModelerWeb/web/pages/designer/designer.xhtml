@@ -53,7 +53,7 @@
     <h:outputStylesheet name="easyui.css" library="css"/>
 </h:head>
 
-<h:body onload="CLASSModeler.init(#{!designerController.readOnly})">
+<h:body onload="CLASSModeler.init(#{designerController.writeable})">
     <p:growl id="generalMessage" for="generalMessage" sticky="true" />
     
     <div id="content">

@@ -10,6 +10,7 @@ import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.EGender;
+import classmodeler.domain.user.User;
 import classmodeler.service.UserService;
 import classmodeler.service.bean.InsertDiagrammerResult;
 import classmodeler.service.exception.ExpiredSecurityCodeException;
@@ -60,6 +61,77 @@ public class UserServiceTest extends ServiceTest {
   @AfterClass
   public void destroy() {
     userService.deleteDiagrammer(diagrammerBasic.getKey());
+  }
+  
+  /**
+   * Unit test to verify the correct behavior of the service method
+   * {@link SessionService#logIn(String, String)}.
+   * 
+   * @author Gabriel Leonardo Diaz, 06.10.2013.
+   * @throws SendEmailException 
+   * @throws InvalidDiagrammerAccountException 
+   * @throws ExpiredSecurityCodeException 
+   * @throws InvalidSecurityCodeException 
+   */
+  public void testLogIn () throws InvalidDiagrammerAccountException, SendEmailException, InvalidSecurityCodeException, ExpiredSecurityCodeException {
+    String email = "gabriel.test.12345@gmail.com";
+    
+    Diagrammer diagrammer = new Diagrammer();
+    diagrammer.setFirstName("Nombre Diagramador");
+    diagrammer.setLastName("Apellido Diagramador");
+    diagrammer.setEmail(email);
+    diagrammer.setPassword("12345");
+    diagrammer.setGender(EGender.MALE);
+    
+    InsertDiagrammerResult result = null;
+    
+    try {
+      result = userService.insertDiagrammer(diagrammer);
+      
+      assert (result != null) : "Error: The result of inserting a diagrammer is null";
+      assert (result.getDiagrammer() != null) : "Error: The diagrammer inside the result is null";
+      assert (result.getSecurityCode() != null) : "Error: The security code inside the result is null";
+      
+      Diagrammer diagrammerActivated = userService.activateDiagrammerAccount(result.getDiagrammer().getEmail(), result.getSecurityCode().getCode());
+      
+      assert (diagrammerActivated != null) : "Error: The activation process has failed.";
+      assert (diagrammerActivated.getAccountStatus() == EDiagrammerAccountStatus.ACTIVATED) : "Error: The account of the diagrammer is not activated.";
+      
+      User loggedIn = userService.logIn(result.getDiagrammer().getEmail(), result.getDiagrammer().getPassword());
+      
+      assert (loggedIn != null) : "Error: The diagrammer has not been logged in" ;
+    }
+    finally {
+      if (result != null) {
+        userService.deleteDiagrammer(result.getDiagrammer().getKey());
+      }
+    }
+  }
+  
+  /**
+   * Unit test to check an alternate flow of the service method
+   * {@link SessionService#logIn(String, String)} by login in with an invalid
+   * non existing account.
+   * 
+   * @author Gabriel Leonardo Diaz, 06.10.2013.
+   * @throws InvalidDiagrammerAccountException 
+   */
+  @Test (expectedExceptions = InvalidDiagrammerAccountException.class)
+  public void testLogIn_failNonExistingAccount () throws InvalidDiagrammerAccountException {
+    userService.logIn("non_existing_account@email.com", "12345");
+  }
+  
+  /**
+   * Unit test to check an alternate flow of the service method
+   * {@link SessionService#logIn(String, String)} by login in with a non
+   * activated account.
+   * 
+   * @author Gabriel Leonardo Diaz, 06.10.2013.
+   * @throws InvalidDiagrammerAccountException 
+   */
+  @Test (expectedExceptions = InvalidDiagrammerAccountException.class)
+  public void testLogIn_failNonActivatedAccount () throws InvalidDiagrammerAccountException {
+    userService.logIn(diagrammerBasic.getEmail(), diagrammerBasic.getPassword());
   }
   
   /**

@@ -8,14 +8,11 @@
 
 package classmodeler.service;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import javax.ejb.Local;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
+import org.apache.jasper.tagplugins.jstl.If;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.share.SharedItem;
@@ -70,6 +67,16 @@ public interface DiagramService {
    *           When the diagrammer does not have privileges for the operation.
    */
   public void deleteDiagram (int diagramKey) throws UnprivilegedException;
+  
+  /**
+   * Changes the privilege given to diagrammer for the diagram.
+   * 
+   * @param sharedItem
+   * @return
+   * @author Gabriel Leonardo Diaz, 23.03.2014.
+   * @throws UnprivilegedException
+   */
+  public SharedItem updatePrivilege (SharedItem sharedItem) throws UnprivilegedException;
   
   /**
    * Deletes the shared item of the diagrammer for the given diagram.
@@ -137,15 +144,5 @@ public interface DiagramService {
    * @author Gabriel Leonardo Diaz, 13.02.2014
    */
   public boolean canWriteDiagram (Diagram diagram, User user) throws UnprivilegedException;
-  
-  /**
-   * Generates the image representation of the diagram using the XML
-   * representation, this puts the result in the output parameter.
-   * 
-   * @param rawXML
-   * @param output
-   * @author Gabriel Leonardo Diaz, 01.03.2014.
-   */
-  public void generateImage (String rawXML, OutputStream output) throws ParserConfigurationException, SAXException, IOException ;
   
 }

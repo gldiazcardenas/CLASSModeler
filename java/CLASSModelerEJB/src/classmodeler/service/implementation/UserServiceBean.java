@@ -23,6 +23,8 @@ import classmodeler.domain.security.ESecurityCodeType;
 import classmodeler.domain.security.SecurityCode;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
+import classmodeler.domain.user.Guest;
+import classmodeler.domain.user.User;
 import classmodeler.service.EmailService;
 import classmodeler.service.SecurityService;
 import classmodeler.service.UserService;
@@ -50,6 +52,25 @@ public @Stateless class UserServiceBean implements UserService {
   
   @EJB
   private EmailService emailService;
+  
+  @Override
+  public User logIn(String email, String password) throws InvalidDiagrammerAccountException {
+    if (Guest.GUEST_EMAIL.equals(email) && Guest.GUEST_PASSWORD.equals(password)) {
+      return new Guest();
+    }
+    
+    Diagrammer user = getDiagrammerByEmail(email);
+    
+    if (user == null || !user.getPassword().equals(password)) {
+      throw new InvalidDiagrammerAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
+    }
+    
+    if (user.getAccountStatus() != EDiagrammerAccountStatus.ACTIVATED) {
+      throw new InvalidDiagrammerAccountException("The user account is not activated.", EInvalidAccountErrorType.NON_ACTIVATED_ACCOUNT);
+    }
+    
+    return user;
+  }
   
   @Override
   public boolean existsUser(String email) {
