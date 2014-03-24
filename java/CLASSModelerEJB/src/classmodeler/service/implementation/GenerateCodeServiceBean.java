@@ -8,18 +8,19 @@
 
 package classmodeler.service.implementation;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.ejb.Stateless;
 
-import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Enumeration;
+import org.eclipse.uml2.uml.Interface;
 import org.stringtemplate.v4.DateRenderer;
+import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import classmodeler.domain.sourcecode.SourceCodeFile;
+import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.user.User;
 import classmodeler.service.GenerateCodeService;
 
@@ -30,7 +31,7 @@ import classmodeler.service.GenerateCodeService;
  */
 public @Stateless class GenerateCodeServiceBean implements GenerateCodeService {
   
-  public static final STGroupFile TEMPLATES = new STGroupFile("classmodeler/domain/code/templates.java.stg");
+  public static final STGroupFile TEMPLATES = new STGroupFile("classmodeler/domain/code/templates/java.stg");
   
   static {
     DateRenderer dateRender = new DateRenderer();
@@ -38,19 +39,59 @@ public @Stateless class GenerateCodeServiceBean implements GenerateCodeService {
     TEMPLATES.registerRenderer(Calendar.class, dateRender);
   }
   
-  protected User user;
-  protected Date now;
-  protected Model model;
+  private User user;
+  private Date now;
+  
+  public GenerateCodeServiceBean() {
+    super();
+  }
   
   @Override
-  public List<SourceCodeFile> generateCode(User user, Model model) {
-    List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
+  public void configure(User user) {
+    this.user = user;
+    this.now  = Calendar.getInstance().getTime();
+  }
+  
+  @Override
+  public String generateSourceCode (SourceCodeFile file) {
+    if (file.getElement() instanceof Class) {
+      return generateClass((Class) file.getElement());
+    }
+    else if (file.getElement() instanceof Interface) {
+      return generateInterface((Interface) file.getElement());
+    }
+    else if (file.getElement() instanceof Enumeration) {
+      return generateEnumeration((Enumeration) file.getElement());
+    }
     
-    this.model = model;
-    this.user  = user;
-    this.now   = Calendar.getInstance().getTime();
-    
-    return sourceCodeFiles;
+    return null;
+  }
+  
+  @Override
+  public String generateClass(Class aClass) {
+    ST template = TEMPLATES.getInstanceOf("class_template");
+    template.add("class", aClass);
+    template.add("author", user.getName());
+    template.add("date", now);
+    return template.render();
+  }
+  
+  @Override
+  public String generateEnumeration(Enumeration aEnumeration) {
+    ST template = TEMPLATES.getInstanceOf("enumeration_template");
+    template.add("enumeration", aEnumeration);
+    template.add("author", user.getName());
+    template.add("date", now);
+    return template.render();
+  }
+  
+  @Override
+  public String generateInterface(Interface aInterface) {
+    ST template = TEMPLATES.getInstanceOf("interface_template");
+    template.add("interface", aInterface);
+    template.add("author", user.getName());
+    template.add("date", now);
+    return template.render();
   }
   
 }

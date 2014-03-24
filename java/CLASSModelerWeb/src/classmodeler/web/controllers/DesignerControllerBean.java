@@ -32,15 +32,14 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.uml2.uml.Model;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import classmodeler.domain.code.SourceCodeFile;
+import classmodeler.domain.code.SourceCodeFileComparator;
 import classmodeler.domain.diagram.Diagram;
-import classmodeler.domain.sourcecode.SourceCodeFile;
-import classmodeler.domain.sourcecode.SourceCodeFileComparator;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
 import classmodeler.service.GenerateCodeService;
@@ -48,7 +47,7 @@ import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
 import classmodeler.web.beans.SharedDiagramSession;
-import classmodeler.web.converters.UMLMetamodelConverter;
+import classmodeler.web.converters.UMLConverter;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -84,6 +83,9 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   
   /** The session created when the user opens a diagram. */
   private SharedDiagramSession session;
+  
+  /** Converter class for UML transformation. */
+  private UMLConverter converter;
   
   /** The source code files generated. */
   private List<SourceCodeFile> sourceCodeFiles;
@@ -147,7 +149,9 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     this.user              = user;
     this.diagram           = this.sharedDiagramController.putDiagram(diagram);
     this.session           = new SharedDiagramSession(this.diagram, this.user);
+    this.converter         = new UMLConverter(this.diagram.getModel());
     this.pendingChanges    = false;
+    this.generateCodeService.configure(this.user);
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
@@ -244,8 +248,8 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    Model model = UMLMetamodelConverter.convertToUML(this.session.getSharedDiagram());
-    this.sourceCodeFiles = generateCodeService.generateCode(user, model);
+    this.converter.execute();
+    this.sourceCodeFiles = this.converter.getSourceCodeFiles();
     Collections.sort(this.sourceCodeFiles, SourceCodeFileComparator.CASE_INSENSITIVE_COMPARATOR);
   }
   
@@ -256,7 +260,8 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 5.03.2014.
    */
   public StreamedContent downloadFile (SourceCodeFile sourceFile) {
-    return new DefaultStreamedContent(new ByteArrayInputStream(sourceFile.getCode().getBytes(Charset.forName("UTF-8"))), "text/plain", sourceFile.getFullName(), "UTF-8");
+    String code = generateCodeService.generateSourceCode(sourceFile);
+    return new DefaultStreamedContent(new ByteArrayInputStream(code.getBytes(Charset.forName("UTF-8"))), "text/plain", sourceFile.getFileName(), "UTF-8");
   }
   
   /**
@@ -274,12 +279,14 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       ZipOutputStream zipFile = new ZipOutputStream(outputStream);
       
+      String code;
       ZipEntry zipEntry;
       
       for (SourceCodeFile sourceFile : this.sourceCodeFiles) {
-        zipEntry = new ZipEntry(sourceFile.getFullName());
+        code = generateCodeService.generateSourceCode(sourceFile);
+        zipEntry = new ZipEntry(sourceFile.getFileName());
         zipFile.putNextEntry(zipEntry);
-        zipFile.write(sourceFile.getCode().getBytes(Charset.forName("UTF-8")));
+        zipFile.write(code.getBytes(Charset.forName("UTF-8")));
       }
       
       zipFile.flush();

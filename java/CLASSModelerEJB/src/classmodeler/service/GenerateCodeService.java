@@ -8,13 +8,13 @@
 
 package classmodeler.service;
 
-import java.util.List;
-
 import javax.ejb.Local;
 
-import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Enumeration;
+import org.eclipse.uml2.uml.Interface;
 
-import classmodeler.domain.sourcecode.SourceCodeFile;
+import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.user.User;
 
 /**
@@ -26,13 +26,41 @@ import classmodeler.domain.user.User;
 public interface GenerateCodeService {
   
   /**
-   * Generates the source code of the given diagram.
    * 
-   * @param user The user for who is the source code being generated.
-   * @param model The model to generate the source files.
-   * @return
-   * @author Gabriel Leonardo Diaz, 05.03.2014.
+   * @param user
    */
-  public List<SourceCodeFile> generateCode (User user, Model model);
+  public void configure (User user);
+  
+  /**
+   * 
+   * @param user
+   * @param file
+   * @return
+   */
+  public String generateSourceCode (SourceCodeFile file);
+  
+  /**
+   * 
+   * @param user
+   * @param aClass
+   * @return
+   */
+  public String generateClass (Class aClass);
+  
+  /**
+   * 
+   * @para user
+   * @param aInterface
+   * @return
+   */
+  public String generateInterface (Interface aInterface);
+  
+  /**
+   * 
+   * @param user
+   * @param aEnumeration
+   * @return
+   */
+  public String generateEnumeration (Enumeration aEnumeration);
   
 }

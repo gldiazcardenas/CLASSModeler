@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.sourcecode;
+package classmodeler.domain.code;
 
 import java.util.Comparator;
 

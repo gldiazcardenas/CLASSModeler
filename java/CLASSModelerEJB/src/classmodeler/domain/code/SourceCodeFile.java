@@ -6,7 +6,9 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.sourcecode;
+package classmodeler.domain.code;
+
+import org.eclipse.uml2.uml.Element;
 
 /**
  * Bean that encapsulates a source code file generated.
@@ -17,7 +19,7 @@ public class SourceCodeFile {
   
   private String name;
   private String format;
-  private String code;
+  private Element element;
   
   public SourceCodeFile() {
     super();
@@ -39,15 +41,15 @@ public class SourceCodeFile {
     this.format = format;
   }
   
-  public String getCode() {
-    return code;
+  public Element getElement() {
+    return element;
   }
   
-  public void setCode(String code) {
-    this.code = code;
+  public void setElement(Element element) {
+    this.element = element;
   }
   
-  public String getFullName () {
+  public String getFileName () {
     return name + "." + format;
   }
   

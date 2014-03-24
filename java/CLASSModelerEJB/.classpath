@@ -97,5 +97,20 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.types_1.0.100.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.types.source_1.0.100.v20130318-0942.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.emf.ecore.xmi_2.9.0.v20130314-0814.jar" sourcepath="lib/UML2/org.eclipse.emf.ecore.xmi.source_2.9.0.v20130314-0814.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/UML2/org.eclipse.uml2.common_1.8.0.v20130318-0942.jar" sourcepath="lib/UML2/org.eclipse.uml2.common.source_1.8.0.v20130318-0942.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

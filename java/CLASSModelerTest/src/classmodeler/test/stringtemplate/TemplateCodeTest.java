@@ -31,6 +31,8 @@ public class TemplateCodeTest {
   private static final Date NOW = Calendar.getInstance().getTime();
   
   
+  
+  
   /**
    * Unit test that generates a class file, this tries to check the result by
    * doing some basic text validations.
