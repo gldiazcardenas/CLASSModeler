@@ -11,7 +11,7 @@
   
   <!-- Session Configuration --> 
   <session-config>
-    <session-timeout>2</session-timeout>
+    <session-timeout>15</session-timeout>
   </session-config>
   
   <!-- Welcome File -->
@@ -51,9 +51,6 @@
   <!-- Listeners -->
   <listener>
     <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>classmodeler.web.controllers.SessionControllerBean</listener-class>
   </listener>
   
   <!-- Filters -->

@@ -8,7 +8,6 @@
 
 package classmodeler.web.validators;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -18,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import classmodeler.service.UserService;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.controllers.SessionControllerBean;
 
@@ -33,9 +31,6 @@ public class ChangePasswordJSFValidator implements Validator {
   
   @ManagedProperty("#{sessionController}")
   private SessionControllerBean sessionController;
-  
-  @EJB
-  private UserService userService;
   
   public ChangePasswordJSFValidator() {
     super();

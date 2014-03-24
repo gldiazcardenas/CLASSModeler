@@ -8,7 +8,7 @@
 
 package classmodeler.test.stringtemplate;
 
-import static classmodeler.service.implementation.SourceCodeServiceBean.TEMPLATES;
+import static classmodeler.service.implementation.GenerateCodeServiceBean.TEMPLATES;
 
 import java.util.Arrays;
 import java.util.Calendar;

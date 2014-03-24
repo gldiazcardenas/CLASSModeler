@@ -6,23 +6,27 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.share;
+package classmodeler.web.controllers;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+
 import classmodeler.domain.diagram.Diagram;
+import classmodeler.web.beans.SharedDiagram;
 
 /**
  * Cache that stores diagrams being edited.
  * 
  * @author Gabriel Leonardo Diaz, 16.02.2014.
  */
-public class SharedDiagramsCache {
-  
-  private static SharedDiagramsCache instance;
+@ApplicationScoped
+@ManagedBean(name="sharedDiagramController")
+public class SharedDiagramController {
   
   /**
    * A map that contains the shared diagrams:
@@ -31,22 +35,8 @@ public class SharedDiagramsCache {
    */
   private Map<Integer, SharedDiagram> sharedDiagrams = new HashMap<Integer, SharedDiagram>();
   
-  private SharedDiagramsCache () {
+  public SharedDiagramController () {
     super();
-  }
-  
-  /**
-   * Gets the reference to the cache object.
-   * 
-   * @return The cache reference, this instances the object if this has not been
-   *         created.
-   * @author Gabriel Leonardo Diaz, 16.02.2014.
-   */
-  public static SharedDiagramsCache getInstance () {
-    if (instance == null) {
-      instance = new SharedDiagramsCache();
-    }
-    return instance;
   }
   
   /**
@@ -96,7 +86,7 @@ public class SharedDiagramsCache {
    * 
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
-  public synchronized void purgeCache () {
+  public synchronized void purgeDiagrams () {
     Entry<Integer, SharedDiagram> entry;
     for (Iterator<Entry<Integer, SharedDiagram>> iterator = this.sharedDiagrams.entrySet().iterator(); iterator.hasNext();) {
       entry = iterator.next();

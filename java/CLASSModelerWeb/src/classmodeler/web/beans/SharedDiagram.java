@@ -6,7 +6,10 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.share;
+package classmodeler.web.beans;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.service.util.CollectionUtils;
@@ -52,6 +55,24 @@ public class SharedDiagram extends mxSharedGraphModel {
   public void publishChanges () {
     String value = getState();
     this.wrappedDiagram.setXML(value);
+  }
+  
+  /**
+   * Gets the list of sessions attached as listeners of this shared diagram.
+   * 
+   * @return
+   * @author Gabriel Leonardo Diaz, 23.03.2014.
+   */
+  public List<SharedDiagramSession> getSessionListeners () {
+    List<SharedDiagramSession> sessions = new ArrayList<SharedDiagramSession>(CollectionUtils.size(diagramChangeListeners));
+    
+    if (!CollectionUtils.isEmptyCollection(diagramChangeListeners)) {
+      for (mxDiagramChangeListener listener : diagramChangeListeners) {
+        sessions.add((SharedDiagramSession) listener);
+      }
+    }
+    
+    return sessions;
   }
   
   /**

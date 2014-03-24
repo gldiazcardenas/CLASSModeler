@@ -69,7 +69,7 @@ public class DesignerServlet extends HttpServlet {
       return;
     }
     
-    DesignerControllerBean designerController = (DesignerControllerBean) request.getSession().getAttribute("designerController");
+    DesignerControllerBean controller = (DesignerControllerBean) request.getSession().getAttribute("designerController");
     
     switch (action) {
     case INIT:
@@ -83,10 +83,10 @@ public class DesignerServlet extends HttpServlet {
       
       try {
         if (action == EDesignerAction.INIT) {
-          writer.println(designerController.initialize());
+          writer.println(controller.initialize());
         }
         else {
-          writer.println(designerController.poll());
+          writer.println(controller.poll());
         }
       }
       catch (InterruptedException e) {
@@ -100,7 +100,7 @@ public class DesignerServlet extends HttpServlet {
       break;
       
     case NOTIFY:
-      designerController.notify(request.getParameter("xml"));
+      controller.notify(request.getParameter("xml"));
       response.setStatus(HttpServletResponse.SC_OK);
       break;
       
@@ -110,7 +110,7 @@ public class DesignerServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_OK);
       
       try {
-        designerController.generateImage(request.getParameter("xml"), response.getOutputStream());
+        controller.generateImage(request.getParameter("xml"), response.getOutputStream());
       }
       catch (NumberFormatException e) {
         throw new ServletException(e);
@@ -125,7 +125,7 @@ public class DesignerServlet extends HttpServlet {
       break;
       
     case SAVE:
-      designerController.save();
+      controller.save();
       response.setStatus(HttpServletResponse.SC_OK);
       
     default:

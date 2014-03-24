@@ -6,6 +6,7 @@
 <div id="graphTitle" class="ui-widget-header" style="padding: 4px 1em; border-width: 0 0 1px;">
     <span id="pendingChanges" />
     <h:outputFormat value="#{msgs.DIAGRAM_DESIGNER_TITLE}"><f:param value="#{designerController.diagram.name}" /></h:outputFormat>
+    <h:graphicImage name="lock.png" library="images" style="vertical-align: middle; margin-left: 5px;" rendered="#{!designerController.writeable}" title="#{msgs.LOCKED_DUE_PRIVILEGES_LABEL}" />
 </div>
 <div id="graph">
     <h:graphicImage id="loading" name="loading.gif" library="images" />

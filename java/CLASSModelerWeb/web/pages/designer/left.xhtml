@@ -40,24 +40,45 @@
             
             <p:separator />
             
-            <h:graphicImage id="association" name="uml_association.png" styleClass="toolbox_item" title="#{msgs.UML_ASSOCIATION}" library="images" />
-            <h:graphicImage id="composition" name="uml_composition.png" styleClass="toolbox_item" title="#{msgs.UML_COMPOSITION}" library="images" />
-            <h:graphicImage id="aggregation" name="uml_aggregation.png" styleClass="toolbox_item" title="#{msgs.UML_AGGREGATION}" library="images" />
-            <h:graphicImage id="generalization" name="uml_generalization.png" styleClass="toolbox_item" title="#{msgs.UML_GENERALIZATION}" library="images" />
-            <h:graphicImage id="realization" name="uml_realization.png" styleClass="toolbox_item" title="#{msgs.UML_REALIZATION}" library="images" />
-            <h:graphicImage id="dependency" name="uml_dependency.png" styleClass="toolbox_item" title="#{msgs.UML_DEPENDENCY}" library="images" />
-            <h:graphicImage id="link" name="uml_link.png" styleClass="toolbox_item" title="#{msgs.UML_LINK}" library="images" />
+            <div class="horizontal_item">
+                <h:graphicImage id="association" name="uml_association.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_ASSOCIATION}" />
+            </div>
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="composition" name="uml_composition.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_COMPOSITION}" />
+            </div>
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="aggregation" name="uml_aggregation.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_AGGREGATION}" />
+            </div>
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="generalization" name="uml_generalization.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_GENERALIZATION}" />
+            </div>
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="realization" name="uml_realization.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_REALIZATION}" />
+            </div>
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="dependency" name="uml_dependency.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_DEPENDENCY}" />
+            </div>
+            
+            <p:separator />
+            
+            <div class="horizontal_item">
+                <h:graphicImage id="link" name="uml_link.png" styleClass="toolbox_item" library="images" />
+                <h:outputText value="#{msgs.UML_LINK}" />
+            </div>
             
         </div>
         
-        
-    </pe:layoutPane>
-    
-    <pe:layoutPane position="south" minSize="100" size="135" maxSize="200">
-        <f:facet name="header"><h:outputText value="#{msgs.OUTLINE_PANEL_LABEL}" /></f:facet>
-        <div id="outline">
-            <!-- mxClient.js library automatically puts the components inside of this tag -->
-        </div>
     </pe:layoutPane>
     
 </ui:composition>

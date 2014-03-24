@@ -24,7 +24,6 @@ import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.EDiagrammerAccountStatus;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
-import classmodeler.service.SourceCodeService;
 import classmodeler.service.UserService;
 import classmodeler.service.exception.InvalidDiagrammerAccountException;
 import classmodeler.service.exception.InvalidDiagrammerAccountException.EInvalidAccountErrorType;
@@ -43,9 +42,6 @@ public @Stateless class DiagramServiceBean implements DiagramService {
   
   @EJB
   private UserService userService;
-  
-  @EJB
-  private SourceCodeService sourceCodeService;
   
   @Override
   public Diagram insertDiagram (Diagram diagram) throws InvalidDiagrammerAccountException {

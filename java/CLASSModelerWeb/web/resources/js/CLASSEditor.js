@@ -323,42 +323,42 @@ CLASSEditor.prototype.createSwimlaneLayout = function () {
 CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var self = this;
   
-  menu.addItem("Deshacer", null, function () { self.execute("undo"); }, null, null, true);
-  menu.addItem("Rehacer", null, function () { self.execute("redo"); }, null, null, true);
+  menu.addItem("Deshacer", null, function () { self.execute("undo"); }, null, null, this.enabled);
+  menu.addItem("Rehacer", null, function () { self.execute("redo"); }, null, null, this.enabled);
   
   menu.addSeparator();
   
-  menu.addItem("Cortar", null, function () { self.execute("cut"); }, null, null, this.isClassifierCell(cell));
-  menu.addItem("Copiar", null, function () { self.execute("copy"); }, null, null, this.isClassifierCell(cell));
-  menu.addItem("Pegar", null, function () { self.execute("paste"); }, null, null, true);
+  menu.addItem("Cortar", null, function () { self.execute("cut"); }, null, null, this.enabled && this.isClassifierCell(cell));
+  menu.addItem("Copiar", null, function () { self.execute("copy"); }, null, null, this.enabled && this.isClassifierCell(cell));
+  menu.addItem("Pegar", null, function () { self.execute("paste"); }, null, null, this.enabled);
   
   menu.addSeparator();
   
-  menu.addItem("Eliminar", null, function () { self.execute("delete"); }, null, null, cell != null);
-  menu.addItem("Seleccionar Todo", null, function () { self.execute("selectAll"); }, null, null, true);
+  menu.addItem("Eliminar", null, function () { self.execute("delete"); }, null, null, this.enabled && cell != null);
+  menu.addItem("Seleccionar Todo", null, function () { self.execute("selectAll"); }, null, null, this.enabled);
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Orden Z");
-  menu.addItem("Traer adelante", null, function () { self.execute("toFront"); }, subMenu, null, self.isElementVertexCell(cell));
-  menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, self.isElementVertexCell(cell));
+  menu.addItem("Traer adelante", null, function () { self.execute("toFront"); }, subMenu, null, this.enabled && self.isElementVertexCell(cell));
+  menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, this.enabled && self.isElementVertexCell(cell));
   
   menu.addSeparator();
   var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) || cell == null ? "Atributos" : "Literales";
-  menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, self.isClassifierCell(cell));
-  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, self.isClassCell(cell) || self.isInterfaceCell(cell));
-  menu.addItem("Relacion", null, function () { self.execute("showRelationship"); }, null, null, self.isAssociationCell(cell));
+  menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, this.enabled && self.isClassifierCell(cell));
+  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, this.enabled && (self.isClassCell(cell) || self.isInterfaceCell(cell)));
+  menu.addItem("Relacion", null, function () { self.execute("showRelationship"); }, null, null, this.enabled && self.isAssociationCell(cell));
   
   menu.addSeparator();
   
   var subMenu = menu.addItem("Herramientas");
-  menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, true);
-  menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, true);
+  menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, this.enabled);
+  menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, this.enabled);
   menu.addSeparator(subMenu);
-  menu.addItem("Agregar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, self.isClassCell(cell));
-  menu.addItem("Agregar Get/Set", null, function () { self.execute("generateGetSet"); }, subMenu, null, self.isPropertyCell(cell));
+  menu.addItem("Agregar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, this.enabled && self.isClassCell(cell));
+  menu.addItem("Agregar Get/Set", null, function () { self.execute("generateGetSet"); }, subMenu, null, this.enabled && self.isPropertyCell(cell));
   menu.addSeparator(subMenu);
-  menu.addItem("Mostrar XML", null, function () { self.execute("viewXML"); }, subMenu, null, true);
+  menu.addItem("Mostrar XML", null, function () { self.execute("viewXML"); }, subMenu, null, this.enabled);
 };
 
 /**
@@ -557,7 +557,12 @@ CLASSEditor.prototype.moveCells = function (keyCode) {
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
 CLASSEditor.prototype.generateCode = function () {
-  dlgGenerateCode.show();
+  PrimeFaces.ab({ source:'userForm:generateCodeItem',
+                  update:'generateCodeForm generalMessage', 
+                  oncomplete: function (xhr, status, args) {
+                    dlgGenerateCode.show();
+                  },
+                  formId:'userForm'});
 };
 
 /**

@@ -6,7 +6,7 @@
  * 
  ****************************************************/
 
-package classmodeler.domain.code;
+package classmodeler.domain.sourcecode;
 
 /**
  * Bean that encapsulates a source code file generated.

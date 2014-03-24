@@ -10,12 +10,9 @@ package classmodeler.web.controllers;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
 
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.domain.user.User;
@@ -32,7 +29,7 @@ import classmodeler.web.util.JSFOutcomeUtil;
  */
 @ManagedBean(name="sessionController")
 @SessionScoped
-public class SessionControllerBean extends JSFGenericBean implements HttpSessionBindingListener {
+public class SessionControllerBean extends JSFGenericBean {
   
   private static final long serialVersionUID = 1L;
   
@@ -41,9 +38,6 @@ public class SessionControllerBean extends JSFGenericBean implements HttpSession
   @EJB
   private UserService userService;
   
-  @ManagedProperty("#{designerController}")
-  private DesignerControllerBean designerController;
-
   public SessionControllerBean() {
     super();
   }
@@ -92,10 +86,6 @@ public class SessionControllerBean extends JSFGenericBean implements HttpSession
     return user != null && user.isRegisteredUser();
   }
   
-  public void setDesignerController(DesignerControllerBean designerController) {
-    this.designerController = designerController;
-  }
-  
   /**
    * Logs in the system the user represented by the given credentials.
    * 
@@ -123,19 +113,6 @@ public class SessionControllerBean extends JSFGenericBean implements HttpSession
       session.invalidate();
     }
     return JSFOutcomeUtil.INDEX + JSFOutcomeUtil.REDIRECT_SUFIX;
-  }
-  
-  @Override
-  public void valueBound(HttpSessionBindingEvent event) {
-    // Do nothing
-  }
-  
-  @Override
-  public void valueUnbound(HttpSessionBindingEvent event) {
-    if (designerController != null) {
-      // Remove the session created for the diagram
-      designerController.destroy();
-    }
   }
   
 }
