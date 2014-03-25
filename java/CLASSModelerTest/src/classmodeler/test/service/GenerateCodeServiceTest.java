@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 import classmodeler.domain.user.Guest;
 import classmodeler.service.GenerateCodeService;
 import classmodeler.service.implementation.GenerateCodeServiceBean;
+import classmodeler.service.util.UMLConstants;
 
 /**
  * Test class to verify the correct operation of code generation service.
@@ -82,7 +83,7 @@ public class GenerateCodeServiceTest extends ServiceTest {
     
     file = generateCodeService.generateEnumeration(aEnumeration);
     
-    assert (file.contains("package")) : "The file does not contain a 'package' sentence, it must exist.";
+    assert (file.contains("package test;")) : "The file does not contain a 'package' sentence, it must exist.";
   }
   
   /**
@@ -95,16 +96,24 @@ public class GenerateCodeServiceTest extends ServiceTest {
     aInterface.setName("ReadableAndWriteable");
     aInterface.setVisibility(VisibilityKind.PUBLIC_LITERAL);
     
-    Property aProperty = aInterface.createOwnedAttribute("MAX_COUNT", UMLFactory.eINSTANCE.createLiteralString().getType());
+    Property aProperty = aInterface.createOwnedAttribute("MAX_COUNT", UMLConstants.PRIMITIVE_INT);
     aProperty.setIsStatic(true);
     aProperty.setIsLeaf(true);
     aProperty.setVisibility(VisibilityKind.PUBLIC_LITERAL);
+    aProperty.setDefault("DefaultValue");
     
     String file = generateCodeService.generateInterface(aInterface);
     
     assert (file.contains("public interface ReadableAndWriteable")) : "The interface declaration is invalid.";
     assert (file.contains("@author")) : "The file does not contain an author.";
     
+    Package aPackage = UMLFactory.eINSTANCE.createPackage();
+    aPackage.setName("test");
+    aInterface.setPackage(aPackage);
+    
+    file = generateCodeService.generateInterface(aInterface);
+    
+    assert (file.contains("package test;")) : "The file does not contain a 'package' sentence, it must exist.";
   }
   
 }

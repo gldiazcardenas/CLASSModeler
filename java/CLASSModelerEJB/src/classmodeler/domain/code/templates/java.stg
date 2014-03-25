@@ -37,7 +37,7 @@ enumeration_template(enumeration, author, date) ::= <<
 
 
 property_template(property) ::= <<
-  <property.visibility.name> <property.type.name> <property.name>;
+  <property.visibility.name> <property.type.name> <property.name><if(property.defaultValue)> = <property.default>;<endif>;
 >>
 
 

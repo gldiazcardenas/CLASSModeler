@@ -17,6 +17,8 @@ import org.eclipse.uml2.uml.Element;
  */
 public class SourceCodeFile {
   
+  public static final String JAVA_FORMAT = ".java";
+  
   private String name;
   private String format;
   private Element element;

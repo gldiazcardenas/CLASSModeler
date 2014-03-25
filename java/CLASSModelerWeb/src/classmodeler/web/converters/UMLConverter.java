@@ -19,6 +19,7 @@ import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.UMLFactory;
@@ -72,19 +73,38 @@ public final class UMLConverter {
     this.sourceCodeFiles.clear();
     
     mxCell mxCell;
+    
     for (Object cell : mxModel.getCells().values()) {
       mxCell = (com.mxgraph.model.mxCell) cell;
       
       if (isClass(mxCell)) {
-        generateClass(mxCell);
+        Class aClass = generateClass(mxCell);
+        this.sourceCodeFiles.add(createSourceCodeFile(aClass));
       }
       else if (isInterface(mxCell)) {
-        generateInteface(mxCell);
+        Interface aInterface = generateInteface(mxCell);
+        this.sourceCodeFiles.add(createSourceCodeFile(aInterface));
       }
       else if (isEnumeration(mxCell)) {
-        generateEnumeration(mxCell);
+        Enumeration aEnumeration = generateEnumeration(mxCell);
+        this.sourceCodeFiles.add(createSourceCodeFile(aEnumeration));
       }
     }
+  }
+  
+  /**
+   * Creates a source code file with the given UML element.
+   * 
+   * @param element
+   * @return
+   * @author Gabriel Leonardo Diaz, 24.03.2014.
+   */
+  private SourceCodeFile createSourceCodeFile (NamedElement element) {
+    SourceCodeFile file = new SourceCodeFile();
+    file.setName(element.getName());
+    file.setElement(element);
+    file.setFormat(SourceCodeFile.JAVA_FORMAT);
+    return file;
   }
   
   /**
