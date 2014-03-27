@@ -138,7 +138,13 @@ CLASSProperties.prototype.configureProperties = function (cell) {
           attributesName = "Literales";
         }
         
-        packageValue  = node.getAttribute("package");
+        packageValue = node.getAttribute("package");
+        if (packageValue != null && packageValue.length > 0) {
+          var packageCell = this.graph.model.getCell(packageValue);
+          if (packageCell != null) {
+            packageValue = packageCell.getAttribute("name");
+          }
+        }
       }
     }
     

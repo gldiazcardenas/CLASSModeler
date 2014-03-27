@@ -287,11 +287,13 @@ public final class UMLConverter {
       property = ((Interface) classifier).createOwnedAttribute(name, type);
     }
     
-    property.setVisibility(visibility);
-    property.setIsStatic(isStatic);
-    property.setIsLeaf(isFinal);
-    property.setDefault(defaultValue);
-    property.setUpper(UMLPackage.LITERAL_UNLIMITED_NATURAL___UNLIMITED_VALUE);
+    if (property != null) {
+      property.setVisibility(visibility);
+      property.setIsStatic(isStatic);
+      property.setIsLeaf(isFinal);
+      property.setDefault(defaultValue);
+      property.setUpper(UMLPackage.LITERAL_UNLIMITED_NATURAL___UNLIMITED_VALUE);
+    }
     
     return property;
   }
@@ -319,13 +321,15 @@ public final class UMLConverter {
       operation = ((Interface) classifier).createOwnedOperation(name, null, null);
     }
     
-    operation.setType(type);
-    operation.setVisibility(visibility);
-    operation.setIsStatic(isStatic);
-    operation.setIsLeaf(isFinal);
-    
-    if (isSynchronized) {
-      operation.setConcurrency(CallConcurrencyKind.GUARDED_LITERAL);
+    if (operation != null) {
+      operation.setType(type);
+      operation.setVisibility(visibility);
+      operation.setIsStatic(isStatic);
+      operation.setIsLeaf(isFinal);
+      
+      if (isSynchronized) {
+        operation.setConcurrency(CallConcurrencyKind.GUARDED_LITERAL);
+      }
     }
     
     return operation;
@@ -354,6 +358,7 @@ public final class UMLConverter {
    * classifier, a generic collection or an anonymus type.
    * 
    * @param typeId
+   * @param collectionType
    * @return
    * @author Gabriel Leonardo Diaz, 26.03.2014.
    */

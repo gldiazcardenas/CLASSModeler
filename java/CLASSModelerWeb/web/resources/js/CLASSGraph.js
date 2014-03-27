@@ -377,7 +377,7 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
     
     // Validates the name of the classifier
     if (attrName == "name" && this.isClassifier(node)) {
-      attrName = this.getUniqueName(attrName);
+      attrValue = this.getUniqueName(attrValue);
     }
     
     // Clones the value for correct UNDO/REDO
@@ -412,7 +412,15 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
  * @author Gabriel Leonardo Diaz, 26.03.2014.
  */
 CLASSGraph.prototype.getUniqueName = function (initialName) {
-  // TODO
+  var cell;
+  for (var id in this.model.cells) {
+    cell = this.model.cells[id];
+    if (this.isClassifier(cell.value)) {
+      if (cell.getAttribute("name") == initialName) {
+        return this.getUniqueName(initialName + "1");
+      }
+    }
+  }
   return initialName;
 };
 
