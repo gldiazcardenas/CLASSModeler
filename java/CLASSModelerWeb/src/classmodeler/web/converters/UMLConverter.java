@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.eclipse.uml2.uml.CallConcurrencyKind;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Enumeration;
@@ -20,17 +22,20 @@ import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.w3c.dom.Element;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.service.util.GenericUtils;
+import classmodeler.web.beans.SharedDiagram;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
 
 /**
  * Converter class that allows to parse a class diagram from XML representation
@@ -40,56 +45,319 @@ import com.mxgraph.model.mxGraphModel;
  */
 public final class UMLConverter {
   
-  protected Map<String, Package> packages         = new HashMap<String, Package>();
-  protected Map<String, Class> classes            = new HashMap<String, Class>();
-  protected Map<String, Interface> interfaces     = new HashMap<String, Interface>();
-  protected Map<String, Enumeration> enumerations = new HashMap<String, Enumeration>();
+  private Map<String, Package> packages         = new HashMap<String, Package>();
+  private Map<String, Classifier> classifiers   = new HashMap<String, Classifier>();
   
   private Model umlModel;
-  private mxGraphModel mxModel;
-  private List<SourceCodeFile> sourceCodeFiles;
+  private SharedDiagram diagram;
   
-  public UMLConverter (mxGraphModel mxModel) {
+  /**
+   * Constructs the UML metamodel converter by using the given XML model
+   * representation.
+   * 
+   * @param mxModel
+   * @author Gabriel Leonardo Diaz, 25.03.2014.
+   */
+  public UMLConverter (SharedDiagram diagram) {
     super();
-    this.mxModel = mxModel;
-    this.sourceCodeFiles = new ArrayList<SourceCodeFile>();
+    this.diagram = diagram;
   }
   
-  public List<SourceCodeFile> getSourceCodeFiles() {
-    return sourceCodeFiles;
+  /**
+   * Gets the diagram which is being transformed to UML metamodel.
+   * 
+   * @return
+   * @author Gabriel Leonardo Diaz, 26.03.2014.
+   */
+  public SharedDiagram getDiagram() {
+    return diagram;
   }
   
-  public Model getUmlModel() {
-    return umlModel;
+  /**
+   * Clears the converter and prepares it for a new execution.
+   * 
+   * @author Gabriel Leonardo Diaz, 25.03.2014.
+   */
+  private void initialize () {
+    this.packages.clear();
+    this.umlModel = UMLFactory.eINSTANCE.createModel();
+    this.umlModel.setName(diagram.getName());
+  }
+  
+  /**
+   * Generates the UML model from the diagram created.
+   * 
+   * @param diagram
+   * @return
+   * @author Gabriel Leonardo Diaz, 26.03.2014.
+   */
+  public Model execute () {
+    initialize();
+    
+    mxCell mxCell;
+    
+    // 1. Generate empty types
+    for (Object cell : diagram.getModel().getCells().values()) {
+      mxCell  = (mxCell) cell;
+      if (mxCell.equals(diagram.getModel().getRoot())) {
+        continue;
+      }
+      
+      if (!mxCell.isVertex()) {
+        continue;
+      }
+      
+      if (isPackage(mxCell)) {
+        generatePackage(mxCell);
+      }
+      else if (isClass(mxCell)) {
+        generateClass(mxCell);
+      }
+      else if (isInterface(mxCell)) {
+        generateInteface(mxCell);
+      }
+      else if (isEnumeration(mxCell)) {
+        generateEnumeration(mxCell);
+      }
+    }
+    
+    
+    mxCell edge;
+    Classifier classifier;
+    
+    // 2. Generate other objects
+    for (Entry<String, Classifier> entry : this.classifiers.entrySet()) {
+      mxCell = (mxCell) diagram.getModel().getCell(entry.getKey());
+      classifier = entry.getValue();
+      
+      // 2.1 Properties
+      for (mxCell property : getProperties(mxCell)) {
+        if (classifier instanceof Enumeration) {
+          generateLiteral((Enumeration) classifier, property);
+        }
+        else {
+          generateProperty(classifier, property);
+        }
+      }
+      
+      // 2.2 Operations
+      for (mxCell operation : getOperations(mxCell)) {
+        generateOperation(classifier, operation);
+      }
+      
+      // 2.3 Relationships
+      if (mxCell.getEdgeCount() > 0) {
+        for (int i = 0; i < mxCell.getEdgeCount(); i++) {
+          edge = (com.mxgraph.model.mxCell) mxCell.getEdgeAt(i);
+          
+          if (isGeneralization(edge)) {
+            // TODO
+          }
+          else if (isRealization(mxCell)) {
+            // TODO
+          }
+        }
+      }
+    }
+    
+    return this.umlModel;
+  }
+  
+  /**
+   * Generates the UML Class Metamodel from the given XML class representation.
+   * 
+   * @param classCell
+   * @return
+   * @author Gabriel Leonardo Diaz, 05.03.2014.
+   */
+  private Class generateClass (mxCell classCell) {
+    String name               = classCell.getAttribute("name");
+    Package aPackage          = getPackage(classCell.getAttribute("package"));
+    VisibilityKind visibility = parseVisibility(classCell.getAttribute("visibility"));
+    boolean isStatic          = parseBoolean(classCell.getAttribute("static"));
+    boolean isAbstract        = parseBoolean(classCell.getAttribute("abstract"));
+    boolean isFinal           = parseBoolean(classCell.getAttribute("final"));
+    
+    Class aClass = UMLFactory.eINSTANCE.createClass();
+    aClass.setName(name);
+    aClass.setIsAbstract(isAbstract);
+    aClass.setVisibility(visibility);
+    aClass.setIsLeaf(isStatic);
+    aClass.setIsFinalSpecialization(isFinal);
+    aClass.setPackage(aPackage);
+    
+    this.classifiers.put(classCell.getId(), aClass);
+    
+    return aClass;
+  }
+  
+  /**
+   * Generates the UML Inteface metamodel from the given XML interface
+   * representation.
+   * 
+   * @param interfaceCell
+   * @return
+   * @author Gabriel Leonardo Diaz, 05.03.2014.
+   */
+  private Interface generateInteface (mxCell interfaceCell) {
+    String name               = interfaceCell.getAttribute("name");
+    Package aPackage          = getPackage(interfaceCell.getAttribute("package"));
+    VisibilityKind visibility = parseVisibility(interfaceCell.getAttribute("visibility"));
+    
+    Interface aInterface = UMLFactory.eINSTANCE.createInterface();
+    aInterface.setName(name);
+    aInterface.setVisibility(visibility);
+    aInterface.setPackage(aPackage);
+    
+    this.classifiers.put(interfaceCell.getId(), aInterface);
+    
+    return aInterface;
+  }
+  
+  /**
+   * Generates the UML Enumeration metamodel from the given XML enumeration.
+   * 
+   * @param enumerationCell
+   * @return
+   * @author Gabriel Leonardo Diaz, 05.03.2014.
+   */
+  private Enumeration generateEnumeration(mxCell enumerationCell) {
+    String name               = enumerationCell.getAttribute("name");
+    Package aPackage          = getPackage(enumerationCell.getAttribute("package"));
+    VisibilityKind visibility = parseVisibility(enumerationCell.getAttribute("visibility"));
+    
+    Enumeration aEnumeration = UMLFactory.eINSTANCE.createEnumeration();
+    aEnumeration.setName(name);
+    aEnumeration.setVisibility(visibility);
+    aEnumeration.setPackage(aPackage);
+    
+    this.classifiers.put(enumerationCell.getId(), aEnumeration);
+    
+    return aEnumeration;
+  }
+  
+  /**
+   * Generates a UML package element with the given cell
+   * 
+   * @param packageCell
+   *          The cell representing a package.
+   * @return The new package element.
+   * @author Gabriel Leonardo Diaz, 25.03.2014.
+   */
+  private Package generatePackage (mxCell packageCell) {
+    Package aPackage = umlModel.createNestedPackage(packageCell.getAttribute("name"));
+    this.packages.put(packageCell.getId(), aPackage);
+    return aPackage;
+  }
+  
+  /**
+   * Generates a UML Enumeration Literal element with the given cell.
+   * 
+   * @param enumeration
+   * @param literalCell
+   * @return The new enumeration literal, this was already added as owned
+   *         element of the given enumeration parameter.
+   * @author Gabriel Leonardo Diaz, 26.03.2014.
+   */
+  private EnumerationLiteral generateLiteral (Enumeration enumeration, mxCell literalCell) {
+    return enumeration.createOwnedLiteral(literalCell.getAttribute("name"));
   }
   
   /**
    * 
-   * @param diagram
+   * @param classifier
+   * @param propertyCell
    * @return
    */
-  public void execute () {
-    this.umlModel = UMLFactory.eINSTANCE.createModel();
-    this.sourceCodeFiles.clear();
+  private Property generateProperty (Classifier classifier, mxCell propertyCell) {
+    Property property = null;
     
-    mxCell mxCell;
+    String name               = propertyCell.getAttribute("name");
+    String defaultValue       = propertyCell.getAttribute("default");
+    Type type                 = getType(propertyCell.getAttribute("type"), propertyCell.getAttribute("collection"));
+    VisibilityKind visibility = parseVisibility(propertyCell.getAttribute("visibility"));
+    boolean isStatic          = parseBoolean(propertyCell.getAttribute("static"));
+    boolean isFinal           = parseBoolean(propertyCell.getAttribute("final"));
     
-    for (Object cell : mxModel.getCells().values()) {
-      mxCell = (com.mxgraph.model.mxCell) cell;
-      
-      if (isClass(mxCell)) {
-        Class aClass = generateClass(mxCell);
-        this.sourceCodeFiles.add(createSourceCodeFile(aClass));
-      }
-      else if (isInterface(mxCell)) {
-        Interface aInterface = generateInteface(mxCell);
-        this.sourceCodeFiles.add(createSourceCodeFile(aInterface));
-      }
-      else if (isEnumeration(mxCell)) {
-        Enumeration aEnumeration = generateEnumeration(mxCell);
-        this.sourceCodeFiles.add(createSourceCodeFile(aEnumeration));
+    if (classifier instanceof Class) {
+      property = ((Class) classifier).createOwnedAttribute(name, type);
+    }
+    else if (classifier instanceof Interface) {
+      property = ((Interface) classifier).createOwnedAttribute(name, type);
+    }
+    
+    property.setVisibility(visibility);
+    property.setIsStatic(isStatic);
+    property.setIsLeaf(isFinal);
+    property.setDefault(defaultValue);
+    property.setUpper(UMLPackage.LITERAL_UNLIMITED_NATURAL___UNLIMITED_VALUE);
+    
+    return property;
+  }
+  
+  /**
+   * 
+   * @param classifier
+   * @param operationCell
+   * @return
+   */
+  private Operation generateOperation (Classifier classifier, mxCell operationCell) {
+    Operation operation = null;
+    
+    String name               = operationCell.getAttribute("name");
+    Type type                 = getType(operationCell.getAttribute("type"), operationCell.getAttribute("collection"));
+    VisibilityKind visibility = parseVisibility(operationCell.getAttribute("visibility"));
+    boolean isStatic          = parseBoolean(operationCell.getAttribute("static"));
+    boolean isFinal           = parseBoolean(operationCell.getAttribute("final"));
+    boolean isSynchronized    = parseBoolean(operationCell.getAttribute("synchronized"));
+    
+    if (classifier instanceof Class) {
+      operation = ((Class) classifier).createOwnedOperation(name, null, null);
+    }
+    else if (classifier instanceof Interface) {
+      operation = ((Interface) classifier).createOwnedOperation(name, null, null);
+    }
+    
+    operation.setType(type);
+    operation.setVisibility(visibility);
+    operation.setIsStatic(isStatic);
+    operation.setIsLeaf(isFinal);
+    
+    if (isSynchronized) {
+      operation.setConcurrency(CallConcurrencyKind.GUARDED_LITERAL);
+    }
+    
+    return operation;
+  }
+  
+  /**
+   * Convenience method that creates the package if it does not exist.
+   * 
+   * @param packageId
+   * @return
+   * @author Gabriel Leonardo Diaz, 25.03.2014.
+   */
+  private Package getPackage (String packageId) {
+    Package aPackage = this.packages.get(packageId);
+    if (aPackage == null && !GenericUtils.isEmptyString(packageId)) {
+      mxCell packageCell = (mxCell) diagram.getModel().getCell(packageId);
+      if (packageCell != null) {
+        aPackage = generatePackage(packageCell);
       }
     }
+    return aPackage;
+  }
+  
+  /**
+   * Generates the type for the given id. This can be a primitive type, a
+   * classifier, a generic collection or an anonymus type.
+   * 
+   * @param typeId
+   * @return
+   * @author Gabriel Leonardo Diaz, 26.03.2014.
+   */
+  private Type getType (String typeId, String collectionType) {
+    return null;
   }
   
   /**
@@ -99,237 +367,13 @@ public final class UMLConverter {
    * @return
    * @author Gabriel Leonardo Diaz, 24.03.2014.
    */
-  private SourceCodeFile createSourceCodeFile (NamedElement element) {
+  public static SourceCodeFile createSourceCodeFile (NamedElement element) {
     SourceCodeFile file = new SourceCodeFile();
     file.setName(element.getName());
     file.setElement(element);
     file.setFormat(SourceCodeFile.JAVA_FORMAT);
     return file;
   }
-  
-  /**
-   * Generates the UML Class Metamodel from the given XML class representation.
-   * 
-   * @param classUML
-   * @return
-   * @author Gabriel Leonardo Diaz, 05.03.2014.
-   */
-  private Class generateClass (mxCell classUML) {
-    String name               = classUML.getAttribute("name");
-    Package aPackage          = generatePackage(classUML.getAttribute("package"));
-    VisibilityKind visibility = parseVisibility(classUML.getAttribute("visibility"));
-    boolean isStatic          = parseBoolean(classUML.getAttribute("static"));
-    boolean isAbstract        = parseBoolean(classUML.getAttribute("abstract"));
-    boolean isFinal           = parseBoolean(classUML.getAttribute("final"));
-    
-    Class aClass = this.umlModel.createOwnedClass(name, isAbstract);
-    aClass.setVisibility(visibility);
-    aClass.setIsLeaf(isFinal);
-    aClass.setIsFinalSpecialization(isStatic);
-    aClass.setPackage(aPackage);
-    
-    for (mxCell property : getProperties(classUML)) {
-      generateProperty(aClass, property);
-    }
-    
-    for (mxCell operation : getOperations(classUML)) {
-      generateOperation(aClass, operation);
-    }
-    
-    return aClass;
-  }
-  
-  /**
-   * Generates the UML Inteface metamodel from the given XML interface
-   * representation.
-   * 
-   * @param interfaceUML
-   * @return
-   * @author Gabriel Leonardo Diaz, 05.03.2014.
-   */
-  private Interface generateInteface (mxCell interfaceUML) {
-    String name               = interfaceUML.getAttribute("name");
-    VisibilityKind visibility = parseVisibility(interfaceUML.getAttribute("visibility"));
-    Package aPackage          = generatePackage(interfaceUML.getAttribute("package"));
-    
-    Interface aInterface = this.umlModel.createOwnedInterface(name);
-    aInterface.setVisibility(visibility);
-    aInterface.setPackage(aPackage);
-    
-    for (mxCell property : getProperties(interfaceUML)) {
-      generateProperty(aInterface, property);
-    }
-    
-    for (mxCell operation : getOperations(interfaceUML)) {
-      generateOperation(aInterface, operation);
-    }
-    
-    return aInterface;
-  }
-  
-  /**
-   * Generates the source code of the given enumeration element.
-   * 
-   * @param enumerationCell
-   * @return
-   * @author Gabriel Leonardo Diaz, 05.03.2014.
-   */
-  private Enumeration generateEnumeration(mxCell enumerationCell) {
-    String name               = enumerationCell.getAttribute("name");
-    VisibilityKind visibility = parseVisibility(enumerationCell.getAttribute("visibility"));
-    Package aPackage          = generatePackage(enumerationCell.getAttribute("package"));
-    
-    Enumeration aEnumeration = this.umlModel.createOwnedEnumeration(name);
-    aEnumeration.setVisibility(visibility);
-    aEnumeration.setPackage(aPackage);
-    
-    for (mxCell child : getLiterals(enumerationCell)) {
-      generateLiteral(aEnumeration, child);
-    }
-    
-    return aEnumeration;
-  }
-  
-  private Package generatePackage (String name) {
-    return null;
-  }
-  
-  private EnumerationLiteral generateLiteral (Enumeration enumeration, mxCell literalCell) {
-    return null;
-  }
-  
-  private Property generateProperty (Classifier classifier, mxCell propertyCell) {
-//  ST tempProperty = TEMPLATES.getInstanceOf("property");
-//  tempProperty.add("name", property.getAttribute("name"));
-//  tempProperty.add("visibility", property.getAttribute("visibility"));
-//  tempProperty.add("type", getType(property));
-//  
-//  List<String> modifiers = new ArrayList<String>();
-//  if ("1".equals(property.getAttribute("static"))) {
-//    modifiers.add("static");
-//  }
-//  
-//  if ("1".equals(property.getAttribute("final"))) {
-//    modifiers.add("final");
-//  }
-//  
-//  tempProperty.add("modifiers", parseOptionalList(modifiers));
-//  tempProperty.add("value", parseOptionalValue(property.getAttribute("value")));
-//  
-//  return tempProperty.render();
-    return null;
-  }
-  
-  private Property generateOperation (Classifier classifier, mxCell operationCell) {
-//  ST tempOperation = TEMPLATES.getInstanceOf("operation");
-//  tempOperation.add("name", operation.getAttribute("name"));
-//  tempOperation.add("visibility", operation.getAttribute("visibility"));
-//  tempOperation.add("type", parseOptionalValue(getType(operation)));
-//  
-//  List<String> modifiers = new ArrayList<String>();
-//  if ("1".equals(operation.getAttribute("synchronized"))) {
-//    modifiers.add("synchonized");
-//  }
-//  
-//  if ("1".equals(operation.getAttribute("static"))) {
-//    modifiers.add("static");
-//  }
-//  
-//  if ("1".equals(operation.getAttribute("final"))) {
-//    modifiers.add("final");
-//  }
-//  
-//  tempOperation.add("modifiers", parseOptionalList(modifiers));
-//  
-//  return tempOperation.render();
-    return null;
-  }
-  
-//  
-//  /**
-//   * 
-//   * @param feature
-//   * @return
-//   */
-//  private String getType (mxCell feature) {
-//    String type          = feature.getAttribute("type");
-//    String collection    = feature.getAttribute("collection");
-//    StringBuilder result = new StringBuilder();
-//    
-//    if (type == null) {
-//      type = "";
-//    }
-//    
-//    mxCell typeCell      = (mxCell) model.getCell(type);
-//    if (typeCell != null) {
-//      type = typeCell.getAttribute("name"); 
-//    }
-//    
-//    if (!GenericUtils.isEmptyString(collection)) {
-//      if (collection.equals("array")) {
-//        result.append("[]").append(type);
-//      }
-//      else {
-//        result.append(getCollection(collection)).append("<").append(type).append(">");
-//      }
-//    }
-//    else {
-//      result.append(type);
-//    }
-//    
-//    return result.toString();
-//  }
-  
-//  /**
-//   * 
-//   * @param collection
-//   * @return
-//   */
-//  private String getCollection (String collection) {
-//    if ("arraylist".equals(collection)) {
-//      return "ArrayList";
-//    }
-//    else if ("collection".equals(collection)) {
-//      return "Collection";
-//    }
-//    else if ("enumset".equals(collection)) {
-//      return "EnumSet";
-//    }
-//    else if ("hashset".equals(collection)) {
-//      return "HashSet";
-//    }
-//    else if ("list".equals(collection)) {
-//      return "List";
-//    }
-//    else if ("linkedhset".equals(collection)) {
-//      return "LinkedHashSet";
-//    }
-//    else if ("linkedlist".equals(collection)) {
-//      return "LinkedList";
-//    }
-//    else if ("prioriqueue".equals(collection)) {
-//      return "PriorityQueue";
-//    }
-//    else if ("queue".equals(collection)) {
-//      return "Queue";
-//    }
-//    else if ("set".equals(collection)) {
-//      return "Set";
-//    }
-//    else if ("sortedset".equals(collection)) {
-//      return "SortedSet";
-//    }
-//    else if ("stack".equals(collection)) {
-//      return "Stack";
-//    }
-//    else if ("treeset".equals(collection)) {
-//      return "TreeSet";
-//    }
-//    else if ("vector".equals(collection)) {
-//      return "Vector";
-//    }
-//    return collection;
-//  }
   
   /**
    * Gets the cells containing the properties of the given classifier.
@@ -451,7 +495,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 24.03.2014.
    */
   public static boolean isPackage (mxCell cell) {
-    if (cell == null || !(cell.getValue() instanceof Element)) {
+    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("package");
@@ -465,7 +509,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isClass (mxCell cell) {
-    if (cell == null || !(cell.getValue() instanceof Element)) {
+    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("class");
@@ -479,7 +523,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isEnumeration (mxCell cell) {
-    if (cell == null || !(cell.getValue() instanceof Element)) {
+    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("enumeration");
@@ -493,10 +537,38 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isInterface (mxCell cell) {
-    if (cell == null || !(cell.getValue() instanceof Element)) {
+    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("interface");
+  }
+  
+  /**
+   * Checks if the given cell contains a Comment.
+   * 
+   * @param cell
+   * @return
+   * @author Gabriel Leonardo Diaz, 25.03.2014.
+   */
+  public static boolean isComment (mxCell cell) {
+    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+      return false;
+    }
+    return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("comment");
+  }
+  
+  /**
+   * Checks if the given cell contains a Link Association.
+   * 
+   * @param cell
+   * @return
+   * @author Gabriel Leonardo Diaz, 17.03.2014.
+   */
+  public static boolean isLink (mxCell cell) {
+    if (cell == null || cell.isVertex() || !(cell.getValue() instanceof Element)) {
+      return false;
+    }
+    return ((Element) cell.getValue()).getTagName().toLowerCase().equals("link");
   }
   
   /**
@@ -507,7 +579,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 17.03.2014.
    */
   public static boolean isAssociation (mxCell cell) {
-    if (cell == null || !(cell.getValue() instanceof Element)) {
+    if (cell == null || cell.isVertex() || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equals("association");

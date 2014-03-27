@@ -232,6 +232,7 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   // super
   var edge = mxEditor.prototype.createEdge.call(this, arguments);
   
+  // Checks if the source/target element is a package.
   if (isSourcePackage) {
     this.graph.cellEditProperty(target, "package", source.id, true);
   }
@@ -243,7 +244,10 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   this.defaultEdge = oldDefaultEdge;
   
   // Adjust the edge created
-  if (this.graph.isAggregation(edge.value)) {
+  if (this.graph.isRealization(edge.value)) {
+    // TODO GD copy operations from interface
+  }
+  else if (this.graph.isAggregation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
     targetProp.setAttribute("name", "a" + target.getAttribute("name"));
     targetProp.setAttribute("visibility", "private");

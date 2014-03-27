@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -32,6 +33,8 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Type;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.xml.sax.InputSource;
@@ -85,10 +88,10 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   private SharedDiagramSession session;
   
   /** Converter class for UML transformation. */
-  private UMLConverter converter;
+  private UMLConverter umlConverter;
   
   /** The source code files generated. */
-  private List<SourceCodeFile> sourceCodeFiles;
+  private List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
   
   /** A flag indicating the user can modify the diagram. */
   private boolean writeable;
@@ -149,7 +152,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     this.user              = user;
     this.diagram           = this.sharedDiagramController.putDiagram(diagram);
     this.session           = new SharedDiagramSession(this.diagram, this.user);
-    this.converter         = new UMLConverter(this.diagram.getModel());
+    this.umlConverter      = new UMLConverter(this.diagram);
     this.pendingChanges    = false;
     this.generateCodeService.configure(this.user);
     
@@ -248,8 +251,19 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    this.converter.execute();
-    this.sourceCodeFiles = this.converter.getSourceCodeFiles();
+    Model model = this.umlConverter.execute();
+    
+    this.sourceCodeFiles.clear();
+    
+    SourceCodeFile sourceFile;
+    for (Type type : model.getOwnedTypes()) {
+      sourceFile = new SourceCodeFile();
+      sourceFile.setName(type.getName());
+      sourceFile.setFormat(SourceCodeFile.JAVA_FORMAT);
+      sourceFile.setElement(type);
+      this.sourceCodeFiles.add(sourceFile);
+    }
+    
     Collections.sort(this.sourceCodeFiles, SourceCodeFileComparator.CASE_INSENSITIVE_COMPARATOR);
   }
   
