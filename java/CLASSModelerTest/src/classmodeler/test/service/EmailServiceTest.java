@@ -27,13 +27,13 @@ public class EmailServiceTest extends ServiceTest {
   @Override
   @BeforeClass
   public void configure() throws NamingException {
-    // TODO Auto-generated method stub
+    // TODO implement
   }
 
   @Override
   @AfterClass
   public void destroy() {
-    // TODO Auto-generated method stub
+    // TODO implement
   }
   
   /**

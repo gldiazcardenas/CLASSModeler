@@ -80,6 +80,7 @@ public final class UMLConverter {
    */
   private void initialize () {
     this.packages.clear();
+    this.classifiers.clear();
     this.umlModel = UMLFactory.eINSTANCE.createModel();
     this.umlModel.setName(diagram.getName());
   }

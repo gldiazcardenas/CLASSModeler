@@ -118,7 +118,8 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
         
         // Adjust the name
         var nameNumber = self.instanceQuantity["class"] + 1;
-        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        var uniqueName = graph.getUniqueName(newCell.getAttribute("name") + nameNumber);
+        newCell.setAttribute("name", uniqueName);
         self.instanceQuantity["class"] = nameNumber;
       }
       
@@ -132,7 +133,8 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
         
         // Adjust the name
         var nameNumber = self.instanceQuantity["interface"] + 1;
-        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        var uniqueName = graph.getUniqueName(newCell.getAttribute("name") + nameNumber);
+        newCell.setAttribute("name", uniqueName);
         self.instanceQuantity["interface"] = nameNumber;
       }
       
@@ -146,7 +148,8 @@ CLASSToolbox.prototype.configureDnD = function (draggableItem, element) {
         
         // Adjust the name
         var nameNumber = self.instanceQuantity["enumeration"] + 1;
-        newCell.setAttribute("name", newCell.getAttribute("name") + nameNumber);
+        var uniqueName = graph.getUniqueName(newCell.getAttribute("name") + nameNumber);
+        newCell.setAttribute("name", uniqueName);
         self.instanceQuantity["enumeration"] = nameNumber;
       }
       else if (graph.isPackage(newCell.value)) {

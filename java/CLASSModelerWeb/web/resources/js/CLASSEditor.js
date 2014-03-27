@@ -245,7 +245,14 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   
   // Adjust the edge created
   if (this.graph.isRealization(edge.value)) {
-    // TODO GD copy operations from interface
+    var operations = this.graph.getOperations(target);
+    var operation;
+    
+    for (var i = 0; i < operations.length; i++) {
+      operation       = this.graph.model.cloneCell(this.getTemplate("operation"));
+      operation.value = operations[i].value.cloneNode(true);
+      this.graph.addOperation(source, operation);
+    }
   }
   else if (this.graph.isAggregation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));

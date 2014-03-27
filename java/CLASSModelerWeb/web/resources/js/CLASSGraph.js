@@ -375,6 +375,11 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
   try {
     var node  = cell.value;
     
+    // Validates the name of the classifier
+    if (attrName == "name" && this.isClassifier(node)) {
+      attrName = this.getUniqueName(attrName);
+    }
+    
     // Clones the value for correct UNDO/REDO
     var clone = node.cloneNode(true);
     clone.setAttribute(attrName, attrValue);
@@ -395,6 +400,20 @@ CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, aut
   finally {
     this.model.endUpdate();
   }
+};
+
+/**
+ * Validates the initial name does not exist, in case this is already used this
+ * transforms the name in order to get a unique one by adding '1' character at
+ * the end.
+ * 
+ * @param initialName
+ *          The initial name.
+ * @author Gabriel Leonardo Diaz, 26.03.2014.
+ */
+CLASSGraph.prototype.getUniqueName = function (initialName) {
+  // TODO
+  return initialName;
 };
 
 /**
