@@ -19,19 +19,21 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
+import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.Interface;
-import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import classmodeler.domain.code.SourceCodeFile;
+import classmodeler.domain.uml.types.java.JavaTypes;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
 
@@ -48,7 +50,6 @@ public final class UMLConverter {
   private Map<String, Package> packages         = new HashMap<String, Package>();
   private Map<String, Classifier> classifiers   = new HashMap<String, Classifier>();
   
-  private Model umlModel;
   private SharedDiagram diagram;
   
   /**
@@ -81,8 +82,6 @@ public final class UMLConverter {
   private void initialize () {
     this.packages.clear();
     this.classifiers.clear();
-    this.umlModel = UMLFactory.eINSTANCE.createModel();
-    this.umlModel.setName(diagram.getName());
   }
   
   /**
@@ -92,9 +91,10 @@ public final class UMLConverter {
    * @return
    * @author Gabriel Leonardo Diaz, 26.03.2014.
    */
-  public Model execute () {
+  public List<NamedElement> execute () {
     initialize();
     
+    List<NamedElement> result = new ArrayList<NamedElement>();
     mxCell mxCell;
     
     // 1. Generate empty types
@@ -112,19 +112,21 @@ public final class UMLConverter {
         generatePackage(mxCell);
       }
       else if (isClass(mxCell)) {
-        generateClass(mxCell);
+        result.add(generateClass(mxCell));
       }
       else if (isInterface(mxCell)) {
-        generateInteface(mxCell);
+        result.add(generateInteface(mxCell));
       }
       else if (isEnumeration(mxCell)) {
-        generateEnumeration(mxCell);
+        result.add(generateEnumeration(mxCell));
       }
     }
     
     
     mxCell edge;
     Classifier classifier;
+    Classifier source;
+    Classifier target;
     
     // 2. Generate other objects
     for (Entry<String, Classifier> entry : this.classifiers.entrySet()) {
@@ -152,16 +154,23 @@ public final class UMLConverter {
           edge = (com.mxgraph.model.mxCell) mxCell.getEdgeAt(i);
           
           if (isGeneralization(edge)) {
-            // TODO
+            source = this.classifiers.get(edge.getSource().getId());
+            target = this.classifiers.get(edge.getTarget().getId());
+            generateGeneralization(source, target);
           }
           else if (isRealization(mxCell)) {
-            // TODO
+            source = this.classifiers.get(edge.getSource().getId());
+            target = this.classifiers.get(edge.getTarget().getId());
+            
+            if (source instanceof Class && target instanceof Interface) {
+              generateRealization((Class) source, (Interface) target, edge);
+            }
           }
         }
       }
     }
     
-    return this.umlModel;
+    return result;
   }
   
   /**
@@ -246,8 +255,11 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 25.03.2014.
    */
   private Package generatePackage (mxCell packageCell) {
-    Package aPackage = umlModel.createNestedPackage(packageCell.getAttribute("name"));
+    Package aPackage = UMLFactory.eINSTANCE.createPackage();
+    aPackage.setName(packageCell.getAttribute("name"));
+    
     this.packages.put(packageCell.getId(), aPackage);
+    
     return aPackage;
   }
   
@@ -265,10 +277,13 @@ public final class UMLConverter {
   }
   
   /**
+   * Generates a UML Property element with the information contained by the XML
+   * representation.
    * 
    * @param classifier
    * @param propertyCell
    * @return
+   * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
   private Property generateProperty (Classifier classifier, mxCell propertyCell) {
     Property property = null;
@@ -299,10 +314,13 @@ public final class UMLConverter {
   }
   
   /**
+   * Generates a UML Operation element with the information contained by the XML
+   * representation.
    * 
    * @param classifier
    * @param operationCell
    * @return
+   * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
   private Operation generateOperation (Classifier classifier, mxCell operationCell) {
     Operation operation = null;
@@ -330,9 +348,45 @@ public final class UMLConverter {
       if (isSynchronized) {
         operation.setConcurrency(CallConcurrencyKind.GUARDED_LITERAL);
       }
+      
+      Element operationNode = (Element) operationCell.getValue();
+      Element paramNode;
+      NodeList nodeList = operationNode.getChildNodes();
+      for (int i = 0; i < nodeList.getLength(); i++) {
+        paramNode = (Element) nodeList.item(i);
+        operation.createOwnedParameter(paramNode.getAttribute("name"), getType(paramNode.getAttribute("type"), paramNode.getAttribute("collection")));
+      }
     }
     
     return operation;
+  }
+  
+  /**
+   * Generates a UML Generalization element by using the given classifier.
+   * 
+   * @param source
+   *          The specific classifier.
+   * @param target
+   *          The general classifier.
+   * @return
+   * @author Gabriel Leonardo Diaz, 27.03.2014.
+   */
+  private Generalization generateGeneralization (Classifier source, Classifier target) {
+    return source.createGeneralization(target);
+  }
+  
+  /**
+   * Generates a UML Generalization element by using the given classifier.
+   * 
+   * @param source
+   *          The specific classifier.
+   * @param target
+   *          The general classifier.
+   * @return
+   * @author Gabriel Leonardo Diaz, 27.03.2014.
+   */
+  private Realization generateRealization (Class source, Interface target, mxCell realizationCell) {
+    return source.createInterfaceRealization(realizationCell.getAttribute("name"), target);
   }
   
   /**
@@ -355,7 +409,7 @@ public final class UMLConverter {
   
   /**
    * Generates the type for the given id. This can be a primitive type, a
-   * classifier, a generic collection or an anonymus type.
+   * classifier, a generic collection or an anonymous type.
    * 
    * @param typeId
    * @param collectionType
@@ -363,22 +417,22 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 26.03.2014.
    */
   private Type getType (String typeId, String collectionType) {
-    return null;
-  }
-  
-  /**
-   * Creates a source code file with the given UML element.
-   * 
-   * @param element
-   * @return
-   * @author Gabriel Leonardo Diaz, 24.03.2014.
-   */
-  public static SourceCodeFile createSourceCodeFile (NamedElement element) {
-    SourceCodeFile file = new SourceCodeFile();
-    file.setName(element.getName());
-    file.setElement(element);
-    file.setFormat(SourceCodeFile.JAVA_FORMAT);
-    return file;
+    Type type = this.classifiers.get(typeId);
+    
+    if (type == null) {
+      type = JavaTypes.getPrimitiveType(typeId);
+      
+      if (type == null) {
+        type = UMLFactory.eINSTANCE.createClass(); // Anonymous Type
+        type.setName(typeId);
+      }
+    }
+    
+    if (!GenericUtils.isEmptyString(collectionType)) {
+      type = JavaTypes.getCollectionType(collectionType, type);
+    }
+    
+    return type;
   }
   
   /**

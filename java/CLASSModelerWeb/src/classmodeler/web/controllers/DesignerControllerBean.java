@@ -33,8 +33,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Type;
+import org.eclipse.uml2.uml.NamedElement;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.xml.sax.InputSource;
@@ -251,16 +250,16 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 17.02.2014
    */
   public void generateCode () {
-    Model model = this.umlConverter.execute();
+    List<NamedElement> elements = this.umlConverter.execute();
     
     this.sourceCodeFiles.clear();
     
     SourceCodeFile sourceFile;
-    for (Type type : model.getOwnedTypes()) {
+    for (NamedElement element : elements) {
       sourceFile = new SourceCodeFile();
-      sourceFile.setName(type.getName());
+      sourceFile.setName(element.getName());
       sourceFile.setFormat(SourceCodeFile.JAVA_FORMAT);
-      sourceFile.setElement(type);
+      sourceFile.setElement(element);
       this.sourceCodeFiles.add(sourceFile);
     }
     

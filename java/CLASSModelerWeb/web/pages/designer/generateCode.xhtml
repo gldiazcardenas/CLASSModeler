@@ -7,7 +7,7 @@
     <h:form id="generateCodeForm">
         <h:panelGrid columns="1" width="100%">
             <p:dataList value="#{designerController.sourceCodeFiles}" var="source" emptyMessage="#{msgs.CODE_GENERATION_EMPTY_FILES_MESSAGE}">
-                <h:commandLink value="#{source.fullName}">
+                <h:commandLink value="#{source.fileName}">
                     <p:fileDownload value="#{designerController.downloadFile(source)}" />
                 </h:commandLink>
             </p:dataList>

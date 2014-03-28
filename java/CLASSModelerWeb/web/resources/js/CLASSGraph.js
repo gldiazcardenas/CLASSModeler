@@ -895,20 +895,20 @@ CLASSGraph.prototype.getCollectionsJSon = function () {
   var jSonData   = [];
   
   jSonData.push({id: "array",       text: "[ ]"});
-  jSonData.push({id: "arraylist",   text: "ArrayList"});
-  jSonData.push({id: "collection",  text: "Collection"});
-  jSonData.push({id: "enumset",     text: "EnumSet"});
-  jSonData.push({id: "hashset",     text: "HashSet"});
-  jSonData.push({id: "list",        text: "List"});
-  jSonData.push({id: "linkedhset",  text: "LinkedHashSet"});
-  jSonData.push({id: "linkedlist",  text: "LinkedList"});
-  jSonData.push({id: "prioriqueue", text: "PriorityQueue"});
-  jSonData.push({id: "queue",       text: "Queue"});
-  jSonData.push({id: "set",         text: "Set"});
-  jSonData.push({id: "sortedset",   text: "SortedSet"});
-  jSonData.push({id: "stack",       text: "Stack"});
-  jSonData.push({id: "treeset",     text: "TreeSet"});
-  jSonData.push({id: "vector",      text: "Vector"});
+  jSonData.push({id: "ArrayList",   text: "ArrayList"});
+  jSonData.push({id: "Collection",  text: "Collection"});
+  jSonData.push({id: "EnumSet",     text: "EnumSet"});
+  jSonData.push({id: "HashSet",     text: "HashSet"});
+  jSonData.push({id: "List",        text: "List"});
+  jSonData.push({id: "LinkedHashSet",  text: "LinkedHashSet"});
+  jSonData.push({id: "LinkedList",  text: "LinkedList"});
+  jSonData.push({id: "Prioriqueue", text: "PriorityQueue"});
+  jSonData.push({id: "Queue",       text: "Queue"});
+  jSonData.push({id: "Set",         text: "Set"});
+  jSonData.push({id: "SortedSet",   text: "SortedSet"});
+  jSonData.push({id: "Stack",       text: "Stack"});
+  jSonData.push({id: "TreeSet",     text: "TreeSet"});
+  jSonData.push({id: "Vector",      text: "Vector"});
   
   return jSonData;
 };
@@ -1223,6 +1223,7 @@ CLASSGraphContextIconHandler.prototype.init = function () {
   
   // 1. CONNECT
   var img = this.createImage("/CLASSModeler/resources/images/next_16x16.png");
+  img.title = "Crear Relacion";
   mxEvent.addListener(img, "click", mxUtils.bind(this, function (evt) {
     var point = mxUtils.convertPoint(this.graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
     if (this.graph.isEnabled()) {
@@ -1235,6 +1236,7 @@ CLASSGraphContextIconHandler.prototype.init = function () {
   
   // 2. DELETE
   var img = this.createImage("/CLASSModeler/resources/images/delete_16x16.png");
+  img.title = "Eliminar";
   mxEvent.addListener(img, "click", mxUtils.bind(this, function (evt) {
     this.graph.removeCells([this.state.cell]);
     mxEvent.consume(evt);

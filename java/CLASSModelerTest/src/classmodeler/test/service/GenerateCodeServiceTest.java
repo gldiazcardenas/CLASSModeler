@@ -20,10 +20,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import classmodeler.domain.uml.types.java.JavaTypes;
 import classmodeler.domain.user.Guest;
 import classmodeler.service.GenerateCodeService;
 import classmodeler.service.implementation.GenerateCodeServiceBean;
-import classmodeler.service.util.UMLConstants;
 
 /**
  * Test class to verify the correct operation of code generation service.
@@ -96,7 +96,7 @@ public class GenerateCodeServiceTest extends ServiceTest {
     aInterface.setName("ReadableAndWriteable");
     aInterface.setVisibility(VisibilityKind.PUBLIC_LITERAL);
     
-    Property aProperty = aInterface.createOwnedAttribute("MAX_COUNT", UMLConstants.PRIMITIVE_INT);
+    Property aProperty = aInterface.createOwnedAttribute("MAX_COUNT", JavaTypes.PRIMITIVE_INT);
     aProperty.setIsStatic(true);
     aProperty.setIsLeaf(true);
     aProperty.setVisibility(VisibilityKind.PUBLIC_LITERAL);
