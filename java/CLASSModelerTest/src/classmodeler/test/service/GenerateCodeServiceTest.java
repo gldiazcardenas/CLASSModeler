@@ -22,8 +22,8 @@ import org.testng.annotations.Test;
 
 import classmodeler.domain.uml.types.java.JavaTypes;
 import classmodeler.domain.user.Guest;
-import classmodeler.service.GenerateCodeService;
-import classmodeler.service.implementation.GenerateCodeServiceBean;
+import classmodeler.service.CodeGenerationService;
+import classmodeler.service.implementation.CodeGenerationServiceBean;
 
 /**
  * Test class to verify the correct operation of code generation service.
@@ -33,12 +33,12 @@ import classmodeler.service.implementation.GenerateCodeServiceBean;
 @Test
 public class GenerateCodeServiceTest extends ServiceTest {
   
-  private GenerateCodeService generateCodeService;
+  private CodeGenerationService generateCodeService;
   
   @Override
   @BeforeClass
   public void configure() throws NamingException {
-    generateCodeService = (GenerateCodeService) context.lookup(getServiceObjectName(GenerateCodeServiceBean.class.getSimpleName()));
+    generateCodeService = (CodeGenerationService) context.lookup(getServiceObjectName(CodeGenerationServiceBean.class.getSimpleName()));
     generateCodeService.configure(new Guest());
   }
   

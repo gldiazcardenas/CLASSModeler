@@ -44,7 +44,7 @@ import classmodeler.domain.code.SourceCodeFileComparator;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.User;
 import classmodeler.service.DiagramService;
-import classmodeler.service.GenerateCodeService;
+import classmodeler.service.CodeGenerationService;
 import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
@@ -72,7 +72,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   private DiagramService diagramService;
   
   @EJB
-  private GenerateCodeService generateCodeService;
+  private CodeGenerationService generateCodeService;
   
   @ManagedProperty(value="#{sharedDiagramController}")
   private SharedDiagramController sharedDiagramController;

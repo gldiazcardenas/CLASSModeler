@@ -256,19 +256,21 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   }
   else if (this.graph.isAggregation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", "a" + target.getAttribute("name"));
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "s");
     targetProp.setAttribute("visibility", "private");
     targetProp.setAttribute("type", target.id);
-    targetProp.setAttribute("collection", "arraylist");
+    targetProp.setAttribute("collection", "ArrayList");
+    targetProp.setAttribute("lower", "0");
     targetProp.setAttribute("upper", "*");
     this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
   else if (this.graph.isComposition(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", "c" + target.getAttribute("name"));
+    targetProp.setAttribute("name", target.getAttribute("name") + "s");
     targetProp.setAttribute("visibility", "private");
     targetProp.setAttribute("type", target.id);
-    targetProp.setAttribute("collection", "arraylist");
+    targetProp.setAttribute("collection", "ArrayList");
+    targetProp.setAttribute("lower", "0");
     targetProp.setAttribute("upper", "*");
     this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
@@ -358,7 +360,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) || cell == null ? "Atributos" : "Literales";
   menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, this.enabled && self.isClassifierCell(cell));
   menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, this.enabled && (self.isClassCell(cell) || self.isInterfaceCell(cell)));
-  menu.addItem("Relacion", null, function () { self.execute("showRelationship"); }, null, null, this.enabled && self.isAssociationCell(cell));
+  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, this.enabled && self.isAssociationCell(cell));
   
   menu.addSeparator();
   

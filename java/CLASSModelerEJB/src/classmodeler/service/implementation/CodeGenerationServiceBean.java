@@ -22,14 +22,14 @@ import org.stringtemplate.v4.STGroupFile;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.user.User;
-import classmodeler.service.GenerateCodeService;
+import classmodeler.service.CodeGenerationService;
 
 /**
  * Implementation of the file service.
  * 
  * @author Gabriel Leonardo Diaz, 05.03.2014.
  */
-public @Stateless class GenerateCodeServiceBean implements GenerateCodeService {
+public @Stateless class CodeGenerationServiceBean implements CodeGenerationService {
   
   public static final STGroupFile TEMPLATES = new STGroupFile("classmodeler/domain/code/templates/java.stg");
   
@@ -42,7 +42,7 @@ public @Stateless class GenerateCodeServiceBean implements GenerateCodeService {
   private User user;
   private Date now;
   
-  public GenerateCodeServiceBean() {
+  public CodeGenerationServiceBean() {
     super();
   }
   

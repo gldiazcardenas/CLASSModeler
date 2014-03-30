@@ -23,7 +23,7 @@ import classmodeler.domain.user.User;
  * @author Gabriel Leonardo Diaz, 05.03.2014.
  */
 @Local
-public interface GenerateCodeService {
+public interface CodeGenerationService {
   
   /**
    * 
