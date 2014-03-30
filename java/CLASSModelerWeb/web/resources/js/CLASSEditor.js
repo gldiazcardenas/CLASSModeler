@@ -256,7 +256,7 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   }
   else if (this.graph.isAggregation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "s");
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
     targetProp.setAttribute("visibility", "private");
     targetProp.setAttribute("type", target.id);
     targetProp.setAttribute("collection", "ArrayList");
@@ -266,7 +266,7 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   }
   else if (this.graph.isComposition(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", target.getAttribute("name") + "s");
+    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
     targetProp.setAttribute("visibility", "private");
     targetProp.setAttribute("type", target.id);
     targetProp.setAttribute("collection", "ArrayList");
@@ -366,7 +366,7 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   
   var subMenu = menu.addItem("Herramientas");
   menu.addItem("Generar Codigo", null, function () { self.execute("generateCode"); }, subMenu, null, this.enabled);
-  menu.addItem("Generar Imagen", null, function () { self.execute("exportImage"); }, subMenu, null, this.enabled);
+  menu.addItem("Generar Imagen", null, function () { self.execute("generateImage"); }, subMenu, null, this.enabled);
   menu.addSeparator(subMenu);
   menu.addItem("Agregar Constructor", null, function () { self.execute("generateConstructor"); }, subMenu, null, this.enabled && self.isClassCell(cell));
   menu.addItem("Agregar Get/Set", null, function () { self.execute("generateGetSet"); }, subMenu, null, this.enabled && self.isPropertyCell(cell));
@@ -524,6 +524,10 @@ CLASSEditor.prototype.addActions = function () {
   
   this.addAction("exportXMI", function (editor) {
     editor.exportXMI();
+  });
+  
+  this.addAction("generateImage", function (editor) {
+    editor.generateImage();
   });
   
   this.addAction("viewXML", function (editor) {
@@ -701,5 +705,47 @@ CLASSEditor.prototype.generateConstructor = function (cell) {
   constructor.setAttribute("name", cell.getAttribute("name"));
   constructor.setAttribute("visibility", "public");
   this.graph.addOperation(cell, constructor);
+};
+
+/**
+ * Generates an image representation of the current diagram.
+ * 
+ * @author Gabriel Leonardo Diaz, 30.03.2014.
+ */
+CLASSEditor.prototype.generateImage = function () {
+  var scale = 1;
+  var bounds = this.graph.getGraphBounds();
+  
+  // Creates XML node to hold output
+  var xmlDoc = mxUtils.createXmlDocument();
+  var root   = xmlDoc.createElement("output");
+  xmlDoc.appendChild(root);
+  
+  // Creates interface for rendering output
+  var xmlCanvas = new mxXmlCanvas2D(root);
+  xmlCanvas.scale(scale);
+  xmlCanvas.translate(Math.round(-bounds.x * scale), Math.round(-bounds.y * scale));
+  
+  // Renders output to interface
+  var imgExport = new mxImageExport();
+  imgExport.drawState(this.graph.getView().getState(this.graph.model.root), xmlCanvas);
+  
+  // Puts request data together
+  var filename = 'export.png';
+  var format = 'png';
+  var bg = '#FFFFFF';
+  var w = Math.round((bounds.width + 4) * scale);
+  var h = Math.round((bounds.height + 4) * scale);
+  var xml = mxUtils.getXml(root);
+  
+  // Compression is currently not used in this example
+  // Requires base64.js and redeflate.js
+  // xml = encodeURIComponent(Base64.encode(RawDeflate.deflate(xml), true));
+  new mxXmlRequest(this.urlImage, 'filename=' + filename +
+                                  '&format=' + format + 
+                                  '&bg=' + bg + 
+                                  '&w=' + w + 
+                                  '&h=' + h + 
+                                  '&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
 };
 

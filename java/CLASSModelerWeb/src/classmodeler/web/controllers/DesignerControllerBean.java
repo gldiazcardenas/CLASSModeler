@@ -8,13 +8,9 @@
 
 package classmodeler.web.controllers;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -28,23 +24,19 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.uml2.uml.NamedElement;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.code.SourceCodeFileComparator;
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.User;
-import classmodeler.service.DiagramService;
 import classmodeler.service.CodeGenerationService;
+import classmodeler.service.DiagramService;
 import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
@@ -53,7 +45,6 @@ import classmodeler.web.converters.UMLConverter;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
-import com.mxgraph.reader.mxGraphViewImageReader;
 import com.mxgraph.util.mxXmlUtils;
 
 /**
@@ -224,24 +215,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     if (this.session == null) return;
     this.session.destroy(); // Removes the session from the listeners of the diagram.
     this.sharedDiagramController.purgeDiagrams(); // Removes the diagrams without any listener
-  }
-  
-  /**
-   * Generates the images in puts it into the output stream.
-   * 
-   * @param rawXML
-   * @param output
-   * @throws SAXException
-   * @throws ParserConfigurationException
-   * @throws IOException
-   * @author Gabriel Leonardo Diaz, 17.02.2014.
-   */
-  public void generateImage (String rawXML, OutputStream output) throws SAXException, ParserConfigurationException, IOException {
-    String xml = URLDecoder.decode(rawXML, "UTF-8");
-    mxGraphViewImageReader reader = new mxGraphViewImageReader(Color.WHITE, 4, true, true);
-    InputSource inputSource = new InputSource(new StringReader(xml));
-    BufferedImage image = mxGraphViewImageReader.convert(inputSource, reader);
-    ImageIO.write(image, "png", output);
   }
   
   /**

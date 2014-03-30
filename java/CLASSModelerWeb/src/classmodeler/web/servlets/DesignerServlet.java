@@ -8,20 +8,33 @@
 
 package classmodeler.web.servlets;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.URLDecoder;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import classmodeler.web.controllers.DesignerControllerBean;
 import classmodeler.web.util.JSFOutcomeUtil;
+
+import com.mxgraph.canvas.mxGraphicsCanvas2D;
+import com.mxgraph.reader.mxSaxOutputHandler;
+import com.mxgraph.util.mxUtils;
 
 /**
  * Servlet implementation class DesignerServlet that handles the requests from
@@ -105,12 +118,28 @@ public class DesignerServlet extends HttpServlet {
       break;
       
     case IMAGE:
-      response.setContentType("image/png");
-      response.setHeader("Content-Disposition", "attachment; filename=diagram.png");
-      response.setStatus(HttpServletResponse.SC_OK);
+      String xml      = URLDecoder.decode(request.getParameter("xml"), "UTF-8");
+      String width    = request.getParameter("w");
+      String height   = request.getParameter("h");
+      String bgParam  = request.getParameter("bg");
+      String filename = request.getParameter("filename");
+      String format   = request.getParameter("format");
+      Color bg        = mxUtils.parseColor(bgParam);
       
       try {
-        controller.generateImage(request.getParameter("xml"), response.getOutputStream());
+        BufferedImage image = mxUtils.createBufferedImage(Integer.parseInt(width), Integer.parseInt(height), bg);
+        Graphics2D g2 = image.createGraphics();
+        mxUtils.setAntiAlias(g2, true, true);
+        XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+        reader.setContentHandler(new mxSaxOutputHandler(new mxGraphicsCanvas2D(g2)));
+        reader.parse(new InputSource(new StringReader(xml)));
+        
+        response.setContentType("image/" + format);
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        
+        ImageIO.write(image, format, response.getOutputStream());
+        
+        response.setStatus(HttpServletResponse.SC_OK);
       }
       catch (NumberFormatException e) {
         throw new ServletException(e);
@@ -127,6 +156,7 @@ public class DesignerServlet extends HttpServlet {
     case SAVE:
       controller.save();
       response.setStatus(HttpServletResponse.SC_OK);
+      break;
       
     default:
       break;

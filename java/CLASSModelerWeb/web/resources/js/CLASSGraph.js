@@ -83,14 +83,14 @@ CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation
     var upper = property.getAttribute("upper");
     
     if (lower) {
-      label += "   {" + lower;
+      label += " {" + lower;
       if (upper) {
         label += ".." + upper;
       }
       label += "}";
     }
     else if (upper) {
-      label += "   {" + upper + "}";
+      label += " {" + upper + "}";
     }
   }
   else {
@@ -253,6 +253,10 @@ CLASSGraph.prototype.getAttributes = function (classifier) {
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
     if (section.getAttribute("attribute") == "1") {
+      if (section.children == null) {
+        return [];
+      }
+      
       return section.children;
     }
   }
@@ -276,6 +280,10 @@ CLASSGraph.prototype.getOperations = function (classifier) {
   for (var i = 0; i < classifier.children.length; i++) {
     section = classifier.getChildAt(i);
     if (section.getAttribute("attribute") == "0") {
+      if (section.children == null) {
+        return [];
+      }
+      
       return section.children;
     }
   }

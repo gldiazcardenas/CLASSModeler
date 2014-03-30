@@ -53,7 +53,7 @@
             
             <p:submenu label="#{msgs.MENU_TOOLS_LABEL}" icon="ui-icon-wrench">
                 <p:menuitem id="generateCodeItem" value="#{msgs.MENU_ITEM_GENERATE_CODE_LABEL}" icon="ui-icon-script" actionListener="#{designerController.generateCode()}" update=":generateCodeForm, :generalMessage" oncomplete="dlgGenerateCode.show();" />
-                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image" onclick="CLASSModeler.execute('exportImage')" />
+                <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_IMAGE_LABEL}" icon="ui-icon-image" onclick="CLASSModeler.execute('generateImage')" />
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_CONSTRUCTOR_LABEL}" icon="ui-icon-script" onclick="CLASSModeler.execute('generateConstructor')" />
                 <p:menuitem value="#{msgs.MENU_ITEM_GENERATE_GET_SET_LABEL}" icon="ui-icon-script" onclick="CLASSModeler.execute('generateGetSet')" />

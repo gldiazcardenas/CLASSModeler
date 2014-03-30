@@ -53,12 +53,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/iText-2.1.7/iText-2.1.7_mx-1.0.jar">
+	<classpathentry kind="lib" path="lib/mxGraph/iText-2.1.7_mx-1.0.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/mxGraph/mxgraph-core.jar">
+	<classpathentry kind="lib" path="lib/mxGraph/mxgraph-all.jar" sourcepath="lib/mxGraph/mxgraph-all-source.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
