@@ -23,6 +23,7 @@ import org.stringtemplate.v4.STGroupFile;
 import classmodeler.domain.code.SourceCodeFile;
 import classmodeler.domain.user.User;
 import classmodeler.service.CodeGenerationService;
+import classmodeler.service.util.GenericUtils;
 
 /**
  * Implementation of the file service.
@@ -71,7 +72,12 @@ public @Stateless class CodeGenerationServiceBean implements CodeGenerationServi
   public String generateClass(Class aClass) {
     ST template = TEMPLATES.getInstanceOf("class_template");
     template.add("class", aClass);
-    template.add("author", user.getName());
+    if (!user.isRegisteredUser()) {
+      template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
+    }
+    else {
+      template.add("author", user.getName());
+    }
     template.add("date", now);
     return template.render();
   }
@@ -80,7 +86,12 @@ public @Stateless class CodeGenerationServiceBean implements CodeGenerationServi
   public String generateEnumeration(Enumeration aEnumeration) {
     ST template = TEMPLATES.getInstanceOf("enumeration_template");
     template.add("enumeration", aEnumeration);
-    template.add("author", user.getName());
+    if (!user.isRegisteredUser()) {
+      template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
+    }
+    else {
+      template.add("author", user.getName());
+    }
     template.add("date", now);
     return template.render();
   }
@@ -89,7 +100,12 @@ public @Stateless class CodeGenerationServiceBean implements CodeGenerationServi
   public String generateInterface(Interface aInterface) {
     ST template = TEMPLATES.getInstanceOf("interface_template");
     template.add("interface", aInterface);
-    template.add("author", user.getName());
+    if (!user.isRegisteredUser()) {
+      template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
+    }
+    else {
+      template.add("author", user.getName());
+    }
     template.add("date", now);
     return template.render();
   }

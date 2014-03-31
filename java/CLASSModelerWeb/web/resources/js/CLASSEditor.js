@@ -243,7 +243,7 @@ CLASSEditor.prototype.createEdge = function (source, target) {
   // Restore default edge
   this.defaultEdge = oldDefaultEdge;
   
-  // Adjust the edge created
+  // REALIZATION: Copy operations in the class
   if (this.graph.isRealization(edge.value)) {
     var operations = this.graph.getOperations(target);
     var operation;
@@ -254,31 +254,24 @@ CLASSEditor.prototype.createEdge = function (source, target) {
       this.graph.addOperation(source, operation);
     }
   }
-  else if (this.graph.isAggregation(edge.value)) {
-    var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
-    targetProp.setAttribute("visibility", "private");
-    targetProp.setAttribute("type", target.id);
-    targetProp.setAttribute("collection", "ArrayList");
-    targetProp.setAttribute("lower", "0");
-    targetProp.setAttribute("upper", "*");
-    this.graph.addAssociationAttribute(edge, targetProp, false, true);
-  }
-  else if (this.graph.isComposition(edge.value)) {
-    var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
-    targetProp.setAttribute("visibility", "private");
-    targetProp.setAttribute("type", target.id);
-    targetProp.setAttribute("collection", "ArrayList");
-    targetProp.setAttribute("lower", "0");
-    targetProp.setAttribute("upper", "*");
-    this.graph.addAssociationAttribute(edge, targetProp, false, true);
-  }
+  
+  // AGGREGATION, COMPOSITION, ASSOCIATION: Generate properties for source and target
   else if (this.graph.isAssociation(edge.value)) {
     var targetProp = model.cloneCell(this.getTemplate("property"));
-    targetProp.setAttribute("name", target.getAttribute("name").toLowerCase());
     targetProp.setAttribute("type", target.id);
-    targetProp.setAttribute("upper", "1");
+    targetProp.setAttribute("visibility", "private");
+    
+    if (this.graph.isAggregation(edge.value) || this.graph.isComposition(edge.value)) {
+      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
+      targetProp.setAttribute("lower", "0");
+      targetProp.setAttribute("upper", "*");
+      targetProp.setAttribute("collection", "ArrayList");
+    }
+    else {
+      targetProp.setAttribute("name", target.getAttribute("name").toLowerCase());
+      targetProp.setAttribute("upper", "1");
+    }
+    
     this.graph.addAssociationAttribute(edge, targetProp, false, true);
   }
   

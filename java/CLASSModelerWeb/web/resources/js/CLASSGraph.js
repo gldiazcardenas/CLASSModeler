@@ -75,22 +75,31 @@ CLASSGraph.prototype.convertClassifierToString = function (classifier) {
 CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation) {
   var visibility   = property.getAttribute("visibility");
   var name         = property.getAttribute("name");
+  var isNavigable  = this.isNavigable(property);
   
-  var label        = this.getVisibilityChar(visibility) + " " + name;
+  var label        = "";
+  
+  // Properties of association might not have name or visibility.
+  if (isNavigable) {
+    label = this.getVisibilityChar(visibility) + " " + name;
+  }
   
   if (isAssociation) {
     var lower = property.getAttribute("lower");
     var upper = property.getAttribute("upper");
     
+    if (isNavigable) {
+      label += " : ";
+    }
+    
     if (lower) {
-      label += " {" + lower;
+      label += lower;
       if (upper) {
         label += ".." + upper;
       }
-      label += "}";
     }
     else if (upper) {
-      label += " {" + upper + "}";
+      label += upper;
     }
   }
   else {
@@ -378,6 +387,11 @@ CLASSGraph.prototype.getEditingValue = function (cell, evt) {
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
 CLASSGraph.prototype.cellEditProperty = function (cell, attrName, attrValue, autoSize) {
+  if (attrName == "name" && attrValue == null || attrValue.length == 0) {
+    // Invalid name
+    return;
+  }
+  
   this.model.beginUpdate();
   
   try {
@@ -444,12 +458,7 @@ CLASSGraph.prototype.cellsRemoved = function (cells) {
     cell = cells[i];
     
     if (this.isProperty(cell.value) && cell.parent.isEdge() && this.isAssociation(cell.parent.value)) {
-      if (cell.getAttribute("type") == cell.parent.source.id) {
-        this.setCellStyles(mxConstants.STYLE_STARTARROW, "", [cell.parent]);
-      }
-      else {
-        this.setCellStyles(mxConstants.STYLE_ENDARROW, "", [cell.parent]);
-      }
+      this.removeAssociationNavigableStyle(cell.getAttribute("type") == cell.parent.source.id, cell.parent);
     }
   }
   
@@ -638,6 +647,16 @@ CLASSGraph.prototype.isCellSelectable = function (cell) {
 };
 
 /**
+ * Checks if the given property is navigable.
+ * 
+ * @param property
+ * @author Gabriel Leonardo Diaz, 30.03.2014.
+ */
+CLASSGraph.prototype.isNavigable = function (property) {
+  return property != null && property.getAttribute("name") != null && property.getAttribute("name").length > 0;
+};
+
+/**
  * Avoid to lock properties cells on associations.
  * @param cell
  * @returns {Boolean}
@@ -802,11 +821,14 @@ CLASSGraph.prototype.addAssociationAttribute = function (associationCell, attrib
   attributeCell.geometry.relative = true;
   if (isSource) {
     attributeCell.geometry.x = -1;
-    this.setCellStyles(mxConstants.STYLE_STARTARROW, "open", [associationCell]);
   }
   else {
     attributeCell.geometry.x = 1;
-    this.setCellStyles(mxConstants.STYLE_ENDARROW, "open", [associationCell]);
+  }
+  
+  // Adjust the style of the association
+  if (this.isNavigable(attributeCell.value)) {
+    this.addAssociationNavigableStyle(isSource, associationCell);
   }
   
   // Add to the association
@@ -823,6 +845,22 @@ CLASSGraph.prototype.addAssociationAttribute = function (associationCell, attrib
 };
 
 /**
+ * Adds the style for a navigable association.
+ * 
+ * @author Gabriel Leonardo Diaz, 30.03.2014.
+ */
+CLASSGraph.prototype.addAssociationNavigableStyle = function (isSource, associationCell) {
+  if (isSource) {
+    if (!this.isAggregation(associationCell.value) && !this.isComposition(associationCell.value)) {
+      this.setCellStyles(mxConstants.STYLE_STARTARROW, "open", [associationCell]);
+    }
+  }
+  else {
+    this.setCellStyles(mxConstants.STYLE_ENDARROW, "open", [associationCell]);
+  }
+};
+
+/**
  * Removes the attribute from the model and adjusts the navigability of the
  * association.
  * 
@@ -830,8 +868,19 @@ CLASSGraph.prototype.addAssociationAttribute = function (associationCell, attrib
  */
 CLASSGraph.prototype.removeAssociationAttribute = function (associationCell, attributeCell, isSource) {
   this.removeCells([attributeCell]);
+  this.removeAssociationNavigableStyle(isSource, associationCell);
+};
+
+/**
+ * Removes the style for navigable association ends.
+ * @param isSource
+ * @param associationCell
+ */
+CLASSGraph.prototype.removeAssociationNavigableStyle = function (isSource, associationCell) {
   if (isSource) {
-    this.setCellStyles(mxConstants.STYLE_STARTARROW, "", [associationCell]);
+    if (!this.isAggregation(associationCell.value) && !this.isComposition(associationCell.value)) {
+      this.setCellStyles(mxConstants.STYLE_STARTARROW, "", [associationCell]);
+    }
   }
   else {
     this.setCellStyles(mxConstants.STYLE_ENDARROW, "", [associationCell]);

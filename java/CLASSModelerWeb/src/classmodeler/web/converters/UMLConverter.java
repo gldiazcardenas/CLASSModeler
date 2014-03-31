@@ -306,7 +306,7 @@ public final class UMLConverter {
       property.setVisibility(visibility);
       property.setIsStatic(isStatic);
       property.setIsLeaf(isFinal);
-      property.setDefault(defaultValue);
+      property.setDefault(parseString(defaultValue));
       property.setUpper(UMLPackage.LITERAL_UNLIMITED_NATURAL___UNLIMITED_VALUE);
     }
     
@@ -468,7 +468,7 @@ public final class UMLConverter {
         
         for (int j = 0; j < edge.getChildCount(); j++) {
           property = (mxCell) edge.getChildAt(j);
-          if (!GenericUtils.equals(property.getAttribute("type"), classifier.getId())) {
+          if (!GenericUtils.equals(property.getAttribute("type"), classifier.getId()) && !GenericUtils.isEmptyString(property.getAttribute("name"))) {
             properties.add(property);
           }
         }
@@ -545,6 +545,18 @@ public final class UMLConverter {
    */
   public static boolean parseBoolean (String booleanValue) {
     return "1".equals(booleanValue);
+  }
+  
+  /**
+   * Parses the string by removing empty strings.
+   * @param stringValue
+   * @return
+   */
+  public static String parseString (String stringValue) {
+    if (GenericUtils.isEmptyString(stringValue)) {
+      return null;
+    }
+    return stringValue;
   }
   
   /**

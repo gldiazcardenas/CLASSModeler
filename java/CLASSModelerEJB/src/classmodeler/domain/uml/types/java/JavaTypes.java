@@ -30,6 +30,7 @@ public final class JavaTypes {
   public static final Type LONG_TYPE                          = createDataType("Long");
   public static final Type SHORT_TYPE                         = createDataType("Short");
   public static final Type STRING_TYPE                        = createDataType("String");
+  public static final Type VOID_TYPE                          = createDataType("void");
   
   public static final PrimitiveWrappedType PRIMITIVE_BOOLEAN  = createPrimitiveType("boolean", BOOLEAN_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_BYTE     = createPrimitiveType("byte", BYTE_TYPE);

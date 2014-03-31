@@ -31,7 +31,7 @@ import classmodeler.service.implementation.CodeGenerationServiceBean;
  * @author Gabriel Leonardo Diaz, 24.03.2014.
  */
 @Test
-public class GenerateCodeServiceTest extends ServiceTest {
+public class CodeGenerationServiceTest extends ServiceTest {
   
   private CodeGenerationService generateCodeService;
   

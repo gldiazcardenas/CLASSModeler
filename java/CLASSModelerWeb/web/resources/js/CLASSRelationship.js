@@ -64,6 +64,126 @@ CLASSRelationship.prototype.init = function (cell) {
 };
 
 /**
+ * Loads the name of the relationship in the text field.
+ * 
+ * @author Gabriel Leonardo Diaz, 16.03.2014.
+ */
+CLASSRelationship.prototype.loadRelationship = function () {
+  $("#relName").val(this.relationshipCell.getAttribute("name"));
+};
+
+/**
+ * Loads the fields in the source section.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.03.2014.
+ */
+CLASSRelationship.prototype.loadSource = function () {
+  this.sourceProperty = null;
+  
+  if (this.relationshipCell.children) {
+    for (var i = 0; i < this.relationshipCell.children.length; i++) {
+      var child = this.relationshipCell.children[i];
+      if (child.getAttribute("type") == this.relationshipCell.source.id) {
+        this.sourceProperty = child;
+        break;
+      }
+    }
+  }
+  
+  var sourceName       = "";
+  var sourceVisibility = "";
+  var sourceCollection = "";
+  var sourceLower      = "";
+  var sourceUpper      = "";
+  var sourceNavigable  = false;
+  
+  if (this.sourceProperty) {
+    sourceName       = this.sourceProperty.getAttribute("name");
+    sourceVisibility = this.sourceProperty.getAttribute("visibility");
+    sourceCollection = this.sourceProperty.getAttribute("collection");
+    sourceLower      = this.sourceProperty.getAttribute("lower");
+    sourceUpper      = this.sourceProperty.getAttribute("upper");
+    sourceNavigable  = this.graph.isNavigable(this.sourceProperty);
+  }
+  
+  $("#sourceName").val(sourceName);
+  $("#sourceVisibility").combobox("setValue", sourceVisibility);
+  $("#sourceType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.source.id));
+  $("#sourceCollection").combobox("setValue", sourceCollection);
+  $("#sourceLower").val(sourceLower);
+  $("#sourceUpper").val(sourceUpper);
+  $("#sourceNavigable").prop("checked", sourceNavigable);
+  $("#sourceNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.target.value));
+  this.setEnabledSource(sourceNavigable);
+};
+
+/**
+ * Enables/Disables the source role controls.
+ * 
+ * @author Gabriel Leonardo Diaz, 15.03.2014.
+ */
+CLASSRelationship.prototype.setEnabledSource = function (enabled) {
+  if (enabled) {
+    $("#sourceName").removeAttr("disabled");
+    $("#sourceVisibility").combobox("enable");
+    $("#sourceCollection").combobox("enable");
+    if (!$("#sourceVisibility").combobox("getValue")) {
+      $("#sourceVisibility").combobox("setValue", "private");
+    }
+  }
+  else {
+    $("#sourceName").attr("disabled", true);
+    $("#sourceVisibility").combobox("disable");
+    $("#sourceCollection").combobox("disable");
+  }
+};
+
+/**
+ * Loads the fields in the target section.
+ * 
+ * @author Gabriel Leonardo Diaz, 14.03.2014.
+ */
+CLASSRelationship.prototype.loadTarget = function () {
+  this.targetProperty = null;
+  
+  if (this.relationshipCell.children) {
+    for (var i = 0; i < this.relationshipCell.children.length; i++) {
+      var child = this.relationshipCell.children[i];
+      if (child.getAttribute("type") == this.relationshipCell.target.id) {
+        this.targetProperty = child;
+        break;
+      }
+    }
+  }
+  
+  var targetName       = "";
+  var targetVisibility = "";
+  var targetCollection = "";
+  var targetLower      = "";
+  var targetUpper      = "";
+  var targetNavigable  = false;
+  
+  if (this.targetProperty) {
+    targetName       = this.targetProperty.getAttribute("name");
+    targetVisibility = this.targetProperty.getAttribute("visibility");
+    targetCollection = this.targetProperty.getAttribute("collection");
+    targetLower      = this.targetProperty.getAttribute("lower");
+    targetUpper      = this.targetProperty.getAttribute("upper");
+    targetNavigable  = this.graph.isNavigable(this.targetProperty);
+  }
+  
+  $("#targetName").val(targetName);
+  $("#targetVisibility").combobox("setValue", targetVisibility);
+  $("#targetType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.target.id));
+  $("#targetCollection").combobox("setValue", targetCollection);
+  $("#targetLower").val(targetLower);
+  $("#targetUpper").val(targetUpper);
+  $("#targetNavigable").prop("checked", targetNavigable);
+  $("#targetNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.source.value));
+  this.setEnabledTarget(targetNavigable);
+};
+
+/**
  * Saves the relationship and its properties.
  * 
  * @returns {Boolean}
@@ -75,19 +195,18 @@ CLASSRelationship.prototype.saveRelationship = function () {
   var sourceCollection = $("#sourceCollection").combobox("getValue");
   var sourceLower      = $("#sourceLower").val();
   var sourceUpper      = $("#sourceUpper").val();
+  var sourceNavigable  = $("#sourceNavigable").is(":checked");
   
   var targetName       = $("#targetName").val();
   var targetVisibility = $("#targetVisibility").combobox("getValue");
   var targetCollection = $("#targetCollection").combobox("getValue");
   var targetLower      = $("#targetLower").val();
   var targetUpper      = $("#targetUpper").val();
+  var targetNavigable  = $("#targetNavigable").is(":checked");
   
   // Validation
-  if ($("#sourceNavigable").is(":checked") && !this.validProperty(sourceName, sourceVisibility, sourceCollection, sourceLower, sourceUpper)) {
-    return false;
-  }
-  
-  if ($("#targetNavigable").is(":checked") && !this.validProperty(targetName, targetVisibility, targetCollection, targetLower, targetUpper)) {
+  if (!this.validProperty(sourceName, sourceVisibility, sourceCollection, sourceLower, sourceUpper, sourceNavigable) ||
+      !this.validProperty(targetName, targetVisibility, targetCollection, targetLower, targetUpper, targetNavigable)) {
     return false;
   }
   
@@ -99,7 +218,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
   
   
   // 2. SAVE SOURCE
-  if ($("#sourceNavigable").is(":checked")) {
+  if (this.needsProperty(sourceNavigable, sourceUpper, sourceLower)) {
     var property;
     if (this.sourceProperty) {
       property = this.sourceProperty.clone(true);
@@ -127,7 +246,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
   }
   
   // 3. SAVE TARGET
-  if ($("#targetNavigable").is(":checked")) {
+  if (this.needsProperty(targetNavigable, targetUpper, targetLower)) {
     var property;
     if (this.targetProperty) {
       property = this.targetProperty.clone(true);
@@ -164,15 +283,18 @@ CLASSRelationship.prototype.saveRelationship = function () {
  * @param collection
  * @param lower
  * @param upper
+ * @param navigable
  * @returns {Boolean}
  */
-CLASSRelationship.prototype.validProperty = function (name, visibility, collection, lower, upper) {
-  if (!name) {
-    return false;
-  }
-  
-  if (!visibility) {
-    return false;
+CLASSRelationship.prototype.validProperty = function (name, visibility, collection, lower, upper, navigable) {
+  if (navigable) {
+    if (!name) {
+      return false;
+    }
+    
+    if (!visibility) {
+      return false;
+    }
   }
   
   if (!this.validMultiplicity(lower, upper)) {
@@ -205,136 +327,26 @@ CLASSRelationship.prototype.validMultiplicity = function (lower, upper) {
 };
 
 /**
- * Loads the name of the relationship in the text field.
- * 
- * @author Gabriel Leonardo Diaz, 16.03.2014.
+ * Checks if the relationship end needs a property.
+ * @param navigable
+ * @param upper
+ * @param lower
+ * @author Gabriel Leonardo Diaz, 30.03.2014.
  */
-CLASSRelationship.prototype.loadRelationship = function () {
-  $("#relName").val(this.relationshipCell.getAttribute("name"));
-};
-
-/**
- * Loads the fields in the source section.
- * 
- * @author Gabriel Leonardo Diaz, 14.03.2014.
- */
-CLASSRelationship.prototype.loadSource = function () {
-  if (!this.relationshipCell.children) {
-    return;
+CLASSRelationship.prototype.needsProperty = function (navigable, upper, lower) {
+  if (navigable) {
+    return true;
   }
   
-  this.sourceProperty = null;
-  
-  for (var i = 0; i < this.relationshipCell.children.length; i++) {
-    var child = this.relationshipCell.children[i];
-    if (child.getAttribute("type") == this.relationshipCell.source.id) {
-      this.sourceProperty = child;
-      break;
-    }
+  if (lower != null && lower.length > 0) {
+    return true;
   }
   
-  var sourceName       = "";
-  var sourceVisibility = "";
-  var sourceCollection = "";
-  var sourceLower      = "";
-  var sourceUpper      = "";
-  var sourceNavigable  = false;
-  
-  if (this.sourceProperty) {
-    sourceName       = this.sourceProperty.getAttribute("name");
-    sourceVisibility = this.sourceProperty.getAttribute("visibility");
-    sourceCollection = this.sourceProperty.getAttribute("collection");
-    sourceLower      = this.sourceProperty.getAttribute("lower");
-    sourceUpper      = this.sourceProperty.getAttribute("upper");
-    sourceNavigable  = true;
+  if (upper != null && upper.length > 0) {
+    return true;
   }
   
-  $("#sourceName").val(sourceName);
-  $("#sourceVisibility").combobox("setValue", sourceVisibility);
-  $("#sourceType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.source.id));
-  $("#sourceCollection").combobox("setValue", sourceCollection);
-  $("#sourceLower").val(sourceLower);
-  $("#sourceUpper").val(sourceUpper);
-  $("#sourceNavigable").prop("checked", sourceNavigable);
-  $("#sourceNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.target.value) || 
-                                          this.graph.isAggregation(this.relationshipCell.value) ||
-                                          this.graph.isComposition(this.relationshipCell.value));
-  this.setEnabledSource(sourceNavigable);
-};
-
-/**
- * Enables/Disables the source role controls.
- * 
- * @author Gabriel Leonardo Diaz, 15.03.2014.
- */
-CLASSRelationship.prototype.setEnabledSource = function (enabled) {
-  if (enabled) {
-    $("#sourceName").removeAttr("disabled");
-    $("#sourceVisibility").combobox("enable");
-    $("#sourceCollection").combobox("enable");
-    $("#sourceLower").removeAttr("disabled");
-    $("#sourceUpper").removeAttr("disabled");
-    
-    var visibility = $("#sourceVisibility").combobox("getValue");
-    if (!visibility) {
-      visibility = "private";
-      $("#sourceVisibility").combobox("setValue", visibility);
-    }
-  }
-  else {
-    $("#sourceName").attr("disabled", true);
-    $("#sourceVisibility").combobox("disable");
-    $("#sourceCollection").combobox("disable");
-    $("#sourceLower").attr("disabled", true);
-    $("#sourceUpper").attr("disabled", true);
-  }
-};
-
-/**
- * Loads the fields in the target section.
- * 
- * @author Gabriel Leonardo Diaz, 14.03.2014.
- */
-CLASSRelationship.prototype.loadTarget = function () {
-  if (!this.relationshipCell.children) {
-    return;
-  }
-  
-  this.targetProperty = null;
-  
-  for (var i = 0; i < this.relationshipCell.children.length; i++) {
-    var child = this.relationshipCell.children[i];
-    if (child.getAttribute("type") == this.relationshipCell.target.id) {
-      this.targetProperty = child;
-      break;
-    }
-  }
-  
-  var targetName       = "";
-  var targetVisibility = "";
-  var targetCollection = "";
-  var targetLower      = "";
-  var targetUpper      = "";
-  var targetNavigable  = false;
-  
-  if (this.targetProperty) {
-    targetName       = this.targetProperty.getAttribute("name");
-    targetVisibility = this.targetProperty.getAttribute("visibility");
-    targetCollection = this.targetProperty.getAttribute("collection");
-    targetLower      = this.targetProperty.getAttribute("lower");
-    targetUpper      = this.targetProperty.getAttribute("upper");
-    targetNavigable  = true;
-  }
-  
-  $("#targetName").val(targetName);
-  $("#targetVisibility").combobox("setValue", targetVisibility);
-  $("#targetType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.target.id));
-  $("#targetCollection").combobox("setValue", targetCollection);
-  $("#targetLower").val(targetLower);
-  $("#targetUpper").val(targetUpper);
-  $("#targetNavigable").prop("checked", targetNavigable);
-  $("#targetNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.source.value));
-  this.setEnabledTarget(targetNavigable);
+  return false;
 };
 
 /**
@@ -346,21 +358,14 @@ CLASSRelationship.prototype.setEnabledTarget = function (enabled) {
     $("#targetName").removeAttr("disabled");
     $("#targetVisibility").combobox("enable");
     $("#targetCollection").combobox("enable");
-    $("#targetLower").removeAttr("disabled");
-    $("#targetUpper").removeAttr("disabled");
-    
-    var visibility = $("#targetVisibility").combobox("getValue");
-    if (!visibility) {
-      visibility = "private";
-      $("#targetVisibility").combobox("setValue", visibility);
+    if (!$("#targetVisibility").combobox("getValue")) {
+      $("#targetVisibility").combobox("setValue", "private");
     }
   }
   else {
     $("#targetName").attr("disabled", true);
     $("#targetVisibility").combobox("disable");
     $("#targetCollection").combobox("disable");
-    $("#targetLower").attr("disabled", true);
-    $("#targetUpper").attr("disabled", true);
   }
 };
 

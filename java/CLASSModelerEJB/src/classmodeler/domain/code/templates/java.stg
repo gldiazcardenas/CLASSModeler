@@ -37,14 +37,19 @@ enumeration_template(enumeration, author, date) ::= <<
 
 
 property_template(property) ::= <<
-  <property.visibility.name> <property.type.name> <property.name><if(property.defaultValue)> = <property.default>;<endif>;
+  <property.visibility.name> <property.type.name> <property.name><if(property.default)> = <property.default><endif>;
 >>
 
 
 operation_template(operation) ::= <<
-  <operation.visibility.name> void <operation.name>() {
+  <operation.visibility.name> <operation.type.name> <operation.name>(<operation.ownedParameters: {parameter | parameter_template(parameter)}; separator={, }>) {
     <todo()>
   }
+>>
+
+
+parameter_template(parameter) ::= <<
+<parameter.type.name> <parameter.name>
 >>
 
 
