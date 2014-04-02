@@ -16,6 +16,8 @@ import java.util.Map.Entry;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
+import org.eclipse.uml2.uml.UMLFactory;
+
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.web.beans.SharedDiagram;
 
@@ -37,6 +39,7 @@ public class SharedDiagramController {
   
   public SharedDiagramController () {
     super();
+    UMLFactory.eINSTANCE.toString();
   }
   
   /**

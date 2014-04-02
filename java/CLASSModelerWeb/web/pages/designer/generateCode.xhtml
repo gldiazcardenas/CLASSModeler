@@ -3,27 +3,41 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
                 
-<p:dialog id="generateCodeDialog" widgetVar="dlgGenerateCode" width="500" header="#{designerController.generateCodeTitle}" modal="true" closable="true" closeOnEscape="true">
+<p:dialog id="generateCodeDialog" widgetVar="dlgGenerateCode" width="400" header="#{designerController.generateCodeTitle}" modal="true" closable="true" closeOnEscape="true">
     <h:form id="generateCodeForm">
-        <h:panelGrid columns="1" width="100%">
-            <p:dataList value="#{designerController.sourceCodeFiles}" var="source" emptyMessage="#{msgs.CODE_GENERATION_EMPTY_FILES_MESSAGE}">
-                <h:commandLink value="#{source.fileName}">
-                    <p:fileDownload value="#{designerController.downloadFile(source)}" />
-                </h:commandLink>
-            </p:dataList>
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td>
+                    <p:dataList value="#{designerController.sourceCodeFiles}" var="source" emptyMessage="#{msgs.CODE_GENERATION_EMPTY_FILES_MESSAGE}" style="border: none;">
+                        <h:commandLink value="#{source.fileName}">
+                            <p:fileDownload value="#{designerController.downloadFile(source)}" />
+                        </h:commandLink>
+                    </p:dataList>
+                </td>
+            </tr>
             
-            <h:commandLink disabled="#{empty designerController.sourceCodeFiles}" style="display: block;">
-                <h:outputLabel value="#{msgs.DOWNLOAD_ZIP_FILE_LABEL}" style="cursor: pointer;" />
-                <h:graphicImage name="package_download.png" library="images" style="vertical-align: middle; margin-left: 3px;" />
-                <p:fileDownload value="#{designerController.downloadZIP()}" />
-            </h:commandLink>
+            <tr>
+                <td align="right">
+                    <h:commandLink disabled="#{empty designerController.sourceCodeFiles}" style="display: block;">
+                        <h:outputLabel value="#{msgs.DOWNLOAD_ZIP_FILE_LABEL}" style="cursor: pointer;" />
+                        <h:graphicImage name="package_download.png" library="images" style="vertical-align: middle; margin-left: 3px;" />
+                        <p:fileDownload value="#{designerController.downloadZIP()}" />
+                    </h:commandLink>
+                </td>
+            </tr>
             
-            <p:separator />
+            <tr>
+                <td><p:separator /></td>
+            </tr>
             
-            <h:panelGrid columns="2">
-                <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgGenerateCode.hide()"/>
-            </h:panelGrid>
-        </h:panelGrid>
+            <tr>
+                <td>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="#{msgs.CLOSE_LABEL}" type="button" onclick="dlgGenerateCode.hide()"/>
+                    </h:panelGrid>
+                </td>
+            </tr>
+        </table>
     </h:form>
 </p:dialog>
 

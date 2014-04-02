@@ -30,7 +30,7 @@ public final class JavaTypes {
   public static final Type LONG_TYPE                          = createDataType("Long");
   public static final Type SHORT_TYPE                         = createDataType("Short");
   public static final Type STRING_TYPE                        = createDataType("String");
-  public static final Type VOID_TYPE                          = createDataType("void");
+  public static final Type VOID_TYPE                          = createDataType("Void");
   
   public static final PrimitiveWrappedType PRIMITIVE_BOOLEAN  = createPrimitiveType("boolean", BOOLEAN_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_BYTE     = createPrimitiveType("byte", BYTE_TYPE);
@@ -41,6 +41,7 @@ public final class JavaTypes {
   public static final PrimitiveWrappedType PRIMITIVE_LONG     = createPrimitiveType("long", LONG_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_SHORT    = createPrimitiveType("short", SHORT_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_STRING   = createPrimitiveType("String", STRING_TYPE);
+  public static final PrimitiveWrappedType PRIMITIVE_VOID     = createPrimitiveType("void", VOID_TYPE);
   
   private static final Map<String, PrimitiveWrappedType> PRIMITIVE_TYPES = new HashMap<String, PrimitiveWrappedType>();
   
@@ -54,6 +55,7 @@ public final class JavaTypes {
     PRIMITIVE_TYPES.put(PRIMITIVE_LONG.getName(), PRIMITIVE_LONG);
     PRIMITIVE_TYPES.put(PRIMITIVE_SHORT.getName(), PRIMITIVE_SHORT);
     PRIMITIVE_TYPES.put(PRIMITIVE_STRING.getName(), PRIMITIVE_STRING);
+    PRIMITIVE_TYPES.put(PRIMITIVE_VOID.getName(), PRIMITIVE_VOID);
   }
   
   private JavaTypes() {

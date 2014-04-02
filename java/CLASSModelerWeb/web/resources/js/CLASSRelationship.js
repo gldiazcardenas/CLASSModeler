@@ -227,6 +227,11 @@ CLASSRelationship.prototype.saveRelationship = function () {
       property = this.graph.model.cloneCell(this.editor.getTemplate("property"));
     }
     
+    if (!sourceNavigable) {
+      sourceName = "";
+      sourceCollection = "";
+    }
+    
     property.setAttribute("name", sourceName);
     property.setAttribute("visibility", sourceVisibility);
     property.setAttribute("collection", sourceCollection);
@@ -239,6 +244,10 @@ CLASSRelationship.prototype.saveRelationship = function () {
     }
     else {
       this.graph.addAssociationAttribute(this.relationshipCell, property, true, false);
+    }
+    
+    if (sourceName == null || sourceName.length == 0) {
+      this.graph.removeAssociationNavigableStyle(true, this.relationshipCell);
     }
   }
   else if (this.sourceProperty) {
@@ -255,6 +264,11 @@ CLASSRelationship.prototype.saveRelationship = function () {
       property = this.graph.model.cloneCell(this.editor.getTemplate("property"));
     }
     
+    if (!targetNavigable) {
+      targetName = "";
+      targetCollection = "";
+    }
+    
     property.setAttribute("name", targetName);
     property.setAttribute("visibility", targetVisibility);
     property.setAttribute("collection", targetCollection);
@@ -267,6 +281,10 @@ CLASSRelationship.prototype.saveRelationship = function () {
     }
     else {
       this.graph.addAssociationAttribute(this.relationshipCell, property, false, false);
+    }
+    
+    if (targetName == null || targetName.length == 0) {
+      this.graph.removeAssociationNavigableStyle(false, this.relationshipCell);
     }
   }
   else if (this.targetProperty) {

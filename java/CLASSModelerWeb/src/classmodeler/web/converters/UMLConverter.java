@@ -21,6 +21,7 @@ import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.Interface;
+import org.eclipse.uml2.uml.InterfaceRealization;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Package;
@@ -33,7 +34,9 @@ import org.eclipse.uml2.uml.VisibilityKind;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import classmodeler.domain.uml.types.OperationCustom;
 import classmodeler.domain.uml.types.java.JavaTypes;
+import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
 
@@ -158,7 +161,7 @@ public final class UMLConverter {
             target = this.classifiers.get(edge.getTarget().getId());
             generateGeneralization(source, target);
           }
-          else if (isRealization(mxCell)) {
+          else if (isRealization(edge)) {
             source = this.classifiers.get(edge.getSource().getId());
             target = this.classifiers.get(edge.getTarget().getId());
             
@@ -323,7 +326,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
   private Operation generateOperation (Classifier classifier, mxCell operationCell) {
-    Operation operation = null;
+    OperationCustom operation = null;
     
     String name               = operationCell.getAttribute("name");
     Type type                 = getType(operationCell.getAttribute("type"), operationCell.getAttribute("collection"));
@@ -333,14 +336,17 @@ public final class UMLConverter {
     boolean isSynchronized    = parseBoolean(operationCell.getAttribute("synchronized"));
     
     if (classifier instanceof Class) {
-      operation = ((Class) classifier).createOwnedOperation(name, null, null);
+      operation = new OperationCustom();
+      ((Class) classifier).getOwnedOperations().add(operation);
     }
     else if (classifier instanceof Interface) {
-      operation = ((Interface) classifier).createOwnedOperation(name, null, null);
+      operation = new OperationCustom();
+      ((Interface) classifier).getOwnedOperations().add(operation);
     }
     
     if (operation != null) {
-      operation.setType(type);
+      operation.setName(name);
+      operation.setReturnType(type);
       operation.setVisibility(visibility);
       operation.setIsStatic(isStatic);
       operation.setIsLeaf(isFinal);
@@ -372,7 +378,22 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
   private Generalization generateGeneralization (Classifier source, Classifier target) {
-    return source.createGeneralization(target);
+    Generalization generalization = null;
+    
+    if (!CollectionUtils.isEmptyCollection(source.getGeneralizations())) {
+      for (Generalization aGen : source.getGeneralizations()) {
+        if (GenericUtils.equals(aGen.getGeneral(), target)) {
+          generalization = aGen;
+          break;
+        }
+      }
+    }
+    
+    if (generalization == null) {
+      generalization = source.createGeneralization(target);
+    }
+    
+    return generalization;
   }
   
   /**
@@ -386,7 +407,22 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
   private Realization generateRealization (Class source, Interface target, mxCell realizationCell) {
-    return source.createInterfaceRealization(realizationCell.getAttribute("name"), target);
+    Realization realization = null;
+    
+    if (!CollectionUtils.isEmptyCollection(source.getInterfaceRealizations())) {
+      for (InterfaceRealization aRealization : source.getInterfaceRealizations()) {
+        if (GenericUtils.equals(aRealization.getContract(), target)) {
+          realization = aRealization;
+          break;
+        }
+      }
+    }
+    
+    if (realization == null) {
+      realization = source.createInterfaceRealization(realizationCell.getAttribute("name"), target);
+    }
+    
+    return realization;
   }
   
   /**
@@ -422,10 +458,12 @@ public final class UMLConverter {
     if (type == null) {
       type = JavaTypes.getPrimitiveType(typeId);
       
-      if (type == null) {
+      if (type == null && !GenericUtils.isEmptyString(typeId)) {
         type = UMLFactory.eINSTANCE.createClass(); // Anonymous Type
         type.setName(typeId);
       }
+      
+      // The type can be null (for constructors)
     }
     
     if (!GenericUtils.isEmptyString(collectionType)) {
@@ -567,7 +605,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 24.03.2014.
    */
   public static boolean isPackage (mxCell cell) {
-    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("package");
@@ -581,7 +619,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isClass (mxCell cell) {
-    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("class");
@@ -595,7 +633,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isEnumeration (mxCell cell) {
-    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("enumeration");
@@ -609,7 +647,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 05.03.2014.
    */
   public static boolean isInterface (mxCell cell) {
-    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("interface");
@@ -623,7 +661,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 25.03.2014.
    */
   public static boolean isComment (mxCell cell) {
-    if (cell == null || cell.isEdge() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equalsIgnoreCase("comment");
@@ -637,7 +675,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 17.03.2014.
    */
   public static boolean isLink (mxCell cell) {
-    if (cell == null || cell.isVertex() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equals("link");
@@ -651,7 +689,7 @@ public final class UMLConverter {
    * @author Gabriel Leonardo Diaz, 17.03.2014.
    */
   public static boolean isAssociation (mxCell cell) {
-    if (cell == null || cell.isVertex() || !(cell.getValue() instanceof Element)) {
+    if (cell == null || !(cell.getValue() instanceof Element)) {
       return false;
     }
     return ((Element) cell.getValue()).getTagName().toLowerCase().equals("association");

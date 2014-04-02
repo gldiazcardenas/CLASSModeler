@@ -52,7 +52,7 @@ public class SourceCodeFile {
   }
   
   public String getFileName () {
-    return name + "." + format;
+    return name + format;
   }
   
 }
