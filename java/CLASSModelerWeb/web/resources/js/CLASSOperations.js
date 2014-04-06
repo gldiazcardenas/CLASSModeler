@@ -77,8 +77,10 @@ CLASSOperations.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.operationCell  = null;
   this.operationIndex = null;
+  this.parameterIndex = null;
   
   this.loadOperationTableData();
+  this.loadTypesData();
   this.clearSelection();
   this.clearFields();
   this.setTitle();
@@ -166,6 +168,14 @@ CLASSOperations.prototype.loadOperationTableData = function () {
   
   $("#operationsTable").datagrid({ data : jSonData });
   $("#operationsTable").datagrid("reload");
+};
+
+/**
+ * Updates the types in the return type field and the parameters table.
+ */
+CLASSOperations.prototype.loadTypesData = function () {
+  $("#operReturnType").combobox({ data: this.graph.getTypesJSon(true) });
+  this.configureParametersTable();
 };
 
 /**
@@ -366,6 +376,7 @@ CLASSOperations.prototype.clearFields = function () {
 CLASSOperations.prototype.newOperation = function () {
   this.clearSelection();
   this.clearFields();
+  $("#operName" ).focus();
 };
 
 /**

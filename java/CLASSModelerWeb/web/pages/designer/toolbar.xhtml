@@ -7,9 +7,7 @@
         <p:toolbar id="toolbar">
             <p:toolbarGroup align="left">
                 <p:separator/>
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_NEW_DIAGRAM_LABEL}" icon="ui-icon-document" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_OPEN_DIAGRAM_LABEL}" icon="ui-icon-folder-open" />
-                <p:commandButton type="button" title="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" />
+                <p:commandButton type="button" title="#{msgs.MENU_ITEM_SAVE_DIAGRAM_LABEL}" icon="ui-icon-disk" onclick="CLASSModeler.execute('save')" />
                 <p:separator/>
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_CUT_LABEL}" icon="ui-icon-scissors" onclick="CLASSModeler.executen('cut')" />
                 <p:commandButton type="button" title="#{msgs.MENU_ITEM_COPY_LABEL}" icon="ui-icon-copy" onclick="CLASSModeler.execute('copy')" />

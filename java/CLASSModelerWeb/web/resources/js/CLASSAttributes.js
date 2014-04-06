@@ -73,6 +73,7 @@ CLASSAttributes.prototype.init = function (cell) {
   
   this.configureGUI();
   this.loadTableData();
+  this.loadTypesData();
   this.clearSelection();
   this.clearFields();
   this.setTitle();
@@ -232,6 +233,13 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
 };
 
 /**
+ * Loads the types data once again.
+ */
+CLASSAttributes.prototype.loadTypesData = function () {
+  $("#attrType").combobox({ data: this.graph.getTypesJSon() });
+};
+
+/**
  * Loads the attributes of the edited classifier and fills the table data.
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
@@ -289,6 +297,7 @@ CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
 CLASSAttributes.prototype.newAttribute = function () {
   this.clearSelection();
   this.clearFields();
+  $("#attrName" ).focus();
 };
 
 /**

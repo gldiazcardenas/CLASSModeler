@@ -289,7 +289,7 @@ CLASSEditor.prototype.setModified = function (modified) {
   
   var pendingChangesLbl = document.getElementById("pendingChanges");
   
-  if (modified) {
+  if (modified && this.enabled) {
     pendingChangesLbl.innerHTML = "* ";
   }
   else {
