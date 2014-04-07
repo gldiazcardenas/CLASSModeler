@@ -25,7 +25,7 @@ public class ArrayPrimitiveType extends CollectionGenericType {
   
   @Override
   public String getName() {
-    return "[] " + getGenericType().getName();
+    return getGenericType().getName() + " [] ";
   }
   
 }

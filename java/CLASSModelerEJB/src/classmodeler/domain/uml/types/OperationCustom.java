@@ -8,6 +8,7 @@
 
 package classmodeler.domain.uml.types;
 
+import org.eclipse.uml2.uml.CallConcurrencyKind;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.internal.impl.OperationImpl;
 
@@ -26,6 +27,10 @@ public class OperationCustom extends OperationImpl {
   
   public void setReturnType(Type returnType) {
     this.returnType = returnType;
+  }
+  
+  public boolean isSynchronized () {
+    return getConcurrency() == CallConcurrencyKind.GUARDED_LITERAL;
   }
   
 }

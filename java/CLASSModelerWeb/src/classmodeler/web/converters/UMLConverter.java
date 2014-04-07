@@ -292,7 +292,7 @@ public final class UMLConverter {
     Property property = null;
     
     String name               = propertyCell.getAttribute("name");
-    String defaultValue       = propertyCell.getAttribute("default");
+    String defaultValue       = propertyCell.getAttribute("initialValue");
     Type type                 = getType(propertyCell.getAttribute("type"), propertyCell.getAttribute("collection"));
     VisibilityKind visibility = parseVisibility(propertyCell.getAttribute("visibility"));
     boolean isStatic          = parseBoolean(propertyCell.getAttribute("static"));
@@ -334,6 +334,7 @@ public final class UMLConverter {
     boolean isStatic          = parseBoolean(operationCell.getAttribute("static"));
     boolean isFinal           = parseBoolean(operationCell.getAttribute("final"));
     boolean isSynchronized    = parseBoolean(operationCell.getAttribute("synchronized"));
+    boolean isAbstract        = parseBoolean(operationCell.getAttribute("abstract"));
     
     if (classifier instanceof Class) {
       operation = new OperationCustom();
@@ -350,6 +351,7 @@ public final class UMLConverter {
       operation.setVisibility(visibility);
       operation.setIsStatic(isStatic);
       operation.setIsLeaf(isFinal);
+      operation.setIsAbstract(isAbstract);
       
       if (isSynchronized) {
         operation.setConcurrency(CallConcurrencyKind.GUARDED_LITERAL);

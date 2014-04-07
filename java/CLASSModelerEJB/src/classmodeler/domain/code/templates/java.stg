@@ -47,20 +47,26 @@ enumeration_template(enumeration, author, date) ::= <<
 
 
 property_template(property) ::= <<
-  <property.visibility.name> <property.type.name> <property.name><if(property.default)> = <property.default><endif>;
+  <property.visibility.name><property_modifiers(property)> <property.type.name> <property.name><if(property.default)> = <property.default><endif>;
 >>
 
 
+property_modifiers(property) ::= "<if(property.static)> static<endif><if(property.leaf)> final<endif>"
+
+
 operation_class(operation) ::= <<
-  <operation.visibility.name><if(operation.returnType)> <operation.returnType.name><endif> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>) {
+  <operation.visibility.name><operation_modifiers(operation)><if(operation.returnType)> <operation.returnType.name><endif> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>) {
     <todo()>
   }
 >>
 
 
 operation_interface(operation) ::= <<
-  <operation.visibility.name> <operation.returnType.name> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>);
+  <operation.visibility.name><operation_modifiers(operation)> <operation.returnType.name> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>);
 >>
+
+
+operation_modifiers (operation) ::= "<if(operation.synchronized)> synchronized <endif><if(operation.abstract)> abstract <else><if(operation.static)> static <elseif(operation.leaf)> final <endif><endif>"
 
 
 extended_types (classifier) ::= "<if(classifier.generalizations)> extends <classifier.generalizations: {generalization | <generalization.general.name>}; separator={, }><endif>"
