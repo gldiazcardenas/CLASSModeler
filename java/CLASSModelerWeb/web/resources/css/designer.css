@@ -6,6 +6,7 @@ body {
 
 #content {
     padding: 2px !important;
+    position: relative;
 }
 
 #toolbar {
@@ -14,12 +15,16 @@ body {
 }
 
 #center {
-    min-height: 510px;
+    position: absolute;
+    top: 77px;
+    bottom: 0px;
+    width: 100%;
 }
 
 #center-layout {
     margin: 2px;
-    min-height: inherit;
+    position: relative;
+    height: 99.5%; /* Leave some space for the border. */
 }
 
 #center-layout .pe-layout-pane-content {
@@ -34,6 +39,7 @@ body {
 
 #footer {
     padding: 8px 0px !important;
+    height: 10%;
 }
 
 #toolbox {

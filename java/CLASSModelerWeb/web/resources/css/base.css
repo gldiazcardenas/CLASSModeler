@@ -1,5 +1,9 @@
 @CHARSET "ISO-8859-1";
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-size: 12px;
     font-style: normal;
@@ -50,10 +54,12 @@ a:hover {
 #content {
     padding-top: 6px;
     background-image: url("#{resource['images:background.jpg']}");
+    height: 90%;
 }
 
 #content-body {
     width: 900px;
+    height: 100%;
     margin: 0px auto 0px auto;
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
