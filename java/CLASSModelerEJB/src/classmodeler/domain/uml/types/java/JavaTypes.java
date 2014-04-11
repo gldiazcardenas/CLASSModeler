@@ -11,6 +11,7 @@ package classmodeler.domain.uml.types.java;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
 
@@ -68,7 +69,9 @@ public final class JavaTypes {
    * @return
    */
   private static Type createDataType (String name) {
-    return UMLFactory.eINSTANCE.createDataType();
+    DataType dataType = UMLFactory.eINSTANCE.createDataType();
+    dataType.setName(name);
+    return dataType;
   }
   
   /**

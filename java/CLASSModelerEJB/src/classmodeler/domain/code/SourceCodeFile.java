@@ -9,6 +9,8 @@
 package classmodeler.domain.code;
 
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.Type;
 
 /**
  * Bean that encapsulates a source code file generated.
@@ -53,6 +55,21 @@ public class SourceCodeFile {
   
   public String getFileName () {
     return name + format;
+  }
+  
+  public String getFileNameWithFolder () {
+    Package aPackage = null;
+    
+    if (element instanceof Type) {
+      aPackage = ((Type) element).getPackage();
+    }
+    
+    String folderName = "";
+    if (aPackage != null) {
+      folderName = aPackage.getName() + "/";
+    }
+    
+    return folderName + getFileName();
   }
   
 }

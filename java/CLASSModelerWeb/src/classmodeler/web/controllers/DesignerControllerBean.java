@@ -270,7 +270,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
       
       for (SourceCodeFile sourceFile : this.sourceCodeFiles) {
         code = generateCodeService.generateSourceCode(sourceFile);
-        zipEntry = new ZipEntry(sourceFile.getFileName());
+        zipEntry = new ZipEntry(sourceFile.getFileNameWithFolder());
         zipFile.putNextEntry(zipEntry);
         zipFile.write(code.getBytes(Charset.forName("UTF-8")));
       }

@@ -490,7 +490,10 @@ CLASSOperations.prototype.saveOperation = function () {
 CLASSOperations.prototype.newParameter = function () {
   if (this.stopEditingParameter()) {
     $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "", collection: "" }});
-    this.startEditingParameter($('#parametersTable').datagrid("getRows").length - 1);
+    var newParamIndex = $("#parametersTable").datagrid("getRows").length - 1;
+    this.startEditingParameter(newParamIndex);
+    var ed = $("#parametersTable").datagrid("getEditor", {index : newParamIndex, field: "name" });
+    $(ed.target).focus();
   }
 };
 

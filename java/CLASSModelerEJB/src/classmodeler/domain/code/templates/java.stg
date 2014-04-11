@@ -27,7 +27,7 @@ interface_template(interface, author, date) ::= <<
 <endif>
 <if(interface.allOperations)>
   
-  <interface.allOperations: {operation | <operation_class(operation)>}; separator={<\n><\n>}>
+  <interface.allOperations: {operation | <operation_interface(operation)>}; separator={<\n><\n>}>
 <endif>
   
 }
