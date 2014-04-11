@@ -85,21 +85,14 @@ CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation
   }
   
   if (isAssociation) {
-    var lower = property.getAttribute("lower");
-    var upper = property.getAttribute("upper");
+    var multiplicity = property.getAttribute("multiplicity");
     
     if (isNavigable) {
       label += " : ";
     }
     
-    if (lower) {
-      label += lower;
-      if (upper) {
-        label += ".." + upper;
-      }
-    }
-    else if (upper) {
-      label += upper;
+    if (multiplicity) {
+      label += multiplicity;
     }
   }
   else {
@@ -951,21 +944,39 @@ CLASSGraph.prototype.getVisibilityJSon = function () {
 CLASSGraph.prototype.getCollectionsJSon = function () {
   var jSonData   = [];
   
-  jSonData.push({id: "array",       text: "[ ]"});
-  jSonData.push({id: "ArrayList",   text: "ArrayList"});
-  jSonData.push({id: "Collection",  text: "Collection"});
-  jSonData.push({id: "EnumSet",     text: "EnumSet"});
-  jSonData.push({id: "HashSet",     text: "HashSet"});
-  jSonData.push({id: "List",        text: "List"});
-  jSonData.push({id: "LinkedHashSet",  text: "LinkedHashSet"});
-  jSonData.push({id: "LinkedList",  text: "LinkedList"});
-  jSonData.push({id: "Prioriqueue", text: "PriorityQueue"});
-  jSonData.push({id: "Queue",       text: "Queue"});
-  jSonData.push({id: "Set",         text: "Set"});
-  jSonData.push({id: "SortedSet",   text: "SortedSet"});
-  jSonData.push({id: "Stack",       text: "Stack"});
-  jSonData.push({id: "TreeSet",     text: "TreeSet"});
-  jSonData.push({id: "Vector",      text: "Vector"});
+  jSonData.push({id: "array",         text: "[ ]"});
+  jSonData.push({id: "ArrayList",     text: "ArrayList"});
+  jSonData.push({id: "Collection",    text: "Collection"});
+  jSonData.push({id: "EnumSet",       text: "EnumSet"});
+  jSonData.push({id: "HashSet",       text: "HashSet"});
+  jSonData.push({id: "List",          text: "List"});
+  jSonData.push({id: "LinkedHashSet", text: "LinkedHashSet"});
+  jSonData.push({id: "LinkedList",    text: "LinkedList"});
+  jSonData.push({id: "Prioriqueue",   text: "PriorityQueue"});
+  jSonData.push({id: "Queue",         text: "Queue"});
+  jSonData.push({id: "Set",           text: "Set"});
+  jSonData.push({id: "SortedSet",     text: "SortedSet"});
+  jSonData.push({id: "Stack",         text: "Stack"});
+  jSonData.push({id: "TreeSet",       text: "TreeSet"});
+  jSonData.push({id: "Vector",        text: "Vector"});
+  
+  return jSonData;
+};
+
+/**
+ * Gets the multiplicities JSon array.
+ * 
+ * @author Gabriel Leonardo Diaz, 10.04.2014.
+ */
+CLASSGraph.prototype.getMultiplicitiesJSon = function () {
+  var jSonData   = [];
+  
+  jSonData.push({id: "*",     text: "*"});
+  jSonData.push({id: "0",     text: "0"});
+  jSonData.push({id: "0..*",  text: "0..*"});
+  jSonData.push({id: "0..1",  text: "0..1"});
+  jSonData.push({id: "1",     text: "1"});
+  jSonData.push({id: "1..*",  text: "1..*"});
   
   return jSonData;
 };

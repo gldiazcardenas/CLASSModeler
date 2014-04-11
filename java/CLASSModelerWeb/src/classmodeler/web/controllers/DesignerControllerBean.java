@@ -144,7 +144,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     this.session           = new SharedDiagramSession(this.diagram, this.user);
     this.umlConverter      = new UMLConverter(this.diagram);
     this.pendingChanges    = false;
-    this.generateCodeService.configure(this.user);
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
@@ -246,7 +245,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 5.03.2014.
    */
   public StreamedContent downloadFile (SourceCodeFile sourceFile) {
-    String code = generateCodeService.generateSourceCode(sourceFile);
+    String code = this.generateCodeService.generateSourceCode(this.user, sourceFile);
     return new DefaultStreamedContent(new ByteArrayInputStream(code.getBytes(Charset.forName("UTF-8"))), "text/plain", sourceFile.getFileName(), "UTF-8");
   }
   
@@ -269,7 +268,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
       ZipEntry zipEntry;
       
       for (SourceCodeFile sourceFile : this.sourceCodeFiles) {
-        code = generateCodeService.generateSourceCode(sourceFile);
+        code = generateCodeService.generateSourceCode(this.user, sourceFile);
         zipEntry = new ZipEntry(sourceFile.getFileNameWithFolder());
         zipFile.putNextEntry(zipEntry);
         zipFile.write(code.getBytes(Charset.forName("UTF-8")));

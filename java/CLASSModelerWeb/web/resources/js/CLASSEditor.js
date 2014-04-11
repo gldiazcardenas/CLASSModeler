@@ -263,13 +263,12 @@ CLASSEditor.prototype.createEdge = function (source, target) {
     
     if (this.graph.isAggregation(edge.value) || this.graph.isComposition(edge.value)) {
       targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
-      targetProp.setAttribute("lower", "0");
-      targetProp.setAttribute("upper", "*");
+      targetProp.setAttribute("multiplicity", "1..*");
       targetProp.setAttribute("collection", "ArrayList");
     }
     else {
       targetProp.setAttribute("name", target.getAttribute("name").toLowerCase());
-      targetProp.setAttribute("upper", "1");
+      targetProp.setAttribute("multiplicity", "1");
     }
     
     this.graph.addAssociationAttribute(edge, targetProp, false, true);
@@ -642,7 +641,7 @@ CLASSEditor.prototype.generateGetSet = function (cell) {
   }
   
   var name = cell.getAttribute("name");
-  var upperName = name.charAt(0).toUpperCase() + name.substring(1);
+  var uName = name.charAt(0).toUpperCase() + name.substring(1);
   var type = cell.getAttribute("type");
   var collection = cell.getAttribute("collection");
   if (collection == null) {
@@ -650,13 +649,13 @@ CLASSEditor.prototype.generateGetSet = function (cell) {
   }
   
   var get = this.graph.model.cloneCell(this.getTemplate("operation"));
-  get.setAttribute("name", "get" + upperName);
+  get.setAttribute("name", "get" + uName);
   get.setAttribute("visibility", "public");
   get.setAttribute("type", type);
   get.setAttribute("collection", collection);
   
   var set = this.graph.model.cloneCell(this.getTemplate("operation"));
-  set.setAttribute("name", "set" + upperName);
+  set.setAttribute("name", "set" + uName);
   set.setAttribute("visibility", "public");
   set.setAttribute("type", "void");
   

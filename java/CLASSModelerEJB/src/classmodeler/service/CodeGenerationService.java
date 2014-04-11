@@ -28,16 +28,10 @@ public interface CodeGenerationService {
   /**
    * 
    * @param user
-   */
-  public void configure (User user);
-  
-  /**
-   * 
-   * @param user
    * @param file
    * @return
    */
-  public String generateSourceCode (SourceCodeFile file);
+  public String generateSourceCode (User user, SourceCodeFile file);
   
   /**
    * 
@@ -45,15 +39,15 @@ public interface CodeGenerationService {
    * @param aClass
    * @return
    */
-  public String generateClass (Class aClass);
+  public String generateClass (User user, Class aClass);
   
   /**
    * 
-   * @para user
+   * @param user
    * @param aInterface
    * @return
    */
-  public String generateInterface (Interface aInterface);
+  public String generateInterface (User user, Interface aInterface);
   
   /**
    * 
@@ -61,6 +55,6 @@ public interface CodeGenerationService {
    * @param aEnumeration
    * @return
    */
-  public String generateEnumeration (Enumeration aEnumeration);
+  public String generateEnumeration (User user, Enumeration aEnumeration);
   
 }

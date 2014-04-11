@@ -40,73 +40,70 @@ public @Stateless class CodeGenerationServiceBean implements CodeGenerationServi
     TEMPLATES.registerRenderer(Calendar.class, dateRender);
   }
   
-  private User user;
-  private Date now;
-  
   public CodeGenerationServiceBean() {
     super();
   }
   
   @Override
-  public void configure(User user) {
-    this.user = user;
-    this.now  = Calendar.getInstance().getTime();
-  }
-  
-  @Override
-  public String generateSourceCode (SourceCodeFile file) {
+  public String generateSourceCode (User user, SourceCodeFile file) {
     if (file.getElement() instanceof Class) {
-      return generateClass((Class) file.getElement());
+      return generateClass(user, (Class) file.getElement());
     }
     else if (file.getElement() instanceof Interface) {
-      return generateInterface((Interface) file.getElement());
+      return generateInterface(user, (Interface) file.getElement());
     }
     else if (file.getElement() instanceof Enumeration) {
-      return generateEnumeration((Enumeration) file.getElement());
+      return generateEnumeration(user, (Enumeration) file.getElement());
     }
     
-    return null;
+    throw new UnsupportedOperationException("The source code file element is not supported!");
   }
   
   @Override
-  public String generateClass(Class aClass) {
+  public String generateClass(User user, Class aClass) {
     ST template = TEMPLATES.getInstanceOf("class_template");
     template.add("class", aClass);
+    template.add("date", Calendar.getInstance().getTime());
+    
     if (!user.isRegisteredUser()) {
       template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
     }
     else {
       template.add("author", user.getName());
     }
-    template.add("date", now);
+    
     return template.render();
   }
   
   @Override
-  public String generateEnumeration(Enumeration aEnumeration) {
+  public String generateEnumeration(User user, Enumeration aEnumeration) {
     ST template = TEMPLATES.getInstanceOf("enumeration_template");
     template.add("enumeration", aEnumeration);
+    template.add("date", Calendar.getInstance().getTime());
+    
     if (!user.isRegisteredUser()) {
       template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
     }
     else {
       template.add("author", user.getName());
     }
-    template.add("date", now);
+    
     return template.render();
   }
   
   @Override
-  public String generateInterface(Interface aInterface) {
+  public String generateInterface(User user, Interface aInterface) {
     ST template = TEMPLATES.getInstanceOf("interface_template");
     template.add("interface", aInterface);
+    template.add("date", Calendar.getInstance().getTime());
+    
     if (!user.isRegisteredUser()) {
       template.add("author", GenericUtils.getLocalizedMessage(user.getName()));
     }
     else {
       template.add("author", user.getName());
     }
-    template.add("date", now);
+    
     return template.render();
   }
   

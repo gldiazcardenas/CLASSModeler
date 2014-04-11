@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 
 import classmodeler.domain.uml.types.java.JavaTypes;
 import classmodeler.domain.user.Guest;
+import classmodeler.domain.user.User;
 import classmodeler.service.CodeGenerationService;
 import classmodeler.service.implementation.CodeGenerationServiceBean;
 
@@ -39,7 +40,6 @@ public class CodeGenerationServiceTest extends ServiceTest {
   @BeforeClass
   public void configure() throws NamingException {
     generateCodeService = (CodeGenerationService) context.lookup(getServiceObjectName(CodeGenerationServiceBean.class.getSimpleName()));
-    generateCodeService.configure(new Guest());
   }
   
   @Override
@@ -68,7 +68,9 @@ public class CodeGenerationServiceTest extends ServiceTest {
     aEnumeration.createOwnedLiteral("DOS");
     aEnumeration.createOwnedLiteral("TRES");
     
-    String file = generateCodeService.generateEnumeration(aEnumeration);
+    User user = new Guest();
+    
+    String file = generateCodeService.generateEnumeration(user, aEnumeration);
     
     assert (file.contains("public enum Numeros")) : "The enum declaration is invalid.";
     assert (file.contains("@author")) : "The file does not contain an author.";
@@ -81,7 +83,7 @@ public class CodeGenerationServiceTest extends ServiceTest {
     aPackage.setName("test");
     aEnumeration.setPackage(aPackage);
     
-    file = generateCodeService.generateEnumeration(aEnumeration);
+    file = generateCodeService.generateEnumeration(user, aEnumeration);
     
     assert (file.contains("package test;")) : "The file does not contain a 'package' sentence, it must exist.";
   }
@@ -102,7 +104,9 @@ public class CodeGenerationServiceTest extends ServiceTest {
     aProperty.setVisibility(VisibilityKind.PUBLIC_LITERAL);
     aProperty.setDefault("DefaultValue");
     
-    String file = generateCodeService.generateInterface(aInterface);
+    User user = new Guest();
+    
+    String file = generateCodeService.generateInterface(user, aInterface);
     
     assert (file.contains("public interface ReadableAndWriteable")) : "The interface declaration is invalid.";
     assert (file.contains("@author")) : "The file does not contain an author.";
@@ -111,7 +115,7 @@ public class CodeGenerationServiceTest extends ServiceTest {
     aPackage.setName("test");
     aInterface.setPackage(aPackage);
     
-    file = generateCodeService.generateInterface(aInterface);
+    file = generateCodeService.generateInterface(user, aInterface);
     
     assert (file.contains("package test;")) : "The file does not contain a 'package' sentence, it must exist.";
   }

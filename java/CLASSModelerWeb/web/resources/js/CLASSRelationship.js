@@ -26,6 +26,8 @@ CLASSRelationship = function (editor) {
   this.configureVisibilityCombo("targetVisibility");
   this.configureCollectionsCombo("sourceCollection");
   this.configureCollectionsCombo("targetCollection");
+  this.configureMultiplicityCombo("sourceMultiplicity");
+  this.configureMultiplicityCombo("targetMultiplicity");
   this.configureNavigableCheckBoxes();
 };
 
@@ -90,28 +92,25 @@ CLASSRelationship.prototype.loadSource = function () {
     }
   }
   
-  var sourceName       = "";
-  var sourceVisibility = "";
-  var sourceCollection = "";
-  var sourceLower      = "";
-  var sourceUpper      = "";
-  var sourceNavigable  = false;
+  var sourceName         = "";
+  var sourceVisibility   = "";
+  var sourceCollection   = "";
+  var sourceMultiplicity = "";
+  var sourceNavigable    = false;
   
   if (this.sourceProperty) {
-    sourceName       = this.sourceProperty.getAttribute("name");
-    sourceVisibility = this.sourceProperty.getAttribute("visibility");
-    sourceCollection = this.sourceProperty.getAttribute("collection");
-    sourceLower      = this.sourceProperty.getAttribute("lower");
-    sourceUpper      = this.sourceProperty.getAttribute("upper");
-    sourceNavigable  = this.graph.isNavigable(this.sourceProperty);
+    sourceName         = this.sourceProperty.getAttribute("name");
+    sourceVisibility   = this.sourceProperty.getAttribute("visibility");
+    sourceCollection   = this.sourceProperty.getAttribute("collection");
+    sourceMultiplicity = this.sourceProperty.getAttribute("multiplicity");
+    sourceNavigable    = this.graph.isNavigable(this.sourceProperty);
   }
   
   $("#sourceName").val(sourceName);
   $("#sourceVisibility").combobox("setValue", sourceVisibility);
   $("#sourceType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.source.id));
   $("#sourceCollection").combobox("setValue", sourceCollection);
-  $("#sourceLower").val(sourceLower);
-  $("#sourceUpper").val(sourceUpper);
+  $("#sourceMultiplicity").combobox("setValue", sourceMultiplicity);
   $("#sourceNavigable").prop("checked", sourceNavigable);
   $("#sourceNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.target.value));
   this.setEnabledSource(sourceNavigable);
@@ -156,28 +155,25 @@ CLASSRelationship.prototype.loadTarget = function () {
     }
   }
   
-  var targetName       = "";
-  var targetVisibility = "";
-  var targetCollection = "";
-  var targetLower      = "";
-  var targetUpper      = "";
-  var targetNavigable  = false;
+  var targetName         = "";
+  var targetVisibility   = "";
+  var targetCollection   = "";
+  var targetMultiplicity = "";
+  var targetNavigable    = false;
   
   if (this.targetProperty) {
-    targetName       = this.targetProperty.getAttribute("name");
-    targetVisibility = this.targetProperty.getAttribute("visibility");
-    targetCollection = this.targetProperty.getAttribute("collection");
-    targetLower      = this.targetProperty.getAttribute("lower");
-    targetUpper      = this.targetProperty.getAttribute("upper");
-    targetNavigable  = this.graph.isNavigable(this.targetProperty);
+    targetName         = this.targetProperty.getAttribute("name");
+    targetVisibility   = this.targetProperty.getAttribute("visibility");
+    targetCollection   = this.targetProperty.getAttribute("collection");
+    targetMultiplicity = this.targetProperty.getAttribute("multiplicity");
+    targetNavigable    = this.graph.isNavigable(this.targetProperty);
   }
   
   $("#targetName").val(targetName);
   $("#targetVisibility").combobox("setValue", targetVisibility);
   $("#targetType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.target.id));
   $("#targetCollection").combobox("setValue", targetCollection);
-  $("#targetLower").val(targetLower);
-  $("#targetUpper").val(targetUpper);
+  $("#targetMultiplicity").combobox("setValue", targetMultiplicity);
   $("#targetNavigable").prop("checked", targetNavigable);
   $("#targetNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.source.value));
   this.setEnabledTarget(targetNavigable);
@@ -190,23 +186,21 @@ CLASSRelationship.prototype.loadTarget = function () {
  * @author Gabriel Leonardo Diaz, 16.03.2014.
  */
 CLASSRelationship.prototype.saveRelationship = function () {
-  var sourceName       = $("#sourceName").val();
-  var sourceVisibility = $("#sourceVisibility").combobox("getValue");
-  var sourceCollection = $("#sourceCollection").combobox("getValue");
-  var sourceLower      = $("#sourceLower").val();
-  var sourceUpper      = $("#sourceUpper").val();
-  var sourceNavigable  = $("#sourceNavigable").is(":checked");
+  var sourceName         = $("#sourceName").val();
+  var sourceVisibility   = $("#sourceVisibility").combobox("getValue");
+  var sourceCollection   = $("#sourceCollection").combobox("getValue");
+  var sourceMultiplicity = $("#sourceMultiplicity").combobox("getValue");
+  var sourceNavigable    = $("#sourceNavigable").is(":checked");
   
-  var targetName       = $("#targetName").val();
-  var targetVisibility = $("#targetVisibility").combobox("getValue");
-  var targetCollection = $("#targetCollection").combobox("getValue");
-  var targetLower      = $("#targetLower").val();
-  var targetUpper      = $("#targetUpper").val();
-  var targetNavigable  = $("#targetNavigable").is(":checked");
+  var targetName         = $("#targetName").val();
+  var targetVisibility   = $("#targetVisibility").combobox("getValue");
+  var targetCollection   = $("#targetCollection").combobox("getValue");
+  var targetMultiplicity = $("#targetMultiplicity").combobox("getValue");
+  var targetNavigable    = $("#targetNavigable").is(":checked");
   
   // Validation
-  if (!this.validProperty(sourceName, sourceVisibility, sourceCollection, sourceLower, sourceUpper, sourceNavigable) ||
-      !this.validProperty(targetName, targetVisibility, targetCollection, targetLower, targetUpper, targetNavigable)) {
+  if (!this.validProperty(sourceName, sourceVisibility, sourceCollection, sourceMultiplicity, sourceNavigable) ||
+      !this.validProperty(targetName, targetVisibility, targetCollection, targetMultiplicity, targetNavigable)) {
     return false;
   }
   
@@ -218,7 +212,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
   
   
   // 2. SAVE SOURCE
-  if (this.needsProperty(sourceNavigable, sourceUpper, sourceLower)) {
+  if (this.needsProperty(sourceNavigable, sourceMultiplicity)) {
     var property;
     if (this.sourceProperty) {
       property = this.sourceProperty.clone(true);
@@ -235,8 +229,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
     property.setAttribute("name", sourceName);
     property.setAttribute("visibility", sourceVisibility);
     property.setAttribute("collection", sourceCollection);
-    property.setAttribute("lower", sourceLower);
-    property.setAttribute("upper", sourceUpper);
+    property.setAttribute("multiplicity", sourceMultiplicity);
     property.setAttribute("type", this.relationshipCell.source.id);
     
     if (this.sourceProperty) {
@@ -255,7 +248,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
   }
   
   // 3. SAVE TARGET
-  if (this.needsProperty(targetNavigable, targetUpper, targetLower)) {
+  if (this.needsProperty(targetNavigable, targetMultiplicity)) {
     var property;
     if (this.targetProperty) {
       property = this.targetProperty.clone(true);
@@ -272,8 +265,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
     property.setAttribute("name", targetName);
     property.setAttribute("visibility", targetVisibility);
     property.setAttribute("collection", targetCollection);
-    property.setAttribute("lower", targetLower);
-    property.setAttribute("upper", targetUpper);
+    property.setAttribute("multiplicity", targetMultiplicity);
     property.setAttribute("type", this.relationshipCell.target.id);
     
     if (this.targetProperty) {
@@ -299,12 +291,11 @@ CLASSRelationship.prototype.saveRelationship = function () {
  * @param name
  * @param visibility
  * @param collection
- * @param lower
- * @param upper
+ * @param multiplicity
  * @param navigable
  * @returns {Boolean}
  */
-CLASSRelationship.prototype.validProperty = function (name, visibility, collection, lower, upper, navigable) {
+CLASSRelationship.prototype.validProperty = function (name, visibility, collection, multiplicity, navigable) {
   if (navigable) {
     if (!name) {
       return false;
@@ -315,7 +306,7 @@ CLASSRelationship.prototype.validProperty = function (name, visibility, collecti
     }
   }
   
-  if (!this.validMultiplicity(lower, upper)) {
+  if (!this.validMultiplicity(multiplicity)) {
     return false;
   }
   
@@ -324,21 +315,34 @@ CLASSRelationship.prototype.validProperty = function (name, visibility, collecti
 
 /**
  * Validates the multiplicity of the property.
- * @param lower
- * @param upper
+ * @param multiplicity
  * @returns {Boolean}
  */
-CLASSRelationship.prototype.validMultiplicity = function (lower, upper) {
-  if (isNaN(lower) || lower < 0) {
-    return false;
-  }
-  
-  if ((isNaN(upper) && upper != "*") || (!isNaN(upper) && upper < 0)) {
-    return false;
-  }
-  
-  if (!isNaN(upper) && lower > upper) {
-    return false;
+CLASSRelationship.prototype.validMultiplicity = function (multiplicity) {
+  if (multiplicity) {
+    var isInteger = function (n) {
+      return !isNaN(n) && parseInt(n) % 1 == 0;
+    };
+    
+    var values = multiplicity.split("..");
+    
+    if (values.length > 2) {
+      return false;
+    }
+    
+    if (!isInteger(values[0]) || parseInt(values[0]) < 0) {
+      return false;
+    }
+    
+    if (values.length > 1) {
+      if (!isInteger(values[1]) && values[1] != "*") {
+        return false;
+      }
+      
+      if (isInteger(values[1]) && parseInt(values[0]) > parseInt(values[1])) {
+        return false;
+      }
+    }
   }
   
   return true;
@@ -346,24 +350,17 @@ CLASSRelationship.prototype.validMultiplicity = function (lower, upper) {
 
 /**
  * Checks if the relationship end needs a property.
+ * 
  * @param navigable
- * @param upper
- * @param lower
+ *          If the end is navigable.
+ * @param multiplicity
+ *          The multiplicity value selected for the end.
  * @author Gabriel Leonardo Diaz, 30.03.2014.
  */
-CLASSRelationship.prototype.needsProperty = function (navigable, upper, lower) {
-  if (navigable) {
+CLASSRelationship.prototype.needsProperty = function (navigable, multiplicity) {
+  if (navigable || multiplicity) {
     return true;
   }
-  
-  if (lower != null && lower.length > 0) {
-    return true;
-  }
-  
-  if (upper != null && upper.length > 0) {
-    return true;
-  }
-  
   return false;
 };
 
@@ -423,7 +420,7 @@ CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
-      width: 300,
+      width: 380,
       data: this.graph.getVisibilityJSon()
   });
   
@@ -448,8 +445,32 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
       valueField:"id",
       textField:"text",
       panelHeight: 90,
-      width: 200,
+      width: 220,
       data: this.graph.getCollectionsJSon()
+  });
+  
+  // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
+  var comboPanel = $(elementId).combobox("panel");
+  comboPanel.panel("panel").css("z-index", "2000");
+};
+
+/**
+ * Configures the multiplicity combo box for the element identified by the given
+ * ID.
+ * 
+ * @param elementId
+ *          The element id.
+ * @author Gabriel Leonardo Diaz, 10.04.2014.
+ */
+CLASSRelationship.prototype.configureMultiplicityCombo = function (elementId) {
+  elementId = "#" + elementId;
+  
+  $(elementId).combobox({
+      valueField:"id",
+      textField:"text",
+      panelHeight: 90,
+      width: 150,
+      data: this.graph.getMultiplicitiesJSon()
   });
   
   // Workaround: The panel is shown behind of the PrimeFaces modal dialog.
