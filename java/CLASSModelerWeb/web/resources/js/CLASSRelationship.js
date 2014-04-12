@@ -95,14 +95,16 @@ CLASSRelationship.prototype.loadSource = function () {
   var sourceName         = "";
   var sourceVisibility   = "";
   var sourceCollection   = "";
-  var sourceMultiplicity = "";
+  var sourceLower        = "";
+  var sourceUpper        = "";
   var sourceNavigable    = false;
   
   if (this.sourceProperty) {
     sourceName         = this.sourceProperty.getAttribute("name");
     sourceVisibility   = this.sourceProperty.getAttribute("visibility");
     sourceCollection   = this.sourceProperty.getAttribute("collection");
-    sourceMultiplicity = this.sourceProperty.getAttribute("multiplicity");
+    sourceLower        = this.sourceProperty.getAttribute("lower");
+    sourceUpper        = this.sourceProperty.getAttribute("upper");
     sourceNavigable    = this.graph.isNavigable(this.sourceProperty);
   }
   
@@ -110,7 +112,7 @@ CLASSRelationship.prototype.loadSource = function () {
   $("#sourceVisibility").combobox("setValue", sourceVisibility);
   $("#sourceType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.source.id));
   $("#sourceCollection").combobox("setValue", sourceCollection);
-  $("#sourceMultiplicity").combobox("setValue", sourceMultiplicity);
+  $("#sourceMultiplicity").combobox("setValue", this.graph.convertMultiplicity(sourceLower, sourceUpper));
   $("#sourceNavigable").prop("checked", sourceNavigable);
   $("#sourceNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.target.value));
   this.setEnabledSource(sourceNavigable);
@@ -158,14 +160,16 @@ CLASSRelationship.prototype.loadTarget = function () {
   var targetName         = "";
   var targetVisibility   = "";
   var targetCollection   = "";
-  var targetMultiplicity = "";
+  var targetLower        = "";
+  var targetUpper        = "";
   var targetNavigable    = false;
   
   if (this.targetProperty) {
     targetName         = this.targetProperty.getAttribute("name");
     targetVisibility   = this.targetProperty.getAttribute("visibility");
     targetCollection   = this.targetProperty.getAttribute("collection");
-    targetMultiplicity = this.targetProperty.getAttribute("multiplicity");
+    targetLower        = this.targetProperty.getAttribute("lower");
+    targetUpper        = this.targetProperty.getAttribute("upper");
     targetNavigable    = this.graph.isNavigable(this.targetProperty);
   }
   
@@ -173,7 +177,7 @@ CLASSRelationship.prototype.loadTarget = function () {
   $("#targetVisibility").combobox("setValue", targetVisibility);
   $("#targetType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.target.id));
   $("#targetCollection").combobox("setValue", targetCollection);
-  $("#targetMultiplicity").combobox("setValue", targetMultiplicity);
+  $("#targetMultiplicity").combobox("setValue", this.graph.convertMultiplicity(targetLower, targetUpper));
   $("#targetNavigable").prop("checked", targetNavigable);
   $("#targetNavigable").attr("disabled", !this.graph.isClass(this.relationshipCell.source.value));
   this.setEnabledTarget(targetNavigable);
@@ -226,21 +230,25 @@ CLASSRelationship.prototype.saveRelationship = function () {
       sourceCollection = "";
     }
     
+    var multiplicities = this.splitMultiplicity(sourceMultiplicity);
     property.setAttribute("name", sourceName);
     property.setAttribute("visibility", sourceVisibility);
     property.setAttribute("collection", sourceCollection);
-    property.setAttribute("multiplicity", sourceMultiplicity);
+    property.setAttribute("lower", multiplicities[0]);
+    property.setAttribute("upper", multiplicities[1]);
     property.setAttribute("type", this.relationshipCell.source.id);
     
     if (this.sourceProperty) {
       this.graph.editAttribute(this.sourceProperty, property);
+      if (sourceName) {
+        this.graph.addAssociationNavigableStyle(true, this.relationshipCell);
+      }
+      else {
+        this.graph.removeAssociationNavigableStyle(true, this.relationshipCell);
+      }
     }
     else {
       this.graph.addAssociationAttribute(this.relationshipCell, property, true, false);
-    }
-    
-    if (sourceName == null || sourceName.length == 0) {
-      this.graph.removeAssociationNavigableStyle(true, this.relationshipCell);
     }
   }
   else if (this.sourceProperty) {
@@ -262,21 +270,25 @@ CLASSRelationship.prototype.saveRelationship = function () {
       targetCollection = "";
     }
     
+    var multiplicities = this.splitMultiplicity(targetMultiplicity);
     property.setAttribute("name", targetName);
     property.setAttribute("visibility", targetVisibility);
     property.setAttribute("collection", targetCollection);
-    property.setAttribute("multiplicity", targetMultiplicity);
+    property.setAttribute("lower", multiplicities[0]);
+    property.setAttribute("upper", multiplicities[1]);
     property.setAttribute("type", this.relationshipCell.target.id);
     
     if (this.targetProperty) {
       this.graph.editAttribute(this.targetProperty, property);
+      if (targetName) {
+        this.graph.addAssociationNavigableStyle(false, this.relationshipCell);
+      }
+      else {
+        this.graph.removeAssociationNavigableStyle(false, this.relationshipCell);
+      }
     }
     else {
       this.graph.addAssociationAttribute(this.relationshipCell, property, false, false);
-    }
-    
-    if (targetName == null || targetName.length == 0) {
-      this.graph.removeAssociationNavigableStyle(false, this.relationshipCell);
     }
   }
   else if (this.targetProperty) {
@@ -320,32 +332,50 @@ CLASSRelationship.prototype.validProperty = function (name, visibility, collecti
  */
 CLASSRelationship.prototype.validMultiplicity = function (multiplicity) {
   if (multiplicity) {
-    var isInteger = function (n) {
-      return !isNaN(n) && parseInt(n) % 1 == 0;
-    };
-    
     var values = multiplicity.split("..");
     
     if (values.length > 2) {
       return false;
     }
     
-    if (!isInteger(values[0]) || parseInt(values[0]) < 0) {
+    if ((!this.isInteger(values[0]) && values[0] != "*") || parseInt(values[0]) < 0) {
       return false;
     }
     
     if (values.length > 1) {
-      if (!isInteger(values[1]) && values[1] != "*") {
+      if ((!this.isInteger(values[1]) && values[1] != "*") || parseInt(values[1]) < 0) {
         return false;
       }
       
-      if (isInteger(values[1]) && parseInt(values[0]) > parseInt(values[1])) {
+      if (this.isInteger(values[1]) && parseInt(values[0]) > parseInt(values[1])) {
         return false;
       }
     }
   }
   
   return true;
+};
+
+/**
+ * Separates the multiplicity value into two values (lower and upper).
+ * 
+ * @param multiplicity
+ * @author Gabriel Leonardo Diaz, 12.04.2014.
+ */
+CLASSRelationship.prototype.splitMultiplicity = function (multiplicity) {
+  var values = [];
+  
+  if (multiplicity) {
+    var separated = multiplicity.split("..");
+    
+    // Lower
+    values.push(separated[0]); 
+    
+    // Upper
+    values.push(separated.length > 1 ? separated[1] : "");
+  }
+  
+  return values;
 };
 
 /**
@@ -362,6 +392,14 @@ CLASSRelationship.prototype.needsProperty = function (navigable, multiplicity) {
     return true;
   }
   return false;
+};
+
+/**
+ * Check if the value is a number.
+ * @param number
+ */
+CLASSRelationship.prototype.isInteger = function (number) {
+  return !isNaN(number) && parseInt(number) % 1 == 0;
 };
 
 /**
@@ -455,8 +493,8 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
 };
 
 /**
- * Configures the multiplicity combo box for the element identified by the given
- * ID.
+ * Configures combo box for multiplicities for the element identified by the
+ * given ID.
  * 
  * @param elementId
  *          The element id.

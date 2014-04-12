@@ -263,12 +263,13 @@ CLASSEditor.prototype.createEdge = function (source, target) {
     
     if (this.graph.isAggregation(edge.value) || this.graph.isComposition(edge.value)) {
       targetProp.setAttribute("name", target.getAttribute("name").toLowerCase() + "Lista");
-      targetProp.setAttribute("multiplicity", "1..*");
+      targetProp.setAttribute("lower", "1");
+      targetProp.setAttribute("upper", "*");
       targetProp.setAttribute("collection", "ArrayList");
     }
     else {
       targetProp.setAttribute("name", target.getAttribute("name").toLowerCase());
-      targetProp.setAttribute("multiplicity", "1");
+      targetProp.setAttribute("upper", "1");
     }
     
     this.graph.addAssociationAttribute(edge, targetProp, false, true);

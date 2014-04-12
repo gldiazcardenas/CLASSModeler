@@ -85,15 +85,10 @@ CLASSGraph.prototype.convertPropertyToString = function (property, isAssociation
   }
   
   if (isAssociation) {
-    var multiplicity = property.getAttribute("multiplicity");
-    
     if (isNavigable) {
       label += " : ";
     }
-    
-    if (multiplicity) {
-      label += multiplicity;
-    }
+    label += this.convertMultiplicity(property.getAttribute("lower"), property.getAttribute("upper"));
   }
   else {
     label += " : " + this.convertTypeToString(property);
@@ -972,13 +967,35 @@ CLASSGraph.prototype.getMultiplicitiesJSon = function () {
   var jSonData   = [];
   
   jSonData.push({id: "*",     text: "*"});
-  jSonData.push({id: "0",     text: "0"});
   jSonData.push({id: "0..*",  text: "0..*"});
   jSonData.push({id: "0..1",  text: "0..1"});
   jSonData.push({id: "1",     text: "1"});
   jSonData.push({id: "1..*",  text: "1..*"});
   
   return jSonData;
+};
+
+/**
+ * Gets the multiplicity value for the given lower and upper values.
+ * 
+ * @param lower
+ * @param upper
+ */
+CLASSGraph.prototype.convertMultiplicity = function (lower, upper) {
+  var multiplicity = "";
+  
+  if (lower) {
+    multiplicity += lower;
+    
+    if (upper) {
+      multiplicity += ".." + upper;
+    }
+  }
+  else if (upper) {
+    multiplicity += upper;
+  }
+  
+  return multiplicity;
 };
 
 /**

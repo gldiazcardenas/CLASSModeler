@@ -334,7 +334,7 @@ public final class UMLConverter {
     boolean isStatic          = parseBoolean(operationCell.getAttribute("static"));
     boolean isFinal           = parseBoolean(operationCell.getAttribute("final"));
     boolean isSynchronized    = parseBoolean(operationCell.getAttribute("synchronized"));
-    boolean isAbstract        = parseBoolean(operationCell.getAttribute("abstract"));
+    boolean isAbstract        = parseBoolean(operationCell.getAttribute("abstract")) || classifier instanceof Interface;
     
     if (classifier instanceof Class) {
       operation = new OperationCustom();

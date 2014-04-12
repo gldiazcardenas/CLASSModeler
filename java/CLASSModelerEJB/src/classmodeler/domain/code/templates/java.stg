@@ -9,7 +9,7 @@ class_template(class, author, date) ::= <<
 <endif>
 <if(class.allOperations)>
   
-  <class.allOperations: {operation | <operation_class(operation)>}; separator={<\n><\n>}>
+  <class.allOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
 <endif>
   
 }
@@ -27,7 +27,7 @@ interface_template(interface, author, date) ::= <<
 <endif>
 <if(interface.allOperations)>
   
-  <interface.allOperations: {operation | <operation_interface(operation)>}; separator={<\n><\n>}>
+  <interface.allOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
 <endif>
   
 }
@@ -54,19 +54,17 @@ property_template(property) ::= <<
 property_modifiers(property) ::= "<if(property.static)> static<endif><if(property.leaf)> final<endif>"
 
 
-operation_class(operation) ::= <<
-  <operation.visibility.name><operation_modifiers(operation)><if(operation.returnType)> <operation.returnType.name><endif> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>) {
+operation_template(operation) ::= <<
+  <operation.visibility.name><operation_modifiers(operation)><if(operation.returnType)> <operation.returnType.name><endif> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>)<if(operation.abstract)>;<endif>
+  <if(!operation.abstract)>
+  {
     <todo()>
   }
+  <endif>
 >>
 
 
-operation_interface(operation) ::= <<
-  <operation.visibility.name><operation_modifiers(operation)> <operation.returnType.name> <operation.name>(<operation.ownedParameters: {parameter | <parameter_template(parameter)>}; separator={, }>);
->>
-
-
-operation_modifiers (operation) ::= "<if(operation.synchronized)> synchronized <endif><if(operation.abstract)> abstract <else><if(operation.static)> static <elseif(operation.leaf)> final <endif><endif>"
+operation_modifiers (operation) ::= "<if(operation.synchronized)> synchronized<endif><if(operation.abstract && operation.class_)> abstract<else><if(operation.static)> static<elseif(operation.leaf)> final<endif><endif>"
 
 
 extended_types (classifier) ::= "<if(classifier.generalizations)> extends <classifier.generalizations: {generalization | <generalization.general.name>}; separator={, }><endif>"
