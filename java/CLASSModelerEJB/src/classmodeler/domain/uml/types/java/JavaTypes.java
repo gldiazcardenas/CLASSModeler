@@ -32,6 +32,8 @@ public final class JavaTypes {
   public static final Type SHORT_TYPE                         = createDataType("Short");
   public static final Type STRING_TYPE                        = createDataType("String");
   public static final Type VOID_TYPE                          = createDataType("Void");
+  public static final Type DATE_TYPE                          = createDataType("Date");
+  public static final Type TIME_TYPE                          = createDataType("Time");
   
   public static final PrimitiveWrappedType PRIMITIVE_BOOLEAN  = createPrimitiveType("boolean", BOOLEAN_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_BYTE     = createPrimitiveType("byte", BYTE_TYPE);
@@ -41,10 +43,10 @@ public final class JavaTypes {
   public static final PrimitiveWrappedType PRIMITIVE_INT      = createPrimitiveType("int", INTEGER_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_LONG     = createPrimitiveType("long", LONG_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_SHORT    = createPrimitiveType("short", SHORT_TYPE);
-  public static final PrimitiveWrappedType PRIMITIVE_STRING   = createPrimitiveType("String", STRING_TYPE);
   public static final PrimitiveWrappedType PRIMITIVE_VOID     = createPrimitiveType("void", VOID_TYPE);
   
   private static final Map<String, PrimitiveWrappedType> PRIMITIVE_TYPES = new HashMap<String, PrimitiveWrappedType>();
+  private static final Map<String, Type> OBJECT_TYPES = new HashMap<String, Type>();
   
   static {
     PRIMITIVE_TYPES.put(PRIMITIVE_BOOLEAN.getName(), PRIMITIVE_BOOLEAN);
@@ -55,8 +57,11 @@ public final class JavaTypes {
     PRIMITIVE_TYPES.put(PRIMITIVE_INT.getName(), PRIMITIVE_INT);
     PRIMITIVE_TYPES.put(PRIMITIVE_LONG.getName(), PRIMITIVE_LONG);
     PRIMITIVE_TYPES.put(PRIMITIVE_SHORT.getName(), PRIMITIVE_SHORT);
-    PRIMITIVE_TYPES.put(PRIMITIVE_STRING.getName(), PRIMITIVE_STRING);
     PRIMITIVE_TYPES.put(PRIMITIVE_VOID.getName(), PRIMITIVE_VOID);
+    
+    OBJECT_TYPES.put(STRING_TYPE.getName(), STRING_TYPE);
+    OBJECT_TYPES.put(DATE_TYPE.getName(), DATE_TYPE);
+    OBJECT_TYPES.put(TIME_TYPE.getName(), TIME_TYPE);
   }
   
   private JavaTypes() {
@@ -64,7 +69,7 @@ public final class JavaTypes {
   }
   
   /**
-   * 
+   * Creates a data type with the given name.
    * @param name
    * @return
    */
@@ -75,6 +80,7 @@ public final class JavaTypes {
   }
   
   /**
+   * Creates a primitive type with the given name and its wrapper.
    * 
    * @param name
    * @param wrapperType
@@ -96,24 +102,42 @@ public final class JavaTypes {
   }
   
   /**
+   * Checks if the given type is an object one.
+   * 
+   * @param typeId
+   * @return
+   * @author Gabriel Leonardo Diaz, 18.04.2014.
+   */
+  public static boolean isObjectType (String typeId) {
+    return OBJECT_TYPES.containsKey(typeId);
+  }
+  
+  /**
    * Gets the primitive type associated to the given id.
    * 
    * @param typeId
    * @return
    * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
-  public static PrimitiveWrappedType getPrimitiveType (String typeId) {
-    return PRIMITIVE_TYPES.get(typeId);
+  public static Type getType (String typeId) {
+    Type type = PRIMITIVE_TYPES.get(typeId);
+    
+    if (type == null) {
+      type = OBJECT_TYPES.get(type);
+    }
+    
+    return type;
   }
   
   /**
+   * Creates a collection type with the given name, for the given type.
    * 
    * @param collectionName
    * @param genericType
    * @return
    * @author Gabriel Leonardo Diaz, 27.03.2014.
    */
-  public static CollectionGenericType getCollectionType (String collectionName, Type genericType) {
+  public static CollectionGenericType createCollectionType (String collectionName, Type genericType) {
     if (ArrayPrimitiveType.ARRAY_TYPE_NAME.equals(collectionName)) {
       return new ArrayPrimitiveType(genericType);
     }

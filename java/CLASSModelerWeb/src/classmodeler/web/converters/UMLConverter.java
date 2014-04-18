@@ -458,7 +458,7 @@ public final class UMLConverter {
     Type type = this.classifiers.get(typeId);
     
     if (type == null) {
-      type = JavaTypes.getPrimitiveType(typeId);
+      type = JavaTypes.getType(typeId);
       
       if (type == null && !GenericUtils.isEmptyString(typeId)) {
         type = UMLFactory.eINSTANCE.createClass(); // Anonymous Type
@@ -469,7 +469,7 @@ public final class UMLConverter {
     }
     
     if (!GenericUtils.isEmptyString(collectionType)) {
-      type = JavaTypes.getCollectionType(collectionType, type);
+      type = JavaTypes.createCollectionType(collectionType, type);
     }
     
     return type;

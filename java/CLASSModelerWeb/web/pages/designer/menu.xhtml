@@ -62,7 +62,13 @@
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_HELP}" icon="ui-icon-help">
-                <p:menuitem value="#{msgs.MENU_ITEM_USER_MANUAL}" icon="ui-icon-note" />
+                <p:menuitem value="#{msgs.MENU_ITEM_USER_MANUAL}" icon="ui-icon-note" url="/resources/CLASSModeler-UserManual.pdf" />
+                <p:separator/>
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_ELEMENTS}" icon="ui-icon-video" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_ATTRIBUTES}" icon="ui-icon-video" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_OPERATIONS}" icon="ui-icon-video" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_RELATIONSHIPS}" icon="ui-icon-video" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_TOOLS}" icon="ui-icon-video" />
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
             </p:submenu>

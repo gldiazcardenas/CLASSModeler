@@ -899,6 +899,8 @@ CLASSGraph.prototype.getTypesJSon = function (includeVoid) {
   jSonData.push({id:"long",    text:"long"});
   jSonData.push({id:"short",   text:"short"});
   jSonData.push({id:"String",  text:"String"});
+  jSonData.push({id:"Date",    text:"Date"});
+  jSonData.push({id:"Time",    text:"Time"});
   
   var cell;
   
