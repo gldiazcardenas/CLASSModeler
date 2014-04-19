@@ -3,13 +3,13 @@ class_template(class, author, date) ::= <<
 <class.package:package()>
 <documentation(author, date)>
 <class.visibility.name> class <class.name><extended_types(class)><implemented_types(class)> {
-<if(class.allAttributes)>
+<if(class.ownedAttributes)>
   
-  <class.allAttributes: {property | <property_template(property)>}; separator={<\n>}>
+  <class.ownedAttributes: {property | <property_template(property)>}; separator={<\n>}>
 <endif>
-<if(class.allOperations)>
+<if(class.ownedOperations)>
   
-  <class.allOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
+  <class.ownedOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
 <endif>
   
 }
@@ -21,13 +21,13 @@ interface_template(interface, author, date) ::= <<
 <interface.package:package()>
 <documentation(author, date)>
 <interface.visibility.name> interface <interface.name><extended_types(interface)> {
-<if(interface.allAttributes)>
+<if(interface.ownedAttributes)>
   
-  <interface.allAttributes: {property | <property_template(property)>}; separator={<\n>}>
+  <interface.ownedAttributes: {property | <property_template(property)>}; separator={<\n>}>
 <endif>
-<if(interface.allOperations)>
+<if(interface.ownedOperations)>
   
-  <interface.allOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
+  <interface.ownedOperations: {operation | <operation_template(operation)>}; separator={<\n><\n>}>
 <endif>
   
 }
