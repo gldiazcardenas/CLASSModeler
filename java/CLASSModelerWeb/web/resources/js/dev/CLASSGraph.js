@@ -6,6 +6,14 @@
  * 
  ******************************************************************************/
 
+/**
+ * Constructor that instances a graph component.
+ * @param container
+ * @param model
+ * @param renderHint
+ * @param stylesheet
+ * @returns {CLASSGraph}
+ */
 CLASSGraph = function (container, model, renderHint, stylesheet) {
   mxGraph.call(this, container, model, renderHint, stylesheet);
 };
