@@ -92,10 +92,6 @@ public @Stateless class UserServiceBean implements UserService {
       throw new InvalidDiagrammerAccountException("The user account is already activated.", EInvalidAccountErrorType.ACTIVATED_ACCOUNT);
     }
     
-    if (diagrammer.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidDiagrammerAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
-    }
-    
     SecurityCode securityCode = securityService.getSecurityCode(diagrammer, verificationCode, ESecurityCodeType.ACTIVATE_ACCOUNT);
     
     if (securityCode == null) {
@@ -135,10 +131,6 @@ public @Stateless class UserServiceBean implements UserService {
       throw new InvalidDiagrammerAccountException("The user account doesn't exist", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (diagrammer.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidDiagrammerAccountException("The use account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
-    }
-    
     // Gets the verification code.
     SecurityCode securityCode = securityService.getSecurityCode(diagrammer, code, ESecurityCodeType.PASSWORD_RESET);
     
@@ -172,10 +164,6 @@ public @Stateless class UserServiceBean implements UserService {
       throw new InvalidDiagrammerAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
     }
     
-    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidDiagrammerAccountException("The user account is deactivated", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
-    }
-    
     // Creates the verification code.
     SecurityCode securityCode = securityService.insertSecurityCode(ESecurityCodeType.PASSWORD_RESET, user);
     
@@ -189,10 +177,6 @@ public @Stateless class UserServiceBean implements UserService {
     
     if (user == null) {
       throw new InvalidDiagrammerAccountException("The user account doesn't exist.", EInvalidAccountErrorType.NON_EXISTING_ACCOUNT);
-    }
-    
-    if (user.getAccountStatus() == EDiagrammerAccountStatus.DEACTIVATED) {
-      throw new InvalidDiagrammerAccountException("The user account is deactivated.", EInvalidAccountErrorType.DEACTIVATED_ACCOUNT);
     }
     
     user.setPassword(newPassword);

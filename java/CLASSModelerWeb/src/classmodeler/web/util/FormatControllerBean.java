@@ -69,9 +69,6 @@ public class FormatControllerBean extends JSFGenericBean {
     case ACTIVATED:
       return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_ACTIVATED_NAME");
       
-    case DEACTIVATED:
-      return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_DEACTIVATED_NAME");
-      
     default:
       return GenericUtils.getLocalizedMessage("USER_ACCOUNT_STATUS_INACTIVATED_NAME");
     }
@@ -93,9 +90,6 @@ public class FormatControllerBean extends JSFGenericBean {
     switch (status) {
     case ACTIVATED:
       return "/resources/images/accept.png";
-      
-    case DEACTIVATED:
-      return "/resources/images/block.png";
       
     default:
       return "/resources/images/warning.png";

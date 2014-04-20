@@ -54,7 +54,6 @@ public class InvalidDiagrammerAccountException extends ServiceException {
     NON_EXISTING_ACCOUNT,  // Used to validate the user account through the email
     NON_ACTIVATED_ACCOUNT, // Used in the login
     DUPLICATED_ACCOUNT,    // Used in signing up process
-    DEACTIVATED_ACCOUNT,   // Used in account activation process.
     ACTIVATED_ACCOUNT      // Used in account activation process.
   }
   

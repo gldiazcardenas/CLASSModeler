@@ -63,9 +63,6 @@ public class ForgotPasswordControllerBean extends JSFGenericBean implements JSFF
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
         }
-        else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-          addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
-        }
         else {
           // Should not happen
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());

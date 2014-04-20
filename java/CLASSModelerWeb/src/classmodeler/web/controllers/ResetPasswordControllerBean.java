@@ -99,9 +99,6 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
       if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
         errorMessage = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE");
       }
-      else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-        errorMessage = GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE");
-      }
       else {
         errorMessage = GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE");
       }
@@ -130,9 +127,6 @@ public class ResetPasswordControllerBean extends JSFGenericBean implements JSFFo
       catch (InvalidDiagrammerAccountException e) {
         if (e.getType() == EInvalidAccountErrorType.NON_EXISTING_ACCOUNT) {
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_NON_EXISTING_MESSAGE"), null);
-        }
-        else if (e.getType() == EInvalidAccountErrorType.DEACTIVATED_ACCOUNT) {
-          addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("INVALID_ACCOUNT_DEACTIVATED_MESSAGE"), null);
         }
         else {
           addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getLocalizedMessage());

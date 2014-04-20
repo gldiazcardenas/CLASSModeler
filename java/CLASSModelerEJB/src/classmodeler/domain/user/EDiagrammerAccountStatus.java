@@ -22,10 +22,6 @@ public enum EDiagrammerAccountStatus {
   /**
    * The diagrammer created his/her account and activated it.
    */
-  ACTIVATED,
-  /**
-   * The diagrammer had an account but decided to deactivate it by himself/herself
-   */
-  DEACTIVATED
+  ACTIVATED
 
 }
