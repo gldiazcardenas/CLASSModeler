@@ -11,7 +11,7 @@
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSRelationship = function (editor) {
+CLASSRelationshipDialog = function (editor) {
   this.editor      = editor;
   this.graph       = editor.graph;
   this.dialog      = dlgRelationship; // Defined by a PrimeFaces dialog.
@@ -34,22 +34,22 @@ CLASSRelationship = function (editor) {
 /**
  * The instance of the relationship being edited.
  */
-CLASSRelationship.prototype.relationshipCell;
+CLASSRelationshipDialog.prototype.relationshipCell;
 
 /**
  * Reference to the source property of the relationship.
  */
-CLASSRelationship.prototype.sourceProperty;
+CLASSRelationshipDialog.prototype.sourceProperty;
 
 /**
  * Reference to the target property of the relationship.
  */
-CLASSRelationship.prototype.targetProperty;
+CLASSRelationshipDialog.prototype.targetProperty;
 
 /**
  * The localized text for the dialog title.
  */
-CLASSRelationship.prototype.title;
+CLASSRelationshipDialog.prototype.title;
 
 /**
  * Initializes the dialog to edit relationship contained by the given cell.
@@ -57,7 +57,7 @@ CLASSRelationship.prototype.title;
  * @param cell
  * @author Gabriel Leonardo Diaz, 19.02.2014.
  */
-CLASSRelationship.prototype.init = function (cell) {
+CLASSRelationshipDialog.prototype.init = function (cell) {
   this.relationshipCell = cell;
   this.loadRelationship();
   this.loadSource();
@@ -70,7 +70,7 @@ CLASSRelationship.prototype.init = function (cell) {
  * 
  * @author Gabriel Leonardo Diaz, 16.03.2014.
  */
-CLASSRelationship.prototype.loadRelationship = function () {
+CLASSRelationshipDialog.prototype.loadRelationship = function () {
   $("#relName").val(this.relationshipCell.getAttribute("name"));
 };
 
@@ -79,7 +79,7 @@ CLASSRelationship.prototype.loadRelationship = function () {
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2014.
  */
-CLASSRelationship.prototype.loadSource = function () {
+CLASSRelationshipDialog.prototype.loadSource = function () {
   this.sourceProperty = null;
   
   if (this.relationshipCell.children) {
@@ -123,7 +123,7 @@ CLASSRelationship.prototype.loadSource = function () {
  * 
  * @author Gabriel Leonardo Diaz, 15.03.2014.
  */
-CLASSRelationship.prototype.setEnabledSource = function (enabled) {
+CLASSRelationshipDialog.prototype.setEnabledSource = function (enabled) {
   if (enabled) {
     $("#sourceName").removeAttr("disabled");
     $("#sourceVisibility").combobox("enable");
@@ -144,7 +144,7 @@ CLASSRelationship.prototype.setEnabledSource = function (enabled) {
  * 
  * @author Gabriel Leonardo Diaz, 14.03.2014.
  */
-CLASSRelationship.prototype.loadTarget = function () {
+CLASSRelationshipDialog.prototype.loadTarget = function () {
   this.targetProperty = null;
   
   if (this.relationshipCell.children) {
@@ -189,7 +189,7 @@ CLASSRelationship.prototype.loadTarget = function () {
  * @returns {Boolean}
  * @author Gabriel Leonardo Diaz, 16.03.2014.
  */
-CLASSRelationship.prototype.saveRelationship = function () {
+CLASSRelationshipDialog.prototype.saveRelationship = function () {
   var sourceName         = $("#sourceName").val();
   var sourceVisibility   = $("#sourceVisibility").combobox("getValue");
   var sourceCollection   = $("#sourceCollection").combobox("getValue");
@@ -307,7 +307,7 @@ CLASSRelationship.prototype.saveRelationship = function () {
  * @param navigable
  * @returns {Boolean}
  */
-CLASSRelationship.prototype.validProperty = function (name, visibility, collection, multiplicity, navigable) {
+CLASSRelationshipDialog.prototype.validProperty = function (name, visibility, collection, multiplicity, navigable) {
   if (navigable) {
     if (!name) {
       return false;
@@ -330,7 +330,7 @@ CLASSRelationship.prototype.validProperty = function (name, visibility, collecti
  * @param multiplicity
  * @returns {Boolean}
  */
-CLASSRelationship.prototype.validMultiplicity = function (multiplicity) {
+CLASSRelationshipDialog.prototype.validMultiplicity = function (multiplicity) {
   if (multiplicity) {
     var values = multiplicity.split("..");
     
@@ -362,7 +362,7 @@ CLASSRelationship.prototype.validMultiplicity = function (multiplicity) {
  * @param multiplicity
  * @author Gabriel Leonardo Diaz, 12.04.2014.
  */
-CLASSRelationship.prototype.splitMultiplicity = function (multiplicity) {
+CLASSRelationshipDialog.prototype.splitMultiplicity = function (multiplicity) {
   var values = [];
   
   if (multiplicity) {
@@ -387,7 +387,7 @@ CLASSRelationship.prototype.splitMultiplicity = function (multiplicity) {
  *          The multiplicity value selected for the end.
  * @author Gabriel Leonardo Diaz, 30.03.2014.
  */
-CLASSRelationship.prototype.needsProperty = function (navigable, multiplicity) {
+CLASSRelationshipDialog.prototype.needsProperty = function (navigable, multiplicity) {
   if (navigable || multiplicity) {
     return true;
   }
@@ -398,7 +398,7 @@ CLASSRelationship.prototype.needsProperty = function (navigable, multiplicity) {
  * Check if the value is a number.
  * @param number
  */
-CLASSRelationship.prototype.isInteger = function (number) {
+CLASSRelationshipDialog.prototype.isInteger = function (number) {
   return !isNaN(number) && parseInt(number) % 1 == 0;
 };
 
@@ -406,7 +406,7 @@ CLASSRelationship.prototype.isInteger = function (number) {
  * 
  * @param enabled
  */
-CLASSRelationship.prototype.setEnabledTarget = function (enabled) {
+CLASSRelationshipDialog.prototype.setEnabledTarget = function (enabled) {
   if (enabled) {
     $("#targetName").removeAttr("disabled");
     $("#targetVisibility").combobox("enable");
@@ -428,7 +428,7 @@ CLASSRelationship.prototype.setEnabledTarget = function (enabled) {
  * 
  * @author Gabriel Leonardo Diaz, 10.02.2014.
  */
-CLASSRelationship.prototype.setTitle = function () {
+CLASSRelationshipDialog.prototype.setTitle = function () {
   var relationshipName = "";
   
   if (this.graph.isAggregation(this.relationshipCell.value)) {
@@ -451,7 +451,7 @@ CLASSRelationship.prototype.setTitle = function () {
  * @param elementId
  * @author Gabriel Leonardo Diaz, 20.02.2014.
  */
-CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
+CLASSRelationshipDialog.prototype.configureVisibilityCombo = function (elementId) {
   elementId = "#" + elementId;
   
   $(elementId).combobox({
@@ -476,7 +476,7 @@ CLASSRelationship.prototype.configureVisibilityCombo = function (elementId) {
  * @param elementId
  * @author Gabriel Leonardo Diaz, 20.02.2014.
  */
-CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
+CLASSRelationshipDialog.prototype.configureCollectionsCombo = function (elementId) {
   elementId = "#" + elementId;
   
   $(elementId).combobox({
@@ -500,7 +500,7 @@ CLASSRelationship.prototype.configureCollectionsCombo = function (elementId) {
  *          The element id.
  * @author Gabriel Leonardo Diaz, 10.04.2014.
  */
-CLASSRelationship.prototype.configureMultiplicityCombo = function (elementId) {
+CLASSRelationshipDialog.prototype.configureMultiplicityCombo = function (elementId) {
   elementId = "#" + elementId;
   
   $(elementId).combobox({
@@ -521,7 +521,7 @@ CLASSRelationship.prototype.configureMultiplicityCombo = function (elementId) {
  * 
  * @author Gabriel Leonardo Diaz, 15.03.2014.
  */
-CLASSRelationship.prototype.configureNavigableCheckBoxes = function () {
+CLASSRelationshipDialog.prototype.configureNavigableCheckBoxes = function () {
   var self = this;
   
   $("#sourceNavigable").change(function() {
@@ -538,6 +538,6 @@ CLASSRelationship.prototype.configureNavigableCheckBoxes = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSRelationship.prototype.show = function () {
+CLASSRelationshipDialog.prototype.show = function () {
   this.dialog.show();
 };

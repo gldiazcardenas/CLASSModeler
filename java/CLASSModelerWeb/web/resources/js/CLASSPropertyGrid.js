@@ -8,7 +8,7 @@
  * 
  ******************************************************************************/
 
-CLASSProperties = function (editor) {
+CLASSPropertyGrid = function (editor) {
   this.editor = editor;
   this.graph  = editor.graph;
 };
@@ -16,19 +16,19 @@ CLASSProperties = function (editor) {
 /**
  * Instance of the editor component (CLASSEditor).
  */
-CLASSProperties.prototype.editor;
+CLASSPropertyGrid.prototype.editor;
 
 /**
  * Instance of the mxGraph cell being edited.
  */
-CLASSProperties.prototype.cell;
+CLASSPropertyGrid.prototype.cell;
 
 /**
  * Initializes the property grid component.
  * 
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.init = function () {
+CLASSPropertyGrid.prototype.init = function () {
   var self = this;
   
   this.graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt) {
@@ -47,7 +47,7 @@ CLASSProperties.prototype.init = function () {
  *          The event.
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.selectionChanged = function (sender, evt) {
+CLASSPropertyGrid.prototype.selectionChanged = function (sender, evt) {
   var cells = this.graph.getSelectionCells();
   
   if (cells.length == 1) {
@@ -63,7 +63,7 @@ CLASSProperties.prototype.selectionChanged = function (sender, evt) {
  * 
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.clearProperties = function () {
+CLASSPropertyGrid.prototype.clearProperties = function () {
   this.configureProperties(null);
 };
 
@@ -74,7 +74,7 @@ CLASSProperties.prototype.clearProperties = function () {
  *          The cell to be edited. If the cell is null the grid is cleared.
  * @author Gabriel Leonardo Diaz, 14.01.2014.
  */
-CLASSProperties.prototype.configureProperties = function (cell) {
+CLASSPropertyGrid.prototype.configureProperties = function (cell) {
   var self               = this;
   var selfEditor         = this.editor;
   
@@ -202,7 +202,7 @@ CLASSProperties.prototype.configureProperties = function (cell) {
  * @param booleanValue
  * @returns
  */
-CLASSProperties.prototype.convertBooleanToString = function (booleanValue) {
+CLASSPropertyGrid.prototype.convertBooleanToString = function (booleanValue) {
   if (booleanValue != null) {
     return booleanValue == "1" ? "Si" : "No";
   }
@@ -214,7 +214,7 @@ CLASSProperties.prototype.convertBooleanToString = function (booleanValue) {
  * @param stringValue
  * @returns
  */
-CLASSProperties.prototype.convertStringToBoolean = function (stringValue) {
+CLASSPropertyGrid.prototype.convertStringToBoolean = function (stringValue) {
   return stringValue == "Si" ? "1" : "0";
 };
 
@@ -223,7 +223,7 @@ CLASSProperties.prototype.convertStringToBoolean = function (stringValue) {
  * @param cell
  * @returns {Boolean}
  */
-CLASSProperties.prototype.isCellEditable = function (cell) {
+CLASSPropertyGrid.prototype.isCellEditable = function (cell) {
   return cell != null && cell.value != null;
 };
 
@@ -238,7 +238,7 @@ CLASSProperties.prototype.isCellEditable = function (cell) {
  *          The changes made.
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSProperties.prototype.processChanges = function (rowIndex, rowData, changes) {
+CLASSPropertyGrid.prototype.processChanges = function (rowIndex, rowData, changes) {
   if (changes.value != null) {
     switch (rowIndex) {
     case 0: // Name

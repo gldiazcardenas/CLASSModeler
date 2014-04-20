@@ -62,7 +62,7 @@ var CLASSModeler = (function () {
       outline.init(document.getElementById("outline"));
       outline.updateOnPan = true;
       
-      properties = new CLASSProperties(editor);
+      properties = new CLASSPropertyGrid(editor);
       properties.init();
     },
     

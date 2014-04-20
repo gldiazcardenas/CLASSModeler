@@ -11,7 +11,7 @@
  * 
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
-CLASSAttributes = function (editor) {
+CLASSAttributeDialog = function (editor) {
   this.editor = editor;
   this.graph  = editor.graph;
   this.dialog = dlgAttributes; // Defined by a PrimeFaces dialog.
@@ -26,37 +26,37 @@ CLASSAttributes = function (editor) {
 /**
  * Instance of the editor component.
  */
-CLASSAttributes.prototype.editor;
+CLASSAttributeDialog.prototype.editor;
 
 /**
  * Instance of the graph component.
  */
-CLASSAttributes.prototype.graph;
+CLASSAttributeDialog.prototype.graph;
 
 /**
  * Instance of the dialog to handle.
  */
-CLASSAttributes.prototype.dialog;
+CLASSAttributeDialog.prototype.dialog;
 
 /**
  * Instance of the classifier edited.
  */
-CLASSAttributes.prototype.classifierCell;
+CLASSAttributeDialog.prototype.classifierCell;
 
 /**
  * Instance of the attribute edited.
  */
-CLASSAttributes.prototype.attributeCell;
+CLASSAttributeDialog.prototype.attributeCell;
 
 /**
  * Index on the table of the attribute being edited.
  */
-CLASSAttributes.prototype.attributeIndex;
+CLASSAttributeDialog.prototype.attributeIndex;
 
 /**
  * The localized title text.
  */
-CLASSAttributes.prototype.title;
+CLASSAttributeDialog.prototype.title;
 
 /**
  * Initializes the dialog with the attributes of the given cell containing a
@@ -66,7 +66,7 @@ CLASSAttributes.prototype.title;
  *          The cell containing the classifier to be edited.
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
-CLASSAttributes.prototype.init = function (cell) {
+CLASSAttributeDialog.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.attributeCell  = null;
   this.attributeIndex = null;
@@ -85,7 +85,7 @@ CLASSAttributes.prototype.init = function (cell) {
  * 
  * @author Gabriel Leonardo Diaz, 03.03.2014.
  */
-CLASSAttributes.prototype.configureGUI = function () {
+CLASSAttributeDialog.prototype.configureGUI = function () {
   if (this.graph.isEnumeration(this.classifierCell.value)) {
     $("#staticCheck").attr("disabled", true);
     $("#finalCheck").attr("disabled", true);
@@ -118,7 +118,7 @@ CLASSAttributes.prototype.configureGUI = function () {
  * 
  * @author Gabriel Leonardo Diaz, 10.02.2014.
  */
-CLASSAttributes.prototype.setTitle = function () {
+CLASSAttributeDialog.prototype.setTitle = function () {
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
 };
 
@@ -127,7 +127,7 @@ CLASSAttributes.prototype.setTitle = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSAttributes.prototype.configureTypeCombo = function () {
+CLASSAttributeDialog.prototype.configureTypeCombo = function () {
   $("#attrType").combobox({
       valueField:"id",
       textField:"text",
@@ -147,7 +147,7 @@ CLASSAttributes.prototype.configureTypeCombo = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSAttributes.prototype.configureVisibilityCombo = function () {
+CLASSAttributeDialog.prototype.configureVisibilityCombo = function () {
   $("#attrVisibility").combobox({
       valueField:"id",
       textField:"text",
@@ -167,7 +167,7 @@ CLASSAttributes.prototype.configureVisibilityCombo = function () {
  * 
  * @author Gabriel Leonardo Diaz, 03.03.2014.
  */
-CLASSAttributes.prototype.configureCollectionsCombo = function () {
+CLASSAttributeDialog.prototype.configureCollectionsCombo = function () {
   $("#attrCollection").combobox({
       valueField:"id",
       textField:"text",
@@ -187,7 +187,7 @@ CLASSAttributes.prototype.configureCollectionsCombo = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSAttributes.prototype.configureAttributesTable = function () {
+CLASSAttributeDialog.prototype.configureAttributesTable = function () {
   var self = this;
   
   $("#attributesTable").datagrid({
@@ -235,7 +235,7 @@ CLASSAttributes.prototype.configureAttributesTable = function () {
 /**
  * Loads the types data once again.
  */
-CLASSAttributes.prototype.loadTypesData = function () {
+CLASSAttributeDialog.prototype.loadTypesData = function () {
   $("#attrType").combobox({ data: this.graph.getTypesJSon() });
 };
 
@@ -243,7 +243,7 @@ CLASSAttributes.prototype.loadTypesData = function () {
  * Loads the attributes of the edited classifier and fills the table data.
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
-CLASSAttributes.prototype.loadTableData = function () {
+CLASSAttributeDialog.prototype.loadTableData = function () {
   var jSonData = [];
   
   var attributes = this.graph.getAttributes(this.classifierCell);
@@ -272,7 +272,7 @@ CLASSAttributes.prototype.loadTableData = function () {
  *          A flag indicating the event type (selection or unselection).
  * @author Gabriel Leonardo Diaz, 24.01.2014.
  */
-CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
+CLASSAttributeDialog.prototype.selectionChanged = function (rowIndex, selected) {
   this.clearFields();
   
   if (selected) {
@@ -294,7 +294,7 @@ CLASSAttributes.prototype.selectionChanged = function (rowIndex, selected) {
  * 
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSAttributes.prototype.newAttribute = function () {
+CLASSAttributeDialog.prototype.newAttribute = function () {
   this.clearSelection();
   this.clearFields();
   $("#attrName" ).focus();
@@ -305,7 +305,7 @@ CLASSAttributes.prototype.newAttribute = function () {
  * 
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSAttributes.prototype.deleteAttribute = function () {
+CLASSAttributeDialog.prototype.deleteAttribute = function () {
   if (this.attributeCell) {
     this.graph.removeCells([this.attributeCell]);
     $("#attributesTable").datagrid("deleteRow", this.attributeIndex);
@@ -318,7 +318,7 @@ CLASSAttributes.prototype.deleteAttribute = function () {
  * 
  * @author Gabriel Leonardo Diaz, 18.01.2014.
  */
-CLASSAttributes.prototype.saveAttribute = function () {
+CLASSAttributeDialog.prototype.saveAttribute = function () {
   var nameValue       = $("#attrName").val();
   var typeValue       = $("#attrType").combobox("getValue");
   var visibilityValue = $("#attrVisibility").combobox("getValue");
@@ -411,7 +411,7 @@ CLASSAttributes.prototype.saveAttribute = function () {
  * 
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
-CLASSAttributes.prototype.clearFields = function () {
+CLASSAttributeDialog.prototype.clearFields = function () {
   $("#attrName").val("");
   
   if (this.graph.isEnumeration(this.classifierCell.value)) {
@@ -435,7 +435,7 @@ CLASSAttributes.prototype.clearFields = function () {
  * 
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
-CLASSAttributes.prototype.clearSelection = function () {
+CLASSAttributeDialog.prototype.clearSelection = function () {
   $("#attributesTable").datagrid("unselectAll");
   this.attributeIndex = null;
   this.attributeCell  = null;
@@ -446,6 +446,6 @@ CLASSAttributes.prototype.clearSelection = function () {
  * 
  * @author Gabriel Leonardo Diaz, 16.01.2014.
  */
-CLASSAttributes.prototype.show = function () {
+CLASSAttributeDialog.prototype.show = function () {
   this.dialog.show();
 };

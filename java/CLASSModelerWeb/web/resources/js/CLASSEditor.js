@@ -588,7 +588,7 @@ CLASSEditor.prototype.showAttributes = function (cell) {
   }
     
   if (!this.attrDialog) {
-    this.attrDialog = new CLASSAttributes(this);
+    this.attrDialog = new CLASSAttributeDialog(this);
   }
   this.attrDialog.init(cell);
   this.attrDialog.show();
@@ -607,7 +607,7 @@ CLASSEditor.prototype.showOperations = function (cell) {
   }
   
   if (!this.operDialog) {
-    this.operDialog = new CLASSOperations(this);
+    this.operDialog = new CLASSOperationDialog(this);
   }
   this.operDialog.init(cell);
   this.operDialog.show();
@@ -625,7 +625,7 @@ CLASSEditor.prototype.showRelationship = function (cell) {
   }
   
   if (!this.relationDialog) {
-    this.relationDialog = new CLASSRelationship(this);
+    this.relationDialog = new CLASSRelationshipDialog(this);
   }
   this.relationDialog.init(cell);
   this.relationDialog.show();

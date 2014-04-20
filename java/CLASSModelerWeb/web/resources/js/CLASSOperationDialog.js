@@ -11,7 +11,7 @@
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations = function (editor) {
+CLASSOperationDialog = function (editor) {
   this.editor = editor;
   this.graph  = editor.graph;
   this.dialog = dlgOperations; // Defined by a PrimeFaces dialog.
@@ -32,48 +32,48 @@ CLASSOperations = function (editor) {
 /**
  * Instance of the editor component.
  */
-CLASSOperations.prototype.editor;
+CLASSOperationDialog.prototype.editor;
 
 /**
  * Instance of the graph component.
  */
-CLASSOperations.prototype.graph;
+CLASSOperationDialog.prototype.graph;
 
 /**
  * The dialog to show.
  */
-CLASSOperations.prototype.dialog;
+CLASSOperationDialog.prototype.dialog;
 
 /**
  * The instance of the classifier being edited.
  */
-CLASSOperations.prototype.classifierCell;
+CLASSOperationDialog.prototype.classifierCell;
 
 /**
  * The instance of the operation being edited.
  */
-CLASSOperations.prototype.operationCell;
+CLASSOperationDialog.prototype.operationCell;
 
 /**
  * The index on the table of the operation being edited.
  */
-CLASSOperations.prototype.operationIndex;
+CLASSOperationDialog.prototype.operationIndex;
 
 /**
  * The index on the table of the parameter being edited.
  */
-CLASSOperations.prototype.parameterIndex;
+CLASSOperationDialog.prototype.parameterIndex;
 
 /**
  * The localized title text.
  */
-CLASSAttributes.prototype.title;
+CLASSOperationDialog.prototype.title;
 
 /**
  * Initializes the dialog to edit the operations of the given classifier cell.
  * @param cell
  */
-CLASSOperations.prototype.init = function (cell) {
+CLASSOperationDialog.prototype.init = function (cell) {
   this.classifierCell = cell;
   this.operationCell  = null;
   this.operationIndex = null;
@@ -92,7 +92,7 @@ CLASSOperations.prototype.init = function (cell) {
  * 
  * @author Gabriel Leonardo Diaz, 10.02.2014.
  */
-CLASSOperations.prototype.setTitle = function () {
+CLASSOperationDialog.prototype.setTitle = function () {
   this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
 };
 
@@ -101,7 +101,7 @@ CLASSOperations.prototype.setTitle = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSOperations.prototype.configureOperationsTable = function () {
+CLASSOperationDialog.prototype.configureOperationsTable = function () {
   var self = this;
   
   $("#operationsTable").datagrid({
@@ -151,7 +151,7 @@ CLASSOperations.prototype.configureOperationsTable = function () {
  * 
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
-CLASSOperations.prototype.loadOperationTableData = function () {
+CLASSOperationDialog.prototype.loadOperationTableData = function () {
   var jSonData = [];
   
   var operations = this.graph.getOperations(this.classifierCell);
@@ -173,7 +173,7 @@ CLASSOperations.prototype.loadOperationTableData = function () {
 /**
  * Updates the types in the return type field and the parameters table.
  */
-CLASSOperations.prototype.loadTypesData = function () {
+CLASSOperationDialog.prototype.loadTypesData = function () {
   $("#operReturnType").combobox({ data: this.graph.getTypesJSon(true) });
   this.configureParametersTable();
 };
@@ -183,7 +183,7 @@ CLASSOperations.prototype.loadTypesData = function () {
  * 
  * @author Gabriel Leonardo Diaz, 17.01.2014.
  */
-CLASSOperations.prototype.configureVisibilityComboBox = function () {
+CLASSOperationDialog.prototype.configureVisibilityComboBox = function () {
   $("#operVisibility").combobox({
       valueField:"id",
       textField:"text",
@@ -204,7 +204,7 @@ CLASSOperations.prototype.configureVisibilityComboBox = function () {
  * 
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
-CLASSOperations.prototype.configureParametersTable = function () {
+CLASSOperationDialog.prototype.configureParametersTable = function () {
   var self      = this;
   
   $("#parametersTable").datagrid({
@@ -259,7 +259,7 @@ CLASSOperations.prototype.configureParametersTable = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.configureReturnTypeComboBox = function () {
+CLASSOperationDialog.prototype.configureReturnTypeComboBox = function () {
   $("#operReturnType").combobox({
       valueField:"id",
       textField:"text",
@@ -279,7 +279,7 @@ CLASSOperations.prototype.configureReturnTypeComboBox = function () {
  * 
  * @author Gabriel Leonardo Diaz, 03.03.2014.
  */
-CLASSOperations.prototype.configureCollectionsComboBox = function () {
+CLASSOperationDialog.prototype.configureCollectionsComboBox = function () {
   $("#operCollection").combobox({
       valueField:"id",
       textField:"text",
@@ -303,7 +303,7 @@ CLASSOperations.prototype.configureCollectionsComboBox = function () {
  *          A flag indicating the action performed.
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
+CLASSOperationDialog.prototype.selectionChanged = function (rowIndex, selected) {
   this.clearFields();
   
   if (selected) {
@@ -343,7 +343,7 @@ CLASSOperations.prototype.selectionChanged = function (rowIndex, selected) {
  * 
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
-CLASSOperations.prototype.clearSelection = function () {
+CLASSOperationDialog.prototype.clearSelection = function () {
   $("#operationsTable").datagrid("unselectAll");
   this.operationIndex = null;
   this.operationCell  = null;
@@ -354,7 +354,7 @@ CLASSOperations.prototype.clearSelection = function () {
  * 
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
-CLASSOperations.prototype.clearFields = function () {
+CLASSOperationDialog.prototype.clearFields = function () {
   $("#operName").val("");
   $("#operStaticCheck").prop("checked", false);
   $("#operFinalCheck").prop("checked", false);
@@ -373,7 +373,7 @@ CLASSOperations.prototype.clearFields = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.newOperation = function () {
+CLASSOperationDialog.prototype.newOperation = function () {
   this.clearSelection();
   this.clearFields();
   $("#operName" ).focus();
@@ -384,7 +384,7 @@ CLASSOperations.prototype.newOperation = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.deleteOperation = function () {
+CLASSOperationDialog.prototype.deleteOperation = function () {
   if (this.operationCell) {
     this.graph.removeCells([this.operationCell]);
     $("#operationsTable").datagrid("deleteRow", this.operationIndex);
@@ -397,7 +397,7 @@ CLASSOperations.prototype.deleteOperation = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.saveOperation = function () {
+CLASSOperationDialog.prototype.saveOperation = function () {
   var nameValue       = $("#operName").val();
   var visValue        = $("#operVisibility").combobox("getValue");
   var retTypeValue    = $("#operReturnType").combobox("getValue");
@@ -487,7 +487,7 @@ CLASSOperations.prototype.saveOperation = function () {
  * 
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
-CLASSOperations.prototype.newParameter = function () {
+CLASSOperationDialog.prototype.newParameter = function () {
   if (this.stopEditingParameter()) {
     $("#parametersTable").datagrid("insertRow", {row: { name: "", type: "", collection: "" }});
     var newParamIndex = $("#parametersTable").datagrid("getRows").length - 1;
@@ -502,7 +502,7 @@ CLASSOperations.prototype.newParameter = function () {
  * 
  * @author Gabriel Leonardo Diaz, 27.01.2014.
  */
-CLASSOperations.prototype.deleteParameter = function () {
+CLASSOperationDialog.prototype.deleteParameter = function () {
   var selected = $("#parametersTable").datagrid("getSelected");
   if (selected == null) {
     return;
@@ -522,7 +522,7 @@ CLASSOperations.prototype.deleteParameter = function () {
  * 
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
-CLASSOperations.prototype.saveParameter = function () {
+CLASSOperationDialog.prototype.saveParameter = function () {
   if (this.stopEditingParameter()) {
     $("#parametersTable").datagrid("acceptChanges");
   }
@@ -533,7 +533,7 @@ CLASSOperations.prototype.saveParameter = function () {
  * 
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
-CLASSOperations.prototype.onClickParameter = function (index) {
+CLASSOperationDialog.prototype.onClickParameter = function (index) {
   if (index == null) {
     return;
   }
@@ -550,7 +550,7 @@ CLASSOperations.prototype.onClickParameter = function (index) {
  * @param index
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  */
-CLASSOperations.prototype.startEditingParameter = function (index) {
+CLASSOperationDialog.prototype.startEditingParameter = function (index) {
   $("#parametersTable").datagrid("beginEdit", index);
   $("#parametersTable").datagrid("selectRow", index);
   
@@ -575,7 +575,7 @@ CLASSOperations.prototype.startEditingParameter = function (index) {
  * @author Gabriel Leonardo Diaz, 29.01.2014.
  * @returns {Boolean}
  */
-CLASSOperations.prototype.stopEditingParameter = function () {
+CLASSOperationDialog.prototype.stopEditingParameter = function () {
   if (this.parameterIndex == null) {
     return true;
   }
@@ -594,6 +594,6 @@ CLASSOperations.prototype.stopEditingParameter = function () {
  * 
  * @author Gabriel Leonardo Diaz, 26.01.2014.
  */
-CLASSOperations.prototype.show = function () {
+CLASSOperationDialog.prototype.show = function () {
   this.dialog.show();
 };
