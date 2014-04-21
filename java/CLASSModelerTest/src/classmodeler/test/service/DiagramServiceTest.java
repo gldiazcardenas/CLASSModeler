@@ -92,6 +92,7 @@ public class DiagramServiceTest extends ServiceTest {
     diagram.setName("DiagramTest");
     diagram.setDescription("DiagramDescription");
     diagram.setCreatedBy(diagrammerBasic);
+    diagram.setXML("asdfdfd");
     
     try {
       diagram = diagramService.insertDiagram(diagram);
@@ -109,12 +110,20 @@ public class DiagramServiceTest extends ServiceTest {
    * @throws InvalidDiagrammerAccountException 
    */
   @Test (expectedExceptions = InvalidDiagrammerAccountException.class)
-  public void testInsertDiagrammer_failNonExistingAccount () throws InvalidDiagrammerAccountException {
+  public void testInsertDiagram_failNonExistingAccount () throws InvalidDiagrammerAccountException {
     Diagram diagram = new Diagram();
     diagram.setName("DiagramTest");
     diagram.setDescription("DiagramDescription");
     diagram.setCreatedBy(new Diagrammer());
     diagram = diagramService.insertDiagram(diagram);
+  }
+  
+  public void testUpdateDiagram () {
+    // TODO
+  }
+  
+  public void testUpdateDiagram_nonExisting () {
+    // TODO
   }
   
 }
