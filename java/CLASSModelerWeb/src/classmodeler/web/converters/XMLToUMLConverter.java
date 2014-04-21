@@ -48,11 +48,10 @@ import com.mxgraph.model.mxCell;
  * 
  * @author Gabriel Leonardo Diaz, 23.03.2014.
  */
-public final class UMLConverter {
+public final class XMLToUMLConverter {
   
   private Map<String, Package> packages         = new HashMap<String, Package>();
   private Map<String, Classifier> classifiers   = new HashMap<String, Classifier>();
-  
   private SharedDiagram diagram;
   
   /**
@@ -62,7 +61,7 @@ public final class UMLConverter {
    * @param mxModel
    * @author Gabriel Leonardo Diaz, 25.03.2014.
    */
-  public UMLConverter (SharedDiagram diagram) {
+  public XMLToUMLConverter (SharedDiagram diagram) {
     super();
     this.diagram = diagram;
   }

@@ -41,7 +41,7 @@ import classmodeler.service.exception.UnprivilegedException;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.beans.SharedDiagram;
 import classmodeler.web.beans.SharedDiagramSession;
-import classmodeler.web.converters.UMLConverter;
+import classmodeler.web.converters.XMLToUMLConverter;
 import classmodeler.web.util.JSFGenericBean;
 import classmodeler.web.util.JSFOutcomeUtil;
 
@@ -78,7 +78,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   private SharedDiagramSession session;
   
   /** Converter class for UML transformation. */
-  private UMLConverter umlConverter;
+  private XMLToUMLConverter umlConverter;
   
   /** The source code files generated. */
   private List<SourceCodeFile> sourceCodeFiles = new ArrayList<SourceCodeFile>();
@@ -142,7 +142,7 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     this.user              = user;
     this.diagram           = this.sharedDiagramController.putDiagram(diagram);
     this.session           = new SharedDiagramSession(this.diagram, this.user);
-    this.umlConverter      = new UMLConverter(this.diagram);
+    this.umlConverter      = new XMLToUMLConverter(this.diagram);
     this.pendingChanges    = false;
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
