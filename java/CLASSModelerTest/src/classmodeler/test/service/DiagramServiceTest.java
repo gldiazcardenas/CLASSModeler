@@ -118,12 +118,180 @@ public class DiagramServiceTest extends ServiceTest {
     diagram = diagramService.insertDiagram(diagram);
   }
   
+  public void testInsertDiagramFromCopy () {
+    // TODO
+  }
+  
   public void testUpdateDiagram () {
     // TODO
   }
   
   public void testUpdateDiagram_nonExisting () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void testUpdateDiagram_unprivileged () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void testDeleteDiagram () {
     // TODO
+  }
+  
+  public void testDeleteDiagram_nonExisting () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void testDeleteDiagram_unprivileged () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void testDeleteDiagram_withSharedItems () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+    
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Unit test to verify the method to update the privilege of one shared item.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testUpdatePrivilege () {
+    // TODO
+  }
+  
+  /**
+   * Unit test to verify the method to delete one shared item.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testDeleteSharedItem () {
+    // TODO
+  }
+  
+  /**
+   * Unit test to verify the method that gets the diagrams of one diagrammer.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testGetDiagramsByDiagrammer () {
+    // TODO
+  }
+  
+  /**
+   * Unit test to verify the method that gets the shared items of one diagram.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testGetSharedItemsByDiagram () {
+    // TODO
+  }
+  
+  /**
+   * Unit test for the service that checks one user has write privilege over one
+   * diagram.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testCanWriteDiagram () {
+    Diagram diagram = new Diagram();
+    diagram.setKey(-1);
+    try {
+      diagramService.canWriteDiagram(diagram, this.diagrammerBasic);
+    }
+    catch (UnprivilegedException e) {
+      e.printStackTrace();
+    }
   }
   
 }

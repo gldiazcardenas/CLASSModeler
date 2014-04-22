@@ -277,7 +277,7 @@ public class UserServiceTest extends ServiceTest {
    * 
    * @author Gabriel Leonardo Diaz, 25.09.2013.
    */
-  public void testRequestPassword () {
+  public void testRequestResetPassword () {
     // TODO
   }
   
@@ -288,6 +288,30 @@ public class UserServiceTest extends ServiceTest {
    * @author Gabriel Leonardo Diaz, 25.09.2013.
    */
   public void testResetPassword () {
+    // TODO
+  }
+  
+  public void testResetPassword_invalidAccount () {
+    // TODO
+  }
+  
+  public void testResetPassword_invalidSecurityCode () {
+    // TODO
+  }
+  
+  public void testIsValidToResetPassword () {
+    // TODO
+  }
+  
+  public void testIsValidToResetPassword_invalidAccount () {
+    // TODO
+  }
+  
+  public void testUpdateDiagrammer () {
+    // TODO
+  }
+  
+  public void testUpdateDiagrammer_nonExisting () {
     // TODO
   }
   

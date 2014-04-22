@@ -49,10 +49,12 @@ public class CodeGenerationServiceTest extends ServiceTest {
   }
   
   /**
+   * Unit test that verifies the code generated for a Class UML.
    * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
    */
-  public void generateClassTest () {
-    
+  public void testGenerateClass () {
+    // TODO
   }
   
   /**
@@ -60,7 +62,7 @@ public class CodeGenerationServiceTest extends ServiceTest {
    * 
    * @author Gabriel Leonardo Diaz, 24.03.2014.
    */
-  public void generateEnumerationTest () {
+  public void testGenerateEnumeration () {
     Enumeration aEnumeration = UMLFactory.eINSTANCE.createEnumeration();
     aEnumeration.setName("Numeros");
     aEnumeration.setVisibility(VisibilityKind.PUBLIC_LITERAL);
@@ -93,7 +95,7 @@ public class CodeGenerationServiceTest extends ServiceTest {
    * 
    * @author Gabriel Leonardo Diaz, 24.03.2014.
    */
-  public void generateInterfaceTest () {
+  public void testGenerateInterface () {
     Interface aInterface = UMLFactory.eINSTANCE.createInterface();
     aInterface.setName("ReadableAndWriteable");
     aInterface.setVisibility(VisibilityKind.PUBLIC_LITERAL);
@@ -118,6 +120,16 @@ public class CodeGenerationServiceTest extends ServiceTest {
     file = generateCodeService.generateInterface(user, aInterface);
     
     assert (file.contains("package test;")) : "The file does not contain a 'package' sentence, it must exist.";
+  }
+  
+  /**
+   * Unit test to verify the generic method to generate source code for an
+   * element.
+   * 
+   * @author Gabriel Leonardo Diaz, 21.04.2014
+   */
+  public void testGenerateSourceCode () {
+    // TODO
   }
   
 }
