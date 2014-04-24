@@ -7,33 +7,33 @@
     <h:form id="attributesForm" prependId="false">
         <table style="width:100%;">
             <tr>
-                <td width="20%"><h:outputText value="#{msgs.ATTRIBUTES_FORM_NAME_FIELD}" /></td>
-                <td><input id="attrName" class="easyui-validatebox" style="width:100%" /></td>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_NAME_FIELD}" /></td>
+                <td colspan="3"><input id="attrName" class="easyui-validatebox" style="width:100%" /></td>
             </tr>
+            
             <tr>
-                <td></td>
+                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
                 <td>
+                    <input id="attrVisibility" />
+                </td>
+                <td colspan="2">
                     <label><input id="staticCheck" type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_STATIC_FIELD}" /></label>
                     <label><input id="finalCheck" type="checkbox" /> <h:outputText value="#{msgs.ATTRIBUTES_FORM_FINAL_FIELD}" /></label>
                 </td>
             </tr>
             
             <tr>
-                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_VISIBILITY_FIELD}" /></td>
-                <td><input id="attrVisibility" /></td>
-            </tr>
-            
-            <tr>
-                <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_TYPE_FIELD}" /></td>
+                <td width="15%"><h:outputText value="#{msgs.ATTRIBUTES_FORM_TYPE_FIELD}" /></td>
                 <td>
                     <input id="attrType" />
-                    <input id="attrCollection" />
                 </td>
+                <td width="15%"><h:outputText value="#{msgs.ATTRIBUTES_FORM_COLLECTION_FIELD}" /></td>
+                <td><input id="attrCollection" /></td>
             </tr>
             
             <tr>
                 <td><h:outputText value="#{msgs.ATTRIBUTES_FORM_INITIAL_VALUE_FIELD}" /></td>
-                <td><input id="attrInitValue" class="easyui-validatebox" style="width:100%" /></td>
+                <td colspan="3"><input id="attrInitValue" class="easyui-validatebox" style="width:100%" /></td>
             </tr>
         </table>
         

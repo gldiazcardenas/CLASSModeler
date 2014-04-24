@@ -5,15 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
     
     <pe:layoutPane position="center">
-        <f:facet name="header">
-            <h:outputText value="#{msgs.TOOLBOX_PANEL_LABEL}" />
-            <h:graphicImage id="info_components" name="info.png" library="images" style="vertical-align: middle; margin-left: 5px;" />
-            <p:tooltip for="info_components">
-                <h:outputText value="#{msgs.INFORMATION_COMPONENT1_PANEL_MESSAGE}" style="display: block;" />
-                <h:outputText value="#{msgs.INFORMATION_COMPONENT2_PANEL_MESSAGE}" style="width: 100px;" />
-                <h:graphicImage name="next_16x16.png" library="images" />
-            </p:tooltip>
-        </f:facet>
+        <f:facet name="header"><h:outputText value="#{msgs.TOOLBOX_PANEL_LABEL}" /></f:facet>
         
         <div id="toolbox">
             <div class="horizontal_item">

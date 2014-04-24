@@ -171,7 +171,7 @@ CLASSAttributeDialog.prototype.configureCollectionsCombo = function () {
   $("#attrCollection").combobox({
       valueField:"id",
       textField:"text",
-      panelHeight: 90,
+      panelHeight: 200,
       data: this.graph.getCollectionsJSon()
   });
   
@@ -328,38 +328,9 @@ CLASSAttributeDialog.prototype.saveAttribute = function () {
   var collectionValue = $("#attrCollection").combobox("getValue");
   var isEnum          = this.graph.isEnumeration(this.classifierCell.value);
   
-  if (nameValue == null || nameValue.length == 0) {
-    // Invalid Name
+  // Validate Values
+  if (!this.validFields(nameValue, typeValue, visibilityValue, initialValue)) {
     return;
-  }
-  
-  if (!isEnum) {
-    if (typeValue == null || typeValue.length == 0) {
-      // Invalid Type
-      return;
-    }
-    
-    if (visibilityValue == null || visibilityValue.length == 0) {
-      // Invalid Visibility
-      return;
-    }
-  }
-  
-  if (this.graph.isInterface(this.classifierCell.value)) {
-    if (staticValue == "0") {
-      // Invalid static
-      return;
-    }
-    
-    if (finalValue == "0") {
-      // Invalid final
-      return;
-    }
-    
-    if (initialValue == null || initialValue.length == 0) {
-      // Invalid constant for interface
-      return;
-    }
   }
   
   // Prepare attribute
@@ -407,12 +378,50 @@ CLASSAttributeDialog.prototype.saveAttribute = function () {
 };
 
 /**
+ * Validates the fields on the form.
+ */
+CLASSAttributeDialog.prototype.validFields = function (nameValue, typeValue, visibilityValue, initialValue) {
+  var valid = true;
+  
+  // Invalid Name
+  if (!nameValue) {
+    $("#attrName").validatebox({ required: true, missingMessage: "Campo requerido" });
+    valid = false;
+  }
+  
+  if (!this.graph.isEnumeration(this.classifierCell.value)) {
+    // Invalid Type
+    if (!typeValue) {
+      $("#attrType").combobox({ required: true, missingMessage: "Campo requerido" });
+      valid = false;
+    }
+    
+    // Invalid Visibility
+    if (!visibilityValue) {
+      $("#attrVisibility").combobox({ required: true, missingMessage: "Campo requerido" });
+      valid = false;
+    }
+  }
+  
+  // Invalid constant for interface
+  if (this.graph.isInterface(this.classifierCell.value) && !initialValue) {
+    $("#attrInitValue").validatebox({ required: true, missingMessage: "Campo requerido para variable constante" });
+    valid = false;
+  }
+  
+  return valid;
+};
+
+/**
  * Clears the fields to create/edit attributes.
  * 
  * @author Gabriel Leonardo Diaz, 25.01.2014.
  */
 CLASSAttributeDialog.prototype.clearFields = function () {
   $("#attrName").val("");
+  $("#attrName").validatebox({ required: false, missingMessage: "" });
+  $("#attrType").combobox({ required: false, missingMessage: "" });
+  $("#attrVisibility").combobox({ required: false, missingMessage: "" });
   
   if (this.graph.isEnumeration(this.classifierCell.value)) {
     $("#attrType").combobox("clear");

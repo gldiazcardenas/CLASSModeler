@@ -350,10 +350,10 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
   menu.addItem("Enviar atras", null, function () { self.execute("toBack"); }, subMenu, null, this.enabled && self.isElementVertexCell(cell));
   
   menu.addSeparator();
-  var attributesName = self.isClassCell(cell) || self.isInterfaceCell(cell) || cell == null ? "Atributos" : "Literales";
-  menu.addItem(attributesName, null, function () { self.execute("showAttributes"); }, null, null, this.enabled && self.isClassifierCell(cell));
-  menu.addItem("Operaciones", null, function () { self.execute("showOperations"); }, null, null, this.enabled && (self.isClassCell(cell) || self.isInterfaceCell(cell)));
-  menu.addItem("Editar Relacion", null, function () { self.execute("showRelationship"); }, null, null, this.enabled && self.isAssociationCell(cell));
+  
+  menu.addItem(self.isEnumerationCell(cell) ? "Literales..." : "Atributos...", null, function () { self.execute("showAttributes"); }, null, null, this.enabled && self.isClassifierCell(cell));
+  menu.addItem("Operaciones...", null, function () { self.execute("showOperations"); }, null, null, this.enabled && (self.isClassCell(cell) || self.isInterfaceCell(cell)));
+  menu.addItem("Relacion...", null, function () { self.execute("showRelationship"); }, null, null, this.enabled && self.isAssociationCell(cell));
   
   menu.addSeparator();
   
@@ -368,15 +368,23 @@ CLASSEditor.prototype.createPopupMenu = function (menu, cell, evt) {
 };
 
 /**
+ * Adds a checkmark to the given menuitem.
+ */
+CLASSEditor.prototype.addShortcut = function (item, shortcut) {
+  var td = item.firstChild.nextSibling.nextSibling;
+  var span = document.createElement("span");
+  span.style.color = "gray";
+  mxUtils.write(span, shortcut);
+  td.appendChild(span);
+};
+
+/**
  * Determines if the user object (node) of the given cell is a Property UML.
  * @param cell
  * @returns
  */
 CLASSEditor.prototype.isPropertyCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isProperty(cell.value);
+  return cell != null && this.graph.isProperty(cell.value);
 };
 
 /**
@@ -385,10 +393,7 @@ CLASSEditor.prototype.isPropertyCell = function (cell) {
  * @returns
  */
 CLASSEditor.prototype.isClassCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isClass(cell.value);
+  return cell != null && this.graph.isClass(cell.value);
 };
 
 /**
@@ -397,20 +402,24 @@ CLASSEditor.prototype.isClassCell = function (cell) {
  * @returns
  */
 CLASSEditor.prototype.isInterfaceCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isInterface(cell.value);
+  return cell != null && this.graph.isInterface(cell.value);
+};
+
+/**
+ * Determines if the use object (node) of the given cell is an Enumeration UML.
+ * 
+ * @param cell
+ * @returns
+ */
+CLASSEditor.prototype.isEnumerationCell = function (cell) {
+  return cell != null && this.graph.isEnumeration(cell.value);
 };
 
 /**
  * Determines if the user object (node) of the cell is a classifier UML.
  */
 CLASSEditor.prototype.isClassifierCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isClassifier(cell.value);
+  return cell != null && this.graph.isClassifier(cell.value);
 };
 
 /**
@@ -419,10 +428,7 @@ CLASSEditor.prototype.isClassifierCell = function (cell) {
  * @returns {Boolean}
  */
 CLASSEditor.prototype.isElementVertexCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isElementVertex(cell.value);
+  return cell != null && this.graph.isElementVertex(cell.value);
 };
 
 /**
@@ -431,10 +437,7 @@ CLASSEditor.prototype.isElementVertexCell = function (cell) {
  * @author Gabriel Leonardo Diaz, 04.02.2014.
  */
 CLASSEditor.prototype.isAssociationCell = function (cell) {
-  if (cell == null) {
-    return false;
-  }
-  return this.graph.isAssociation(cell.value);
+  return cell != null && this.graph.isAssociation(cell.value);
 };
 
 /**

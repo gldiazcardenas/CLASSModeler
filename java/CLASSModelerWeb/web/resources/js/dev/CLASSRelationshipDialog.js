@@ -458,7 +458,7 @@ CLASSRelationshipDialog.prototype.configureVisibilityCombo = function (elementId
       valueField:"id",
       textField:"text",
       panelHeight: 90,
-      width: 380,
+      width: 150,
       data: this.graph.getVisibilityJSon()
   });
   
@@ -482,8 +482,8 @@ CLASSRelationshipDialog.prototype.configureCollectionsCombo = function (elementI
   $(elementId).combobox({
       valueField:"id",
       textField:"text",
-      panelHeight: 90,
-      width: 220,
+      panelHeight: 200,
+      width: 205,
       data: this.graph.getCollectionsJSon()
   });
   
@@ -506,7 +506,7 @@ CLASSRelationshipDialog.prototype.configureMultiplicityCombo = function (element
   $(elementId).combobox({
       valueField:"id",
       textField:"text",
-      panelHeight: 90,
+      panelHeight: 110,
       width: 150,
       data: this.graph.getMultiplicitiesJSon()
   });

@@ -218,12 +218,12 @@ CLASSOperationDialog.prototype.configureParametersTable = function () {
       columns:[[
           { field:"name", title:"Nombre", width:150, editor: { type: "validatebox", options: { required: true, missingMessage: "" }}},
           
-          { field:"type", title:"Tipo",   width:100, editor: {
+          { field:"type", title:"Tipo",   width:120, editor: {
               type:"combobox",
               options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getTypesJSon(), required: true, missingMessage: "" }
           }},
           
-          { field:"collection", title:"Coleccion", width:100, editor: {
+          { field:"collection", title:"Coleccion", width:130, editor: {
               type:"combobox",
               options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getCollectionsJSon() }
             },
@@ -283,7 +283,7 @@ CLASSOperationDialog.prototype.configureCollectionsComboBox = function () {
   $("#operCollection").combobox({
       valueField:"id",
       textField:"text",
-      panelHeight: 90,
+      panelHeight: 200,
       data: this.graph.getCollectionsJSon()
   });
   
@@ -356,6 +356,9 @@ CLASSOperationDialog.prototype.clearSelection = function () {
  */
 CLASSOperationDialog.prototype.clearFields = function () {
   $("#operName").val("");
+  $("#operName").validatebox({ required: false, missingMessage: "" });
+  $("#operVisibility").combobox({ required: false, missingMessage: "" });
+  $("#operReturnType").combobox({ required: false, missingMessage: "" });
   $("#operStaticCheck").prop("checked", false);
   $("#operFinalCheck").prop("checked", false);
   $("#operAbstractCheck").prop("checked", false);
@@ -407,25 +410,8 @@ CLASSOperationDialog.prototype.saveOperation = function () {
   var syncValue       = $("#operSyncCheck").is(":checked") ? "1" : "0";
   var collectionValue = $("#operCollection").combobox("getValue");
   
-  if (nameValue == null || nameValue.length == 0) {
-    // Invalid NAME
-    return;
-  }
-  
-  if (visValue == null || visValue.length == 0) {
-    // Invalid VISIBILITY
-    return;
-  }
-  
-  if (this.graph.isInterface(this.classifierCell.value)) {
-    if (retTypeValue == null || retTypeValue.length == 0) {
-      // Invalid Return Type
-      return;
-    }
-  }
-  
-  if (!this.stopEditingParameter()) {
-    // Invalid Parameter
+  // Validate fields
+  if (!this.validFields(nameValue, visValue, retTypeValue)) {
     return;
   }
   
@@ -480,6 +466,40 @@ CLASSOperationDialog.prototype.saveOperation = function () {
   }
   
   $("#operationsTable").datagrid("reload");
+};
+
+/**
+ * Validates the fields on the form.
+ */
+CLASSOperationDialog.prototype.validFields = function (nameValue, visValue, retTypeValue) {
+  var valid = true;
+  
+  // Invalid NAME
+  if (!nameValue) {
+    $("#operName").validatebox({ required: true, missingMessage: "Campo requerido" });
+    valid = false;
+  }
+  
+  // Invalid VISIBILITY
+  if (!visValue) {
+    $("#operVisibility").combobox({ required: true, missingMessage: "Campo requerido" });
+    valid = false;
+  }
+  
+  // Invalid Return Type
+  if (this.graph.isInterface(this.classifierCell.value) || nameValue != this.classifierCell.getAttribute("name")) {
+    if (!retTypeValue) {
+      $("#operReturnType").combobox({ required: true, missingMessage: "Campo requerido" });
+      valid = false;
+    }
+  }
+  
+  // Invalid Parameter
+  if (!this.stopEditingParameter()) {
+    valid = false;
+  }
+  
+  return valid;
 };
 
 /**

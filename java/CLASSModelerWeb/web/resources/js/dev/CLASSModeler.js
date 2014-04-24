@@ -44,7 +44,7 @@ var CLASSModeler = (function () {
       }
       
       // Disables built-in context menu
-      mxEvent.disableContextMenu(document.body);
+//      mxEvent.disableContextMenu(document.body);
       
       // Vertexes selection color
       mxConstants.HANDLE_FILLCOLOR = "#FC8D98";
