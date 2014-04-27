@@ -123,7 +123,7 @@ CLASSOperationDialog.prototype.configureOperationsTable = function () {
       columns:[[
           {field:"name",       title:"Nombre",          width:150},
           {field:"type",       title:"Tipo de Retorno", width:150},
-          {field:"parameters", title:"Parametros",      width:150}
+          {field:"parameters", title:"Parametros",      width:180}
       ]]
   });
   
@@ -218,7 +218,7 @@ CLASSOperationDialog.prototype.configureParametersTable = function () {
       columns:[[
           { field:"name", title:"Nombre", width:150, editor: { type: "validatebox", options: { required: true, missingMessage: "" }}},
           
-          { field:"type", title:"Tipo",   width:120, editor: {
+          { field:"type", title:"Tipo",   width:130, editor: {
               type:"combobox",
               options: { valueField:"id",  textField:"text", panelHeight: 200, data:this.graph.getTypesJSon(), required: true, missingMessage: "" }
           }},
