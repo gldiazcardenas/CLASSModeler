@@ -109,7 +109,11 @@ CLASSRelationshipDialog.prototype.loadSource = function () {
   }
   
   $("#sourceName").val(sourceName);
+  $("#sourceName").validatebox({ required: false, missingMessage: "" });
+  
   $("#sourceVisibility").combobox("setValue", sourceVisibility);
+  $("#sourceVisibility").combobox({ required: false, missingMessage: "" });
+  
   $("#sourceType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.source.id));
   $("#sourceCollection").combobox("setValue", sourceCollection);
   $("#sourceMultiplicity").combobox("setValue", this.graph.convertMultiplicity(sourceLower, sourceUpper));
@@ -174,7 +178,11 @@ CLASSRelationshipDialog.prototype.loadTarget = function () {
   }
   
   $("#targetName").val(targetName);
+  $("#targetName").validatebox({ required: false, missingMessage: "" });
+  
   $("#targetVisibility").combobox("setValue", targetVisibility);
+  $("#targetVisibility").combobox({ required: false, missingMessage: "" });
+  
   $("#targetType").val(this.graph.convertTypeIdToNameString(this.relationshipCell.target.id));
   $("#targetCollection").combobox("setValue", targetCollection);
   $("#targetMultiplicity").combobox("setValue", this.graph.convertMultiplicity(targetLower, targetUpper));
@@ -203,8 +211,9 @@ CLASSRelationshipDialog.prototype.saveRelationship = function () {
   var targetNavigable    = $("#targetNavigable").is(":checked");
   
   // Validation
-  if (!this.validProperty(sourceName, sourceVisibility, sourceCollection, sourceMultiplicity, sourceNavigable) ||
-      !this.validProperty(targetName, targetVisibility, targetCollection, targetMultiplicity, targetNavigable)) {
+  if (!this.validProperty(true, sourceName, sourceVisibility, sourceCollection, sourceMultiplicity, sourceNavigable) ||
+      !this.validProperty(false, targetName, targetVisibility, targetCollection, targetMultiplicity, targetNavigable)) {
+    
     return false;
   }
   
@@ -300,6 +309,7 @@ CLASSRelationshipDialog.prototype.saveRelationship = function () {
 
 /**
  * Validates the property fields.
+ * @param isSource
  * @param name
  * @param visibility
  * @param collection
@@ -307,50 +317,40 @@ CLASSRelationshipDialog.prototype.saveRelationship = function () {
  * @param navigable
  * @returns {Boolean}
  */
-CLASSRelationshipDialog.prototype.validProperty = function (name, visibility, collection, multiplicity, navigable) {
+CLASSRelationshipDialog.prototype.validProperty = function (isSource, name, visibility, collection, multiplicity, navigable) {
   if (navigable) {
     if (!name) {
+      if (isSource) {
+        $("#sourceName").validatebox({ required: true, missingMessage: "Campo requerido" });
+      }
+      else {
+        $("#targetName").validatebox({ required: true, missingMessage: "Campo requerido" });
+      }
       return false;
     }
     
     if (!visibility) {
+      if (isSource) {
+        $("#sourceVisibility").combobox({ required: true, missingMessage: "Campo requerido" });
+      }
+      else {
+        $("#targetVisibility").combobox({ required: true, missingMessage: "Campo requerido" });
+      }
       return false;
     }
   }
   
-  if (!this.validMultiplicity(multiplicity)) {
+  var multiplicityId;
+  
+  if (isSource) {
+    multiplicityId = "sourceMultiplicity";
+  }
+  else {
+    multiplicityId = "targetMultiplicity";
+  }
+  
+  if (!$("#" + multiplicityId).combobox("isValid")) {
     return false;
-  }
-  
-  return true;
-};
-
-/**
- * Validates the multiplicity of the property.
- * @param multiplicity
- * @returns {Boolean}
- */
-CLASSRelationshipDialog.prototype.validMultiplicity = function (multiplicity) {
-  if (multiplicity) {
-    var values = multiplicity.split("..");
-    
-    if (values.length > 2) {
-      return false;
-    }
-    
-    if ((!this.isInteger(values[0]) && values[0] != "*") || parseInt(values[0]) < 0) {
-      return false;
-    }
-    
-    if (values.length > 1) {
-      if ((!this.isInteger(values[1]) && values[1] != "*") || parseInt(values[1]) < 0) {
-        return false;
-      }
-      
-      if (this.isInteger(values[1]) && parseInt(values[0]) > parseInt(values[1])) {
-        return false;
-      }
-    }
   }
   
   return true;
@@ -392,14 +392,6 @@ CLASSRelationshipDialog.prototype.needsProperty = function (navigable, multiplic
     return true;
   }
   return false;
-};
-
-/**
- * Check if the value is a number.
- * @param number
- */
-CLASSRelationshipDialog.prototype.isInteger = function (number) {
-  return !isNaN(number) && parseInt(number) % 1 == 0;
 };
 
 /**
@@ -507,6 +499,7 @@ CLASSRelationshipDialog.prototype.configureMultiplicityCombo = function (element
       valueField:"id",
       textField:"text",
       panelHeight: 110,
+      validType: "multiplicity",
       width: 150,
       data: this.graph.getMultiplicitiesJSon()
   });
@@ -541,3 +534,41 @@ CLASSRelationshipDialog.prototype.configureNavigableCheckBoxes = function () {
 CLASSRelationshipDialog.prototype.show = function () {
   this.dialog.show();
 };
+
+/**
+ * Defines the validator for the multiplicity value.
+ */
+$.extend($.fn.validatebox.defaults.rules, {
+  multiplicity: {
+      validator: function (multiplicity, param) {
+        var isInteger = function (number) {
+          return !isNaN(number) && parseFloat(number) % 1 == 0;
+        };
+        
+        if (multiplicity) {
+          var values = multiplicity.split("..");
+          
+          if (values.length > 2) {
+            return false;
+          }
+          
+          if ((!isInteger(values[0]) && values[0] != "*") || parseInt(values[0]) < 0) {
+            return false;
+          }
+          
+          if (values.length > 1) {
+            if ((!isInteger(values[1]) && values[1] != "*") || parseInt(values[1]) < 0) {
+              return false;
+            }
+            
+            if (isInteger(values[1]) && parseInt(values[0]) > parseInt(values[1])) {
+              return false;
+            }
+          }
+        }
+        
+        return true;
+      },
+      message: 'La multiplicidad es invalida.'
+  }
+});
