@@ -138,6 +138,7 @@ CLASSRelationshipDialog.prototype.setEnabledSource = function (enabled) {
   }
   else {
     $("#sourceName").attr("disabled", true);
+    $("#sourceName").validatebox({ required: false, missingMessage: "" });
     $("#sourceVisibility").combobox("disable");
     $("#sourceCollection").combobox("disable");
   }
@@ -409,6 +410,7 @@ CLASSRelationshipDialog.prototype.setEnabledTarget = function (enabled) {
   }
   else {
     $("#targetName").attr("disabled", true);
+    $("#targetName").validatebox({ required: false, missingMessage: "" });
     $("#targetVisibility").combobox("disable");
     $("#targetCollection").combobox("disable");
   }
