@@ -4,10 +4,11 @@
     padding: 1%;
     width: 98%;
     display: inline-block;
+    height: 79%;
 }
 
 #center-content {
-    min-height: 490px;
+    height: 100%;
 }
 
 #diagramsSection {
@@ -15,13 +16,13 @@
     border-right: 1px solid #CCCCCC;
     width: 70%;
     padding-right: 1%;
-    min-height: inherit;
+    height: inherit;
 }
 
 #shareSection {
     float: right;
     width: 28%;
-    min-height: inherit;
+    height: inherit;
 }
 
 #diagramButtonsForm button, #sharingButtonsForm button {
