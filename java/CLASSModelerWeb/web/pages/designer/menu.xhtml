@@ -62,12 +62,11 @@
             </p:submenu>
             
             <p:submenu label="#{msgs.MENU_HELP}" icon="ui-icon-help">
-                <p:menuitem value="#{msgs.MENU_ITEM_USER_MANUAL}" icon="ui-icon-note" url="/resources/CLASSModeler-UserManual.pdf" />
-                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_TUTORIALS}" icon="ui-icon-video" />
+                <p:menuitem value="#{msgs.MENU_ITEM_USER_MANUAL}" icon="ui-icon-note" url="/resources/CLASSModeler-UserManual.pdf" target="_blank" />
+                <p:menuitem value="#{msgs.MENU_ITEM_VIDEO_TUTORIALS}" icon="ui-icon-video" url="https://www.youtube.com/playlist?list=PLdMoi1ThXmdB2SmOT8HNnK_rOD0cwWTvF" target="_blank" />
                 <p:separator/>
                 <p:menuitem value="#{msgs.MENU_ITEM_ABOUT_LABEL}" icon="ui-icon-flag" onclick="dlgAbout.show()" />
             </p:submenu>
-            
             
             <f:facet name="options">
                 <ui:include src="/pages/dashboard/user.xhtml" />
