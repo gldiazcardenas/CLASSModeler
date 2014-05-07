@@ -86,9 +86,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   /** A flag indicating the user can modify the diagram. */
   private boolean writeable;
   
-  /** A flag indicating the user made changes on the diagram. */
-  private boolean pendingChanges;
-  
   public DesignerControllerBean() {
     super();
   }
@@ -143,7 +140,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
     this.diagram           = this.sharedDiagramController.putDiagram(diagram);
     this.session           = new SharedDiagramSession(this.diagram, this.user);
     this.umlConverter      = new XMLToUMLConverter(this.diagram);
-    this.pendingChanges    = false;
     
     return JSFOutcomeUtil.DESIGNER + JSFOutcomeUtil.REDIRECT_SUFIX;
   }
@@ -155,10 +151,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
    * @author Gabriel Leonardo Diaz, 16.02.2014.
    */
   public String initialize () {
-    if (this.pendingChanges) {
-      save();
-    }
-    
     String value = this.session.init();
     return value;
   }
@@ -184,7 +176,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
   public void notify (String rawXML) throws UnsupportedEncodingException {
     String xml = URLDecoder.decode(rawXML, "UTF-8");
     this.session.receive(mxXmlUtils.parseXml(xml).getDocumentElement());
-    this.pendingChanges = true;
   }
   
   /**
@@ -198,7 +189,6 @@ public class DesignerControllerBean extends JSFGenericBean implements HttpSessio
       if (this.user.isRegisteredUser()) {
         this.diagramService.updateDiagram(this.session.getDiagram());
       }
-      this.pendingChanges = false;
     }
     catch (UnprivilegedException e) {
       e.printStackTrace();
