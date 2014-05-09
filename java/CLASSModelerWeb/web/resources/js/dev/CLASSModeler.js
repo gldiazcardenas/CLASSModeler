@@ -39,7 +39,8 @@ var CLASSModeler = (function () {
   return {
     init : function (enabled) {
       if (!mxClient.isBrowserSupported()) {
-        mxUtils.error('Browser is not supported for mxGraph!', 200, false);
+        mxUtils.error("El navegador no es soportado por la libreria mxGraph. Si es Internet Explorer 11, por favor usar en modo de commpatibilidad de IE 10.", 400, false);
+        stopLoading();
         return;
       }
       
