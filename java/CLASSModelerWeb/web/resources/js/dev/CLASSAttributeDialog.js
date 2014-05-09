@@ -71,11 +71,11 @@ CLASSAttributeDialog.prototype.init = function (cell) {
   this.attributeCell  = null;
   this.attributeIndex = null;
   
-  this.configureGUI();
   this.loadTableData();
   this.loadTypesData();
   this.clearSelection();
   this.clearFields();
+  this.configureGUI();
   this.setTitle();
 };
 
@@ -119,7 +119,11 @@ CLASSAttributeDialog.prototype.configureGUI = function () {
  * @author Gabriel Leonardo Diaz, 10.02.2014.
  */
 CLASSAttributeDialog.prototype.setTitle = function () {
-  this.dialog.titlebar.children("span.ui-dialog-title").html(this.title.replace("{0}", this.classifierCell.getAttribute("name")));
+  var aTitle = this.title.replace("{0}", this.classifierCell.getAttribute("name"));
+  if (this.graph.isEnumeration(this.classifierCell.value)) {
+    aTitle = aTitle.replace("Atributos", "Literales");
+  }
+  this.dialog.titlebar.children("span.ui-dialog-title").html(aTitle);
 };
 
 /**
