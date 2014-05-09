@@ -441,6 +441,7 @@ CLASSAttributeDialog.prototype.clearFields = function () {
   $("#attrInitValue").val("");
   $("#staticCheck").prop("checked", this.graph.isInterface(this.classifierCell.value));
   $("#finalCheck").prop("checked", this.graph.isInterface(this.classifierCell.value));
+  this.configureGUI();
 };
 
 /**
