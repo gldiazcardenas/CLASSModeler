@@ -128,6 +128,6 @@ a:hover {
 #footer {
     color: #FFFFFF;
     text-align: center;
-    padding: 15px 0px;
     border-top: 3px solid #CC0000;
+    padding-top: 5px;
 }
