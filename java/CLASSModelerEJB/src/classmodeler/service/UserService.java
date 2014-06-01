@@ -203,4 +203,19 @@ public interface UserService {
    */
   public List<Diagrammer> getDiagrammersAllowedToShareDiagram (Diagram diagram);
   
+  /**
+   * Filters the list of diagrammers allowed to shared the given diagram by
+   * using the search pattern in the string parameter. This compares the
+   * {@code firstName}, {@code lastName} and {@code email} fields.
+   * 
+   * @param diagram
+   *          The diagram to be shared.
+   * @param pattern
+   *          The search pattern.
+   * @return A list of diagrammers that match the filter pattern and are allowed
+   *         to share the diagram.
+   * @author Gabriel Leonardo Diaz, 30.05.2014
+   */
+  public List<Diagrammer> filterDiagrammersToShareDiagram (Diagram diagram, String pattern);
+  
 }

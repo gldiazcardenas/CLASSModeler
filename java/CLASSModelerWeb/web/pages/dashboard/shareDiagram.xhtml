@@ -3,45 +3,50 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="640">
+<p:dialog id="shareDialog" header="#{diagramController.title}" widgetVar="dlgShare" closable="true" closeOnEscape="true" modal="true" width="550">
     <h:form id="shareForm">
-        <h:outputText value="#{msgs.SHARE_FORM_DIAGRAMMER_LIST_LABEL}" styleClass="italic, bold" />
         
-        <p:pickList id="usersList"
-                    value="#{diagramController.pickListModel}"
-                    var="diagrammer"
-                    itemValue="#{diagrammer}"
-                    itemLabel="#{diagrammer.name}"
-                    converter="#{diagramController}"
-                    showSourceControls="true"
-                    showTargetControls="true"
-                    showSourceFilter="true"
-                    showTargetFilter="true"
-                    filterMatchMode="contains"
-                    required="true"
-                    requiredMessage="#{msgs.SHARE_DIAGRAM_FORM_REQUIRED_MESSAGE}"
-                    style="margin-top: 5px;">
+        <h:panelGroup layout="block" style="margin-bottom: 30px;">
+            <h:outputText value="#{msgs.SHARE_FORM_DIAGRAMMER_LIST_LABEL}" styleClass="bold" />
+            <h:outputText value="#{msgs.SHARE_DIAGRAM_FORM_DIAGRAMMERS_MESSAGE}" styleClass="italic block" style="padding: 10px 15px;" />
+            <p:autoComplete id="diagrammersList"
+                            value="#{diagramController.diagrammers}"
+                            completeMethod="#{diagramController.complete}"
+                            var="diagrammer"
+                            itemLabel="#{diagrammer.name}"
+                            itemValue="#{diagrammer}"
+                            converter="#{diagramController}"
+                            forceSelection="true"
+                            scrollHeight="300"
+                            queryDelay="600"
+                            multiple="true"
+                            required="true"
+                            requiredMessage="#{msgs.SHARE_DIAGRAM_FORM_REQUIRED_MESSAGE}"
+                            emptyMessage="#{msgs.EMPTY_TABLE_MESSAGE}"
+                            cache="true"
+                            cacheTimeout="60000">
+                
+                <p:column style="width:30px;">
+                    <p:graphicImage url="#{diagrammer.avatar}" width="25" height="25" />
+                </p:column>
+                
+                <p:column>
+                    <h:outputText value="#{diagrammer.name}" />
+                    <h:outputText value="#{diagrammer.email}" styleClass="subtext" style="margin-left: 5px;" />
+                </p:column>
+                
+            </p:autoComplete>
             
-            <f:facet name="sourceCaption"><h:outputText value="#{msgs.AVAILABLE_LABEL}" /></f:facet>
-            <f:facet name="targetCaption"><h:outputText value="#{msgs.SELECTED_LABEL}" /></f:facet>
-            
-            <p:column style="width:30px;">
-                <p:graphicImage url="#{diagrammer.avatar}" width="25" height="25" />
-            </p:column>
-            
-            <p:column>
-                <h:outputText value="#{diagrammer.name}" />
-            </p:column>
-        </p:pickList>
-        
-        <table style="boder: 0px; margin-top: 10px; width: 100%;">
-            <tr>
-                <td width="110px"><p:selectBooleanCheckbox value="#{diagramController.readOnly}" itemLabel="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="italic, bold" /></td>
-                <td><h:outputText value="#{msgs.SHARE_DIAGRAM_FORM_READ_ONLY_MESSAGE}" styleClass="italic" /></td>
-            </tr>
-        </table>
+            <p:watermark for="diagrammersList" value="#{msgs.SHARE_DIAGRAM_FORM_TO_MESSAGE}" />
+        </h:panelGroup>
         
         <p:messages id="message" />
+        
+        <h:panelGroup layout="block" style="margin-bottom: 10px;">
+            <p:selectBooleanCheckbox value="#{diagramController.readOnly}" itemLabel="#{msgs.SHARE_FORM_PRIVILEGE_LABEL}" styleClass="bold" />
+            <h:outputText value="#{msgs.SHARE_DIAGRAM_FORM_READ_ONLY_MESSAGE}" styleClass="italic block" style="padding: 3px 10px;" />
+        </h:panelGroup>
+        
         
         <p:separator/>
         

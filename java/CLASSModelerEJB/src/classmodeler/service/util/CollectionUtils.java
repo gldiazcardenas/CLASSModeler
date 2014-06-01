@@ -104,5 +104,30 @@ public final class CollectionUtils {
     
     return newList;
   }
+  
+  /**
+   * Removes the duplicates from the list.
+   * 
+   * @param objects
+   *          The list of objects to process.
+   * @author Gabriel Leonardo Diaz, 01.06.2014
+   */
+  public static <T extends Object> void removeDuplicates (List<T> objects) {
+    T first;
+    T other;
+    
+    for (int i = 0; i < objects.size(); i++) {
+      first = objects.get(i);
+      
+      for (int j = i + 1; j < objects.size(); j++) {
+        other = objects.get(j);
+        
+        if (first.equals(other)) {
+          objects.remove(j);
+          j--;
+        }
+      }
+    }
+  }
 
 }

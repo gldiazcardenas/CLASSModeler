@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import classmodeler.domain.diagram.Diagram;
@@ -265,6 +266,29 @@ public @Stateless class UserServiceBean implements UserService {
     }
     
     return diagrammers;
+  }
+  
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<Diagrammer> filterDiagrammersToShareDiagram(Diagram diagram, String pattern) {
+    if (diagram == null || GenericUtils.isEmptyString(pattern)) {
+      return new ArrayList<Diagrammer>(0);
+    }
+    
+    pattern = "'" + pattern + "%'";
+    StringBuilder sql = new StringBuilder();
+    
+    sql.append("SELECT * FROM diagrammer WHERE diagrammer_key <> ?owner \n")
+       .append("AND diagrammer_key NOT IN (\n")
+       .append("SELECT shared_item_diagrammer_key FROM shared_item WHERE shared_item_diagram_key = ?diagram")
+       .append(")")
+       .append(" AND (diagrammer_first_name LIKE " + pattern + " OR diagrammer_last_name LIKE " + pattern + " OR diagrammer_email LIKE " + pattern + ")");
+    
+    Query query = em.createNativeQuery(sql.toString(), Diagrammer.class)
+                    .setParameter("owner", diagram.getCreatedBy().getKey())
+                    .setParameter("diagram", diagram.getKey());
+    
+    return query.getResultList();
   }
 
 }

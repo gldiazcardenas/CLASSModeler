@@ -8,7 +8,9 @@
 
 package classmodeler.web.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -18,12 +20,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-import org.primefaces.model.DualListModel;
-
 import classmodeler.domain.diagram.Diagram;
 import classmodeler.domain.user.Diagrammer;
 import classmodeler.service.DiagramService;
 import classmodeler.service.UserService;
+import classmodeler.service.util.CollectionUtils;
 import classmodeler.service.util.GenericUtils;
 import classmodeler.web.util.FormatControllerBean;
 import classmodeler.web.util.JSFFormControllerBean;
@@ -72,9 +73,9 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   private String title;
   private Diagram diagram;
   private EDiagramControllerMode mode;
-  private boolean readOnly;
   private List<Diagrammer> diagrammers;
-  private DualListModel<Diagrammer> pickListModel = new DualListModel<Diagrammer>();
+  private Map<Integer, Diagrammer> cache = new HashMap<Integer, Diagrammer>();
+  private boolean readOnly;
   
   public DiagramControllerBean() {
     super();
@@ -116,12 +117,12 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
     this.formatController = formatController;
   }
   
-  public DualListModel<Diagrammer> getPickListModel() {
-    return pickListModel;
+  public List<Diagrammer> getDiagrammers() {
+    return diagrammers;
   }
   
-  public void setPickListModel (DualListModel<Diagrammer> model) {
-    this.pickListModel = model;
+  public void setDiagrammers(List<Diagrammer> diagrammers) {
+    this.diagrammers = diagrammers;
   }
   
   public boolean isReadOnly() {
@@ -213,10 +214,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       title          = GenericUtils.getLocalizedMessage("DIAGRAM_SHARE_FORM_TITLE", name);
       mode           = EDiagramControllerMode.SHARE;
       readOnly       = false;
-      diagrammers    = userService.getDiagrammersAllowedToShareDiagram(diagram);
-      pickListModel.getSource().clear();
-      pickListModel.getTarget().clear();
-      pickListModel.getSource().addAll(diagrammers);
+      diagrammers    = null;
     }
   }
   
@@ -261,7 +259,8 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
         break;
       
       case SHARE:
-        diagramService.shareDiagram(diagram, pickListModel.getTarget(), !readOnly);
+        CollectionUtils.removeDuplicates(diagrammers);
+        diagramService.shareDiagram(diagram, diagrammers, !readOnly);
         dashBoardController.setDiagram(diagram);// Reload shared items
         break;
         
@@ -279,7 +278,7 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
       addErrorMessage(JSFGenericBean.GENERAL_MESSAGE_ID, GenericUtils.getLocalizedMessage("UNEXPECTED_EXCEPTION_MESSAGE"), e.getMessage());
     }
   }
-
+  
   @Override
   public String process() {
     return null; // Not used.
@@ -301,18 +300,43 @@ public class DiagramControllerBean extends JSFGenericBean implements JSFFormCont
   
   @Override
   public Object getAsObject(FacesContext context, UIComponent component, String value) {
-    int diagrammerKey = Integer.parseInt(value);
-    for (Diagrammer diagrammer : diagrammers) {
-      if (diagrammer.getKey() == diagrammerKey) {
-        return diagrammer;
+    Integer diagrammerKey = Integer.valueOf(value);
+    
+    Diagrammer diagrammer = cache.get(diagrammerKey);
+    
+    if (diagrammer == null) {
+      diagrammer = userService.getDiagrammerByKey(diagrammerKey.intValue());
+      if (diagrammer != null) {
+        cache.put(diagrammer.getKey(), diagrammer);
       }
     }
-    return null;
+    
+    return diagrammer;
   }
   
   @Override
   public String getAsString(FacesContext context, UIComponent component, Object value) {
     return String.valueOf(((Diagrammer) value).getKey());
+  }
+  
+  /**
+   * Filters the diagrammers by the given query pattern.
+   * 
+   * @param query The query to filter the diagrammers.
+   * @return A list of diagrammers result of the filter process.
+   * @author Gabriel Leonardo Diaz, 29.05.2014
+   */
+  public List<Diagrammer> complete (String pattern) {
+    List<Diagrammer> filtered = userService.filterDiagrammersToShareDiagram(diagram, pattern);
+    
+    // Store in cache the diagrammers loaded
+    if (!CollectionUtils.isEmptyCollection(filtered)) {
+      for (Diagrammer aDiagrammer : filtered) {
+        cache.put(aDiagrammer.getKey(), aDiagrammer);
+      }
+    }
+    
+    return filtered;
   }
   
   /**

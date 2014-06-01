@@ -37,3 +37,7 @@
 #shareForm .ui-picklist-filter {
     width: 92%;
 }
+
+#shareForm .ui-autocomplete-multiple-container {
+    width: 100%;
+}

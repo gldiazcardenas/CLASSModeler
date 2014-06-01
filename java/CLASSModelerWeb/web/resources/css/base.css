@@ -43,6 +43,11 @@ body {
     text-align: justify;
 }
 
+.subtext {
+    font-size: 0.9em;
+    font-family: monospace;
+}
+
 a:link , a:active, a:visited, a:hover {
     color: inherit;
 }
