@@ -1,0 +1,6 @@
+- Diseñar componentes o librerias que generen un Jar.
+- Sistema de Versiones
+- Integración con Repositorios de Código
+- Integración con Motores de Bases de Datos
+- Integración con Servidores de Aplicación, montar mi aplicación
+- Capacidad de Compilar el Código fuente.
