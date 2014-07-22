@@ -1,7 +1,0 @@
-- Diseñar componentes o librerias que generen un Jar.
-- Sistema de Versiones
-- Integración con Repositorios de Código
-- Integración con Motores de Bases de Datos
-- Integración con Servidores de Aplicación, montar la aplicación diseñada
-- Capacidad de Compilar el Código fuente.
-- Chrome OS (nueva aplicacion para correr en navegadores=
