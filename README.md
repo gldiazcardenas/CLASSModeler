@@ -1,4 +1,4 @@
 CLASSModeler
 ============
 
-Online class diagram modeler, project created as university degree work.
+Online class diagram modeler.  JS/JSF/EJB/Hibernate application created as university degree work.
